@@ -1,0 +1,100 @@
+// app global css in SCSS form
+
+@import url(./inter-font/inter-font.css);
+
+body {
+  font-family: "Inter", sans-serif;
+  color: $primary;
+  line-height: 1;
+}
+.q-table__middle::-webkit-scrollbar {
+  width: 8px;
+  position: absolute;
+  left: 0;
+}
+.q-table__middle::-webkit-scrollbar-track {
+  background-color: #e3e8f0;
+  border-radius: 0 12px 12px 0;
+}
+.q-table__middle::-webkit-scrollbar-thumb {
+  border-radius: 0 12px 12px 0;
+  background-color: #d0d8e5;
+}
+
+.body-bg {
+  background-color: $body-bg;
+}
+
+.page-container {
+  padding: 24px 20px;
+}
+.page-title {
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+
+}
+
+.q-field__native {
+  padding: 0;
+  color: $primary;
+}
+.q-field--dense .q-field__control,
+.q-field--dense .q-field__marginal {
+  height: 36px;
+}
+
+.q-table__card {
+  color: $primary;
+  background: none;
+  border-radius: 0;
+}
+.q-table {
+  table-layout: auto;
+}
+
+.q-table__middle {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+  overflow-x: auto;
+  background-color: #ffffff;
+  border-radius: 12px !important;
+}
+.q-table-inner-element {
+  border-radius: 12px !important;
+}
+.q-table th,
+.q-table td,
+.q-table thead,
+.q-table tbody td {
+  height: unset;
+}
+.q-table th {
+  line-height: 13px;
+}
+.q-table td {
+}
+.q-table tr {
+  height: 44px;
+}
+
+.q-btn.btn--no-hover .q-focus-helper {
+  display: none;
+}
+
+
+
+.fade-leave-to,
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-leave-from,
+.fade-enter-to {
+  opacity: 1;
+}
+.fade-leave-active,
+.fade-enter-active {
+  transition: opacity, 0.3s;
+}

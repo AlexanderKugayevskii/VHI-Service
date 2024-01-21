@@ -1,0 +1,616 @@
+{
+  "api": [
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "30.08.2023 − 14:33",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "35 000",
+      "clientID": "ID00001"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "10.03.2023 − 21:19",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "279 000",
+      "clientID": "ID00002"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "31.03.2023 − 12:17",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "241 000",
+      "clientID": "ID00003"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "29.06.2023 − 22:47",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "41 000",
+      "clientID": "ID00004"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "23.12.2023 − 22:15",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "МРТ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "476 000",
+      "clientID": "ID00005"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "05.05.2023 − 01:37",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Иванова Мария",
+      "serviceName": "МРТ",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "195 000",
+      "clientID": "ID00006"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "26.05.2023 − 17:20",
+      "appealStatus": "Завершено",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "МРТ",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "427 000",
+      "clientID": "ID00007"
+    },
+    {
+      "clientName": "Иванов Дмитрий",
+      "appealDate": "25.12.2023 − 03:12",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Иванова Мария",
+      "serviceName": "МРТ",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "331 000",
+      "clientID": "ID00008"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "27.05.2023 − 07:08",
+      "appealStatus": "Новое",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "МРТ",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "406 000",
+      "clientID": "ID00009"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "28.05.2023 − 07:01",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "6 000",
+      "clientID": "ID00010"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "02.12.2023 − 17:35",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "78 000",
+      "clientID": "ID00011"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "22.09.2023 − 04:54",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "346 000",
+      "clientID": "ID00012"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "02.12.2023 − 11:23",
+      "appealStatus": "Новое",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "380 000",
+      "clientID": "ID00013"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "04.09.2023 − 09:39",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "250 000",
+      "clientID": "ID00014"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "05.08.2023 − 19:03",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "МРТ",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "400 000",
+      "clientID": "ID00015"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "30.10.2023 − 08:02",
+      "appealStatus": "Завершено",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Иванова Мария",
+      "serviceName": "МРТ",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "358 000",
+      "clientID": "ID00016"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "08.04.2023 − 22:22",
+      "appealStatus": "Завершено",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Иванова Мария",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "142 000",
+      "clientID": "ID00017"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "12.08.2023 − 13:11",
+      "appealStatus": "В работе",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Иванова Мария",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "314 000",
+      "clientID": "ID00018"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "24.03.2023 − 14:34",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "14 000",
+      "clientID": "ID00019"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "27.10.2023 − 01:23",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "46 000",
+      "clientID": "ID00020"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "06.10.2023 − 12:33",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "128 000",
+      "clientID": "ID00021"
+    },
+    {
+      "clientName": "Иванов Дмитрий",
+      "appealDate": "13.03.2023 − 23:48",
+      "appealStatus": "Завершено",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "498 000",
+      "clientID": "ID00022"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "09.10.2023 − 18:45",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "223 000",
+      "clientID": "ID00023"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "30.09.2023 − 03:04",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "147 000",
+      "clientID": "ID00024"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "16.04.2023 − 11:18",
+      "appealStatus": "В работе",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "292 000",
+      "clientID": "ID00025"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "30.11.2023 − 01:50",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "474 000",
+      "clientID": "ID00026"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "22.04.2023 − 09:34",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "36 000",
+      "clientID": "ID00027"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "30.09.2023 − 02:28",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "171 000",
+      "clientID": "ID00028"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "13.07.2023 − 18:06",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "448 000",
+      "clientID": "ID00029"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "08.05.2023 − 21:29",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "239 000",
+      "clientID": "ID00030"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "13.12.2023 − 07:29",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "84 000",
+      "clientID": "ID00031"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "12.04.2023 − 00:14",
+      "appealStatus": "Завершено",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "5 000",
+      "clientID": "ID00032"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "12.11.2023 − 14:54",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "317 000",
+      "clientID": "ID00033"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "14.08.2023 − 23:11",
+      "appealStatus": "Завершено",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "133 000",
+      "clientID": "ID00034"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "14.11.2023 − 22:22",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "161 000",
+      "clientID": "ID00035"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "21.12.2023 − 08:26",
+      "appealStatus": "В работе",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "161 000",
+      "clientID": "ID00036"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "27.01.2023 − 17:44",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "217 000",
+      "clientID": "ID00037"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "25.05.2023 − 10:18",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Артрит",
+      "expenseAmount": "10 000",
+      "clientID": "ID00038"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "10.01.2023 − 04:35",
+      "appealStatus": "Новое",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "329 000",
+      "clientID": "ID00039"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "03.10.2023 − 20:51",
+      "appealStatus": "В работе",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Иванова Мария",
+      "serviceName": "МРТ",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "341 000",
+      "clientID": "ID00040"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "22.05.2023 − 18:09",
+      "appealStatus": "Новое",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Консультация специалиста",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "10 000",
+      "clientID": "ID00041"
+    },
+    {
+      "clientName": "Иванов Дмитрий",
+      "appealDate": "06.10.2023 − 15:30",
+      "appealStatus": "В работе",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "214 000",
+      "clientID": "ID00042"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "27.07.2023 − 23:04",
+      "appealStatus": "Новое",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "13 000",
+      "clientID": "ID00043"
+    },
+    {
+      "clientName": "Попова Ольга",
+      "appealDate": "11.07.2023 − 19:27",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Здоровье",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Остеохондроз",
+      "expenseAmount": "378 000",
+      "clientID": "ID00044"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "13.11.2023 − 16:06",
+      "appealStatus": "Завершено",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Смирнов Игорь",
+      "serviceName": "Хирургическая операция",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "139 000",
+      "clientID": "ID00045"
+    },
+    {
+      "clientName": "Смирнова Анна",
+      "appealDate": "04.05.2023 − 01:48",
+      "appealStatus": "В работе",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Гастрит",
+      "expenseAmount": "276 000",
+      "clientID": "ID00046"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "10.09.2023 − 02:47",
+      "appealStatus": "Новое",
+      "clinicName": "Госпиталь Надежда",
+      "doctorName": "Петрова Екатерина",
+      "serviceName": "УЗИ",
+      "diagnosisName": "Грипп",
+      "expenseAmount": "302 000",
+      "clientID": "ID00047"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "08.12.2023 − 12:53",
+      "appealStatus": "В работе",
+      "clinicName": "Клиника Аврора",
+      "doctorName": "Попов Алексей",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "291 000",
+      "clientID": "ID00048"
+    },
+    {
+      "clientName": "Васильева Елена",
+      "appealDate": "11.01.2023 − 12:46",
+      "appealStatus": "В работе",
+      "clinicName": "Медцентр Созвездие",
+      "doctorName": "Кузнецова Светлана",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "102 000",
+      "clientID": "ID00049"
+    },
+    {
+      "clientName": "Кузнецов Павел",
+      "appealDate": "20.10.2023 − 01:06",
+      "appealStatus": "Завершено",
+      "clinicName": "Медикал Сити",
+      "doctorName": "Иванова Мария",
+      "serviceName": "Анализы крови",
+      "diagnosisName": "Пневмония",
+      "expenseAmount": "246 000",
+      "clientID": "ID00050"
+    }
+  ],
+  "clients": [
+    {
+      "clientID": "ID00001",
+      "clientName": "Иванов Дмитрий"
+    },
+    {
+      "clientID": "ID00002",
+      "clientName": "Зайцева Виктория"
+    },
+    {
+      "clientID": "ID00003",
+      "clientName": "Федорова Ольга"
+    },
+    {
+      "clientID": "ID00004",
+      "clientName": "Семенова Наталья"
+    },
+    {
+      "clientID": "ID00005",
+      "clientName": "Алексеева Дарья"
+    },
+    {
+      "clientID": "ID00006",
+      "clientName": "Морозова Ирина"
+    },
+    {
+      "clientID": "ID00007",
+      "clientName": "Ермакова Анна"
+    },
+    {
+      "clientID": "ID00008",
+      "clientName": "Новикова Мария"
+    },
+    {
+      "clientID": "ID00009",
+      "clientName": "Васильева Елена"
+    },
+    {
+      "clientID": "ID00010",
+      "clientName": "Лебедева Татьяна"
+    },
+    {
+      "clientID": "ID00011",
+      "clientName": "Смирнова Анна"
+    },
+    {
+      "clientID": "ID00012",
+      "clientName": "Волкова Елена"
+    },
+    {
+      "clientID": "ID00013",
+      "clientName": "Козлова Алина"
+    },
+    {
+      "clientID": "ID00014",
+      "clientName": "somsa"
+    },
+    {
+      "clientID": "ID00015",
+      "clientName": "Попова Ольга"
+    }
+  ]
+}

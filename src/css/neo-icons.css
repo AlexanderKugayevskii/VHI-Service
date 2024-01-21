@@ -1,0 +1,39 @@
+@font-face {
+  font-family: "neo";
+  src: url("fonts/neo.eot?rg311m");
+  src: url("fonts/neo.eot?rg311m#iefix") format("embedded-opentype"),
+    url("fonts/neo.ttf?rg311m") format("truetype"),
+    url("fonts/neo.woff?rg311m") format("woff"),
+    url("fonts/neo.svg?rg311m#neo") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.neo-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "neo" !important;
+
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.neo-icon-appeals-icon:before {
+  content: "\e900";
+  color: #7a88a6;
+}
+.neo-icon-clients-icon:before {
+  content: "\e901";
+  color: #7a88a6;
+}
+.neo-icon-dashboard-icon:before {
+  content: "\e902";
+  color: #7a88a6;
+}

@@ -1,0 +1,59 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+@use "quasar/src/css/variables" as q;
+@use "sass:map";
+
+
+$primary   : #2C3955;   
+$secondary : #26A69A;
+$lightgray: #E3E8F0;
+$negative: #CB3333; 
+$hover: #E3E8F0;  
+$accent    : #13B8BA;
+$nav-bg: #F7F9FC;
+$body-bg: #EDF0F5;
+
+
+$space-base   : 16px !default;
+$space-x-base : $space-base !default;
+$space-y-base : $space-base !default;
+
+$space-none : (x: 0, y: 0) !default;
+$space-xxs   : (x: 4px, y: 4px) !default;
+$space-xs   : (x: ($space-x-base * 0.5), y: ($space-y-base * 0.5)) !default;
+$space-sm   : (x: 12px, y: 12px) !default;
+$space-md   : (x: ($space-x-base), y: ($space-y-base)) !default;
+$space-lg   : (x: ($space-x-base * 1.5), y: ($space-y-base * 1.5)) !default;
+$space-xl   : (x: ($space-x-base * 2), y: ($space-y-base * 2)) !default;
+$space-xxl   : (x: ($space-x-base * 3), y: ($space-y-base * 3)) ;
+
+$custom-spaces: (
+  xxs: $space-xxs,
+  xs: $space-xs,
+  sm: $space-sm,
+  md: $space-md,
+  lg: $space-lg,
+  xl: $space-xl,
+  xxl: $space-xxl,
+);
+
+$spaces: map.merge(q.$spaces, $custom-spaces);
+
+$dark      : #1D1D1D;
+$dark-page : #121212;
+
+$positive  : #21BA45;
+$negative  : #C10015;
+$info      : #31CCEC;
+$warning   : #F2C037;
