@@ -1,8 +1,19 @@
 <template>
   <div class="checkbox-wrapper">
-    <label class="checkbox-label">
-      <input type="checkbox" class="checkbox-input" :value="item" />
-      <q-icon size="16px" class="check-icon">
+    <label
+      class="checkbox-label"
+      :class="{
+        'checkbox-label--checked': checked,
+      }"
+    >
+      <input
+        type="checkbox"
+        class="checkbox-input"
+        :value="item"
+        v-model="checked"
+        @change="selectItem(item)"
+      />
+      <q-icon size="16px" class="check-icon" v-if="checked">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"
@@ -24,6 +35,8 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+const checked = ref(false);
 const props = defineProps({
   item: {
     type: Object,
@@ -43,7 +56,7 @@ const emit = defineEmits(["update:selectItems"]);
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: grey;
+  background-color: #d0d8e5;
   position: relative;
   display: flex;
   align-items: center;
@@ -60,10 +73,13 @@ const emit = defineEmits(["update:selectItems"]);
   width: 100%;
   height: 100%;
 }
-.check-icon {
-  display: none;
-}
-.checkbox-input:checked + .check-icon {
-  display: inline-block;
+// .check-icon {
+//   display: none;
+// }
+// .checkbox-input:checked + .check-icon {
+//   display: inline-block;
+// }
+.checkbox-label--checked {
+  background-color: #13b8ba;
 }
 </style>
