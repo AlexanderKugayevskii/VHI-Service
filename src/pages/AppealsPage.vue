@@ -12,7 +12,11 @@
               class="search-input q-px-sm"
               placeholder="Поиск"
               v-model="search"
+<<<<<<< HEAD
               debounce = "300"
+=======
+              debounce="300"
+>>>>>>> e0875ea (some changes)
             >
               <template v-slot:prepend>
                 <q-icon>
@@ -49,7 +53,11 @@
               flat
               :ripple="false"
               class="filter-badge btn--no-hover"
+<<<<<<< HEAD
               @click="fixed=true"
+=======
+              @click="modalFilterFixed = true"
+>>>>>>> e0875ea (some changes)
             >
               <svg
                 width="16"
@@ -98,6 +106,7 @@
             </div>
           </div>
         </div>
+<<<<<<< HEAD
         <div class="appeals-create-appeal"></div>
       </div>
       <ClientsTable :search="search" />
@@ -105,6 +114,20 @@
     </div>
 
     <TableFiltersModal v-model:="fixed"></TableFiltersModal>
+=======
+        <SimpleButton
+          label="Создать обращение"
+          type="button"
+          customClass="appeals-btn"
+          @click="searchFilterFixed = true"
+        />
+      </div>
+      <ClientsTable :search="search" />
+    </div>
+
+    <AppealSearchClient v-model:="searchFilterFixed"></AppealSearchClient>
+    <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
+>>>>>>> e0875ea (some changes)
   </q-page>
 </template>
 
@@ -113,6 +136,11 @@ import { reactive, computed, ref } from "vue";
 import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
 import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
+<<<<<<< HEAD
+=======
+import SimpleButton from "src/components/Shared/SimpleButton.vue";
+import AppealSearchClient from "./AppealSearchClient.vue";
+>>>>>>> e0875ea (some changes)
 
 const props = defineProps(["page", "perPage"]);
 
@@ -120,7 +148,12 @@ const page = computed(() => props.page);
 
 const search = ref("");
 
+<<<<<<< HEAD
 const fixed = ref(false)
+=======
+const modalFilterFixed = ref(false);
+const searchFilterFixed = ref(false);
+>>>>>>> e0875ea (some changes)
 
 const filterOptions = reactive([
   {
@@ -153,10 +186,17 @@ const clientsData = computed(() => {
   return clientsStore.clients;
 });
 
+<<<<<<< HEAD
 const expandedOptions = computed(() => {
   return filterOptions.slice(0, 2);
 });
 
+=======
+//filter badges
+const expandedOptions = computed(() => {
+  return filterOptions.slice(0, 2);
+});
+>>>>>>> e0875ea (some changes)
 const extraOptions = computed(() => {
   return filterOptions.slice(2);
 });
@@ -175,10 +215,30 @@ const toggleDropdown = () => {
   font-size: 15px;
   color: #7a88a6;
 }
+<<<<<<< HEAD
+=======
+:global(.appeals-btn) {
+  border-radius: 16px;
+  border: none;
+  background-color: #13b8ba;
+  color: #fff;
+  font-size: 15px;
+  height: 36px;
+  padding: 0 32px;
+  font-weight: 500;
+  cursor: pointer;
+}
+>>>>>>> e0875ea (some changes)
 .appeals-actions {
   padding-top: 4px;
   padding-bottom: 4px;
   margin-bottom: 20px;
+<<<<<<< HEAD
+=======
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+>>>>>>> e0875ea (some changes)
 }
 .appeals-filter {
   display: flex;
@@ -195,7 +255,12 @@ const toggleDropdown = () => {
 
 .filter-badge {
   background-color: #fff;
+<<<<<<< HEAD
 
+=======
+  height: 36px;
+  width: 36px;
+>>>>>>> e0875ea (some changes)
   .q-badge {
     background-color: $accent;
     width: 17px;
@@ -240,6 +305,9 @@ const toggleDropdown = () => {
     }
   }
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e0875ea (some changes)
 </style>

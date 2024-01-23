@@ -368,7 +368,10 @@ function fetchClients(page = 1, limit = 10, search) {
 }
 
 const handleRequest = (props) => {
+<<<<<<< HEAD
   console.log(props.pagination);
+=======
+>>>>>>> e0875ea (some changes)
   fetchClients(
     props.pagination.page,
     props.pagination.rowsPerPage,
@@ -436,6 +439,19 @@ thead tr th {
 thead tr:first-child th {
   top: 0;
 }
+<<<<<<< HEAD
+=======
+thead tr:first-child th:last-child {
+  right: 0;
+  background-color: #fff;
+}
+
+tbody tr td:last-child {
+  position: sticky;
+  right: 0;
+  background-color: #fff;
+}
+>>>>>>> e0875ea (some changes)
 
 button[type="button"] {
   border: none;
@@ -450,6 +466,10 @@ button[type="button"]:disabled {
   padding: 4px 12px;
   display: flex;
   align-items: center;
+<<<<<<< HEAD
+=======
+  background: none;
+>>>>>>> e0875ea (some changes)
   cursor: pointer;
 }
 .pagination-btn-num {

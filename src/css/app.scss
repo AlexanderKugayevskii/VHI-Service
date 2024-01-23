@@ -9,6 +9,10 @@ body {
 }
 .q-table__middle::-webkit-scrollbar {
   width: 8px;
+<<<<<<< HEAD
+=======
+  height: 8px;
+>>>>>>> e0875ea (some changes)
   position: absolute;
   left: 0;
 }
@@ -33,7 +37,10 @@ body {
   font-style: normal;
   font-weight: 700;
   line-height: 28px;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0875ea (some changes)
 }
 
 .q-field__native {
@@ -82,8 +89,14 @@ body {
 .q-btn.btn--no-hover .q-focus-helper {
   display: none;
 }
+<<<<<<< HEAD
 
 
+=======
+.q-tab.tab--no-hover .q-focus-helper {
+  display: none;
+}
+>>>>>>> e0875ea (some changes)
 
 .fade-leave-to,
 .fade-enter-from {
@@ -97,4 +110,117 @@ body {
 .fade-leave-active,
 .fade-enter-active {
   transition: opacity, 0.3s;
+<<<<<<< HEAD
 }
+=======
+}
+.q-dialog__inner--minimized > div {
+  max-height: auto;
+}
+
+.btn-cancel,
+.btn-action {
+  padding: 12px 32px;
+  font-size: 15px;
+  border-radius: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.btn-cancel {
+  background-color: $hover;
+  color: #404f6f;
+}
+.btn-action {
+  background-color: #13b8ba;
+  color: #fff;
+}
+.btn-close {
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.q-dialog__inner > .modal-container {
+  width: 440px;
+  background-color: #fff;
+  padding-right: 8px;
+  border-radius: 24px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 12px;
+    background-color: #f2f5fa;
+    margin-top: 60px;
+    margin-bottom: 24px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background-color: #e3e8f0;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  padding: 20px 8px 16px 20px;
+}
+
+.modal-body {
+  padding: 8px 8px 0px 20px;
+}
+
+.modal-footer {
+  padding: 16px 8px 20px 8px;
+  position: sticky;
+  bottom: 0;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  column-gap: 8px;
+}
+.modal-container-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-container-scroll::-webkit-scrollbar-track {
+  border-radius: 50px;
+  background-color: #f2f5fa;
+  margin-bottom: 20px;
+}
+.modal-container-scroll::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  background-color: #e3e8f0;
+}
+
+.tabs-header {
+  background-color: #f2f5fa;
+  border-radius: 16px;
+}
+.q-tab__indicator {
+  display: none;
+}
+.q-tab {
+  text-transform: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: #404f6f;
+  height: 40px;
+  border: 2px solid #f2f5fa;
+  border-radius: 14px;
+}
+.q-tab-panel {
+  padding: 0;
+}
+.tab-active {
+  background-color: #fff;
+}
+>>>>>>> e0875ea (some changes)

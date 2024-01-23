@@ -1,13 +1,24 @@
 <template>
+<<<<<<< HEAD
   <div class="dropdown" style="width: 500px; margin-left: 100px">
+=======
+  <div class="dropdown">
+>>>>>>> e0875ea (some changes)
     <label class="dropdown-label">
       <div class="dropdown-label-wrapper">
         <span class="dropdown-label-text">{{ label }}</span>
       </div>
       <div class="dropdown-button">
         <button class="dropdown-button-btn" @click="handleDropdown">
+<<<<<<< HEAD
           <span class="dropdown-button-btn-text" v-if="!selectedOptions.length"
             >Выберете статус</span
+=======
+          <span
+            class="dropdown-button-btn-text"
+            v-if="!selectedOptions.length"
+            >{{ placeholder }}</span
+>>>>>>> e0875ea (some changes)
           >
           <span
             class="dropdown-button-btn-text-selected"
@@ -153,6 +164,10 @@ import debounce from "lodash/debounce";
 const props = defineProps({
   fetchFunction: Function,
   label: String,
+<<<<<<< HEAD
+=======
+  placeholder: String,
+>>>>>>> e0875ea (some changes)
   idKey: {
     type: String,
     default: "clientID",
@@ -299,6 +314,10 @@ watch([() => searchItems.value, showDropdown, error], async () => {
   position: absolute;
   top: calc(100% + 4px);
   width: 100%;
+<<<<<<< HEAD
+=======
+  z-index: 10;
+>>>>>>> e0875ea (some changes)
   border-radius: 16px;
   padding: 0 4px 0 4px;
   background-color: #fff;
