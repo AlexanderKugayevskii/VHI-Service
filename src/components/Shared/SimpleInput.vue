@@ -2,7 +2,6 @@
   <div class="input-field">
     <label class="input-label">
       <div class="input-label__wrapper">
-        <span class="input-label__text">Клиент</span>
         <span class="input-label__text">{{ label }}</span>
       </div>
       <div class="input-field__wrapper">
