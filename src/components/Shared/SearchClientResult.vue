@@ -11,23 +11,25 @@
         <span class="client-result-item-info-title"
           >Серия и номер паспорта
         </span>
-        <span class="client-result-item-info-descr">AB 72013013</span>
+        <span class="client-result-item-info-descr">{{
+          item.passportSeries
+        }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">ID </span>
-        <span class="client-result-item-info-descr">1/31/0245/12/0001</span>
+        <span class="client-result-item-info-descr">{{ item.userID }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">Фамилия и Имя </span>
-        <span class="client-result-item-info-descr">Xodjaev Sergey</span>
+        <span class="client-result-item-info-descr">{{ item.clientName }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">Программа </span>
-        <span class="client-result-item-info-descr">VIP</span>
+        <span class="client-result-item-info-descr">{{ item.program }}</span>
       </div>
     </div>
     <div class="client-result-item-tag">
-      <div class="client-result-item-tag-text">Клиент</div>
+      <div class="client-result-item-tag-text">{{ item.type }}</div>
     </div>
   </div>
 </template>

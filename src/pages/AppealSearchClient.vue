@@ -60,55 +60,19 @@
                 <SimpleInput
                   label="ID"
                   placeholder="Введите ID клиента"
+                  debounce-time="300"
+                  v-model:model-value="searchId"
                   :show-icon="true"
                 ></SimpleInput>
               </div>
               <div class="client-results">
-                <!-- <div class="client-results__item">
-                  <div class="client-results__item-check">
-                    <SimpleCheckbox></SimpleCheckbox>
-                  </div>
-                  <div class="client-result-item-content">
-                    <div class="client-result-item-info">
-                      <span class="client-result-item-info-title"
-                        >Серия и номер паспорта
-                      </span>
-                      <span class="client-result-item-info-descr"
-                        >AB 72013013</span
-                      >
-                    </div>
-                    <div class="client-result-item-info">
-                      <span class="client-result-item-info-title"
-                        >Серия и номер паспорта
-                      </span>
-                      <span class="client-result-item-info-descr"
-                        >AB 72013013</span
-                      >
-                    </div>
-                    <div class="client-result-item-info">
-                      <span class="client-result-item-info-title"
-                        >Серия и номер паспорта
-                      </span>
-                      <span class="client-result-item-info-descr"
-                        >AB 72013013</span
-                      >
-                    </div>
-                    <div class="client-result-item-info">
-                      <span class="client-result-item-info-title"
-                        >Серия и номер паспорта
-                      </span>
-                      <span class="client-result-item-info-descr"
-                        >AB 72013013</span
-                      >
-                    </div>
-                  </div>
-                  <div class="client-result-item-tag">
-                    <div class="client-result-item-tag-text">Клиент</div>
-                  </div>
-                </div> -->
-                <SearchClientResult></SearchClientResult>
-                <SearchClientResult></SearchClientResult>
-                <SearchClientResult></SearchClientResult>
+                {{ searchId }}
+
+                <SearchClientResult
+                  v-for="client in clientStore.searchClients"
+                  :item="client"
+                  :key="client.userID"
+                ></SearchClientResult>
               </div>
             </q-tab-panel>
 
@@ -155,9 +119,19 @@
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+
+import { useClientsStore } from "src/stores/clientsStore";
+const searchId = ref("");
 
 const tab = ref("byId");
+const clientStore = useClientsStore();
+
+watch(searchId, (newVal) => {
+  if (newVal.length > 0) {
+    clientStore.getClientsForAppealByPassport(newVal);
+  }
+});
 
 const appealSearchClientRef = ref(null);
 const hideModal = () => {

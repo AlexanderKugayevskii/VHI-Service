@@ -1,4 +1,4 @@
-import { api } from '../boot/axios';
+import { api } from "../boot/axios";
 
 function getClients(page, limit, search) {
   return api.get(`/api`, {
@@ -10,7 +10,7 @@ function getClients(page, limit, search) {
   });
 }
 
-function getClientsBySearch(q = '') {
+function getClientsBySearch(q = "") {
   return api.get(`/clients`, {
     params: {
       q: q,
@@ -18,7 +18,36 @@ function getClientsBySearch(q = '') {
   });
 }
 
+function getClientByUserID(userID) {
+  console.log(userID);
+  return api.get("/clients", {
+    params: {
+      userID: userID,
+    },
+  });
+}
+
+function getClientByPassport(passportSeries) {
+  return api.get("/clients", {
+    params: {
+      passportSeries: passportSeries,
+    },
+  });
+}
+
+function getClientByClientName(clientName) {
+  return api.get("/clients", {
+    params: {
+      clientName: clientName,
+    },
+  });
+}
+
 export default {
   getClients,
   getClientsBySearch,
+
+  getClientByUserID,
+  getClientByPassport,
+  getClientByClientName,
 };
