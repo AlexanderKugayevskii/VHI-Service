@@ -64,7 +64,7 @@
                 ></SimpleInput>
               </div>
               <div class="client-results">
-                <div class="client-results__item">
+                <!-- <div class="client-results__item">
                   <div class="client-results__item-check">
                     <SimpleCheckbox></SimpleCheckbox>
                   </div>
@@ -105,7 +105,10 @@
                   <div class="client-result-item-tag">
                     <div class="client-result-item-tag-text">Клиент</div>
                   </div>
-                </div>
+                </div> -->
+                <SearchClientResult></SearchClientResult>
+                <SearchClientResult></SearchClientResult>
+                <SearchClientResult></SearchClientResult>
               </div>
             </q-tab-panel>
 
@@ -151,7 +154,7 @@
 <script setup>
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
+import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
 import { ref } from "vue";
 
 const tab = ref("byId");
@@ -168,43 +171,5 @@ const hideModal = () => {
 }
 .tab-header {
   margin-bottom: 20px;
-}
-
-.client-results__item {
-  display: flex;
-  align-items: center;
-  column-gap: 16px;
-  padding: 12px;
-  background-color: #f7f9fc;
-  border-radius: 16px;
-}
-.client-results__item-check {
-}
-.client-result-item-content {
-  flex-grow: 1;
-}
-.client-result-item-tag {
-  align-self: flex-start;
-}
-.client-result-item-info {
-  display: flex;
-  column-gap: 4px;
-  font-size: 15px;
-  margin-bottom: 8px;
-}
-.client-result-item-info-title {
-  color: #7a88a6;
-}
-.client-result-item-info-descr {
-  color: #404f6f;
-  font-weight: 500;
-}
-
-.client-result-item-tag-text {
-  background-color: #e0fafb;
-  color: #1a8c8d;
-  font-size: 15px;
-  border-radius: 8px;
-  padding: 4px 8px;
 }
 </style>

@@ -11,7 +11,7 @@
         class="checkbox-input"
         :value="item"
         v-model="checked"
-        @change="selectItem(item)"
+        @change="emitChange"
       />
       <q-icon size="16px" class="check-icon" v-if="checked">
         <svg
@@ -43,11 +43,15 @@ const props = defineProps({
   },
 });
 
-const selectItem = (item) => {
-  emit("update:selectItems", item);
-};
+const emit = defineEmits(["change"]);
 
-const emit = defineEmits(["update:selectItems"]);
+const emitChange = (event) => {
+  if (event.target.checked) {
+    emit("change", props.item);
+  } else {
+    emit("change", null);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
