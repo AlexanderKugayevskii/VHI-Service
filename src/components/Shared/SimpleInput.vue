@@ -2,26 +2,17 @@
   <div class="input-field">
     <label class="input-label">
       <div class="input-label__wrapper">
-<<<<<<< HEAD
         <span class="input-label__text">Клиент</span>
-=======
         <span class="input-label__text">{{ label }}</span>
->>>>>>> e0875ea (some changes)
       </div>
       <div class="input-field__wrapper">
         <input
           type="text"
-<<<<<<< HEAD
-          placeholder="Введите имя и фамилию клиента"
-=======
           :placeholder="placeholder"
->>>>>>> e0875ea (some changes)
           class="input-field__text-input"
           :value="modelValue"
           @input="onInput"
         />
-<<<<<<< HEAD
-=======
         <q-icon size="20px" v-if="showIcon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,22 +37,12 @@
             />
           </svg>
         </q-icon>
->>>>>>> e0875ea (some changes)
       </div>
     </label>
   </div>
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref, watch } from 'vue';
-import debounce from 'lodash/debounce';
-
-const props = defineProps({
-  modelValue: {
-    type: String,
-    default: '',
-=======
 import { ref, watch } from "vue";
 import debounce from "lodash/debounce";
 
@@ -77,32 +58,23 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: "",
->>>>>>> e0875ea (some changes)
   },
   debounceTime: {
     type: [Number, String],
     default: 0,
   },
-<<<<<<< HEAD
-});
-const emit = defineEmits(['update:modelValue']);
-=======
   showIcon: {
     type: Boolean,
     default: false,
   },
 });
+
 const emit = defineEmits(["update:modelValue"]);
->>>>>>> e0875ea (some changes)
 
 const debounceInput = ref(props.modelValue);
 
 const debounceEmit = debounce((value) => {
-<<<<<<< HEAD
-  emit('update:modelValue', value);
-=======
   emit("update:modelValue", value);
->>>>>>> e0875ea (some changes)
 }, props.debounceTime);
 
 const onInput = (e) => {
@@ -110,11 +82,7 @@ const onInput = (e) => {
   if (props.debounceTime > 0) {
     debounceEmit(debounceInput.value);
   } else {
-<<<<<<< HEAD
-    emit('update:modelValue', e.target.value);
-=======
     emit("update:modelValue", e.target.value);
->>>>>>> e0875ea (some changes)
   }
 };
 
@@ -124,11 +92,7 @@ watch(
     if (newVal > 0) {
       debounceEmit.cancel();
       debounceEmit = debounce((value) => {
-<<<<<<< HEAD
-        emit('update:modelValue', value);
-=======
         emit("update:modelValue", value);
->>>>>>> e0875ea (some changes)
       }, newVal);
     }
   }
@@ -153,12 +117,9 @@ watch(
     background-color: #f2f5fa;
     border-radius: 16px;
     padding: 12px 16px;
-<<<<<<< HEAD
-=======
     display: flex;
     align-items: center;
     justify-content: space-between;
->>>>>>> e0875ea (some changes)
   }
   &__text-input {
     width: 100%;

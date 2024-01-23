@@ -9,10 +9,7 @@ body {
 }
 .q-table__middle::-webkit-scrollbar {
   width: 8px;
-<<<<<<< HEAD
-=======
   height: 8px;
->>>>>>> e0875ea (some changes)
   position: absolute;
   left: 0;
 }
@@ -37,10 +34,6 @@ body {
   font-style: normal;
   font-weight: 700;
   line-height: 28px;
-<<<<<<< HEAD
-
-=======
->>>>>>> e0875ea (some changes)
 }
 
 .q-field__native {
@@ -89,14 +82,9 @@ body {
 .q-btn.btn--no-hover .q-focus-helper {
   display: none;
 }
-<<<<<<< HEAD
-
-
-=======
 .q-tab.tab--no-hover .q-focus-helper {
   display: none;
 }
->>>>>>> e0875ea (some changes)
 
 .fade-leave-to,
 .fade-enter-from {
@@ -110,10 +98,8 @@ body {
 .fade-leave-active,
 .fade-enter-active {
   transition: opacity, 0.3s;
-<<<<<<< HEAD
 }
-=======
-}
+
 .q-dialog__inner--minimized > div {
   max-height: auto;
 }
@@ -223,4 +209,3 @@ body {
 .tab-active {
   background-color: #fff;
 }
->>>>>>> e0875ea (some changes)

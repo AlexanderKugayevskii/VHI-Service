@@ -1,10 +1,6 @@
 <template>
   <q-page class="flex flex-center column body-bg">
     <h1>Клиенты</h1>
-<<<<<<< HEAD
-=======
-
->>>>>>> e0875ea (some changes)
     <div class="full-width q-mb-md">
       <SimpleInput v-model="inputValue"></SimpleInput>
     </div>
@@ -30,11 +26,7 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { defineComponent, ref } from "vue";
-=======
 import { ref } from "vue";
->>>>>>> e0875ea (some changes)
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 
@@ -47,10 +39,6 @@ const inputValue = ref("");
 .body-bg {
   background-color: $body-bg;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e0875ea (some changes)
 .option-content {
   display: flex;
   align-items: center;
