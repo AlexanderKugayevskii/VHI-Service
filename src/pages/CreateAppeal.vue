@@ -101,7 +101,6 @@
                       <q-tab-panel name="doctors">
                         <div class="tab-header">
                           <DropdownSelect
-                            label="Врач"
                             placeholder="Выберете врача"
                           ></DropdownSelect>
                         </div>
@@ -110,7 +109,6 @@
                       <q-tab-panel name="services">
                         <div class="tab-header">
                           <DropdownSelect
-                            label="Сервис"
                             placeholder="Выберете сервисы"
                           ></DropdownSelect>
                         </div>
@@ -225,12 +223,26 @@ const tab = ref("clinics");
 }
 .tabs-container {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 .q-tab {
   height: 44px;
   flex: 1;
 }
-
+.tabs-content {
+  height: 100%;
+  display: flex;
+}
+.q-tab-panels {
+  flex-grow: 1;
+}
+.q-panel > div {
+  height: auto;
+}
+.tab-header {
+  height: 100%;
+}
 .create-appeal-actions {
   display: flex;
   align-items: center;
