@@ -1,5 +1,11 @@
 <template>
-  <q-dialog full-height maximized class="create-appeal-modal">
+  <q-dialog
+    full-height
+    maximized
+    no-backdrop-dismiss
+    ref="createAppealModalRef"
+    class="create-appeal-modal"
+  >
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
@@ -138,6 +144,7 @@
                       label="Выйти"
                       type="button"
                       customClass="btn-cancel"
+                      @click="hideModal"
                     ></SimpleButton>
                   </div>
                   <div class="create-appeal-action-expences">
@@ -151,8 +158,38 @@
                 </div>
               </div>
             </div>
-            <div class="create-appeal-right"></div>
+            <div class="create-appeal-right">
+              <div class="create-appeal-interaction"></div>
+            </div>
           </div>
+        </div>
+        <div class="create-appeal-close">
+          <button class="create-appeal-close-btn">
+            <q-icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+              >
+                <path
+                  d="M11 1L1 11"
+                  stroke="#7A88A6"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M1 1L11 11"
+                  stroke="#7A88A6"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </q-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -167,6 +204,10 @@ import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import { ref } from "vue";
 
 const tab = ref("clinics");
+const createAppealModalRef = ref(null);
+const hideModal = () => {
+  createAppealModalRef.value.hide();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -184,6 +225,7 @@ const tab = ref("clinics");
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .create-appeal-body {
   padding: 16px;
@@ -217,6 +259,24 @@ const tab = ref("clinics");
   padding: 16px;
   display: flex;
   flex-direction: column;
+}
+
+.create-appeal-close {
+  position: absolute;
+  left: -48px;
+  top: 20px;
+  z-index: 100;
+  &-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    border: none;
+    background: #fcfeff;
+    outline: none;
+  }
 }
 .appeal-dropdown {
   margin-bottom: 20px;
