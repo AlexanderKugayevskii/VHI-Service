@@ -352,7 +352,7 @@ export default defineComponent({
 .img-btn span.active {
   box-shadow: 0 0 0 4px #d0d8e5;
 }
-
+ 
 .img-btn > input {
   display: none;
 }
