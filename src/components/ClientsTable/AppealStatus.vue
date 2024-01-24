@@ -11,7 +11,7 @@
       :class="{ 'status-done': status === 'Завершено' }"
     ></div>
   </div>
-  <div class = "status-outer-text"> 
+  <div class="status-outer-text" v-if="!showStatusText">
     <span class="status-text">{{ status }}</span>
   </div>
 </template>
@@ -23,6 +23,10 @@ defineProps({
     default: () => {
       return "Новое";
     },
+  },
+  showStatusText: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>
@@ -38,18 +42,16 @@ defineProps({
 .status-left {
   flex: 1;
   border-radius: 50px 0 0 50px;
-
 }
 .status-right {
   flex: 1;
   border-radius: 0 50px 50px 0;
-
 }
 .status-done {
   background-color: #13b8ba;
 }
 .status-text {
   font-size: 11px;
-  color: #404F6F;
+  color: #404f6f;
 }
 </style>

@@ -49,7 +49,7 @@ const emitChange = (event) => {
   if (event.target.checked) {
     emit("change", props.item);
   } else {
-    emit("change", null);
+    emit("change", props.item);
   }
 };
 </script>

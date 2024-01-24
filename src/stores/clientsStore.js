@@ -8,15 +8,22 @@ export const useClientsStore = defineStore("clients", () => {
   const getClients = async (page, perPage) => {
     clients.value = {};
     const response = await ClientService.getClients(page, perPage);
-    console.log(response.data);
     clients.value = response.data;
   };
 
   const getClientsForAppealByPassport = async (passport) => {
-    const response = await ClientService.getClientByUserID(passport);
-    console.log(response);
+    const response = await ClientService.getClientsBySearch(passport);
     searchClients.value = response.data;
   };
 
-  return { clients, searchClients, getClients, getClientsForAppealByPassport };
+  function $resetSearchClients() {
+    searchClients.value = [];
+  }
+  return {
+    clients,
+    searchClients,
+    getClients,
+    getClientsForAppealByPassport,
+    $resetSearchClients,
+  };
 });

@@ -209,3 +209,10 @@ body {
 .tab-active {
   background-color: #fff;
 }
+.create-appeal-modal .q-dialog__inner {
+  justify-content: flex-end;
+}
+
+.q-dialog__inner--maximized > div.modal-container {
+  border-radius: 16px 0 0 16px !important;
+}

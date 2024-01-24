@@ -19,7 +19,6 @@ function getClientsBySearch(q = "") {
 }
 
 function getClientByUserID(userID) {
-  console.log(userID);
   return api.get("/clients", {
     params: {
       userID: userID,
@@ -28,9 +27,10 @@ function getClientByUserID(userID) {
 }
 
 function getClientByPassport(passportSeries) {
+  console.log(encodeURIComponent(passportSeries));
   return api.get("/clients", {
     params: {
-      passportSeries: passportSeries,
+      passportSeries: encodeURIComponent(passportSeries),
     },
   });
 }

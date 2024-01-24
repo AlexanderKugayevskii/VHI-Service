@@ -110,6 +110,7 @@
 
     <AppealSearchClient v-model:="searchFilterFixed"></AppealSearchClient>
     <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
+    <CreateAppeal v-model:="createAppealFixed"></CreateAppeal>
   </q-page>
 </template>
 
@@ -120,6 +121,7 @@ import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
+import CreateAppeal from "./CreateAppeal.vue";
 
 const props = defineProps(["page", "perPage"]);
 
@@ -129,6 +131,7 @@ const search = ref("");
 
 const modalFilterFixed = ref(false);
 const searchFilterFixed = ref(false);
+const createAppealFixed = ref(true);
 
 const filterOptions = reactive([
   {

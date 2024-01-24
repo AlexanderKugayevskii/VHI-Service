@@ -1,12 +1,12 @@
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: '',
-        component: () => import('pages/AppealsPage.vue'),
-        name: 'appeals-page',
+        path: "",
+        component: () => import("pages/AppealsPage.vue"),
+        name: "appeals-page",
         props: (route) => {
           return {
             page: parseInt(route.query.page) || 1,
@@ -14,15 +14,15 @@ const routes = [
           };
         },
       },
-      { path: 'clients', component: () => import('pages/ClientsPage.vue') },
+      { path: "clients", component: () => import("pages/ClientsPage.vue") },
     ],
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    path: "/:catchAll(.*)*",
+    component: () => import("pages/ErrorNotFound.vue"),
   },
 ];
 

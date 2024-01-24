@@ -66,12 +66,11 @@
                 ></SimpleInput>
               </div>
               <div class="client-results">
-                {{ searchId }}
-
                 <SearchClientResult
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.userID"
+                  @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
             </q-tab-panel>
@@ -123,20 +122,35 @@ import { ref, watch } from "vue";
 
 import { useClientsStore } from "src/stores/clientsStore";
 const searchId = ref("");
-
+const selectedClients = ref([]);
 const tab = ref("byId");
+const appealSearchClientRef = ref(null);
+
 const clientStore = useClientsStore();
+
+const hideModal = () => {
+  appealSearchClientRef.value.hide();
+};
+
+const handleSelectItem = (item) => {
+  const index = selectedClients.value.findIndex((client) => {
+    return client.clientID === item.clientID;
+  });
+
+  if (index > -1) {
+    selectedClients.value.splice(index, 1);
+  } else {
+    selectedClients.value.push(item);
+  }
+};
 
 watch(searchId, (newVal) => {
   if (newVal.length > 0) {
     clientStore.getClientsForAppealByPassport(newVal);
+  } else {
+    clientStore.$resetSearchClients();
   }
 });
-
-const appealSearchClientRef = ref(null);
-const hideModal = () => {
-  appealSearchClientRef.value.hide();
-};
 </script>
 
 <style lang="scss" scoped>
