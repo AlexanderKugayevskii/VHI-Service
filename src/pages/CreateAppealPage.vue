@@ -151,6 +151,7 @@
                     <span class="create-appeal-action-expences-title"
                       >Общий расход:
                     </span>
+
                     <span class="create-appeal-action-expences-total"
                       >2 020 000</span
                     >
@@ -164,7 +165,7 @@
           </div>
         </div>
         <div class="create-appeal-close">
-          <button class="create-appeal-close-btn">
+          <button class="create-appeal-close-btn" @click="hideModal">
             <q-icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -211,16 +212,20 @@ const hideModal = () => {
 </script>
 
 <style lang="scss" scoped>
-.q-dialog__inner > .modal-container {
+.create-appeal-modal .modal-container {
   width: 90%;
+
+  padding: 0;
+  position: relative;
+  overflow: visible;
+}
+.create-appeal-modal .modal-header {
+  display: block;
+  border-top-left-radius: 16px;
+}
+.create-appeal-modal .modal-content {
   background-color: #edf0f5;
   border-radius: 20px;
-  padding: 0;
-}
-.modal-header {
-  display: block;
-}
-.modal-content {
   height: 100%;
   flex-grow: 1;
   display: flex;
@@ -276,6 +281,7 @@ const hideModal = () => {
     border: none;
     background: #fcfeff;
     outline: none;
+    cursor: pointer;
   }
 }
 .appeal-dropdown {

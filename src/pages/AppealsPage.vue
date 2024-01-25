@@ -121,7 +121,7 @@ import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
-import CreateAppeal from "./CreateAppeal.vue";
+import CreateAppeal from "./CreateAppealPage.vue";
 
 const props = defineProps(["page", "perPage"]);
 
