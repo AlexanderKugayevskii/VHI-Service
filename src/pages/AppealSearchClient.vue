@@ -70,6 +70,7 @@
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
+                  :checked="selectedClient?.clientID === client.clientID"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -126,6 +127,8 @@ const selectedClient = ref(null);
 const tab = ref("byId");
 const appealSearchClientRef = ref(null);
 
+const checked = ref(false);
+
 const clientStore = useClientsStore();
 
 const hideModal = () => {
@@ -134,6 +137,7 @@ const hideModal = () => {
 
 const handleSelectItem = (item) => {
   selectedClient.value = item;
+  console.log(selectedClient.value.clientID);
 };
 
 watch(searchId, (newVal) => {

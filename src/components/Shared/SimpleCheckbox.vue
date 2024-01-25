@@ -11,7 +11,7 @@
         class="checkbox-input"
         :name="name"
         :value="item"
-        v-model="checked"
+        :checked="checked"
         @change="emitChange"
       />
       <q-icon size="16px" class="check-icon" v-if="checked">
@@ -37,13 +37,16 @@
 
 <script setup>
 import { ref } from "vue";
-const checked = ref(false);
+
 const props = defineProps({
   item: {
     type: Object,
   },
   name: {
     type: String,
+  },
+  checked: {
+    type: Boolean,
   },
 });
 

@@ -5,6 +5,7 @@
         :item="item"
         @change="handleCheckboxChange"
         name="search-client"
+        :checked="checked"
       ></SimpleCheckbox>
     </div>
     <div class="client-result-item-content">
@@ -40,6 +41,7 @@ import SimpleCheckbox from "./SimpleCheckbox.vue";
 
 const props = defineProps({
   item: Object,
+  checked: Boolean,
 });
 
 const emit = defineEmits(["update:selectValue"]);
