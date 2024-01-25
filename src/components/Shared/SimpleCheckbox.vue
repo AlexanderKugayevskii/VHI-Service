@@ -9,6 +9,7 @@
       <input
         type="checkbox"
         class="checkbox-input"
+        :name="name"
         :value="item"
         v-model="checked"
         @change="emitChange"
@@ -41,6 +42,9 @@ const props = defineProps({
   item: {
     type: Object,
   },
+  name: {
+    type: String,
+  },
 });
 
 const emit = defineEmits(["change"]);
@@ -49,7 +53,7 @@ const emitChange = (event) => {
   if (event.target.checked) {
     emit("change", props.item);
   } else {
-    emit("change", props.item);
+    emit("change", null);
   }
 };
 </script>

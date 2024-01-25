@@ -4,6 +4,7 @@
       <SimpleCheckbox
         :item="item"
         @change="handleCheckboxChange"
+        name="search-client"
       ></SimpleCheckbox>
     </div>
     <div class="client-result-item-content">

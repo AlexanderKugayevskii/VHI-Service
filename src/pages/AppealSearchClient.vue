@@ -69,7 +69,7 @@
                 <SearchClientResult
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.userID"
+                  :key="client.clientID"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -122,7 +122,7 @@ import { ref, watch } from "vue";
 
 import { useClientsStore } from "src/stores/clientsStore";
 const searchId = ref("");
-const selectedClients = ref([]);
+const selectedClient = ref(null);
 const tab = ref("byId");
 const appealSearchClientRef = ref(null);
 
@@ -133,15 +133,7 @@ const hideModal = () => {
 };
 
 const handleSelectItem = (item) => {
-  const index = selectedClients.value.findIndex((client) => {
-    return client.clientID === item.clientID;
-  });
-
-  if (index > -1) {
-    selectedClients.value.splice(index, 1);
-  } else {
-    selectedClients.value.push(item);
-  }
+  selectedClient.value = item;
 };
 
 watch(searchId, (newVal) => {
