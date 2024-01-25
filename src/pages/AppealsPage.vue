@@ -123,9 +123,8 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import CreateAppeal from "./CreateAppealPage.vue";
 
-const props = defineProps(["page", "perPage"]);
-
-const page = computed(() => props.page);
+// const props = defineProps(["page", "perPage"])
+// const page = computed(() => props.page);
 
 const search = ref("");
 

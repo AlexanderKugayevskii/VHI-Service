@@ -7,12 +7,12 @@ const routes = [
         path: "",
         component: () => import("pages/AppealsPage.vue"),
         name: "appeals-page",
-        props: (route) => {
-          return {
-            page: parseInt(route.query.page) || 1,
-            limit: parseInt(route.query.limit) || 10,
-          };
-        },
+        // props: (route) => {
+        //   return {
+        //     page: parseInt(route.query.page) || 1,
+        //     limit: parseInt(route.query.limit) || 10,
+        //   };
+        // },
       },
       { path: "clients", component: () => import("pages/ClientsPage.vue") },
     ],

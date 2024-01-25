@@ -17,25 +17,25 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
-import { useRoute } from 'vue-router';
-const emit = defineEmits(['choiceOption']);
-defineProps(['options']);
+import { ref, defineEmits, watch } from "vue";
+import { useRoute } from "vue-router";
+const emit = defineEmits(["choiceOption"]);
+defineProps(["options"]);
 
-const route = useRoute();
+// const route = useRoute();
 
 const optionsRowsPerPage = ref([10, 25, 30]);
 const selectedOption = ref(10);
 
-watch(
-  () => route.query,
-  (newVal, oldVal) => {
-    selectedOption.value = parseInt(newVal.limit) || 10;
-  }
-);
+// watch(
+//   () => route.query,
+//   (newVal, oldVal) => {
+//     selectedOption.value = parseInt(newVal.limit) || 10;
+//   }
+// );
 const handleChoice = (option) => {
-  // selectedOption.value = option;
-  emit('choiceOption', option);
+  selectedOption.value = option;
+  emit("choiceOption", option);
 };
 </script>
 

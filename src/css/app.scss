@@ -85,6 +85,15 @@ body {
 .q-tab.tab--no-hover .q-focus-helper {
   display: none;
 }
+.q-item.item--no-hover .q-focus-helper {
+  display: none;
+}
+
+.q-menu {
+  background: #404f6f;
+  border-radius: 16px;
+  padding: 12px;
+}
 
 .fade-leave-to,
 .fade-enter-from {

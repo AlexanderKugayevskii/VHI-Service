@@ -1,6 +1,5 @@
 <template>
   <router-view />
-
 </template>
 
 <script>
@@ -12,8 +11,6 @@ export default defineComponent({
 
   setup() {
     const clientStore = useClientsStore();
-
-
     return {
       clientStore,
     };

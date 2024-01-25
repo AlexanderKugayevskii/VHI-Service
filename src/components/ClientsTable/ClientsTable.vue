@@ -88,38 +88,7 @@
             {{ props.row.expenseAmount }}
           </q-td>
           <q-td key="userSettings" :props="props" class="appeals-td text-right">
-            <q-icon size="20px">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M10 10.8333C10.221 10.8333 10.433 10.7455 10.5893 10.5892C10.7456 10.433 10.8334 10.221 10.8334 9.99998C10.8334 9.77897 10.7456 9.567 10.5893 9.41072C10.433 9.25444 10.221 9.16665 10 9.16665C9.77901 9.16665 9.56704 9.25444 9.41076 9.41072C9.25448 9.56701 9.16669 9.77897 9.16669 9.99998C9.16669 10.221 9.25448 10.433 9.41076 10.5892C9.56704 10.7455 9.77901 10.8333 10 10.8333Z"
-                  fill="#404F6F"
-                  stroke="#404F6F"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M15.8333 10.8333C16.0543 10.8333 16.2663 10.7455 16.4226 10.5892C16.5789 10.433 16.6667 10.221 16.6667 9.99998C16.6667 9.77897 16.5789 9.567 16.4226 9.41072C16.2663 9.25444 16.0543 9.16665 15.8333 9.16665C15.6123 9.16665 15.4004 9.25444 15.2441 9.41072C15.0878 9.56701 15 9.77897 15 9.99998C15 10.221 15.0878 10.433 15.2441 10.5892C15.4004 10.7455 15.6123 10.8333 15.8333 10.8333Z"
-                  stroke="#404F6F"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M4.16665 10.8333C4.38766 10.8333 4.59962 10.7455 4.7559 10.5892C4.91218 10.433 4.99998 10.221 4.99998 9.99998C4.99998 9.77897 4.91218 9.567 4.7559 9.41072C4.59962 9.25444 4.38766 9.16665 4.16665 9.16665C3.94563 9.16665 3.73367 9.25444 3.57739 9.41072C3.42111 9.56701 3.33331 9.77897 3.33331 9.99998C3.33331 10.221 3.42111 10.433 3.57739 10.5892C3.73367 10.7455 3.94563 10.8333 4.16665 10.8333Z"
-                  stroke="#404F6F"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </q-icon>
+            <UserSettings></UserSettings>
           </q-td>
         </q-tr>
       </template>
@@ -206,11 +175,12 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref, watch, watchEffect } from "vue";
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
-import { useClientsStore } from "src/stores/clientsStore";
 import ClientService from "src/services/ClientService";
+import UserSettings from "./UserSettings.vue";
+import { onMounted, computed, ref, watch, watchEffect } from "vue";
+import { useClientsStore } from "src/stores/clientsStore";
 import { useRouter, useRoute } from "vue-router";
 
 const columns = [
@@ -263,14 +233,18 @@ const searchProp = defineProps(["search"]);
 
 const search = computed(() => searchProp.search);
 
-const router = useRouter();
-const route = useRoute();
+// const router = useRouter();
+// const route = useRoute();
 const loading = ref(true);
 const users = ref([]);
 
 const tableRef = ref(null);
+
+//for future
 const clientsStore = useClientsStore();
 
+//base pagination ref for q-table
+//it can be replace in clientStore Store to make component more flexible
 const pagination = ref({
   sortBy: "desc",
   descending: false,
@@ -279,6 +253,7 @@ const pagination = ref({
   page: 1,
 });
 
+//incremenet decrement and change page events
 const incrementPage = () => {
   tableRef.value.nextPage();
 };
@@ -294,17 +269,26 @@ const changePage = (pageNum) => {
     });
   }
 };
+//10-25-30
+const selectOption = (option) => {
+  tableRef.value.setPagination({
+    rowsPerPage: option,
+  });
+};
 
-watch(
-  () => route.query,
-  (newVal) => {
-    tableRef.value.setPagination({
-      page: parseInt(newVal.page) || 1,
-      rowsPerPage: parseInt(newVal.limit) || 10,
-    });
-  }
-);
+//only router if needs
+//if query page or limit will changes, pagination will changes
+// watch(
+//   () => route.query,
+//   (newVal) => {
+//     tableRef.value.setPagination({
+//       page: parseInt(newVal.page) || 1,
+//       rowsPerPage: parseInt(newVal.limit) || 10,
+//     });
+//   }
+// );
 
+//pagination logic
 const totalPages = computed(() => {
   return Math.ceil(pagination.value.rowsNumber / pagination.value.rowsPerPage);
 });
@@ -338,22 +322,24 @@ const paginationRange = computed(() => {
   return range;
 });
 
+//first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
 });
 
+//main fn to fetch clients, router push is optional
 function fetchClients(page = 1, limit = 10, search) {
   loading.value = true;
   ClientService.getClients(page, limit, search)
     .then((response) => {
       users.value = response.data;
-      router.push({
-        name: "appeals-page",
-        query: {
-          page,
-          limit,
-        },
-      });
+      // router.push({
+      //   name: "appeals-page",
+      //   query: {
+      //     page,
+      //     limit,
+      //   },
+      // });
 
       pagination.value.page = page;
       pagination.value.rowsPerPage = limit;
@@ -375,6 +361,7 @@ const handleRequest = (props) => {
   );
 };
 
+//add numerable table
 const rows = computed(() => {
   return users.value?.map((row, index) => {
     return {
@@ -386,12 +373,7 @@ const rows = computed(() => {
   });
 });
 
-const selectOption = (option) => {
-  tableRef.value.setPagination({
-    rowsPerPage: option,
-  });
-};
-
+//calculate table height for showing only 10 rows
 onMounted(() => {
   const qTableMiddleElement = document.querySelector(".q-table__middle");
   qTableMiddleElement.style.height = `${48 + 44 * 10}px`;
@@ -426,7 +408,6 @@ onMounted(() => {
   font-size: 14px;
   color: $primary;
 }
-
 thead tr th {
   position: sticky;
   z-index: 1;
@@ -476,5 +457,10 @@ button[type="button"]:disabled {
 }
 .pagination-btn-num--cursor-default {
   cursor: default;
+}
+.user-settings-btn {
+  background: none;
+  cursor: pointer;
+  padding: 0;
 }
 </style>
