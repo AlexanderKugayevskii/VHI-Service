@@ -191,7 +191,7 @@ const toggleDropdown = () => {
   background-color: #13b8ba;
   color: #fff;
   font-size: 15px;
-  height: 36px;
+  height: 44px;
   padding: 0 32px;
   font-weight: 500;
   cursor: pointer;

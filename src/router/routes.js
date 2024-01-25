@@ -15,6 +15,12 @@ const routes = [
         // },
       },
       { path: "clients", component: () => import("pages/ClientsPage.vue") },
+      {
+        path: "create-appeal/:id",
+        name: "createAppeal",
+        props: true,
+        component: () => import("pages/CreateAppealPage"),
+      },
     ],
   },
 

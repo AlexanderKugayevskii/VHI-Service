@@ -56,7 +56,12 @@
           <span class="option-text">Редактировать</span>
         </q-item>
 
-        <q-item clickable v-close-popup class="item--no-hover">
+        <q-item
+          clickable
+          v-close-popup
+          class="item--no-hover"
+          @click="handleClick"
+        >
           <q-icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -81,15 +86,13 @@
 </template>
 
 <script setup>
+import { watch, watchEffect } from "vue";
 import DropdownSettings from "../Shared/DropdownSettings.vue";
 
-import { ref } from "vue";
+const props = defineProps(["clientID"]);
 
-const dropDownSettingsRef = ref(null);
-
-const showSettings = ref(false);
-const handleShowSettings = () => {
-  showSettings.value = !showSettings.value;
+const handleClick = () => {
+  console.log(props.clientID);
 };
 </script>
 
