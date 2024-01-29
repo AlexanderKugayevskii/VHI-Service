@@ -1,6 +1,11 @@
 <template>
   <div class="button-wrapper">
-    <button :type="type" @click="handleClick" :class="customClass">
+    <button
+      :type="type"
+      @click="handleClick"
+      :class="customClass"
+      :disabled="disabled"
+    >
       {{ label }}
     </button>
   </div>
@@ -10,7 +15,11 @@
 defineProps({
   label: String,
   type: String,
-  customClass: String,
+  customClass: [Array, Object, String],
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits(["click"]);
 

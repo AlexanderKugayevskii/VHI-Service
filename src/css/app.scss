@@ -124,6 +124,10 @@ body {
   background: none;
   border: none;
 }
+
+button[class^="btn"] {
+  transition: 0.3s;
+}
 .btn-cancel {
   background-color: $hover;
   color: #404f6f;
@@ -132,6 +136,10 @@ body {
   background-color: #13b8ba;
   color: #fff;
 }
+.btn--disabled {
+  background-color: $hover;
+}
+
 .btn-close {
   border: none;
   background: none;

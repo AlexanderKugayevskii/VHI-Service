@@ -108,7 +108,11 @@
         />
         <SimpleButton
           label="Создать обращение"
-          custom-class="btn-action"
+          :custom-class="[
+            'btn-action',
+            selectedClient === null ? 'btn--disabled' : '',
+          ]"
+          :disabled="selectedClient === null"
         ></SimpleButton>
       </div>
     </div>
@@ -127,17 +131,17 @@ const selectedClient = ref(null);
 const tab = ref("byId");
 const appealSearchClientRef = ref(null);
 
-const checked = ref(false);
-
 const clientStore = useClientsStore();
 
 const hideModal = () => {
   appealSearchClientRef.value.hide();
+  clientStore.$resetSearchClients();
+  selectedClient.value = null;
 };
 
 const handleSelectItem = (item) => {
   selectedClient.value = item;
-  console.log(selectedClient.value.clientID);
+  console.log(selectedClient.value);
 };
 
 watch(searchId, (newVal) => {

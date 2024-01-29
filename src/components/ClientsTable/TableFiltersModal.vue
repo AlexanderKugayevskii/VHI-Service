@@ -45,10 +45,25 @@
           ></SimpleInput>
         </div>
         <div class="filter-item">
-          <DropdownSelect
+          <DropdownSelectLocal
             label="Статус"
-            placeholder="Выберете статус"
-          ></DropdownSelect>
+            placeholder="Выберите статус"
+            id-key="statusName"
+            :multiple="false"
+            :initialOptions="[
+              { id: 1, statusName: 'Новое' },
+              { id: 2, statusName: 'В работе' },
+              { id: 3, statusName: 'Завершено' },
+            ]"
+          >
+            <template #option-content="{ option }">
+              <div class="option-content">
+                <span>
+                  {{ option.statusName }}
+                </span>
+              </div>
+            </template>
+          </DropdownSelectLocal>
         </div>
         <div class="filter-item">
           <DropdownSelect
@@ -86,6 +101,7 @@
 import { ref } from "vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DropdownSelect from "../Shared/DropdownSelect.vue";
+import DropdownSelectLocal from "../Shared/DropdownSelectLocal.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 
 const filterDialogRef = ref(null);
