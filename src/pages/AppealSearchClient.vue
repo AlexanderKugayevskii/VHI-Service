@@ -153,7 +153,7 @@ const handleSelectItem = (item) => {
 };
 
 const goToAppeal = () => {
-  router.push({
+  router.replace({
     name: "createAppeal",
     params: {
       id: selectedClient.value.clientID,

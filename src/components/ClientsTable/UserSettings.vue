@@ -96,7 +96,7 @@ const router = useRouter();
 
 const goToAppeal = () => {
   appealStore.setClient(props.client);
-  router.push({
+  router.replace({
     name: "createAppeal",
     params: {
       id: props.client.clientID,

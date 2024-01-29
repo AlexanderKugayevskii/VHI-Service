@@ -220,7 +220,7 @@ const createAppealModalRef = ref(null);
 
 const hideModal = () => {
   createAppealModalRef.value.hide();
-  router.push("/");
+  router.replace("/");
 };
 </script>
 

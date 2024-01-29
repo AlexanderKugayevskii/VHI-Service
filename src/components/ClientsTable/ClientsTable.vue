@@ -64,7 +64,14 @@
             {{ props.row.index }}
           </q-td>
           <q-td key="client" :props="props" class="appeals-td">
-            {{ props.row.clientName }}
+            <RouterLink
+              class="appeal-link"
+              @click="appealStore.setClient(props.row)"
+              :to="{ name: 'createAppeal', params: { id: props.row.clientID } }"
+              replace
+            >
+              {{ props.row.clientName }}
+            </RouterLink>
           </q-td>
           <q-td key="appealDate" :props="props" class="appeals-td">
             {{ props.row.appealDate }}
@@ -182,6 +189,7 @@ import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref, watch, watchEffect } from "vue";
 import { useClientsStore } from "src/stores/clientsStore";
 import { useRouter, useRoute } from "vue-router";
+import { useAppealStore } from "src/stores/appealStore";
 
 const columns = [
   {
@@ -242,6 +250,7 @@ const tableRef = ref(null);
 
 //for future
 const clientsStore = useClientsStore();
+const appealStore = useAppealStore();
 
 //base pagination ref for q-table
 //it can be replace in clientStore Store to make component more flexible
@@ -387,6 +396,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.appeal-link {
+  font-size: 14px;
+  line-height: 20px;
+  color: #13b8ba;
+  text-decoration: none;
+}
 .appeals-th {
   color: #404f6f;
   font-weight: 600;
