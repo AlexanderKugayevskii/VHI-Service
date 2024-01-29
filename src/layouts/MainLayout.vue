@@ -148,10 +148,10 @@
               </span>
             </label>
           </div>
-          <div class="balance q-py-xxs q-px-sm">
+          <!-- <div class="balance q-py-xxs q-px-sm">
             <span class="balance-desc">Баланс: </span>
             <span class="balance-amount">190 000 UZS</span>
-          </div>
+          </div> -->
 
           <q-btn dense flat :ripple="false" class="btn--no-hover">
             <svg
@@ -238,7 +238,7 @@
 
             <q-item-section side>
               <q-btn dense flat :ripple="false" class="btn--no-hover">
-                <q-icon size = "20px">
+                <q-icon size="20px">
                   <svg
                     width="20"
                     height="21"
@@ -352,7 +352,7 @@ export default defineComponent({
 .img-btn span.active {
   box-shadow: 0 0 0 4px #d0d8e5;
 }
- 
+
 .img-btn > input {
   display: none;
 }
@@ -394,6 +394,4 @@ export default defineComponent({
     margin-top: 2px;
   }
 }
-
-
 </style>

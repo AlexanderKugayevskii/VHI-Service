@@ -5,10 +5,13 @@
     no-backdrop-dismiss
     ref="createAppealModalRef"
     class="create-appeal-modal"
+    :key="route.params.id"
+    v-model:="createAppealModalFixed"
   >
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
+          {{ appealStore.client }}
           <h4 class="page-title q-my-none">Обращение</h4>
           <AppealStatus></AppealStatus>
         </div>
@@ -203,11 +206,21 @@ import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useAppealStore } from "src/stores/appealStore.js";
+
+const appealStore = useAppealStore();
+
+const createAppealModalFixed = ref(true);
+const router = useRouter();
+const route = useRoute();
 
 const tab = ref("clinics");
 const createAppealModalRef = ref(null);
+
 const hideModal = () => {
   createAppealModalRef.value.hide();
+  router.push("/");
 };
 </script>
 

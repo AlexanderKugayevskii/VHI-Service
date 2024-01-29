@@ -88,7 +88,7 @@
             {{ props.row.expenseAmount }}
           </q-td>
           <q-td key="userSettings" :props="props" class="appeals-td text-right">
-            <UserSettings :clientID="props.row.clientID"></UserSettings>
+            <UserSettings :client="props.row"></UserSettings>
           </q-td>
         </q-tr>
       </template>

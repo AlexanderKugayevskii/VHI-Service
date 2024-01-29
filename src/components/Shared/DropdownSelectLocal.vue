@@ -91,11 +91,15 @@
                     checkSelected(option),
                 }"
               >
-                <slot name="option-content" :option="option">
+                <slot
+                  name="option-content"
+                  :option="option"
+                  :checked="checkSelected(option)"
+                >
                   <span>
                     {{ option.clientName }}
                   </span>
-                  <q-icon v-if="checkSelected(option)">
+                  <q-icon>
                     <slot name="checked-icon"></slot>
                   </q-icon>
                 </slot>
@@ -132,7 +136,7 @@ const showDropdown = ref(false);
 const dropdownListRef = ref(null); //for children elements
 const searchValue = ref(""); //v model input
 
-const selectedOptions = ref(props.multiple ? [] : null);
+const selectedOptions = ref([]);
 
 const updateSearchValue = debounce((newValue) => {
   searchValue.value = newValue;

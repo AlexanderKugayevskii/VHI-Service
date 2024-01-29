@@ -60,7 +60,7 @@
           clickable
           v-close-popup
           class="item--no-hover"
-          @click="handleClick"
+          @click="goToAppeal"
         >
           <q-icon>
             <svg
@@ -86,13 +86,22 @@
 </template>
 
 <script setup>
-import { watch, watchEffect } from "vue";
 import DropdownSettings from "../Shared/DropdownSettings.vue";
+import { useRouter } from "vue-router";
+import { useAppealStore } from "src/stores/appealStore";
+const props = defineProps(["client"]);
 
-const props = defineProps(["clientID"]);
+const appealStore = useAppealStore();
+const router = useRouter();
 
-const handleClick = () => {
-  console.log(props.clientID);
+const goToAppeal = () => {
+  appealStore.setClient(props.client);
+  router.push({
+    name: "createAppeal",
+    params: {
+      id: props.client.clientID,
+    },
+  });
 };
 </script>
 

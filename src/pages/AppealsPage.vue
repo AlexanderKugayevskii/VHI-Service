@@ -110,7 +110,8 @@
 
     <AppealSearchClient v-model:="searchFilterFixed"></AppealSearchClient>
     <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
-    <CreateAppeal v-model:="createAppealFixed"></CreateAppeal>
+    <!-- <CreateAppeal v-model:="createAppealFixed"></CreateAppeal> -->
+    <router-view></router-view>
   </q-page>
 </template>
 
@@ -130,7 +131,7 @@ const search = ref("");
 
 const modalFilterFixed = ref(false);
 const searchFilterFixed = ref(false);
-const createAppealFixed = ref(true);
+
 
 const filterOptions = reactive([
   {

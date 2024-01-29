@@ -33,11 +33,28 @@
           { id: 3, statusName: 'Завершено' },
         ]"
       >
-        <template #option-content="{ option }">
+        <template #option-content="{ option, checked }">
           <div class="option-content">
             <span>
               {{ option.statusName }}
             </span>
+            <q-icon v-if="checked">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="12"
+                viewBox="0 0 17 12"
+                fill="none"
+              >
+                <path
+                  d="M1 6L6 11L16 1"
+                  stroke="#13B8BA"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </q-icon>
           </div>
         </template>
       </DropdownSelectLocal>
@@ -51,7 +68,6 @@ import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import ClientService from "src/services/ClientService";
-import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
 
 const inputValue = ref("");
 </script>
