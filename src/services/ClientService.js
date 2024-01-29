@@ -1,11 +1,12 @@
 import { api } from "../boot/axios";
 
-function getClients(page, limit, search) {
+function getClients(page, limit, search, filterQueries) {
   return api.get(`/api`, {
     params: {
       _page: page,
       _limit: limit,
       q: search,
+      ...filterQueries,
     },
   });
 }
@@ -27,7 +28,6 @@ function getClientByUserID(userID) {
 }
 
 function getClientByPassport(passportSeries) {
-  console.log(encodeURIComponent(passportSeries));
   return api.get("/clients", {
     params: {
       passportSeries: encodeURIComponent(passportSeries),

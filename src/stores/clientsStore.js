@@ -19,6 +19,7 @@ export const useClientsStore = defineStore("clients", () => {
   function $resetSearchClients() {
     searchClients.value = [];
   }
+
   return {
     clients,
     searchClients,
