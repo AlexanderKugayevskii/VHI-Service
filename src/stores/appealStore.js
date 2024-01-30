@@ -8,8 +8,6 @@ export const useAppealStore = defineStore("appeal", () => {
     client.value = item;
   };
 
-
-
   return {
     client,
     setClient,

@@ -127,14 +127,14 @@ import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
-import { useClientsStore } from "src/stores/clientsStore";
+import { useSearchClientsStore } from "src/stores/clientSearchStore";
 
 const searchId = ref("");
 const selectedClient = ref(null);
 const tab = ref("byId");
 const appealSearchClientRef = ref(null);
 
-const clientStore = useClientsStore();
+const clientStore = useSearchClientsStore();
 const appealStore = useAppealStore();
 
 const router = useRouter();

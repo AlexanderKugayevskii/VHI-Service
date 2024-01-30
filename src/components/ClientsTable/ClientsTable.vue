@@ -12,7 +12,7 @@
       v-model:pagination="pagination"
       no-data-label="I didn't find anything for you"
       no-results-label="The filter didn't uncover any results"
-      @request="handleRequest"
+      @request="clientTableStore.handleRequest"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -176,20 +176,20 @@
 
     <q-space></q-space>
     <RowsPerPage @choiceOption="selectOption" />
-    <!-- <RowsPerPage /> -->
-    <!-- <div>{{ page }} |||| {{ pagination.page }}</div> -->
   </div>
 </template>
 
 <script setup>
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
-import ClientService from "src/services/ClientService";
 import UserSettings from "./UserSettings.vue";
-import { onMounted, computed, ref, watch, watchEffect } from "vue";
-import { useClientsStore } from "src/stores/clientsStore";
-import { useRouter, useRoute } from "vue-router";
+import { onMounted, computed, ref } from "vue";
+
+import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
+import { storeToRefs } from "pinia";
+
+import usePaginate from "src/composables/usePaginate";
 
 const columns = [
   {
@@ -238,29 +238,14 @@ const columns = [
 ];
 
 const searchProp = defineProps(["search"]);
-
 const search = computed(() => searchProp.search);
-
-// const router = useRouter();
-// const route = useRoute();
-const loading = ref(true);
-const users = ref([]);
 
 const tableRef = ref(null);
 
-//for future
-const clientsStore = useClientsStore();
 const appealStore = useAppealStore();
-
-//base pagination ref for q-table
-//it can be replace in clientStore Store to make component more flexible
-const pagination = ref({
-  sortBy: "desc",
-  descending: false,
-  rowsPerPage: 10,
-  rowsNumber: 0,
-  page: 1,
-});
+const clientTableStore = useClientTableStore();
+const { pagination, users, loading } = storeToRefs(clientTableStore);
+const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
 
 //incremenet decrement and change page events
 const incrementPage = () => {
@@ -297,82 +282,9 @@ const selectOption = (option) => {
 //   }
 // );
 
-//pagination logic
-const totalPages = computed(() => {
-  return Math.ceil(pagination.value.rowsNumber / pagination.value.rowsPerPage);
-});
-
-const hasNextPage = computed(() => totalPages.value === pagination.value.page);
-const hasPrevPage = computed(() => pagination.value.page === 1);
-const paginationRange = computed(() => {
-  const sidePages = 1;
-  const range = [];
-  const start = Math.max(1, pagination.value.page - sidePages);
-  const end = Math.min(pagination.value.page + sidePages, totalPages.value);
-
-  if (start > 1) {
-    range.push(1);
-    if (start > 2) {
-      range.push("..."); // Многоточие после первой страницы
-    }
-  }
-
-  for (let i = start; i <= end; i++) {
-    range.push(i);
-  }
-
-  if (end < totalPages.value) {
-    if (end < totalPages.value - 1) {
-      range.push("..."); // Многоточие перед последней страницей
-    }
-    range.push(totalPages.value);
-  }
-
-  return range;
-});
-
-//first request to API on mounted
-onMounted(() => {
-  tableRef.value.requestServerInteraction();
-});
-
-//main fn to fetch clients, router push is optional
-function fetchClients(page = 1, limit = 10, search) {
-  loading.value = true;
-  ClientService.getClients(page, limit, search)
-    .then((response) => {
-      users.value = response.data;
-      // router.push({
-      //   name: "appeals-page",
-      //   query: {
-      //     page,
-      //     limit,
-      //   },
-      // });
-
-      pagination.value.page = page;
-      pagination.value.rowsPerPage = limit;
-      pagination.value.rowsNumber = parseInt(
-        response.headers.get("x-total-count")
-      );
-    })
-    .catch(() => {})
-    .finally(() => {
-      loading.value = false;
-    });
-}
-
-const handleRequest = (props) => {
-  fetchClients(
-    props.pagination.page,
-    props.pagination.rowsPerPage,
-    props.filter
-  );
-};
-
 //add numerable table
 const rows = computed(() => {
-  return users.value?.map((row, index) => {
+  return users.value.map((row, index) => {
     return {
       ...row,
       userSettings: "",
@@ -380,6 +292,11 @@ const rows = computed(() => {
         (pagination.value.page - 1) * pagination.value.rowsPerPage + index + 1,
     };
   });
+});
+
+//first request to API on mounted
+onMounted(() => {
+  tableRef.value.requestServerInteraction();
 });
 
 //calculate table height for showing only 10 rows

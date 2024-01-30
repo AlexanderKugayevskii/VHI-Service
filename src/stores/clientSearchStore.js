@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import ClientService from "src/services/ClientService";
-export const useClientsStore = defineStore("clients", () => {
-  const clients = ref({});
+export const useSearchClientsStore = defineStore("clients", () => {
+  const clients = ref([]);
   const searchClients = ref([]);
 
   const getClients = async (page, perPage) => {
-    clients.value = {};
+    clients.value = [];
     const response = await ClientService.getClients(page, perPage);
     clients.value = response.data;
   };
