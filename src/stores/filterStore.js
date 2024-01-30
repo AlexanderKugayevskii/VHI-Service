@@ -3,32 +3,50 @@ import { reactive } from "vue";
 
 export const useClientsStore = defineStore("clients", () => {
   const filterData = reactive({
-    clientName: null,
-    dateOfAppeal: null,
-    status: null,
-    clinicName: null,
-    doctorName: null,
-    serviceName: null,
+    clientName: {
+      label: "Клиент",
+      value: null,
+    },
+    dateOfAppeal: {
+      label: "Дата обращения",
+      value: null,
+    },
+    status: {
+      label: "Статус",
+      value: null,
+    },
+    clinicName: {
+      label: "Клиника",
+      value: null,
+    },
+    doctorName: {
+      label: "Врач",
+      value: null,
+    },
+    serviceName: {
+      label: "Сервис",
+      value: null,
+    },
   });
 
   // setters
   const setClientName = (value) => {
-    filterData.clientName = value;
+    filterData.clientName.value = value;
   };
   const setDateOfAppeal = (date) => {
-    filterData.value = date ?? new Date();
+    filterData.dateOfAppeal.value = date ?? new Date();
   };
   const setStatus = (status) => {
-    filterData.value = status;
+    filterData.status.value = status;
   };
   const setClinicName = (clinicName) => {
-    filterData.clinicName = clinicName;
+    filterData.clinicName.value = clinicName;
   };
   const setDoctorName = (doctorName) => {
-    filterData.doctorName = doctorName;
+    filterData.doctorName.value = doctorName;
   };
   const setServiceName = (serviceName) => {
-    filterData.serviceName = serviceName;
+    filterData.serviceName.value = serviceName;
   };
 
   return {

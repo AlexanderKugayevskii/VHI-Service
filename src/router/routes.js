@@ -25,6 +25,13 @@ const routes = [
               };
             },
             component: () => import("pages/CreateAppealPage.vue"),
+            beforeEnter: (to, from, next) => {
+              if (from.name) {
+                next();
+              } else {
+                next("/");
+              }
+            },
           },
         ],
       },
