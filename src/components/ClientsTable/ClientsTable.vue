@@ -181,6 +181,7 @@
 
 <script setup>
 import AppealStatus from "./AppealStatus.vue";
+import StatusBar from "../Shared/StatusBar.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref } from "vue";

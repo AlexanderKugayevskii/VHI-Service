@@ -11,9 +11,11 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
-          {{ appealStore.client }}
-          <h4 class="page-title q-my-none">Обращение</h4>
-          <AppealStatus></AppealStatus>
+          <h4 class="page-title q-my-none q-mb-md">Обращение</h4>
+          <StatusBar
+            :status="appealStore.client?.appealStatus ?? 'NEW'"
+            :label="true"
+          ></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -22,16 +24,16 @@
                 <div class="create-appeal-client-text">
                   <span
                     >ID:
-                    <b>{{ clientData?.userID ?? "1/44/23/11/66" }}</b></span
+                    <b>{{ clientData.userID ?? "1/44/23/11/66" }} </b></span
                   >
                   <span
-                    >Клиент: <b>{{ clientData.clientName }}</b></span
+                    >Клиент: <b>{{ clientData.clientName }} </b></span
                   >
                   <span
-                    >Программа: <b>{{ clientData.program }}</b></span
+                    >Программа: <b>{{ clientData.program }} </b></span
                   >
                   <span
-                    >Родственник: <b>{{ clientData.clientName }}</b></span
+                    >Родственник: <b>{{ clientData.clientName }} </b></span
                   >
                 </div>
                 <div class="create-appeal-client-action">
@@ -210,7 +212,7 @@
 </template>
 
 <script setup>
-import AppealStatus from "src/components/ClientsTable/AppealStatus.vue";
+import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
@@ -246,6 +248,7 @@ const hideModal = () => {
 .create-appeal-modal .modal-header {
   display: block;
   border-top-left-radius: 16px;
+  padding: 24px;
 }
 .create-appeal-modal .modal-content {
   background-color: #edf0f5;
@@ -280,6 +283,16 @@ const hideModal = () => {
 }
 .create-appeal-client-text {
   flex-grow: 1;
+  display: flex;
+  column-gap: 16px;
+
+  span {
+    font-size: 15px;
+    color: #404f6f;
+    b {
+      font-weight: 500;
+    }
+  }
 }
 .create-appeal-form {
   flex: 1;
