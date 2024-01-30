@@ -20,10 +20,19 @@
             <div class="create-appeal-left">
               <div class="create-appeal-client-info">
                 <div class="create-appeal-client-text">
-                  <span>ID: 1/22/001/220</span>
-                  <span>Клиент: Ходжаев Сергей</span>
-                  <span>Программа: DMS Ultra</span>
-                  <span>Родственник: Эргашев Фаррух</span>
+                  <span
+                    >ID:
+                    <b>{{ clientData?.userID ?? "1/44/23/11/66" }}</b></span
+                  >
+                  <span
+                    >Клиент: <b>{{ clientData.clientName }}</b></span
+                  >
+                  <span
+                    >Программа: <b>{{ clientData.program }}</b></span
+                  >
+                  <span
+                    >Родственник: <b>{{ clientData.clientName }}</b></span
+                  >
                 </div>
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
@@ -208,8 +217,10 @@ import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
+import { storeToRefs } from "pinia";
 
 const appealStore = useAppealStore();
+const { client: clientData } = storeToRefs(appealStore);
 
 const createAppealModalFixed = ref(true);
 const router = useRouter();
