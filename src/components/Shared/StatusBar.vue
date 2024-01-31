@@ -12,6 +12,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 const props = defineProps({
   status: {
     type: String,
@@ -27,10 +28,12 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
+
 const statuses = {
-  NEW: "Новое",
-  IN_PROGRESS: "В работе",
-  COMPLETED: "Завершено",
+  NEW: t("statuses.new"),
+  IN_PROGRESS: t("statuses.in_progress"),
+  COMPLETED: t("statuses.completed"),
 };
 const statusArr = computed(() => {
   return Object.entries(statuses);

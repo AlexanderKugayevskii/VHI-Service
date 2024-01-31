@@ -11,7 +11,9 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="page-title q-my-none q-mb-md">Обращение</h4>
+          <h4 class="page-title q-my-none q-mb-md">
+            {{ $t("create_appeal.title") }}
+          </h4>
           <StatusBar
             :status="appealStore.client?.appealStatus ?? 'NEW'"
             :label="true"
@@ -78,25 +80,25 @@
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
                         name="clinics"
-                        label="Клиника и диагноз"
+                        :label="$t('create_appeal.tabs.clinic')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="doctors"
-                        label="Врачи"
+                        :label="$t('create_appeal.tabs.doctors')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="services"
-                        label="Сервисы"
+                        :label="$t('create_appeal.tabs.services')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="drugstore"
-                        label="Аптека"
+                        :label="$t('create_appeal.tabs.drugstore')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
@@ -286,7 +288,9 @@
                                         )} `
                                   }}
                                 </span>
-                                <span v-else> Выберите сервис </span>
+                                <span v-else>
+                                  {{ $t("create_appeal.dropdowns.services") }}
+                                </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.serviceName }}
@@ -355,12 +359,12 @@
                 <div class="create-appeal-actions">
                   <div class="create-appeal-actions-btns">
                     <SimpleButton
-                      label="Создать обращение"
+                      :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
                     ></SimpleButton>
                     <SimpleButton
-                      label="Выйти"
+                      :label="$t('create_appeal.buttons.exit_appeal')"
                       type="button"
                       customClass="btn-cancel"
                       @click="hideModal"
@@ -439,7 +443,7 @@ const createAppealModalRef = ref(null);
 
 const hideModal = () => {
   createAppealModalRef.value.hide();
-  router.replace(Trans.i18nRoute({ name: 'appeals-page'}));
+  router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 </script>
 

@@ -14,15 +14,20 @@
     ></div>
   </div>
   <div class="status-outer-text" v-if="!showStatusText">
-    <span class="status-text" v-if="status === 'NEW'">Новое</span>
-    <span class="status-text" v-else-if="status === 'IN_PROGRESS'"
-      >В работе</span
-    >
-    <span class="status-text" v-if="status === 'COMPLETED'">Завершено</span>
+    <span class="status-text" v-if="status === 'NEW'">{{
+      t("statuses.new")
+    }}</span>
+    <span class="status-text" v-else-if="status === 'IN_PROGRESS'">{{
+      t("statuses.in_progress")
+    }}</span>
+    <span class="status-text" v-if="status === 'COMPLETED'">{{
+      t("statuses.completed")
+    }}</span>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 defineProps({
   status: {
     type: String,
@@ -33,6 +38,7 @@ defineProps({
     default: false,
   },
 });
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scope>

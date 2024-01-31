@@ -10,7 +10,7 @@
               dense
               borderless
               class="search-input q-px-sm"
-              placeholder="Поиск"
+              :placeholder="$t('search')"
               v-model="search"
               debounce="300"
             >
@@ -131,7 +131,6 @@ const search = ref("");
 
 const modalFilterFixed = ref(false);
 const searchFilterFixed = ref(false);
-
 
 const filterOptions = reactive([
   {

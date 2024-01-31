@@ -4,6 +4,7 @@
     "clients": "Mijozlar"
   },
   "create_appeal": {
+    "title": "Murojaat",
     "tabs": {
       "clinic": "Klinika va tashxis",
       "doctors": "Shifokorlar",
@@ -16,6 +17,16 @@
       "services": "Hizmatni tanlang",
       "doctors_choise": "Shifokorni tanlang | {n}-ta shifokor tanlangan",
       "services_choise": "Hizmatni tanlang | {n}-ta hizmat tanlangan"
+    },
+    "buttons": {
+      "save_appeal": "Xabarni saqlash",
+      "exit_appeal": "Tashqariga chiqish"
     }
-  }
+  },
+  "statuses": {
+    "new": "Yangi",
+    "in_progress": "Ishda",
+    "completed": "Bajarildi"
+  },
+  "search": "qidirish"
 }

@@ -52,7 +52,7 @@
             <label class="dropdown-select-search-label">
               <input
                 type="text"
-                placeholder="Поиск"
+                :placeholder="$t('search')"
                 class="dropdown-select-search__field"
                 @input="updateSearchValue($event.target.value)"
               />
