@@ -4,6 +4,7 @@ const routes = [
   {
     path: "/:locale?",
     component: RouterView,
+    name: "home",
     beforeEnter: Trans.routeMiddleware,
     children: [
       {

@@ -67,7 +67,12 @@
             <RouterLink
               class="appeal-link"
               @click="appealStore.setClient(props.row)"
-              :to="{ name: 'createAppeal', params: { id: props.row.clientID } }"
+              :to="
+                Trans.i18nRoute({
+                  name: 'createAppeal',
+                  params: { id: props.row.clientID },
+                })
+              "
               replace
             >
               {{ props.row.clientName }}
@@ -180,6 +185,7 @@
 </template>
 
 <script setup>
+import Trans from "src/i18n/translation";
 import AppealStatus from "./AppealStatus.vue";
 import StatusBar from "../Shared/StatusBar.vue";
 import RowsPerPage from "./RowsPerPage.vue";
@@ -189,7 +195,6 @@ import { onMounted, computed, ref } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
-
 import usePaginate from "src/composables/usePaginate";
 
 const columns = [

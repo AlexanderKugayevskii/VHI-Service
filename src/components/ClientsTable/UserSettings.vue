@@ -89,6 +89,7 @@
 import DropdownSettings from "../Shared/DropdownSettings.vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
+import Trans from "src/i18n/translation";
 const props = defineProps(["client"]);
 
 const appealStore = useAppealStore();
@@ -96,12 +97,14 @@ const router = useRouter();
 
 const goToAppeal = () => {
   appealStore.setClient(props.client);
-  router.replace({
-    name: "createAppeal",
-    params: {
-      id: props.client.clientID,
-    },
-  });
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppeal",
+      params: {
+        id: props.client.clientID,
+      },
+    })
+  );
 };
 </script>
 

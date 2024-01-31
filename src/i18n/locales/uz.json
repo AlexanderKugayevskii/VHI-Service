@@ -2,5 +2,20 @@
   "nav": {
     "appeals": "Murojaatlar",
     "clients": "Mijozlar"
+  },
+  "create_appeal": {
+    "tabs": {
+      "clinic": "Klinika va tashxis",
+      "doctors": "Shifokorlar",
+      "services": "Hizmatlar",
+      "drugstore": "Dorixona"
+    },
+    "dropdowns": {
+      "clinic": "Klinikani tanlang",
+      "doctors": "Shifokorni tanlang",
+      "services": "Hizmatni tanlang",
+      "doctors_choise": "Shifokorni tanlang | {n}-ta shifokor tanlangan",
+      "services_choise": "Hizmatni tanlang | {n}-ta hizmat tanlangan"
+    }
   }
 }

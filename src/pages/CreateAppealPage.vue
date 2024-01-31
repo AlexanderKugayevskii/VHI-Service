@@ -109,7 +109,9 @@
                           <div class="tab-header">
                             <DropdownSelect
                               label="Клиника"
-                              placeholder="Выберите клинику"
+                              :placeholder="
+                                $t('create_appeal.dropdowns.clinic')
+                              "
                               class="appeal-dropdown"
                               id-key="id"
                               name-key="clinicName"
@@ -124,7 +126,9 @@
                                 >
                                   {{ appealStore.clinic[0].clinicName }}
                                 </span>
-                                <span v-else> Выберите клинику </span>
+                                <span v-else>
+                                  {{ $t("create_appeal.dropdowns.clinic") }}
+                                </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.clinicName }}
@@ -177,7 +181,9 @@
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
                             <DropdownSelect
-                              placeholder="Выберете врача"
+                              :placeholder="
+                                $t('create_appeal.dropdowns.doctors')
+                              "
                               id-key="id"
                               name-key="doctorName"
                               :multiple="true"
@@ -200,7 +206,9 @@
                                         )
                                   }}
                                 </span>
-                                <span v-else> Выберите врача </span>
+                                <span v-else>
+                                  {{ $t("create_appeal.dropdowns.doctors") }}
+                                </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.specialization }}
@@ -254,7 +262,9 @@
                         <q-tab-panel name="services" key="services">
                           <div class="tab-header">
                             <DropdownSelect
-                              placeholder="Выберете сервисы"
+                              :placeholder="
+                                $t('create_appeal.dropdowns.services')
+                              "
                               id-key="id"
                               name-key="serviceName"
                               :multiple="true"
@@ -414,7 +424,7 @@ import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
-
+import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 
 const appealStore = useAppealStore();
@@ -429,7 +439,7 @@ const createAppealModalRef = ref(null);
 
 const hideModal = () => {
   createAppealModalRef.value.hide();
-  router.replace("/");
+  router.replace(Trans.i18nRoute({ name: 'appeals-page'}));
 };
 </script>
 

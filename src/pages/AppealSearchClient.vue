@@ -128,6 +128,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import { useSearchClientsStore } from "src/stores/clientSearchStore";
+import Trans from "src/i18n/translation";
 
 const searchId = ref("");
 const selectedClient = ref(null);
@@ -153,12 +154,14 @@ const handleSelectItem = (item) => {
 };
 
 const goToAppeal = () => {
-  router.replace({
-    name: "createAppeal",
-    params: {
-      id: selectedClient.value.clientID,
-    },
-  });
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppeal",
+      params: {
+        id: selectedClient.value.clientID,
+      },
+    })
+  );
   hideModal();
 };
 
