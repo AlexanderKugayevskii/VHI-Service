@@ -133,13 +133,14 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, computed } from "vue";
+import { ref, watch, nextTick, computed, onMounted } from "vue";
 import debounce from "lodash/debounce";
 
 const props = defineProps({
   fetchFunction: Function,
   label: String,
   placeholder: String,
+  selectedData: Array,
   multiple: {
     type: Boolean,
     default: true,
@@ -164,7 +165,7 @@ const searchValue = ref(""); //v model input
 
 const searchOptions = ref([]);
 const initialOptions = ref([]);
-const selectedOptions = ref([]);
+const selectedOptions = ref(props.selectedData || []);
 
 const updateSearchValue = debounce((newValue) => {
   searchValue.value = newValue;
@@ -192,7 +193,7 @@ const toggleOption = (option) => {
       selectedOptions.value[0] = option;
     }
     showDropdown.value = false;
-    console.log(selectedOptions.value);
+
     emit("update:selectedOptions", selectedOptions.value[0]);
   }
 };
@@ -235,6 +236,7 @@ function filterOptionsBySearch(value) {
   searchOptions.value = initialOptions.value.filter((option) => {
     return option[props.nameKey].toLowerCase().startsWith(value.toLowerCase());
   });
+
   if (searchOptions.value.length === 0) {
     error.value = true;
   } else {
@@ -308,6 +310,16 @@ watch([() => searchItems.value, showDropdown, error], async () => {
     }, 0);
 
   dropdownListRef.value.style.height = `${totalHeight}px`;
+});
+
+onMounted(() => {
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".dropdown")) {
+      return;
+    } else {
+      showDropdown.value = false;
+    }
+  });
 });
 </script>
 

@@ -175,6 +175,7 @@
                               id-key="id"
                               name-key="doctorName"
                               :multiple="true"
+                              :selected-data="appealStore.doctorsData"
                               :fetch-function="appealStore.fetchDoctors"
                               @update:selected-options="appealStore.setDoctors"
                             >
@@ -198,7 +199,7 @@
                               <template #selected-options-length="{ length }">
                                 Выбрано {{ length }} врачей
                               </template>
-                              <template #option-content="{ option, checked }">
+                              <template #option-content="{ option }">
                                 <div class="option-content">
                                   <span>
                                     {{ option.specialization }}
@@ -207,7 +208,13 @@
                                   <span class="option-content-extra">
                                     {{ option.price }}
                                   </span>
-                                  <q-icon v-if="checked">
+                                  <q-icon
+                                    v-if="
+                                      appealStore.doctorsData?.some(
+                                        (doctor) => doctor.id === option.id
+                                      )
+                                    "
+                                  >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       width="17"
@@ -237,6 +244,7 @@
                             ></DropdownSelect>
                           </div>
                         </q-tab-panel>
+
                         <q-tab-panel name="drugstore" key="drugstore">
                           <div class="tab-header">
                             <SimpleInput
@@ -274,7 +282,6 @@
                     <span class="create-appeal-action-expences-total"
                       >2 020 000</span
                     >
-                    {{ appealStore.doctors }}
                   </div>
                 </div>
               </div>

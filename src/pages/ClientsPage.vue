@@ -13,7 +13,7 @@
         label="Клиника"
         id-key="clientID"
         nameKey="clientName"
-        :multiple="false"
+        :multiple="true"
         @update:selected-options="handleTest"
       >
         <template #placeholder> Выберете клинику </template>

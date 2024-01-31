@@ -4,20 +4,23 @@ import ClinicService from "src/services/ClinicService";
 
 export const useAppealStore = defineStore("appeal", () => {
   const client = ref(null);
+
   const setClient = (item) => {
     client.value = item;
   };
 
   const clinicsData = ref([]);
-  const clinic = ref(null);
-  const doctorsData = ref(null);
-  const diagnosisData = ref("");
+  const clinic = ref(null); //можно выбрать 1 клинику
+  const doctorsData = ref(null); //врачей
+  const diagnosisData = ref(""); //диагноз
 
   const setClinic = (selectedClinic) => {
     clinic.value = selectedClinic;
+    console.log(clinic.value);
   };
   const setDoctors = (selectedDoctors) => {
     doctorsData.value = selectedDoctors;
+    console.log(doctorsData.value);
   };
   const setDiagnosis = (diagnosis) => {
     diagnosisData.value = diagnosis;

@@ -15,7 +15,7 @@ import { computed } from "vue";
 const props = defineProps({
   status: {
     type: String,
-    default: "IN_PROGRESS",
+    default: "NEW",
   },
   label: {
     type: Boolean,
