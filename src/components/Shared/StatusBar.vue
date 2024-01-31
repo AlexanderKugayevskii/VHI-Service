@@ -50,10 +50,12 @@ const findIndex = computed(() => {
   border-radius: 50px;
   overflow: hidden;
   display: flex;
+
+  &-dense {
+    height: 8px;
+  }
 }
-.status-row-dense {
-  height: 8px;
-}
+
 .status-item {
   font-size: 15px;
   font-weight: 500;

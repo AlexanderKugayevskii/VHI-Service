@@ -12,6 +12,8 @@
         :fetch-function="ClientService.getClientsBySearch"
         label="Статус"
         id-key="clientID"
+        :multiple="false"
+        @update:selected-options="handleTest"
       >
         <template #option-content="{ option, checked }">
           <div class="option-content">
@@ -91,6 +93,9 @@ import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import ClientService from "src/services/ClientService";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 const inputValue = ref("");
+const handleTest = (options) => {
+  console.log(options);
+};
 </script>
 
 <style lang="scss">

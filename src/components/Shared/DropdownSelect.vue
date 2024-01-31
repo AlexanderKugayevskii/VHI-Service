@@ -14,7 +14,7 @@
           <span
             class="dropdown-button-btn-text-selected"
             v-else-if="selectedOptions.length === 1"
-            >{{ selectedOptions.at(0)[tempId] }}</span
+            >{{ selectedOptions.at(0)["clientName"] }}</span
           >
           <span class="dropdown-button-btn-text-selected" v-else
             >Выбрано {{ selectedOptions.length }} приколов</span
@@ -110,34 +110,12 @@
               :key="option[tempId]"
               @click="toggleOption(option)"
             >
-              <div
-                class="dropdown-select-list-item-text"
-                :class="{
-                  'dropdown-select-list-item-text--active':
-                    checkSelected(option),
-                }"
-              >
-                <slot name="option-content" :option="option">
-                  <span>
-                    {{ option.clientName }}
-                  </span>
-                  <q-icon v-if="checkSelected(option)">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="17"
-                      height="12"
-                      viewBox="0 0 17 12"
-                      fill="none"
-                    >
-                      <path
-                        d="M1 6L6 11L16 1"
-                        stroke="#13B8BA"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </q-icon>
+              <div class="dropdown-select-list-item-text">
+                <slot
+                  name="option-content"
+                  :option="option"
+                  :checked="checkSelected(option)"
+                >
                 </slot>
               </div>
             </div>
@@ -156,6 +134,10 @@ const props = defineProps({
   fetchFunction: Function,
   label: String,
   placeholder: String,
+  multiple: {
+    type: Boolean,
+    default: true,
+  },
   idKey: {
     type: String,
     default: "clientID",
@@ -183,16 +165,25 @@ const updateSearchValue = debounce((newValue) => {
 const tempId = computed(() => props.idKey);
 
 const toggleOption = (option) => {
-  const index = selectedOptions.value.findIndex(
-    (item) => item[tempId.value] === option[tempId.value]
-  );
-  if (index !== -1) {
-    selectedOptions.value.splice(index, 1);
+  if (props.multiple) {
+    const index = selectedOptions.value.findIndex(
+      (item) => item[tempId.value] === option[tempId.value]
+    );
+    if (index !== -1) {
+      selectedOptions.value.splice(index, 1);
+    } else {
+      selectedOptions.value.push(option);
+    }
+    emit("update:selectedOptions", selectedOptions.value);
   } else {
-    selectedOptions.value.push(option);
+    if (checkSelected(option)) {
+      selectedOptions.value = [];
+    } else {
+      selectedOptions.value[0] = option;
+    }
+    showDropdown.value = false;
+    emit("update:selectedOptions", selectedOptions.value[0]);
   }
-
-  emit("update:selectedOptions", selectedOptions.value);
 };
 
 const checkSelected = (option) => {
