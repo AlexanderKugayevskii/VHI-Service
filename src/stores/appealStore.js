@@ -9,10 +9,10 @@ export const useAppealStore = defineStore("appeal", () => {
     client.value = item;
   };
 
-  const clinicsData = ref([]);
   const clinic = ref(null); //можно выбрать 1 клинику
   const doctorsData = ref(null); //врачей
   const diagnosisData = ref(""); //диагноз
+  const servicesData = ref(null); //сервисы
 
   const setClinic = (selectedClinic) => {
     clinic.value = selectedClinic;
@@ -25,9 +25,13 @@ export const useAppealStore = defineStore("appeal", () => {
   const setDiagnosis = (diagnosis) => {
     diagnosisData.value = diagnosis;
   };
+  const setServices = (services) => {
+    servicesData.value = services;
+  };
 
   watch(clinic, () => {
     doctorsData.value = null;
+    servicesData.value = null;
   });
 
   const fetchClinics = () => {
@@ -35,7 +39,11 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchDoctors = () => {
-    return ClinicService.getDoctors(clinic.value.id);
+    return ClinicService.getDoctors(clinic.value[0].id);
+  };
+
+  const fetchServices = () => {
+    return ClinicService.getServices(clinic.value[0].id);
   };
 
   return {
@@ -43,11 +51,14 @@ export const useAppealStore = defineStore("appeal", () => {
     clinic,
     doctorsData,
     diagnosisData,
+    servicesData,
     setClient,
     fetchClinics,
     fetchDoctors,
+    fetchServices,
     setClinic,
     setDoctors,
     setDiagnosis,
+    setServices,
   };
 });

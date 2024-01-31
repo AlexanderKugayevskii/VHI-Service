@@ -119,17 +119,17 @@
                             >
                               <template #placeholder>
                                 <span
-                                  v-if="appealStore.clinic"
+                                  v-if="appealStore.clinic?.length"
                                   class="dropdown-button-btn-text-selected"
                                 >
-                                  {{ appealStore.clinic?.clinicName }}
+                                  {{ appealStore.clinic[0].clinicName }}
                                 </span>
-                                <span v-else> Выберите клинику </span>
+                                <span v-else> Выберите врача </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.clinicName }}
                               </template>
-                              <template #option-content="{ option, checked }">
+                              <template #option-content="{ option }">
                                 <div class="option-content">
                                   <div class="image-wrapper">
                                     <img
@@ -139,7 +139,13 @@
                                   <span>
                                     {{ option.clinicName }}
                                   </span>
-                                  <q-icon v-if="checked">
+                                  <q-icon
+                                    v-if="
+                                      appealStore.clinic?.some((clinic) => {
+                                        return clinic.id === option.id;
+                                      })
+                                    "
+                                  >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       width="17"
@@ -241,7 +247,72 @@
                           <div class="tab-header">
                             <DropdownSelect
                               placeholder="Выберете сервисы"
-                            ></DropdownSelect>
+                              id-key="id"
+                              name-key="serviceName"
+                              :multiple="true"
+                              :selected-data="appealStore.servicesData"
+                              :fetch-function="appealStore.fetchServices"
+                              @update:selected-options="appealStore.setServices"
+                            >
+                              <template #placeholder>
+                                <span
+                                  v-if="appealStore.serviceData?.length > 0"
+                                  class="dropdown-button-btn-text-selected"
+                                >
+                                  {{
+                                    appealStore.serviceData.length === 1
+                                      ? appealStore.serviceData[0].serviceName
+                                      : `${appealStore.serviceData.length} сервисов`
+                                  }}
+                                </span>
+                                <span v-else> Выберите сервис </span>
+                              </template>
+                              <template #selected-options-once="{ option }">
+                                {{ option.serviceName }}
+                              </template>
+                              <template #selected-options-length="{ length }">
+                                Выбрано {{ length }} сервисов
+                              </template>
+                              <template #option-content="{ option }">
+                                <div class="option-content">
+                                  <span>
+                                    {{ option.serviceName }}
+                                  </span>
+                                  -
+                                  <span class="option-content-extra">
+                                    {{ option.price }}
+                                  </span>
+                                  <q-icon
+                                    v-if="
+                                      appealStore.servicesData?.some(
+                                        (service) => service.id === option.id
+                                      )
+                                    "
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="17"
+                                      height="12"
+                                      viewBox="0 0 17 12"
+                                      fill="none"
+                                    >
+                                      <path
+                                        d="M1 6L6 11L16 1"
+                                        stroke="#13B8BA"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      />
+                                    </svg>
+                                  </q-icon>
+                                </div>
+                                {{
+                                  appealStore.servicesData?.some(
+                                    (service) => service.id === option.id
+                                  )
+                                }}
+                              </template>
+                            </DropdownSelect>
                           </div>
                         </q-tab-panel>
 

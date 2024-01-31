@@ -194,7 +194,7 @@ const toggleOption = (option) => {
     }
     showDropdown.value = false;
 
-    emit("update:selectedOptions", selectedOptions.value[0]);
+    emit("update:selectedOptions", selectedOptions.value);
   }
 };
 
