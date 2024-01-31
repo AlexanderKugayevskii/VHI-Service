@@ -16,7 +16,7 @@ function getDoctors(id, search) {
   });
 }
 
-return {
+export default {
   getClinics,
   getDoctors,
 };

@@ -6,19 +6,25 @@
       </div>
       <div class="dropdown-button">
         <button class="dropdown-button-btn" @click="handleDropdown">
-          <span
-            class="dropdown-button-btn-text"
-            v-if="!selectedOptions.length"
-            >{{ placeholder }}</span
-          >
+          <span class="dropdown-button-btn-text" v-if="!selectedOptions.length">
+            <slot name="placeholder"></slot>
+          </span>
           <span
             class="dropdown-button-btn-text-selected"
             v-else-if="selectedOptions.length === 1"
-            >{{ selectedOptions.at(0)["clientName"] }}</span
           >
-          <span class="dropdown-button-btn-text-selected" v-else
-            >Выбрано {{ selectedOptions.length }} приколов</span
-          >
+            <slot
+              name="selected-options-once"
+              :option="selectedOptions.at(0)"
+            ></slot>
+          </span>
+
+          <span class="dropdown-button-btn-text-selected" v-else>
+            <slot
+              name="selected-options-length"
+              :length="selectedOptions.length"
+            ></slot>
+          </span>
         </button>
         <q-icon size="20px">
           <svg
@@ -142,6 +148,10 @@ const props = defineProps({
     type: String,
     default: "clientID",
   },
+  nameKey: {
+    type: String,
+    default: "clientName",
+  },
 });
 
 const emit = defineEmits(["update:selectedOptions"]);
@@ -164,6 +174,7 @@ const updateSearchValue = debounce((newValue) => {
 //for temp id test
 const tempId = computed(() => props.idKey);
 
+//events
 const toggleOption = (option) => {
   if (props.multiple) {
     const index = selectedOptions.value.findIndex(
@@ -215,6 +226,22 @@ function fetchInitialOptions() {
   }
 }
 
+function filterOptionsBySearch(value) {
+  if (value.length === 0) {
+    error.value = false;
+    searchOptions.value = [];
+    return;
+  }
+  searchOptions.value = initialOptions.value.filter((option) => {
+    return option[props.nameKey].toLowerCase().startsWith(value.toLowerCase());
+  });
+  if (searchOptions.value.length === 0) {
+    error.value = true;
+  } else {
+    error.value = false;
+  }
+}
+
 function fetchOptionsBySearch(value) {
   if (value.length === 0) {
     error.value = false;
@@ -256,7 +283,8 @@ watch(showDropdown, async (newVal) => {
 
 //when searchValue changed => fetching data by query
 watch(searchValue, (newValue) => {
-  fetchOptionsBySearch(newValue);
+  // fetchOptionsBySearch(newValue);
+  filterOptionsBySearch(newValue);
 });
 
 const searchItems = computed(() => {

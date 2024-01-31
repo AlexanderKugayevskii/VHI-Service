@@ -10,11 +10,19 @@
     <div class="full-width">
       <DropdownSelect
         :fetch-function="ClientService.getClientsBySearch"
-        label="Статус"
+        label="Клиника"
         id-key="clientID"
-        :multiple="false"
+        nameKey="clientName"
+        :multiple="true"
         @update:selected-options="handleTest"
       >
+        <template #placeholder> Выберете клинику </template>
+        <template #selected-options-once="{ option }">
+          {{ option.clientName }}
+        </template>
+        <template #selected-options-length="{ length }">
+          Выбрано {{ length }} клиник
+        </template>
         <template #option-content="{ option, checked }">
           <div class="option-content">
             <div class="image-wrapper">
