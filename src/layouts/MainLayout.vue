@@ -2,13 +2,6 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="body-bg bordered">
       <q-toolbar class="q-px-lg q-py-sm">
-        <q-input
-          rounded
-          dense
-          borderless
-          class="search-input q-px-md"
-          placeholder="Поиск"
-        ></q-input>
         <q-space></q-space>
         <div class="right-side">
           <div class="language">
@@ -17,9 +10,9 @@
                 type="radio"
                 name="country-flags"
                 v-model="lang"
-                value="rus"
+                value="ru"
               />
-              <span :class="{ active: lang === 'rus' }">
+              <span :class="{ active: lang === 'ru' }">
                 <svg
                   width="20"
                   height="20"
@@ -55,9 +48,9 @@
                 type="radio"
                 name="country-flags"
                 v-model="lang"
-                value="uzb"
+                value="uz"
               />
-              <span :class="{ active: lang === 'uzb' }">
+              <span :class="{ active: lang === 'uz' }">
                 <svg
                   width="20"
                   height="20"
@@ -184,7 +177,10 @@
       </div>
       <div class="flex column justify-between nav-grow">
         <q-list>
-          <RouteLink caption="Обращения" :routeTo="{ path: '/' }">
+          <RouteLink
+            :caption="$t('nav.appeals')"
+            :routeTo="Trans.i18nRoute({ name: 'appeals-page' })"
+          >
             <template v-slot:icon>
               <svg
                 width="20"
@@ -202,7 +198,10 @@
               </svg>
             </template>
           </RouteLink>
-          <RouteLink caption="Клиенты" :routeTo="{ path: 'clients' }">
+          <RouteLink
+            :caption="$t('nav.clients')"
+            :routeTo="Trans.i18nRoute({ name: 'clients' })"
+          >
             <template v-slot:icon>
               <svg
                 width="20"
@@ -284,8 +283,12 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import Trans from "src/i18n/translation";
 
 import RouteLink from "components/RouteLink/RouteLink.vue";
+import { watchEffect } from "vue";
 
 export default defineComponent({
   name: "MainLayout",
@@ -295,9 +298,23 @@ export default defineComponent({
   },
 
   setup() {
-    const lang = ref("rus");
+    const lang = ref(Trans.guessDefaultLocale());
+    const { locale } = useI18n();
+    const supportedLocales = Trans.supportedLocales;
 
-    return { lang };
+    const router = useRouter();
+
+    watchEffect(async () => {
+      await Trans.switchLanguage(lang.value);
+
+      try {
+        await router.replace({ params: { locale: lang.value } });
+      } catch (e) {
+        router.replace("/");
+      }
+    });
+
+    return { lang, locale, supportedLocales, Trans };
   },
 });
 </script>

@@ -109,7 +109,7 @@
                           <div class="tab-header">
                             <DropdownSelect
                               label="Клиника"
-                              placeholder="Выберете клинику"
+                              placeholder="Выберите клинику"
                               class="appeal-dropdown"
                               id-key="id"
                               name-key="clinicName"
@@ -124,7 +124,7 @@
                                 >
                                   {{ appealStore.clinic[0].clinicName }}
                                 </span>
-                                <span v-else> Выберите врача </span>
+                                <span v-else> Выберите клинику </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.clinicName }}
@@ -194,16 +194,24 @@
                                     appealStore.doctorsData.length === 1
                                       ? appealStore.doctorsData[0]
                                           .specialization
-                                      : `${appealStore.doctorsData.length} Врачей`
+                                      : $t(
+                                          "create_appeal.dropdowns.doctors_choise",
+                                          appealStore.doctorsData.length
+                                        )
                                   }}
                                 </span>
-                                <span v-else> Выберите клинику </span>
+                                <span v-else> Выберите врача </span>
                               </template>
                               <template #selected-options-once="{ option }">
                                 {{ option.specialization }}
                               </template>
                               <template #selected-options-length="{ length }">
-                                Выбрано {{ length }} врачей
+                                {{
+                                  $t(
+                                    "create_appeal.dropdowns.doctors_choise",
+                                    length
+                                  )
+                                }}
                               </template>
                               <template #option-content="{ option }">
                                 <div class="option-content">
@@ -256,13 +264,16 @@
                             >
                               <template #placeholder>
                                 <span
-                                  v-if="appealStore.serviceData?.length > 0"
+                                  v-if="appealStore.servicesData?.length > 0"
                                   class="dropdown-button-btn-text-selected"
                                 >
                                   {{
-                                    appealStore.serviceData.length === 1
-                                      ? appealStore.serviceData[0].serviceName
-                                      : `${appealStore.serviceData.length} сервисов`
+                                    appealStore.servicesData.length === 1
+                                      ? appealStore.servicesData[0].serviceName
+                                      : `${$t(
+                                          "create_appeal.dropdowns.services_choise",
+                                          appealStore.servicesData.length
+                                        )} `
                                   }}
                                 </span>
                                 <span v-else> Выберите сервис </span>
@@ -271,7 +282,12 @@
                                 {{ option.serviceName }}
                               </template>
                               <template #selected-options-length="{ length }">
-                                Выбрано {{ length }} сервисов
+                                {{
+                                  $t(
+                                    "create_appeal.dropdowns.services_choise",
+                                    length
+                                  )
+                                }}
                               </template>
                               <template #option-content="{ option }">
                                 <div class="option-content">
@@ -306,11 +322,6 @@
                                     </svg>
                                   </q-icon>
                                 </div>
-                                {{
-                                  appealStore.servicesData?.some(
-                                    (service) => service.id === option.id
-                                  )
-                                }}
                               </template>
                             </DropdownSelect>
                           </div>
