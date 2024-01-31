@@ -18,7 +18,6 @@ const routes = [
             path: "create-appeal/:id",
             name: "createAppeal",
             props: (route) => {
-              console.log(route.params.id);
               return {
                 id: route.params.id,
                 key: route.params.id,

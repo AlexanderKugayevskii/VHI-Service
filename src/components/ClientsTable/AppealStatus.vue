@@ -3,16 +3,22 @@
     <div
       class="status-left"
       :class="{
-        'status-done': status === 'В работе' || status === 'Завершено',
+        'status-done': status === 'IN_PROGRESS' || status === 'COMPLETED',
       }"
     ></div>
     <div
       class="status-right"
-      :class="{ 'status-done': status === 'Завершено' }"
+      :class="{
+        'status-done': status === 'COMPLETED',
+      }"
     ></div>
   </div>
   <div class="status-outer-text" v-if="!showStatusText">
-    <span class="status-text">{{ status }}</span>
+    <span class="status-text" v-if="status === 'NEW'">Новое</span>
+    <span class="status-text" v-else-if="status === 'IN_PROGRESS'"
+      >В работе</span
+    >
+    <span class="status-text" v-if="status === 'COMPLETED'">Завершено</span>
   </div>
 </template>
 
@@ -20,9 +26,7 @@
 defineProps({
   status: {
     type: String,
-    default: () => {
-      return "Новое";
-    },
+    default: "NEW",
   },
   showStatusText: {
     type: Boolean,

@@ -84,24 +84,12 @@
               :key="option[tempId]"
               @click="toggleOption(option)"
             >
-              <div
-                class="dropdown-select-list-item-text"
-                :class="{
-                  'dropdown-select-list-item-text--active':
-                    checkSelected(option),
-                }"
-              >
+              <div class="dropdown-select-list-item-text">
                 <slot
                   name="option-content"
                   :option="option"
                   :checked="checkSelected(option)"
                 >
-                  <span>
-                    {{ option.clientName }}
-                  </span>
-                  <q-icon>
-                    <slot name="checked-icon"></slot>
-                  </q-icon>
                 </slot>
               </div>
             </div>

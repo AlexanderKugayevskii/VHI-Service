@@ -6,19 +6,25 @@
       </div>
       <div class="dropdown-button">
         <button class="dropdown-button-btn" @click="handleDropdown">
-          <span
-            class="dropdown-button-btn-text"
-            v-if="!selectedOptions.length"
-            >{{ placeholder }}</span
-          >
+          <span class="dropdown-button-btn-text" v-if="!selectedOptions.length">
+            <slot name="placeholder"></slot>
+          </span>
           <span
             class="dropdown-button-btn-text-selected"
             v-else-if="selectedOptions.length === 1"
-            >{{ selectedOptions.at(0)[tempId] }}</span
           >
-          <span class="dropdown-button-btn-text-selected" v-else
-            >Выбрано {{ selectedOptions.length }} приколов</span
-          >
+            <slot
+              name="selected-options-once"
+              :option="selectedOptions.at(0)"
+            ></slot>
+          </span>
+
+          <span class="dropdown-button-btn-text-selected" v-else>
+            <slot
+              name="selected-options-length"
+              :length="selectedOptions.length"
+            ></slot>
+          </span>
         </button>
         <q-icon size="20px">
           <svg
@@ -110,34 +116,12 @@
               :key="option[tempId]"
               @click="toggleOption(option)"
             >
-              <div
-                class="dropdown-select-list-item-text"
-                :class="{
-                  'dropdown-select-list-item-text--active':
-                    checkSelected(option),
-                }"
-              >
-                <slot name="option-content" :option="option">
-                  <span>
-                    {{ option.clientName }}
-                  </span>
-                  <q-icon v-if="checkSelected(option)">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="17"
-                      height="12"
-                      viewBox="0 0 17 12"
-                      fill="none"
-                    >
-                      <path
-                        d="M1 6L6 11L16 1"
-                        stroke="#13B8BA"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </q-icon>
+              <div class="dropdown-select-list-item-text">
+                <slot
+                  name="option-content"
+                  :option="option"
+                  :checked="checkSelected(option)"
+                >
                 </slot>
               </div>
             </div>
@@ -156,9 +140,17 @@ const props = defineProps({
   fetchFunction: Function,
   label: String,
   placeholder: String,
+  multiple: {
+    type: Boolean,
+    default: true,
+  },
   idKey: {
     type: String,
     default: "clientID",
+  },
+  nameKey: {
+    type: String,
+    default: "clientName",
   },
 });
 
@@ -172,7 +164,6 @@ const searchValue = ref(""); //v model input
 
 const searchOptions = ref([]);
 const initialOptions = ref([]);
-
 const selectedOptions = ref([]);
 
 const updateSearchValue = debounce((newValue) => {
@@ -182,17 +173,28 @@ const updateSearchValue = debounce((newValue) => {
 //for temp id test
 const tempId = computed(() => props.idKey);
 
+//events
 const toggleOption = (option) => {
-  const index = selectedOptions.value.findIndex(
-    (item) => item[tempId.value] === option[tempId.value]
-  );
-  if (index !== -1) {
-    selectedOptions.value.splice(index, 1);
+  if (props.multiple) {
+    const index = selectedOptions.value.findIndex(
+      (item) => item[tempId.value] === option[tempId.value]
+    );
+    if (index !== -1) {
+      selectedOptions.value.splice(index, 1);
+    } else {
+      selectedOptions.value.push(option);
+    }
+    emit("update:selectedOptions", selectedOptions.value);
   } else {
-    selectedOptions.value.push(option);
+    if (checkSelected(option)) {
+      selectedOptions.value = [];
+    } else {
+      selectedOptions.value[0] = option;
+    }
+    showDropdown.value = false;
+    console.log(selectedOptions.value);
+    emit("update:selectedOptions", selectedOptions.value[0]);
   }
-
-  emit("update:selectedOptions", selectedOptions.value);
 };
 
 const checkSelected = (option) => {
@@ -221,6 +223,22 @@ function fetchInitialOptions() {
       .finally(() => {
         loading.value = false;
       });
+  }
+}
+
+function filterOptionsBySearch(value) {
+  if (value.length === 0) {
+    error.value = false;
+    searchOptions.value = [];
+    return;
+  }
+  searchOptions.value = initialOptions.value.filter((option) => {
+    return option[props.nameKey].toLowerCase().startsWith(value.toLowerCase());
+  });
+  if (searchOptions.value.length === 0) {
+    error.value = true;
+  } else {
+    error.value = false;
   }
 }
 
@@ -265,7 +283,8 @@ watch(showDropdown, async (newVal) => {
 
 //when searchValue changed => fetching data by query
 watch(searchValue, (newValue) => {
-  fetchOptionsBySearch(newValue);
+  // fetchOptionsBySearch(newValue);
+  filterOptionsBySearch(newValue);
 });
 
 const searchItems = computed(() => {
@@ -347,6 +366,7 @@ watch([() => searchItems.value, showDropdown, error], async () => {
   height: 40px;
   background-color: #fff;
   position: sticky;
+  z-index: 10;
   top: 0;
 }
 .dropdown-select-search-label {
