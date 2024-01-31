@@ -13,7 +13,7 @@
         label="Клиника"
         id-key="clientID"
         nameKey="clientName"
-        :multiple="true"
+        :multiple="false"
         @update:selected-options="handleTest"
       >
         <template #placeholder> Выберете клинику </template>
@@ -110,22 +110,7 @@ const handleTest = (options) => {
 .body-bg {
   background-color: $body-bg;
 }
-.option-content {
-  display: flex;
-  align-items: center;
-  column-gap: 8px;
-}
-.image-wrapper {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  overflow: hidden;
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
-}
+
 .test-width {
   width: 300px;
 }

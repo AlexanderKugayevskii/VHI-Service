@@ -164,7 +164,6 @@ const searchValue = ref(""); //v model input
 
 const searchOptions = ref([]);
 const initialOptions = ref([]);
-
 const selectedOptions = ref([]);
 
 const updateSearchValue = debounce((newValue) => {
@@ -193,6 +192,7 @@ const toggleOption = (option) => {
       selectedOptions.value[0] = option;
     }
     showDropdown.value = false;
+    console.log(selectedOptions.value);
     emit("update:selectedOptions", selectedOptions.value[0]);
   }
 };
@@ -366,6 +366,7 @@ watch([() => searchItems.value, showDropdown, error], async () => {
   height: 40px;
   background-color: #fff;
   position: sticky;
+  z-index: 10;
   top: 0;
 }
 .dropdown-select-search-label {

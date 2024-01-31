@@ -103,47 +103,152 @@
                     </q-tabs>
                   </div>
                   <div class="tabs-content">
-                    <q-tab-panels v-model="tab" animated>
-                      <q-tab-panel name="clinics">
-                        <div class="tab-header">
-                          <DropdownSelect
-                            label="Клиника"
-                            placeholder="Выберете клинику"
-                            class="appeal-dropdown"
-                          ></DropdownSelect>
-                          <SimpleInput
-                            label="Диагноз"
-                            placeholder="Введите диагноз"
-                          ></SimpleInput>
-                        </div>
-                      </q-tab-panel>
+                    <keep-alive>
+                      <q-tab-panels v-model="tab" animated>
+                        <q-tab-panel name="clinics" key="clinics">
+                          <div class="tab-header">
+                            <DropdownSelect
+                              label="Клиника"
+                              placeholder="Выберете клинику"
+                              class="appeal-dropdown"
+                              id-key="id"
+                              name-key="clinicName"
+                              :multiple="false"
+                              :fetch-function="appealStore.fetchClinics"
+                              @update:selected-options="appealStore.setClinic"
+                            >
+                              <template #placeholder>
+                                <span
+                                  v-if="appealStore.clinic"
+                                  class="dropdown-button-btn-text-selected"
+                                >
+                                  {{ appealStore.clinic?.clinicName }}
+                                </span>
+                                <span v-else> Выберите клинику </span>
+                              </template>
+                              <template #selected-options-once="{ option }">
+                                {{ option.clinicName }}
+                              </template>
+                              <template #option-content="{ option, checked }">
+                                <div class="option-content">
+                                  <div class="image-wrapper">
+                                    <img
+                                      src="/src/assets/temp/propfmedservice.png"
+                                    />
+                                  </div>
+                                  <span>
+                                    {{ option.clinicName }}
+                                  </span>
+                                  <q-icon v-if="checked">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="17"
+                                      height="12"
+                                      viewBox="0 0 17 12"
+                                      fill="none"
+                                    >
+                                      <path
+                                        d="M1 6L6 11L16 1"
+                                        stroke="#13B8BA"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      />
+                                    </svg>
+                                  </q-icon>
+                                </div>
+                              </template>
+                            </DropdownSelect>
+                            <SimpleInput
+                              label="Диагноз"
+                              placeholder="Введите диагноз"
+                              @update:model-value="appealStore.setDiagnosis"
+                              :modelValue="appealStore.diagnosisData"
+                            ></SimpleInput>
+                          </div>
+                        </q-tab-panel>
 
-                      <q-tab-panel name="doctors">
-                        <div class="tab-header">
-                          <DropdownSelect
-                            placeholder="Выберете врача"
-                          ></DropdownSelect>
-                        </div>
-                      </q-tab-panel>
+                        <q-tab-panel name="doctors" key="doctors">
+                          <div class="tab-header">
+                            <DropdownSelect
+                              placeholder="Выберете врача"
+                              id-key="id"
+                              name-key="doctorName"
+                              :multiple="true"
+                              :fetch-function="appealStore.fetchDoctors"
+                              @update:selected-options="appealStore.setDoctors"
+                            >
+                              <template #placeholder>
+                                <span
+                                  v-if="appealStore.doctorsData?.length > 0"
+                                  class="dropdown-button-btn-text-selected"
+                                >
+                                  {{
+                                    appealStore.doctorsData.length === 1
+                                      ? appealStore.doctorsData[0]
+                                          .specialization
+                                      : `${appealStore.doctorsData.length} Врачей`
+                                  }}
+                                </span>
+                                <span v-else> Выберите клинику </span>
+                              </template>
+                              <template #selected-options-once="{ option }">
+                                {{ option.specialization }}
+                              </template>
+                              <template #selected-options-length="{ length }">
+                                Выбрано {{ length }} врачей
+                              </template>
+                              <template #option-content="{ option, checked }">
+                                <div class="option-content">
+                                  <span>
+                                    {{ option.specialization }}
+                                  </span>
+                                  -
+                                  <span class="option-content-extra">
+                                    {{ option.price }}
+                                  </span>
+                                  <q-icon v-if="checked">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="17"
+                                      height="12"
+                                      viewBox="0 0 17 12"
+                                      fill="none"
+                                    >
+                                      <path
+                                        d="M1 6L6 11L16 1"
+                                        stroke="#13B8BA"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      />
+                                    </svg>
+                                  </q-icon>
+                                </div>
+                              </template>
+                            </DropdownSelect>
+                          </div>
+                        </q-tab-panel>
 
-                      <q-tab-panel name="services">
-                        <div class="tab-header">
-                          <DropdownSelect
-                            placeholder="Выберете сервисы"
-                          ></DropdownSelect>
-                        </div>
-                      </q-tab-panel>
-                      <q-tab-panel name="drugstore">
-                        <div class="tab-header">
-                          <SimpleInput
-                            label="Серия и номер паспорта"
-                            placeholder="Введите серию и номер паспорта"
-                            :show-icon="true"
-                          >
-                          </SimpleInput>
-                        </div>
-                      </q-tab-panel>
-                    </q-tab-panels>
+                        <q-tab-panel name="services" key="services">
+                          <div class="tab-header">
+                            <DropdownSelect
+                              placeholder="Выберете сервисы"
+                            ></DropdownSelect>
+                          </div>
+                        </q-tab-panel>
+                        <q-tab-panel name="drugstore" key="drugstore">
+                          <div class="tab-header">
+                            <SimpleInput
+                              label="Серия и номер паспорта"
+                              placeholder="Введите серию и номер паспорта"
+                              :show-icon="true"
+                            >
+                            </SimpleInput>
+                          </div>
+                        </q-tab-panel>
+                      </q-tab-panels>
+                    </keep-alive>
                   </div>
                 </div>
 
@@ -169,6 +274,7 @@
                     <span class="create-appeal-action-expences-total"
                       >2 020 000</span
                     >
+                    {{ appealStore.doctors }}
                   </div>
                 </div>
               </div>
@@ -219,6 +325,7 @@ import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
+
 import { storeToRefs } from "pinia";
 
 const appealStore = useAppealStore();
@@ -365,5 +472,12 @@ const hideModal = () => {
 }
 .create-appeal-action-expences-total {
   font-weight: 700;
+}
+
+.option-content-extra {
+  color: #1a2133;
+}
+.dropdown-button-btn-text-selected {
+  color: #404f6f;
 }
 </style>

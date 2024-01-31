@@ -1338,127 +1338,127 @@
       "id": "DR0001",
       "specialization": "Кардиолог",
       "price": "179 000",
-      "clinicID": "CL0001"
+      "clinicId": "CL0001"
     },
     {
       "id": "DR0002",
       "specialization": "Эндокринолог",
       "price": "109 000",
-      "clinicID": "CL0001"
+      "clinicId": "CL0001"
     },
     {
       "id": "DR0003",
       "specialization": "Офтальмолог",
       "price": "154 000",
-      "clinicID": "CL0001"
+      "clinicId": "CL0001"
     },
     {
       "id": "DR0004",
       "specialization": "Терапевт",
       "price": "138 000",
-      "clinicID": "CL0002"
+      "clinicId": "CL0002"
     },
     {
       "id": "DR0005",
       "specialization": "Педиатр",
       "price": "109 000",
-      "clinicID": "CL0002"
+      "clinicId": "CL0002"
     },
     {
       "id": "DR0006",
       "specialization": "Кардиолог",
       "price": "127 000",
-      "clinicID": "CL0002"
+      "clinicId": "CL0002"
     },
     {
       "id": "DR0007",
       "specialization": "Дерматолог",
       "price": "187 000",
-      "clinicID": "CL0003"
+      "clinicId": "CL0003"
     },
     {
       "id": "DR0008",
       "specialization": "Лор",
       "price": "160 000",
-      "clinicID": "CL0003"
+      "clinicId": "CL0003"
     },
     {
       "id": "DR0009",
       "specialization": "Дерматолог",
       "price": "132 000",
-      "clinicID": "CL0003"
+      "clinicId": "CL0003"
     },
     {
       "id": "DR0010",
       "specialization": "Офтальмолог",
       "price": "167 000",
-      "clinicID": "CL0004"
+      "clinicId": "CL0004"
     },
     {
       "id": "DR0011",
       "specialization": "Эндокринолог",
       "price": "125 000",
-      "clinicID": "CL0004"
+      "clinicId": "CL0004"
     },
     {
       "id": "DR0012",
       "specialization": "Хирург",
       "price": "173 000",
-      "clinicID": "CL0004"
+      "clinicId": "CL0004"
     },
     {
       "id": "DR0013",
       "specialization": "Невролог",
       "price": "180 000",
-      "clinicID": "CL0005"
+      "clinicId": "CL0005"
     },
     {
       "id": "DR0014",
       "specialization": "Уролог",
       "price": "113 000",
-      "clinicID": "CL0005"
+      "clinicId": "CL0005"
     },
     {
       "id": "DR0015",
       "specialization": "Дерматолог",
       "price": "108 000",
-      "clinicID": "CL0005"
+      "clinicId": "CL0005"
     },
     {
       "id": "DR0016",
       "specialization": "Дерматолог",
       "price": "112 000",
-      "clinicID": "CL0006"
+      "clinicId": "CL0006"
     },
     {
       "id": "DR0017",
       "specialization": "Педиатр",
       "price": "124 000",
-      "clinicID": "CL0006"
+      "clinicId": "CL0006"
     },
     {
       "id": "DR0018",
       "specialization": "Дерматолог",
       "price": "191 000",
-      "clinicID": "CL0006"
+      "clinicId": "CL0006"
     },
     {
       "id": "DR0019",
       "specialization": "Уролог",
       "price": "158 000",
-      "clinicID": "CL0007"
+      "clinicId": "CL0007"
     },
     {
       "id": "DR0020",
       "specialization": "Педиатр",
       "price": "161 000",
-      "clinicID": "CL0007"
+      "clinicId": "CL0007"
     },
     {
       "id": "DR0021",
       "specialization": "Лор",
       "price": "144 000",
-      "clinicID": "CL0007"
+      "clinicId": "CL0007"
     }
   ]
 }

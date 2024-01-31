@@ -1,19 +1,12 @@
 import { api } from "../boot/axios";
 
-function getClinics(search) {
-  return api.get("/clinics", {
-    params: {
-      q: search.toLowerCase(),
-    },
-  });
+function getClinics() {
+  return api.get("/clinics");
 }
 
-function getDoctors(id, search) {
-  return api.get(`/clinics/${id}/doctors`, {
-    params: {
-      q: search,
-    },
-  });
+function getDoctors(id) {
+  console.log(id);
+  return api.get(`/clinics/${id}/doctors`);
 }
 
 export default {
