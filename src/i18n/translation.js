@@ -6,7 +6,6 @@ const Trans = {
     return import.meta.env.VITE_DEFAULT_LOCALE;
   },
   get supportedLocales() {
-    console.log(import.meta.env);
     return import.meta.env.VITE_SUPPORTED_LOCALES.split(",");
   },
   get currentLocale() {
@@ -76,7 +75,7 @@ const Trans = {
 
   async routeMiddleware(to, from, next) {
     const paramLocale = to.params.locale;
-    console.log(paramLocale);
+
     if (!Trans.isLocaleSupported(paramLocale)) {
       return next(Trans.guessDefaultLocale());
     } else {

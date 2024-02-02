@@ -93,8 +93,16 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
-      open: true, // opens browser window automatically
+      proxy: {
+        // proxy all requests starting with /api to the API
+        "/api": {
+          target: "https://api.neoinsurance.uz",
+          changeOrigin: true,
+          pathRewrite: { "^/api": "" },
+        },
+      },
+      port: 8080,
+      // open: true, // opens browser window automatically,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

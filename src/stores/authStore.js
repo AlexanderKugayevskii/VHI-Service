@@ -43,7 +43,9 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
     try {
       const response = await LoginService.login(credentials);
+      console.log(response);
       const data = response.data;
+      console.log(data);
       setUser({ user: data.user, token: data.token });
     } catch (error) {
       setError("login_page.signin_error");

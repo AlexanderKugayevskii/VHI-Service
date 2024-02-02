@@ -11,7 +11,7 @@
             <SimpleInput
               :label="$t('login_page.login_label')"
               :placeholder="$t('login_page.login_placeholder')"
-              v-model="credentials.user"
+              v-model="credentials.email"
             ></SimpleInput>
           </div>
           <div class="user-box">
@@ -52,7 +52,7 @@ import { ref, computed } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 
 const authStore = useAuthStore();
-const credentials = ref({ user: "", password: "" });
+const credentials = ref({ email: "", password: "" });
 const loading = computed(() => authStore.loading);
 const error = computed(() => authStore.error);
 
