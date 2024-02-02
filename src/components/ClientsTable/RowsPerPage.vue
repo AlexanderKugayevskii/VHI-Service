@@ -1,6 +1,8 @@
 <template>
   <div class="rows-options flex items-center">
-    <span class="rows-options-label">Строк в таблице: </span>
+    <span class="rows-options-label"
+      >{{ $t("pagination.rows_per_page") }}:
+    </span>
     <div class="rows-options-variants">
       <button
         type="button"

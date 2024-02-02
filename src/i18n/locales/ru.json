@@ -20,8 +20,20 @@
     },
     "buttons": {
       "save_appeal": "Сохранить обращение",
+      "create_appeal": "Создать обращение",
       "exit_appeal": "Выйти"
     }
+  },
+  "appeal_search": {
+    "title": "Поиск клиента",
+    "fio": "Фамилия и Имя",
+    "passport": "Паспорт",
+    "cancel": "Отмена",
+    "id_input": "Введите ID клиента",
+    "fio_input": "Введите Фамилию и Имя клиента",
+    "passport_input": "Введите серию и номер паспорта",
+    "fio_label": "Фамилия Имя",
+    "passport_label": "Серия и номер паспорта"
   },
   "statuses": {
     "new": "Новое",
@@ -37,5 +49,20 @@
     "password_placeholder": "Введите пароль",
     "signin_label": "Войти",
     "signin_error": "Не правильный логин или пароль"
+  },
+  "client_table": {
+    "clients": "Клиенты",
+    "date_of_appeal": "Дата обращения",
+    "appeal_status": "Статус",
+    "clinic": "Клиника",
+    "doctor": "Врач",
+    "service": "Сервис",
+    "diagnosis": "Диагноз",
+    "expense": "Расход / {currency}"
+  },
+  "pagination": {
+    "next": "Следующая",
+    "prev": "Предыдущая",
+    "rows_per_page": "Строк в таблице"
   }
 }

@@ -134,7 +134,7 @@
               />
             </svg>
           </q-icon>
-          <span>Предыдущая</span>
+          <span>{{$t('pagination.prev')}}</span>
         </button>
 
         <button
@@ -157,7 +157,7 @@
           @click="incrementPage"
           class="pagination-btn-control"
         >
-          <span>Следующая</span>
+          <span>{{$t('pagination.next')}}</span>
           <q-icon size="20px"
             ><svg
               width="20"
@@ -197,52 +197,6 @@ import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import usePaginate from "src/composables/usePaginate";
 
-const columns = [
-  {
-    name: "index",
-    label: "№",
-    field: "index",
-    align: "left",
-  },
-  {
-    name: "client",
-    align: "left",
-    label: "КЛИЕНТЫ",
-    field: "clientName",
-  },
-  {
-    name: "appealDate",
-    align: "left",
-    label: "ДАТА ОБРАЩЕНИЯ",
-    field: "appealDate",
-  },
-  {
-    name: "appealStatus",
-    align: "left",
-    label: "СТАТУС",
-    field: "appealStatus",
-  },
-  { name: "clinicName", align: "left", label: "КЛИНИКА", field: "clinicName" },
-  { name: "doctorName", align: "left", label: "ВРАЧ", field: "doctorName" },
-  { name: "serviceName", align: "left", label: "СЕРВИС", field: "serviceName" },
-  {
-    name: "diagnosisName",
-    align: "left",
-    label: "ДИАГНОЗ",
-    field: "diagnosisName",
-  },
-  {
-    name: "expenseAmount",
-    align: "right",
-    label: "РАСХОД / UZS",
-    field: "expenseAmount",
-  },
-  {
-    name: "userSettings",
-    align: "left",
-  },
-];
-
 const searchProp = defineProps(["search"]);
 const search = computed(() => searchProp.search);
 
@@ -250,7 +204,7 @@ const tableRef = ref(null);
 
 const appealStore = useAppealStore();
 const clientTableStore = useClientTableStore();
-const { pagination, users, loading } = storeToRefs(clientTableStore);
+const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
 
 //incremenet decrement and change page events
@@ -289,16 +243,6 @@ const selectOption = (option) => {
 // );
 
 //add numerable table
-const rows = computed(() => {
-  return users.value.map((row, index) => {
-    return {
-      ...row,
-      userSettings: "",
-      index:
-        (pagination.value.page - 1) * pagination.value.rowsPerPage + index + 1,
-    };
-  });
-});
 
 //first request to API on mounted
 onMounted(() => {
@@ -350,6 +294,7 @@ thead tr th {
   position: sticky;
   z-index: 1;
   background-color: #fff;
+  text-transform: uppercase;
 }
 thead tr:first-child th {
   top: 0;

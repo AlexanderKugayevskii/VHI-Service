@@ -20,8 +20,20 @@
     },
     "buttons": {
       "save_appeal": "Xabarni saqlash",
+      "create_appeal": "So'rov yarating",
       "exit_appeal": "Tashqariga chiqish"
     }
+  },
+  "appeal_search": {
+    "title": "Mijoz qidiring",
+    "fio": "Familiyasi va Ismi",
+    "passport": "Pasport",
+    "cancel": "Bekor qilish",
+    "id_input": "Mijoz ID kiriting",
+    "fio_input": "Familiyasi vs Ismi kiriting",
+    "passport_input": "Seriya va pasport raqamini kiriting",
+    "fio_label": "Familiya Ismi",
+    "passport_label": "Seriya vs pasport"
   },
   "statuses": {
     "new": "Yangi",
@@ -37,5 +49,20 @@
     "password_placeholder": "parolni kiriting",
     "signin_label": "Kirish",
     "signin_error": "Noto'g'ri login yoki parol"
+  },
+  "client_table": {
+    "clients": "Mijozlar",
+    "date_of_appeal": "Ariza berilgan sana",
+    "appeal_status": "Holat",
+    "clinic": "Klinika",
+    "doctor": "Shifokor",
+    "service": "Xizmat",
+    "diagnosis": "Tashxis",
+    "expense": "Iste'mol / {currency}"
+  },
+  "pagination": {
+    "next": "Keyingisi",
+    "prev": "Oldingi",
+    "rows_per_page": "Jadvaldagi qatorlar"
   }
 }

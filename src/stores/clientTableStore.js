@@ -1,6 +1,67 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import ClientService from "src/services/ClientService";
+import { i18n } from "src/i18n";
+const columns = computed(() => [
+  {
+    name: "index",
+    label: "№",
+    field: "index",
+    align: "left",
+  },
+  {
+    name: "client",
+    align: "left",
+    label: i18n.t("client_table.clients"),
+    field: "clientName",
+  },
+  {
+    name: "appealDate",
+    align: "left",
+    label: i18n.t("client_table.date_of_appeal"),
+    field: "appealDate",
+  },
+  {
+    name: "appealStatus",
+    align: "left",
+    label: i18n.t("client_table.appeal_status"),
+    field: "appealStatus",
+  },
+  {
+    name: "clinicName",
+    align: "left",
+    label: i18n.t("client_table.clinic"),
+    field: "clinicName",
+  },
+  {
+    name: "doctorName",
+    align: "left",
+    label: i18n.t("client_table.doctor"),
+    field: "doctorName",
+  },
+  {
+    name: "serviceName",
+    align: "left",
+    label: i18n.t("client_table.service"),
+    field: "serviceName",
+  },
+  {
+    name: "diagnosisName",
+    align: "left",
+    label: i18n.t("client_table.diagnosis"),
+    field: "diagnosisName",
+  },
+  {
+    name: "expenseAmount",
+    align: "right",
+    label: i18n.t("client_table.expense", { currency: "UZS" }),
+    field: "expenseAmount",
+  },
+  {
+    name: "userSettings",
+    align: "left",
+  },
+]);
 export const useClientTableStore = defineStore("clientTable", () => {
   const pagination = ref({
     sortBy: "desc",
@@ -46,5 +107,17 @@ export const useClientTableStore = defineStore("clientTable", () => {
     );
   };
 
-  return { pagination, loading, users, handleRequest };
+  const rows = computed(() => {
+    return users.value.map((row, index) => {
+      return {
+        ...row,
+        userSettings: "",
+        index:
+          (pagination.value.page - 1) * pagination.value.rowsPerPage +
+          index +
+          1,
+      };
+    });
+  });
+  return { pagination, loading, rows, columns, handleRequest };
 });

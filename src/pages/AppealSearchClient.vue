@@ -2,7 +2,7 @@
   <q-dialog ref="appealSearchClientRef" no-backdrop-dismiss>
     <div class="modal-container appeal-search-container">
       <div class="modal-header">
-        <h4 class="page-title q-my-none">Поиск клиента</h4>
+        <h4 class="page-title q-my-none">{{ $t("appeal_search.title") }}</h4>
         <button type="button" class="btn-close" @click="hideModal">
           <q-icon size="20px">
             <svg
@@ -41,13 +41,13 @@
             />
             <q-tab
               name="byName"
-              label="Фамилия и Имя"
+              :label="$t('appeal_search.fio')"
               :ripple="false"
               class="tab--no-hover"
             />
             <q-tab
               name="byPassport"
-              label="Паспорт"
+              :label="$t('appeal_search.passport')"
               :ripple="false"
               class="tab--no-hover"
             />
@@ -59,7 +59,7 @@
               <div class="tab-header">
                 <SimpleInput
                   label="ID"
-                  placeholder="Введите ID клиента"
+                  :placeholder="$t('appeal_search.id_input')"
                   debounce-time="300"
                   v-model:model-value="searchId"
                   :show-icon="true"
@@ -79,8 +79,8 @@
             <q-tab-panel name="byName">
               <div class="tab-header">
                 <SimpleInput
-                  label="Фамилия Имя"
-                  placeholder="Введите Фамилию и Имя клиента"
+                  :label="$t('appeal_search.fio_label')"
+                  :placeholder="$t('appeal_search.fio_input')"
                   :show-icon="true"
                 >
                 </SimpleInput>
@@ -90,8 +90,8 @@
             <q-tab-panel name="byPassport">
               <div class="tab-header">
                 <SimpleInput
-                  label="Серия и номер паспорта"
-                  placeholder="Введите серию и номер паспорта"
+                  :label="$t('appeal_search.passport_label')"
+                  :placeholder="$t('appeal_search.passport_input')"
                   :show-icon="true"
                 >
                 </SimpleInput>
@@ -102,12 +102,12 @@
       </div>
       <div class="modal-footer">
         <SimpleButton
-          label="Отмена"
+          :label="$t('appeal_search.cancel')"
           custom-class="btn-cancel"
           @click="hideModal"
         />
         <SimpleButton
-          label="Создать обращение"
+          :label="$t('create_appeal.buttons.create_appeal')"
           :custom-class="[
             'btn-action',
             selectedClient === null ? 'btn--disabled' : '',

@@ -99,7 +99,7 @@
           </div>
         </div>
         <SimpleButton
-          label="Создать обращение"
+          :label="$t('create_appeal.buttons.create_appeal')"
           type="button"
           customClass="appeals-btn"
           @click="searchFilterFixed = true"
@@ -116,7 +116,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onMounted } from "vue";
 import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
 import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
@@ -175,6 +175,15 @@ const showDropdown = ref(false);
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
+
+onMounted(() => {
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".filter-chip-dropdown")) {
+      return;
+    }
+    showDropdown.value = false;
+  });
+});
 </script>
 
 <style lang="scss" scoped>
