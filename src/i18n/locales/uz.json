@@ -28,5 +28,14 @@
     "in_progress": "Ishda",
     "completed": "Bajarildi"
   },
-  "search": "qidirish"
+  "search": "qidirish",
+  "login_page": {
+    "title": "{company}-ga kirish",
+    "login_label": "Login",
+    "password_label": "Parol",
+    "login_placeholder": "Loginni kiriting",
+    "password_placeholder": "parolni kiriting",
+    "signin_label": "Kirish",
+    "signin_error": "Noto'g'ri login yoki parol"
+  }
 }

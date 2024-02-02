@@ -6,7 +6,7 @@
       </div>
       <div class="input-field__wrapper">
         <input
-          type="text"
+          :type="type"
           :placeholder="placeholder"
           class="input-field__text-input"
           :value="modelValue"
@@ -65,6 +65,10 @@ const props = defineProps({
   showIcon: {
     type: Boolean,
     default: false,
+  },
+  type: {
+    type: String,
+    default: "text",
   },
 });
 

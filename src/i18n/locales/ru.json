@@ -28,5 +28,14 @@
     "in_progress": "В работе",
     "completed": "Завершено"
   },
-  "search": "поиск"
+  "search": "поиск",
+  "login_page": {
+    "title": "Вход в {company}",
+    "login_label": "Логин",
+    "password_label": "Пароль",
+    "login_placeholder": "Введите логин",
+    "password_placeholder": "Введите пароль",
+    "signin_label": "Войти",
+    "signin_error": "Не правильный логин или пароль"
+  }
 }
