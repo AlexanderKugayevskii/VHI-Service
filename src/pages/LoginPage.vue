@@ -86,7 +86,8 @@ input:-webkit-autofill:active {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 407px;
+  max-width: 407px;
+  width: 100%;
   padding: 32px;
   transform: translate(-50%, -50%);
   background: #fff;
