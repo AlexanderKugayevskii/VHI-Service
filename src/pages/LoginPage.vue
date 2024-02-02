@@ -27,11 +27,15 @@
           type="submit"
           :label="$t('login_page.signin_label')"
           custom-class="btn-action full-width"
-        ></SimpleButton>
-        <!-- <button type="submit" class="login-btn">Kirish</button> -->
+          :loading="loading"
+        >
+          <template #loading-spinner>
+            <LoadingSpinner />
+          </template>
+        </SimpleButton>
       </form>
-      <div v-if="loading">Logging in...</div>
-      <div v-if="error" class="error">{{ error }}</div>
+
+      <!-- <div v-if="error" class="error">{{ error }}</div> -->
       <div class="flex flex-center">
         <LanguageSwitcher></LanguageSwitcher>
       </div>
@@ -43,7 +47,7 @@
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
-
+import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, computed } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 
@@ -94,7 +98,6 @@ input:-webkit-autofill:active {
 
 .login-box .title_text {
   font-size: 31px;
-  margin-bottom: 16px;
   color: #2c3955;
   text-align: center;
   font-weight: 700;

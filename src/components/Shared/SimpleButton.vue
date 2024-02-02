@@ -6,7 +6,10 @@
       :class="customClass"
       :disabled="disabled"
     >
-      {{ label }}
+      <span v-if="!loading">
+        {{ label }}
+      </span>
+      <slot name="loading-spinner" v-else></slot>
     </button>
   </div>
 </template>
@@ -17,6 +20,10 @@ defineProps({
   type: String,
   customClass: [Array, Object, String],
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },

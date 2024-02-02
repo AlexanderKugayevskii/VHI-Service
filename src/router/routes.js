@@ -4,12 +4,13 @@ const routes = [
   {
     path: "/:locale?",
     component: RouterView,
-    name: "home",
+
     beforeEnter: Trans.routeMiddleware,
     children: [
       {
         path: "",
         component: () => import("pages/LoginPage.vue"),
+        name: "login",
       },
       {
         path: "dashboard",

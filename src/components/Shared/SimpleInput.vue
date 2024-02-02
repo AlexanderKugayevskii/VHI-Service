@@ -120,6 +120,7 @@ watch(
     background-color: #f2f5fa;
     border-radius: 16px;
     padding: 12px 16px;
+    line-height: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
