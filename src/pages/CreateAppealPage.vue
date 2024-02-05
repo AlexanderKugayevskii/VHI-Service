@@ -263,7 +263,7 @@
                               v-for="item in doctorsData"
                               :item="item"
                               :key="item.id"
-                              @update:select="handleClick"
+                              @update:select="handleRemoveDoctor"
                             >
                               <template #label>
                                 {{ item.specialization }}
@@ -349,6 +349,18 @@
                                 </div>
                               </template>
                             </DropdownSelect>
+                          </div>
+                          <div class="tab-body">
+                            <SelectedItem
+                              v-for="item in servicesData"
+                              :item="item"
+                              :key="item.id"
+                              @update:select="handleRemoveService"
+                            >
+                              <template #label>
+                                {{ item.serviceName }}
+                              </template>
+                            </SelectedItem>
                           </div>
                         </q-tab-panel>
 
@@ -446,6 +458,7 @@ import formatPrice from "src/helpers/formatPrice";
 
 const appealStore = useAppealStore();
 const doctorsData = computed(() => appealStore.doctorsData);
+const servicesData = computed(() => appealStore.servicesData);
 const { client: clientData } = storeToRefs(appealStore);
 
 const createAppealModalFixed = ref(true);
@@ -460,9 +473,11 @@ const hideModal = () => {
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 
-const handleClick = (item) => {
+const handleRemoveDoctor = (item) => {
   appealStore.clearDoctors(item);
-  console.log(doctorsData.value);
+};
+const handleRemoveService = (item) => {
+  appealStore.clearServices(item);
 };
 </script>
 

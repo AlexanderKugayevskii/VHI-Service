@@ -35,6 +35,12 @@ export const useAppealStore = defineStore("appeal", () => {
     );
   };
 
+  const clearServices = (service) => {
+    servicesData.value = servicesData.value.filter(
+      (item) => item.id !== service.id
+    );
+  };
+
   watch(clinic, () => {
     doctorsData.value = [];
     servicesData.value = [];
@@ -77,5 +83,6 @@ export const useAppealStore = defineStore("appeal", () => {
     setDiagnosis,
     setServices,
     clearDoctors,
+    clearServices,
   };
 });
