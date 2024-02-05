@@ -8,8 +8,10 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const api = axios.create({ baseURL: 'http://localhost:3000' })
-const url = "https://api.neoinsurance.uz";
-const api = axios.create({ baseURL: url + "/api" });
+// const url = "https://api.neoinsurance.uz";
+const fakeUrl = "http://localhost:3000"
+// const api = axios.create({ baseURL: url + "/api" });
+const api = axios.create({ baseURL: fakeUrl });
 
 axios.defaults.withCredentials = true;
 axios.interceptors.request.use((config) => {

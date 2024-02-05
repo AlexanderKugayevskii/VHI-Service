@@ -189,7 +189,7 @@
                               id-key="id"
                               name-key="doctorName"
                               :multiple="true"
-                              :selected-data="appealStore.doctorsData"
+                              :selected-data="doctorsData"
                               :fetch-function="appealStore.fetchDoctors"
                               @update:selected-options="appealStore.setDoctors"
                             >
@@ -199,12 +199,11 @@
                                   class="dropdown-button-btn-text-selected"
                                 >
                                   {{
-                                    appealStore.doctorsData.length === 1
-                                      ? appealStore.doctorsData[0]
-                                          .specialization
+                                    doctorsData.length === 1
+                                      ? doctorsData[0].specialization
                                       : $t(
                                           "create_appeal.dropdowns.doctors_choise",
-                                          appealStore.doctorsData.length
+                                          doctorsData.length
                                         )
                                   }}
                                 </span>
@@ -425,13 +424,14 @@ import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 
 const appealStore = useAppealStore();
+const doctorsData = computed(() => appealStore.doctorsData);
 const { client: clientData } = storeToRefs(appealStore);
 
 const createAppealModalFixed = ref(true);
