@@ -89,6 +89,8 @@
           </div>
         </template>
       </DropdownSelectLocal>
+
+      <TestComponent></TestComponent>
     </div>
   </q-page>
 </template>
@@ -100,6 +102,7 @@ import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import ClientService from "src/services/ClientService";
 import StatusBar from "src/components/Shared/StatusBar.vue";
+import TestComponent from "src/components/Shared/TestComponent.vue";
 const inputValue = ref("");
 const handleTest = (options) => {
   console.log(options);

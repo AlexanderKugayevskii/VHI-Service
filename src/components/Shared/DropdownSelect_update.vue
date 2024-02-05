@@ -137,6 +137,7 @@ import { ref, watch, nextTick, computed, onMounted } from "vue";
 import debounce from "lodash/debounce";
 
 const props = defineProps({
+  fetchFunction: Function,
   label: String,
   placeholder: String,
   selectedData: Array,
@@ -156,15 +157,13 @@ const props = defineProps({
 
 const emit = defineEmits(["update:selectedOptions"]);
 
+const initialOptions = ref([]);
+const selectedOptions = ref([]);
 const showDropdown = ref(false);
 const loading = ref(true); //for loading
-const error = ref(false); //for error
-const dropdownListRef = ref(null); //for children elements
+const error = ref(null); //for error
 const searchValue = ref(""); //v model input
-
-const searchOptions = ref([]);
-const initialOptions = ref([]);
-const selectedOptions = ref(props.selectedData || []);
+const dropdownListRef = ref(null); //for children elements
 
 const updateSearchValue = debounce((newValue) => {
   searchValue.value = newValue;

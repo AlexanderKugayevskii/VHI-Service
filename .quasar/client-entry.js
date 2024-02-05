@@ -160,7 +160,9 @@ createQuasarApp(createApp, quasarUserOptions)
       
       import('boot/axios'),
       
-      import('boot/auth')
+      import('boot/auth'),
+      
+      import('boot/router-auth')
       
     ]).then(bootFiles => {
       const boot = mapFn(bootFiles).filter(entry => typeof entry === 'function')

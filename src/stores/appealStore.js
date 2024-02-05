@@ -3,9 +3,6 @@ import { ref, reactive, watch } from "vue";
 import ClinicService from "src/services/ClinicService";
 
 export const useAppealStore = defineStore("appeal", () => {
-  // const loading = ref(false);
-  // const error = ref(false);
-
   const client = ref(null);
 
   const setClient = (item) => {
@@ -13,7 +10,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const clinic = ref(null); //можно выбрать 1 клинику
-  const doctorsData = ref(null); //врачей
+  const doctorsData = ref([]); //врачей
   const diagnosisData = ref(""); //диагноз
   const servicesData = ref(null); //сервисы
 
@@ -32,9 +29,15 @@ export const useAppealStore = defineStore("appeal", () => {
     servicesData.value = services;
   };
 
+  const clearDoctors = (doctor) => {
+    doctorsData.value = doctorsData.value.filter(
+      (item) => item.id !== doctor.id
+    );
+  };
+
   watch(clinic, () => {
-    doctorsData.value = null;
-    servicesData.value = null;
+    doctorsData.value = [];
+    servicesData.value = [];
   });
 
   const fetchClinics = () => {
@@ -44,6 +47,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const fetchDoctors = () => {
     return ClinicService.getDoctors(clinic.value[0].id);
   };
+
   // const fetchDoctors = async () => {
   //   try {
   //     const response = await ClinicService.getDoctors(clinic.value[[0]].id);
@@ -72,5 +76,6 @@ export const useAppealStore = defineStore("appeal", () => {
     setDoctors,
     setDiagnosis,
     setServices,
+    clearDoctors,
   };
 });

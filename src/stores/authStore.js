@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
+
 export const useAuthStore = defineStore("auth", () => {
   //state
   const user = ref(null);
@@ -12,6 +13,7 @@ export const useAuthStore = defineStore("auth", () => {
   //   const { t } = useI18n();
   //actions
   const setUser = (payload) => {
+    console.log(payload);
     user.value = payload.user;
     token.value = payload.token;
 
@@ -43,23 +45,26 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
     try {
       const response = await LoginService.login(credentials);
-      console.log(response);
       const data = response.data;
       console.log(data);
       setUser({ user: data.user, token: data.token });
+      setLoading(false);
+      return true;
     } catch (error) {
       setError("login_page.signin_error");
+      setLoading(false);
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
   const initializeFromLocalStorage = () => {
-    const token = localStorage.getItem("authToken");
-    const user = localStorage.getItem("authUser");
-    if (token && user) {
-      user = JSON.parse(user);
-      token = token;
+    const storedToken = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("authUser");
+    if (storedToken && storedUser) {
+      token.value = storedToken;
+      user.value = JSON.parse(storedUser);
     }
   };
   return { login, logout, initializeFromLocalStorage, user, error, loading };

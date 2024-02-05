@@ -6,9 +6,13 @@
       </div>
     </div>
     <div class="selected-item-right">
-      <div class="selected-item-price">{{ item.price }}</div>
+      <div class="selected-item-price">{{ formatPrice(item.price) }}</div>
       <div class="selected-item-actions">
-        <button type="button" class="selected-item-btn" @click="emitClick">
+        <button
+          type="button"
+          class="selected-item-btn"
+          @click="emitClick($event, item)"
+        >
           <q-icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +44,7 @@
 </template>
 
 <script setup>
+import formatPrice from "src/helpers/formatPrice";
 const props = defineProps({
   item: {
     type: Object,
@@ -47,8 +52,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:select"]);
-const emitClick = () => {
-  emit("update:select");
+const emitClick = (event, item) => {
+  emit("update:select", item);
 };
 </script>
 
@@ -59,6 +64,7 @@ const emitClick = () => {
   border-radius: 16px;
   display: flex;
   column-gap: 16px;
+  margin-bottom: 8px;
 }
 .selected-item-left {
   flex-grow: 1;

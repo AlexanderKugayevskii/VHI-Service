@@ -8,19 +8,17 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const api = axios.create({ baseURL: 'http://localhost:3000' })
-// const url = "https://api.neoinsurance.uz";
-const fakeUrl = "http://localhost:3000"
-// const api = axios.create({ baseURL: url + "/api" });
+const fakeUrl = "http://localhost:3000";
 const api = axios.create({ baseURL: fakeUrl });
+// const url = "https://api.neoinsurance.uz";
+// const api = axios.create({ baseURL: url + "/api" });
 
-axios.defaults.withCredentials = true;
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
   config.headers["Access-Control-Allow-Origin"] = "*";
-
   return config;
 });
 

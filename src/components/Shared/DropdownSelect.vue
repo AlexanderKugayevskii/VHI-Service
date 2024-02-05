@@ -133,14 +133,17 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, computed, onMounted } from "vue";
+import { toRef, ref, watch, nextTick, computed, onMounted } from "vue";
 import debounce from "lodash/debounce";
 
 const props = defineProps({
   fetchFunction: Function,
   label: String,
   placeholder: String,
-  selectedData: Array,
+  selectedData: {
+    type: Array,
+    default: () => [],
+  },
   multiple: {
     type: Boolean,
     default: true,
@@ -165,7 +168,7 @@ const searchValue = ref(""); //v model input
 
 const searchOptions = ref([]);
 const initialOptions = ref([]);
-const selectedOptions = ref(props.selectedData || []);
+const selectedOptions = toRef(() => props.selectedData);
 
 const updateSearchValue = debounce((newValue) => {
   searchValue.value = newValue;
@@ -196,6 +199,7 @@ const toggleOption = (option) => {
 
     emit("update:selectedOptions", selectedOptions.value);
   }
+  console.log(selectedOptions.value);
 };
 
 const checkSelected = (option) => {

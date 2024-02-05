@@ -229,7 +229,7 @@
                                   </span>
                                   -
                                   <span class="option-content-extra">
-                                    {{ option.price }}
+                                    {{ formatPrice(option.price) }}
                                   </span>
                                   <q-icon
                                     v-if="
@@ -257,6 +257,18 @@
                                 </div>
                               </template>
                             </DropdownSelect>
+                          </div>
+                          <div class="tab-body">
+                            <SelectedItem
+                              v-for="item in doctorsData"
+                              :item="item"
+                              :key="item.id"
+                              @update:select="handleClick"
+                            >
+                              <template #label>
+                                {{ item.specialization }}
+                              </template>
+                            </SelectedItem>
                           </div>
                         </q-tab-panel>
 
@@ -309,7 +321,7 @@
                                   </span>
                                   -
                                   <span class="option-content-extra">
-                                    {{ option.price }}
+                                    {{ formatPrice(option.price) }}
                                   </span>
                                   <q-icon
                                     v-if="
@@ -424,11 +436,13 @@ import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
+import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
+import formatPrice from "src/helpers/formatPrice";
 
 const appealStore = useAppealStore();
 const doctorsData = computed(() => appealStore.doctorsData);
@@ -444,6 +458,11 @@ const createAppealModalRef = ref(null);
 const hideModal = () => {
   createAppealModalRef.value.hide();
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+};
+
+const handleClick = (item) => {
+  appealStore.clearDoctors(item);
+  console.log(doctorsData.value);
 };
 </script>
 
@@ -555,6 +574,7 @@ const hideModal = () => {
 }
 .tab-header {
   height: 100%;
+  margin-bottom: 12px;
 }
 .create-appeal-actions {
   display: flex;
