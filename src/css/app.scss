@@ -137,6 +137,18 @@ button[class^="btn"] {
   background-color: #13b8ba;
   color: #fff;
 }
+.btn-add {
+  background: #13b8ba;
+  border: none;
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+  cursor: pointer;
+}
 .btn--disabled {
   background-color: $hover;
 }

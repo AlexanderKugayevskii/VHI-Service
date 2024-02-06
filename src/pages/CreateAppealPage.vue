@@ -365,14 +365,74 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="drugstore" key="drugstore">
-                          <div class="tab-header">
-                            <SimpleInput
-                              label="Серия и номер паспорта"
-                              placeholder="Введите серию и номер паспорта"
-                              :show-icon="true"
-                            >
-                            </SimpleInput>
+                          <div class="tab-header drugstore-header">
+                            <DragNdrop></DragNdrop>
                           </div>
+                          <div class="tab-body">
+                            <div class="drugstore-form">
+                              <SimpleInput
+                                label="Лекарство"
+                                placeholder="Название лекарства"
+                                class="drugstore-form-drugname"
+                                @update:model-value="appealStore.setDrugName"
+                                :modelValue="drugData.drugName"
+                              ></SimpleInput>
+                              <SimpleInput
+                                label="Кол-во"
+                                placeholder="0"
+                                class="drugstore-form-amount"
+                                @update:model-value="appealStore.setDrugAmount"
+                                :modelValue="drugData.drugAmount"
+                              ></SimpleInput>
+                              <DropdownSelectLocal
+                                class="drugstore-form-type"
+                                label="Ед. изм"
+                                placeholder="Шт"
+                                id-key="drugType"
+                                :multiple="false"
+                                :initialOptions="[
+                                  { id: 1, drugType: 'Шт' },
+                                  { id: 2, drugType: 'Мл' },
+                                ]"
+                                @update:selectedOptions="
+                                  appealStore.setDrugType
+                                "
+                              >
+                                <template #option-content="{ option }">
+                                  <div class="option-content">
+                                    <span>
+                                      {{ option.drugType }}
+                                    </span>
+                                  </div>
+                                </template>
+                              </DropdownSelectLocal>
+                              <SimpleInput
+                                class="drugstore-form-price"
+                                label="Цена"
+                                placeholder="0"
+                                @update:model-value="appealStore.setDrugPrice"
+                                :model-value="drugData.drugAmount"
+                              ></SimpleInput>
+                              <SimpleButton
+                                label="Добавить"
+                                type="button"
+                                customClass="btn-add"
+                                class="drugstore-form-btn-wrapper"
+                                @click="handleAddDrug"
+                              ></SimpleButton>
+                            </div>
+                            <SelectedItem
+                              v-for="(item, index) in drugsData"
+                              :item="item"
+                              :key="index"
+                              @update:select="handleRemoveDrug"
+                            >
+                              <template #label>
+                                {{ item.drugName }}
+                              </template>
+                            </SelectedItem>
+                          </div>
+                          {{ drugsData }}
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>
@@ -446,9 +506,11 @@
 <script setup>
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
+import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
+import DragNdrop from "src/components/DragNdrop.vue";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -459,8 +521,9 @@ import formatPrice from "src/helpers/formatPrice";
 const appealStore = useAppealStore();
 const doctorsData = computed(() => appealStore.doctorsData);
 const servicesData = computed(() => appealStore.servicesData);
-const { client: clientData } = storeToRefs(appealStore);
-
+const drugsData = computed(() => appealStore.drugsData.drugs);
+const { client: clientData, drug: drugData } = storeToRefs(appealStore);
+console.log(appealStore.drugsData);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
@@ -479,12 +542,17 @@ const handleRemoveDoctor = (item) => {
 const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
+const handleRemoveDrug = (item) => {
+  appealStore.clearDrugs(item);
+};
+const handleAddDrug = () => {
+  appealStore.setDrugs(drugData);
+};
 </script>
 
 <style lang="scss" scoped>
 .create-appeal-modal .modal-container {
   width: 90%;
-
   padding: 0;
   position: relative;
   overflow: visible;
@@ -617,5 +685,32 @@ const handleRemoveService = (item) => {
 }
 .dropdown-button-btn-text-selected {
   color: #404f6f;
+}
+
+.drugstore-form {
+  display: flex;
+  column-gap: 8px;
+
+  > div {
+    width: auto;
+  }
+  &-drugname {
+    flex-basis: 245px;
+  }
+  &-amount {
+    flex-basis: 100px;
+  }
+  &-type {
+    flex-basis: 85px;
+  }
+  &-price {
+    flex-basis: 140px;
+  }
+  &-btn-wrapper {
+    align-self: flex-end;
+  }
+}
+.drugstore-header {
+  margin-bottom: 20px;
 }
 </style>
