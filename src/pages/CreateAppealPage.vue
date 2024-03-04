@@ -389,6 +389,7 @@
                                 label="Ед. изм"
                                 placeholder="Шт"
                                 id-key="drugType"
+                                :search = "false"
                                 :multiple="false"
                                 :initialOptions="[
                                   { id: 1, drugType: 'Шт' },
@@ -432,7 +433,7 @@
                               </template>
                             </SelectedItem>
                           </div>
-                          {{ drugsData }}
+                         
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>

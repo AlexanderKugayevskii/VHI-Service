@@ -6,7 +6,10 @@
       </div>
       <div class="dropdown-button">
         <button class="dropdown-button-btn" @click="handleDropdown">
-          <span class="dropdown-button-btn-text" v-if="!selectedOptions?.length">
+          <span
+            class="dropdown-button-btn-text"
+            v-if="!selectedOptions?.length"
+          >
             <slot name="placeholder"></slot>
           </span>
           <span
@@ -48,7 +51,7 @@
     <Transition name="fade">
       <div key="dropdown-select" class="dropdown-select" v-if="showDropdown">
         <div class="dropdown-select-scroll">
-          <div class="dropdown-select-search">
+          <div class="dropdown-select-search" v-if="search">
             <label class="dropdown-select-search-label">
               <input
                 type="text"
@@ -143,6 +146,10 @@ const props = defineProps({
   selectedData: {
     type: Array,
     default: () => [],
+  },
+  search: {
+    type: Boolean,
+    default: true,
   },
   multiple: {
     type: Boolean,

@@ -67,5 +67,13 @@ export const useAuthStore = defineStore("auth", () => {
       user.value = JSON.parse(storedUser);
     }
   };
-  return { login, logout, initializeFromLocalStorage, user, error, loading };
+  return {
+    login,
+    logout,
+    initializeFromLocalStorage,
+    user,
+    error,
+    loading,
+    token,
+  };
 });
