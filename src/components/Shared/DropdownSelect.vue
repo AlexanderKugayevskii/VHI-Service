@@ -6,7 +6,7 @@
       </div>
       <div class="dropdown-button">
         <button class="dropdown-button-btn" @click="handleDropdown">
-          <span class="dropdown-button-btn-text" v-if="!selectedOptions.length">
+          <span class="dropdown-button-btn-text" v-if="!selectedOptions?.length">
             <slot name="placeholder"></slot>
           </span>
           <span
