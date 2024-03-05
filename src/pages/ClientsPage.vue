@@ -91,6 +91,10 @@
       </DropdownSelectLocal>
       <DragNdrop></DragNdrop>
     </div>
+
+    <div class="test-width">
+      <DropdownSelectNew />
+    </div>
   </q-page>
 </template>
 
@@ -103,6 +107,7 @@ import ClientService from "src/services/ClientService";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import TestComponent from "src/components/Shared/TestComponent.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
+import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 const inputValue = ref("");
 const handleTest = (options) => {
   console.log(options);

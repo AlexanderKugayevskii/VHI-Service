@@ -42,7 +42,7 @@
     <Transition name="fade">
       <div key="dropdown-select" class="dropdown-select" v-if="showDropdown">
         <div class="dropdown-select-scroll">
-          <div class="dropdown-select-search">
+          <div class="dropdown-select-search" v-if="search">
             <label class="dropdown-select-search-label">
               <input
                 type="text"
@@ -109,6 +109,10 @@ const props = defineProps({
   placeholder: String,
   initialOptions: Array,
   multiple: {
+    type: Boolean,
+    default: true,
+  },
+  search: {
     type: Boolean,
     default: true,
   },
