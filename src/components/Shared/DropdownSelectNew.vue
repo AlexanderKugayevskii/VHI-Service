@@ -4,22 +4,23 @@
       <div class="dropdown-label-wrapper">
         <span class="dropdown-label-text">{{ label }}</span>
       </div>
+
       <div class="dropdown-button" ref="button">
         <button class="dropdown-button-btn" @click="handleDropdown">
           <span
             class="dropdown-button-btn-text"
-            v-if="!selectedOptions?.length"
+            v-if="
+              (checkMultiOptions && !selectedOptions?.length) ||
+              selectedOptions === null
+            "
           >
             <slot name="placeholder"></slot>
           </span>
           <span
             class="dropdown-button-btn-text-selected"
-            v-else-if="selectedOptions.length === 1"
+            v-else-if="!checkMultiOptions || selectedOptions?.length === 1"
           >
-            <slot
-              name="selected-options-once"
-              :option="selectedOptions.at(0)"
-            ></slot>
+            <slot name="selected-options-once" :option="oneOption"></slot>
           </span>
 
           <span class="dropdown-button-btn-text-selected" v-else>
@@ -120,18 +121,13 @@
             </div>
             <div class="dropdown-select-list" ref="dropdownListRef" v-else>
               <div
-                v-for="(option, index) of searchItems"
+                v-for="(option, index) of options"
                 class="dropdown-select-list-item"
                 :key="index"
-                @click="toggleOption(option)"
+                @click="selectOption(option)"
               >
                 <div class="dropdown-select-list-item-text">
-                  <slot
-                    name="option-content"
-                    :option="option"
-                    :checked="checkSelected(option)"
-                  >
-                  </slot>
+                  <slot name="option-content" :option="option"></slot>
                 </div>
               </div>
             </div>
@@ -143,9 +139,18 @@
 </template>
 
 <script>
+import { watch } from "vue";
 export default {
   props: {
+    label: String,
     options: Array,
+    selectedOptions: {
+      required: true,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -158,14 +163,30 @@ export default {
       this.showDropdown = !this.showDropdown;
       if (!this.showDropdown) {
         this.searchValue = "";
+      } else {
+        this.handleRequest();
       }
     },
     handleRequest() {
       this.$emit("request");
     },
+    selectOption(option) {
+      this.$emit("selectOption", option);
+      if (!this.multiple) {
+        this.showDropdown = false;
+      }
+    },
   },
 
   computed: {
+    checkMultiOptions() {
+      return Array.isArray(this.selectedOptions);
+    },
+    oneOption() {
+      return this.checkMultiOptions
+        ? this.selectedOptions.at(0)
+        : this.selectedOptions;
+    },
     dropDownStyle() {
       if (this.showDropdown) {
         const buttonRect = this.$refs.button.getBoundingClientRect();
@@ -179,6 +200,25 @@ export default {
       }
       return {};
     },
+  },
+
+  mounted() {
+    watch([() => this.options, showDropdown, error], async () => {
+      await nextTick();
+      if (!showDropdown.value || error.value) return;
+
+      const dropdownSelectListItemElements =
+        dropdownListRef.value.children ?? [];
+
+      const totalHeight = Array.from(dropdownSelectListItemElements)
+        .slice(0, 6)
+        .reduce((acc, elem) => {
+          const elemHeight = elem.getBoundingClientRect().height;
+          return acc + elemHeight;
+        }, 0);
+
+      dropdownListRef.value.style.height = `${totalHeight}px`;
+    });
   },
 };
 </script>

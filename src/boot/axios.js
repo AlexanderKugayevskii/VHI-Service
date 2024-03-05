@@ -8,10 +8,10 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const api = axios.create({ baseURL: 'http://localhost:3000' })
-const fakeUrl = "http://localhost:3000";
-const api = axios.create({ baseURL: fakeUrl });
-// const url = "https://api.neoinsurance.uz";
-// const api = axios.create({ baseURL: url + "/api" });
+// const fakeUrl = "http://localhost:3000";
+// const api = axios.create({ baseURL: fakeUrl });
+const url = "https://api.neoinsurance.uz";
+const api = axios.create({ baseURL: url + "/api" });
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");

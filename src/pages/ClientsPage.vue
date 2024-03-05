@@ -1,7 +1,24 @@
 <template>
   <q-page class="flex flex-center column body-bg">
     <StatusBar :label="true"></StatusBar>
-
+    <div class="test-width">
+      <DropdownSelectNew
+        label="выберите клинику"
+        :multiple="false"
+        :options="testStore.testOptions"
+        :selected-options="testStore.selectedOption"
+        @select-option="testStore.selectOption"
+      >
+        <template #placeholder> Выберете клинику </template>
+        <template v-slot:selected-options-once="props">
+          <div>{{ props.option.clinicName }}</div>
+        </template>
+        <template v-slot:option-content="props">
+          <div>{{ props.option.clinicName }}</div>  
+        </template>
+      </DropdownSelectNew>
+      {{ testStore.selectedOption }}
+    </div>
     <h1>Клиенты</h1>
     <div class="full-width q-mb-md">
       <SimpleInput v-model="inputValue" debounce-time="500"></SimpleInput>
@@ -91,10 +108,6 @@
       </DropdownSelectLocal>
       <DragNdrop></DragNdrop>
     </div>
-
-    <div class="test-width">
-      <DropdownSelectNew />
-    </div>
   </q-page>
 </template>
 
@@ -108,10 +121,14 @@ import StatusBar from "src/components/Shared/StatusBar.vue";
 import TestComponent from "src/components/Shared/TestComponent.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
+import { useCounterStore } from "src/stores/example-store";
 const inputValue = ref("");
 const handleTest = (options) => {
   console.log(options);
 };
+
+const testStore = useCounterStore();
+console.log(testStore);
 </script>
 
 <style lang="scss">
