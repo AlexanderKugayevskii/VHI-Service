@@ -54,7 +54,13 @@
           </q-tabs>
         </div>
         <div class="tabs-content">
-          <q-tab-panels v-model="tab" animated>
+          <q-tab-panels
+            v-model="tab"
+            animated
+            swipeable
+            transition-next="fade"
+            transition-prev="fade"
+          >
             <q-tab-panel name="byId">
               <div class="tab-header">
                 <SimpleInput

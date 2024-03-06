@@ -56,6 +56,7 @@
           class="dropdown-select"
           v-if="showDropdown"
           :style="dropDownStyle"
+
         >
           <div class="dropdown-select-scroll">
             <div class="dropdown-select-search">
@@ -140,6 +141,7 @@
 
 <script>
 import { watch } from "vue";
+import { ref } from "vue";
 export default {
   props: {
     label: String,
@@ -159,7 +161,8 @@ export default {
       searchValue: false,
     };
   },
-  
+  setup() {},
+
   methods: {
     onClickOutside(event) {
       console.log("Clicked outside. Event: ", event);

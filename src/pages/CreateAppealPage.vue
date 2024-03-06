@@ -108,7 +108,13 @@
                   </div>
                   <div class="tabs-content">
                     <keep-alive>
-                      <q-tab-panels v-model="tab" animated>
+                      <q-tab-panels
+                        v-model="tab"
+                        animated
+                        swipeable
+                        transition-next="jump-right"
+                        transition-prev="jump-left"
+                      >
                         <q-tab-panel name="clinics" key="clinics">
                           <div class="tab-header">
                             <DropdownSelect
