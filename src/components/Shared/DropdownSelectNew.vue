@@ -92,9 +92,9 @@
                 </q-icon>
               </label>
             </div>
-            <div class="dropdown-loading flex flex-center" v-if="loading">
+            <!-- <div class="dropdown-loading flex flex-center" v-if="loading">
               <q-spinner-tail color="teal" />
-            </div>
+            </div>  -->
             <div
               class="dropdown-select-error-message flex items-center"
               v-if="error"
@@ -152,8 +152,10 @@ export default {
       default: false,
     },
   },
+  setup() {},
   data() {
     return {
+      error: null,
       showDropdown: false,
       searchValue: false,
     };
@@ -200,25 +202,29 @@ export default {
       }
       return {};
     },
+
   },
 
   mounted() {
-    watch([() => this.options, showDropdown, error], async () => {
-      await nextTick();
-      if (!showDropdown.value || error.value) return;
+    watch(
+      [() => this.options, () => this.showDropdown, this.error],
+      async () => {
+        await this.$nextTick();
 
-      const dropdownSelectListItemElements =
-        dropdownListRef.value.children ?? [];
+        // if (!this.showDropdown || this.error) return;
+        const dropdownSelectListItemElements =
+          this.$refs.dropdownListRef.children ?? [];
 
-      const totalHeight = Array.from(dropdownSelectListItemElements)
-        .slice(0, 6)
-        .reduce((acc, elem) => {
-          const elemHeight = elem.getBoundingClientRect().height;
-          return acc + elemHeight;
-        }, 0);
+        const totalHeight = Array.from(dropdownSelectListItemElements)
+          .slice(0, 6)
+          .reduce((acc, elem) => {
+            const elemHeight = elem.getBoundingClientRect().height;
+            return acc + elemHeight;
+          }, 0);
 
-      dropdownListRef.value.style.height = `${totalHeight}px`;
-    });
+        this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
+      }
+    );
   },
 };
 </script>
