@@ -14,10 +14,31 @@
           <div>{{ props.option.clinicName }}</div>
         </template>
         <template v-slot:option-content="props">
-          <div>{{ props.option.clinicName }}</div>  
+          <div>{{ props.option.clinicName }}</div>
+          <CheckIcon v-if="testStore.checkSelectOption(props.option)" />
         </template>
       </DropdownSelectNew>
-      {{ testStore.selectedOption }}
+    </div>
+    <div class="test-width">
+      <DropdownSelectNew
+        label="выберите клинику"
+        :multiple="true"
+        :options="testStore.testOptions"
+        :selected-options="testStore.selectedOptions"
+        @select-option="testStore.selectOptions"
+      >
+        <template #placeholder> Выберете клинику </template>
+        <template v-slot:selected-options-once="props">
+          <div>{{ props.option.clinicName }}</div>
+        </template>
+        <template v-slot:option-content="props">
+          <div>{{ props.option.clinicName }}</div>
+          <CheckIcon v-if="testStore.checkSelectOptions(props.option)" />
+        </template>
+        <template v-slot:selected-options-length="props">
+          Выбрано {{ props.length }} клиник
+        </template>
+      </DropdownSelectNew>
     </div>
     <h1>Клиенты</h1>
     <div class="full-width q-mb-md">
@@ -121,6 +142,7 @@ import StatusBar from "src/components/Shared/StatusBar.vue";
 import TestComponent from "src/components/Shared/TestComponent.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
+import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import { useCounterStore } from "src/stores/example-store";
 const inputValue = ref("");
 const handleTest = (options) => {

@@ -152,7 +152,6 @@ export default {
       default: false,
     },
   },
-  setup() {},
   data() {
     return {
       error: null,
@@ -161,6 +160,9 @@ export default {
     };
   },
   methods: {
+    onClickOutside(event) {
+      console.log("Clicked outside. Event: ", event);
+    },
     handleDropdown() {
       this.showDropdown = !this.showDropdown;
       if (!this.showDropdown) {
@@ -202,7 +204,6 @@ export default {
       }
       return {};
     },
-
   },
 
   mounted() {
@@ -210,18 +211,15 @@ export default {
       [() => this.options, () => this.showDropdown, this.error],
       async () => {
         await this.$nextTick();
-
-        // if (!this.showDropdown || this.error) return;
+        if (!this.showDropdown || this.error) return;
         const dropdownSelectListItemElements =
-          this.$refs.dropdownListRef.children ?? [];
-
+          this.$refs.dropdownListRef?.children ?? [];
         const totalHeight = Array.from(dropdownSelectListItemElements)
           .slice(0, 6)
           .reduce((acc, elem) => {
             const elemHeight = elem.getBoundingClientRect().height;
             return acc + elemHeight;
           }, 0);
-
         this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
       }
     );

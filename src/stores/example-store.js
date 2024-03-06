@@ -61,10 +61,32 @@ export const useCounterStore = defineStore("counter", {
       },
     ],
     selectedOption: null,
+    selectedOptions: [],
   }),
   actions: {
     selectOption(option) {
       this.selectedOption = option;
+    },
+    selectOptions(option) {
+      const index = this.selectedOptions.findIndex(
+        (testOption) => testOption.id === option.id
+      );
+      if (index > -1) {
+        this.selectedOptions.splice(index, 1);
+      } else {
+        this.selectedOptions.push(option);
+      }
+    },
+  },
+  getters: {
+    checkSelectOption(state) {
+      return (option) => state.selectedOption?.id === option.id;
+    },
+    checkSelectOptions(state) {
+      return (option) =>
+        state.selectedOptions.some(
+          (selectedOption) => selectedOption.id === option.id
+        );
     },
   },
 });

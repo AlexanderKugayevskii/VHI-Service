@@ -11,6 +11,15 @@ function getClients(page, limit, search, filterQueries) {
   });
 }
 
+function getClientsByCode(code) {
+  return api.get("/clinics/search-by-code", {
+    params: {
+      dms_code: code,
+    },
+   
+  });
+}
+
 function getClientsBySearch(q = "") {
   return api.get(`/clients`, {
     params: {
@@ -50,4 +59,5 @@ export default {
   getClientByUserID,
   getClientByPassport,
   getClientByClientName,
+  getClientsByCode,
 };

@@ -167,7 +167,7 @@ const goToAppeal = () => {
 
 watch(searchId, (newVal) => {
   if (newVal.length > 0) {
-    clientStore.getClientsForAppealByPassport(newVal);
+    clientStore.getClientByCode(newVal);
   } else {
     clientStore.$resetSearchClients();
   }

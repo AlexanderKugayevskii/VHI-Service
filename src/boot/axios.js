@@ -13,7 +13,7 @@ import axios from "axios";
 const url = "https://api.neoinsurance.uz";
 const api = axios.create({ baseURL: url + "/api" });
 
-axios.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
