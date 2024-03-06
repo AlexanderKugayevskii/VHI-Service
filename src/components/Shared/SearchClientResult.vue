@@ -14,16 +14,18 @@
           >Серия и номер паспорта
         </span>
         <span class="client-result-item-info-descr">{{
-          item.passportSeries
+          item.passportSeria + " " + item.passportNumber
         }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">ID </span>
-        <span class="client-result-item-info-descr">{{ item.userID }}</span>
+        <span class="client-result-item-info-descr">{{ item.dmsCode }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">Фамилия и Имя </span>
-        <span class="client-result-item-info-descr">{{ item.clientName }}</span>
+        <span class="client-result-item-info-descr">{{
+          item.firstname + " " + item.lastname
+        }}</span>
       </div>
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">Программа </span>

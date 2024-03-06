@@ -159,6 +159,7 @@ export default {
       searchValue: false,
     };
   },
+  
   methods: {
     onClickOutside(event) {
       console.log("Clicked outside. Event: ", event);

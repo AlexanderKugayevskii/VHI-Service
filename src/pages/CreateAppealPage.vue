@@ -25,18 +25,20 @@
               <div class="create-appeal-client-info">
                 <div class="create-appeal-client-text">
                   <span
-                    >ID:
-                    <b>{{ clientData.userID ?? "1/44/23/11/66" }} </b></span
+                    >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >Клиент: <b>{{ clientData.clientName }} </b></span
+                    >Клиент:
+                    <b
+                      >{{ clientData.firstname + " " + clientData.lastname }}
+                    </b></span
                   >
                   <span
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
-                  <span
+                  <!-- <span
                     >Родственник: <b>{{ clientData.clientName }} </b></span
-                  >
+                  > -->
                 </div>
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
@@ -389,7 +391,7 @@
                                 label="Ед. изм"
                                 placeholder="Шт"
                                 id-key="drugType"
-                                :search = "false"
+                                :search="false"
                                 :multiple="false"
                                 :initialOptions="[
                                   { id: 1, drugType: 'Шт' },
@@ -433,7 +435,6 @@
                               </template>
                             </SelectedItem>
                           </div>
-                         
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>

@@ -70,7 +70,7 @@
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
-                  :checked="selectedClient?.clientID === client.clientID"
+                  :checked="selectedClient?.id === client.id"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -158,7 +158,7 @@ const goToAppeal = () => {
     Trans.i18nRoute({
       name: "createAppeal",
       params: {
-        id: selectedClient.value.clientID,
+        id: selectedClient.value.id,
       },
     })
   );

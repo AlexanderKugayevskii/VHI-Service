@@ -13,9 +13,10 @@ export const useSearchClientsStore = defineStore("clients", () => {
 
   const getClientByCode = async (code) => {
     searchClients.value = [];
+    clients.value = [];
     const response = await ClientService.getClientsByCode(code);
-    searchClients.value = response.data.data;
-    clients.value = searchClients.value.map((item) => {
+    clients.value = response.data.data;
+    searchClients.value = clients.value.map((item) => {
       return {
         id: item.id,
         clientId: item.client.id,
@@ -25,14 +26,11 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program.name,
+        type: "Клиент",
       };
-
-      console.log(clients.value);
-      console.log(clients.value.client.name);
-      console.log(clients.value.client.lastname);
     });
 
-    console.log(clients.value);
+    console.log(searchClients);
   };
 
   function $resetSearchClients() {
