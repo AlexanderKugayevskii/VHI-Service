@@ -47,6 +47,7 @@ const Trans = {
     }
 
     const userPreferredLocale = Trans.getUserLocale();
+    
     if (Trans.isLocaleSupported(userPreferredLocale.locale)) {
       return userPreferredLocale.locale;
     }
@@ -75,9 +76,8 @@ const Trans = {
 
   async routeMiddleware(to, from, next) {
     const paramLocale = to.params.locale;
-
     if (!Trans.isLocaleSupported(paramLocale)) {
-      return next(Trans.guessDefaultLocale());
+      return next();
     } else {
       await Trans.switchLanguage(paramLocale);
       return next();

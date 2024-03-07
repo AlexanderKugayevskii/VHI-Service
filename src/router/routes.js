@@ -8,16 +8,13 @@ const routes = [
     children: [
       {
         path: "",
-        component: () => import("pages/LoginPage.vue"),
-        name: "login",
-      },
-      {
-        path: "dashboard",
+        name: "Dashboard",
+        redirect: { name: "appeals-page" },
         component: () => import("layouts/MainLayout.vue"),
         meta: { requiresAuth: true },
         children: [
           {
-            path: "",
+            path: "appeals",
             component: () => import("pages/AppealsPage.vue"),
             name: "appeals-page",
             // props: (route) => {
@@ -53,6 +50,11 @@ const routes = [
             component: () => import("pages/ClientsPage.vue"),
           },
         ],
+      },
+      {
+        path: "login",
+        name: "Login",
+        component: () => import("pages/LoginPage.vue"),
       },
       {
         path: ":catchAll(.*)*",

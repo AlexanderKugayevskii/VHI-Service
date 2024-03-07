@@ -88,12 +88,12 @@
           <q-item class="q-pa-xs user">
             <q-item-section avatar class="q-pr-xs">
               <q-avatar size="47px">
-                <img
+                <!-- <img
                   :src="`https://api.neoinsurance.uz/storage/${authStore.user.avatar}`"
-                />
+                /> -->
               </q-avatar>
             </q-item-section>
-
+<!-- 
             <q-item-section>
               <q-item-label class="user-name"
                 >{{ authStore.user.name }}
@@ -102,7 +102,7 @@
               <q-item-label class="user-id" lines="1"
                 >Agent ID: {{ authStore.user.agent_id }}</q-item-label
               >
-            </q-item-section>
+            </q-item-section> -->
             <q-item-section side>
               <div class="user-settings">
                 <DropdownSettings>

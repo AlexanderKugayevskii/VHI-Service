@@ -52,8 +52,7 @@ import { ref, computed } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 import { useRouter } from "vue-router";
 
-
-const router = useRouter()  
+const router = useRouter();
 const authStore = useAuthStore();
 const credentials = ref({ email: "", password: "" });
 const loading = computed(() => authStore.loading);
@@ -62,7 +61,7 @@ const error = computed(() => authStore.error);
 const handleLogin = async () => {
   const success = await authStore.login(credentials.value);
   if (success) {
-    router.push({ path: "dashboard" }); // Перенаправление на страницу dashboard
+    router.push({ name: "Dashboard" }); // Перенаправление на страницу dashboard
   } else {
     // Ошибка входа, сообщение уже установлено в состоянии error
     // Возможно, здесь вы захотите что-то сделать дополнительно
