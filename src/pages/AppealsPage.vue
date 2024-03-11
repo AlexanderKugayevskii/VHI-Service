@@ -2,6 +2,7 @@
   <q-page class="flex body-bg">
     <div class="col page-container">
       <h2 class="page-title q-my-none q-mb-md">Обращения</h2>
+
       <div class="appeals-actions">
         <div class="appeals-filter">
           <div class="appeals-search-input">
@@ -98,6 +99,7 @@
             </div>
           </div>
         </div>
+
         <SimpleButton
           :label="$t('create_appeal.buttons.create_appeal')"
           type="button"
@@ -110,6 +112,7 @@
 
     <AppealSearchClient v-model:="searchFilterFixed"></AppealSearchClient>
     <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
+
     <!-- <CreateAppeal v-model:="createAppealFixed"></CreateAppeal> -->
     <router-view></router-view>
   </q-page>
@@ -123,7 +126,7 @@ import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import CreateAppeal from "./CreateAppealPage.vue";
-
+import { useAppealStore } from "src/stores/appealStore";
 // const props = defineProps(["page", "perPage"])
 // const page = computed(() => props.page);
 

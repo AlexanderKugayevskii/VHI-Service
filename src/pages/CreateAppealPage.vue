@@ -3,6 +3,7 @@
     full-height
     maximized
     no-backdrop-dismiss
+    no-esc-dismiss
     ref="createAppealModalRef"
     class="create-appeal-modal"
     :key="route.params.id"

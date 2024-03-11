@@ -22,6 +22,27 @@
       </DropdownSelectNew>
     </div>
 
+    <div class="test-width">
+      <DropdownSelectNew
+        label="выберите клинику"
+        :multiple="false"
+        :loading="appealStore.loading"
+        :options="appealStore.clinics"
+        :selected-options="appealStore.selectedClinic"
+        @select-option="appealStore.selectClinic"
+        @request="appealStore.fetchClinics"
+      >
+        <template #placeholder> Выберете клинику </template>
+        <template v-slot:selected-options-once="props">
+          <div>{{ props.option.name }}</div>
+        </template>
+        <template v-slot:option-content="props">
+          <div>{{ props.option.name }}</div>
+          <CheckIcon v-if="appealStore.checkSelectedClinic(props.option)" />
+        </template>
+      </DropdownSelectNew>
+    </div>
+
     <h1>Клиенты</h1>
     <div class="full-width q-mb-md">
       <SimpleInput v-model="inputValue" debounce-time="500"></SimpleInput>
@@ -143,6 +164,6 @@ console.log(testStore);
 }
 
 .test-width {
-  width: 300px;
+  width: 100%;
 }
 </style>
