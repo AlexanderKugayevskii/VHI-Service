@@ -126,7 +126,6 @@ import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import CreateAppeal from "./CreateAppealPage.vue";
-import { useAppealStore } from "src/stores/appealStore";
 // const props = defineProps(["page", "perPage"])
 // const page = computed(() => props.page);
 
