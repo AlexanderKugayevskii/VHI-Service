@@ -236,7 +236,7 @@ export default defineComponent({
 
     const handleLogout = () => {
       authStore.logout();
-      router.replace({name: 'login'})
+      router.replace({name: 'Login'})
     };
     onMounted(() => {
       console.log(authStore.user);

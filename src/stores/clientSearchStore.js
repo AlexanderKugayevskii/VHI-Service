@@ -29,8 +29,50 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-
     console.log(searchClients);
+  };
+  const getClientByName = async (name) => {
+    searchClients.value = [];
+    clients.value = [];
+    const response = await ClientService.getClientsByName(name);
+    console.log(response);
+    clients.value = response.data.data;
+    searchClients.value = clients.value.map((item) => {
+      return {
+        id: item.id,
+        clientId: item.client.id,
+        firstname: item.client.name,
+        lastname: item.client.lastname,
+        dmsCode: item.dms_code,
+        passportSeria: item.client.seria,
+        passportNumber: item.client.number,
+        program: item.program ? item.programm : "no program",
+        type: "Клиент",
+      };
+    });
+    console.log("searchClients", searchClients);
+  };
+
+  const getClientByPassport = async (passport) => {
+    searchClients.value = [];
+    clients.value = [];
+    const response = await ClientService.getClientsByPassport(passport);
+    console.log(response);
+    clients.value = response.data.data;
+    searchClients.value = clients.value.map((item) => {
+      return {
+        id: item.id,
+        clientId: item.client.id,
+        firstname: item.client.name,
+        lastname: item.client.lastname,
+        dmsCode: item.dms_code,
+        passportSeria: item.client.seria,
+        passportNumber: item.client.number,
+        program: item.program ? item.programm : "no program",
+        type: "Клиент",
+      };
+    });
+    console.log("searchClients", searchClients);
   };
 
   function $resetSearchClients() {
@@ -43,5 +85,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
     getClients,
     $resetSearchClients,
     getClientByCode,
+    getClientByName,
+    getClientByPassport,
   };
 });

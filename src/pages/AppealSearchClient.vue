@@ -86,10 +86,21 @@
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.fio_label')"
+                  debounce-time="300"
                   :placeholder="$t('appeal_search.fio_input')"
+                  v-model:model-value="searchName"
                   :show-icon="true"
                 >
                 </SimpleInput>
+              </div>
+              <div class="client-results">
+                <SearchClientResult
+                  v-for="client in clientStore.searchClients"
+                  :item="client"
+                  :key="client.clientID"
+                  :checked="selectedClient?.id === client.id"
+                  @update:select-value="handleSelectItem"
+                ></SearchClientResult>
               </div>
             </q-tab-panel>
 
@@ -97,10 +108,21 @@
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.passport_label')"
+                  debounce-time="300"
                   :placeholder="$t('appeal_search.passport_input')"
                   :show-icon="true"
+                  v-model:model-value="searchPassport"
                 >
                 </SimpleInput>
+              </div>
+              <div class="client-results">
+                <SearchClientResult
+                  v-for="client in clientStore.searchClients"
+                  :item="client"
+                  :key="client.clientID"
+                  :checked="selectedClient?.id === client.id"
+                  @update:select-value="handleSelectItem"
+                ></SearchClientResult>
               </div>
             </q-tab-panel>
           </q-tab-panels>
@@ -130,13 +152,15 @@
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
-import { ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import { useSearchClientsStore } from "src/stores/clientSearchStore";
 import Trans from "src/i18n/translation";
 
 const searchId = ref("");
+const searchName = ref("");
+const searchPassport = ref("");
 const selectedClient = ref(null);
 const tab = ref("byId");
 const appealSearchClientRef = ref(null);
@@ -145,6 +169,12 @@ const clientStore = useSearchClientsStore();
 const appealStore = useAppealStore();
 
 const router = useRouter();
+
+const clearFields = () => {
+  searchId.value = "";
+  searchName.value = "";
+  searchPassport.value = "";
+};
 
 const hideModal = () => {
   appealSearchClientRef.value.hide();
@@ -171,11 +201,25 @@ const goToAppeal = () => {
   hideModal();
 };
 
-watch(searchId, (newVal) => {
-  if (newVal.length > 0) {
-    clientStore.getClientByCode(newVal);
-  } else {
+watch(tab, (newTab) => {
+  clearFields();
+});
+watch([searchId, searchName, searchPassport], (newVal) => {
+  const checkEmptyFields = newVal.every((val) => val.length === 0);
+  const [newSearchId, newSearchName, newSearchPassport] = newVal;
+  if (checkEmptyFields) {
     clientStore.$resetSearchClients();
+    return;
+  }
+
+  if (newSearchId.length > 0) {
+    clientStore.getClientByCode(newSearchId);
+  }
+  if (newSearchName.length > 0) {
+    clientStore.getClientByName(newSearchName);
+  }
+  if (newSearchPassport.length > 0) {
+    clientStore.getClientByPassport(newSearchPassport);
   }
 });
 </script>

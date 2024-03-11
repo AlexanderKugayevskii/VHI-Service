@@ -6,7 +6,11 @@
       </div>
 
       <div class="dropdown-button" ref="button">
-        <button class="dropdown-button-btn" @click="handleDropdown">
+        <button
+          class="dropdown-button-btn"
+          @click.once="handleRequest"
+          @click="handleDropdown"
+        >
           <span
             class="dropdown-button-btn-text"
             v-if="
@@ -56,7 +60,6 @@
           class="dropdown-select"
           v-if="showDropdown"
           :style="dropDownStyle"
-
         >
           <div class="dropdown-select-scroll">
             <div class="dropdown-select-search">
@@ -93,9 +96,6 @@
                 </q-icon>
               </label>
             </div>
-            <!-- <div class="dropdown-loading flex flex-center" v-if="loading">
-              <q-spinner-tail color="teal" />
-            </div>  -->
             <div
               class="dropdown-select-error-message flex items-center"
               v-if="error"
@@ -120,17 +120,26 @@
                 {{ error && "Не удалось найти" }}
               </span>
             </div>
+            <div class="dropdown-loading flex flex-center" v-if="loading">
+              <q-spinner-tail color="teal" />
+            </div>
+
             <div class="dropdown-select-list" ref="dropdownListRef" v-else>
-              <div
-                v-for="(option, index) of options"
-                class="dropdown-select-list-item"
-                :key="index"
-                @click="selectOption(option)"
+              <q-virtual-scroll
+                class="dropdown-select-list-virtual-scroll"
+                :items="options.data"
+                v-slot="{ item, index }"
               >
-                <div class="dropdown-select-list-item-text">
-                  <slot name="option-content" :option="option"></slot>
+                <div
+                  class="dropdown-select-list-item"
+                  :key="index"
+                  @click="selectOption(item)"
+                >
+                  <div class="dropdown-select-list-item-text">
+                    <slot name="option-content" :option="item"></slot>
+                  </div>
                 </div>
-              </div>
+              </q-virtual-scroll>
             </div>
           </div>
         </div>
@@ -144,6 +153,7 @@ import { watch } from "vue";
 import { ref } from "vue";
 export default {
   props: {
+    loading: Boolean,
     label: String,
     options: Array,
     selectedOptions: {
@@ -171,9 +181,8 @@ export default {
       this.showDropdown = !this.showDropdown;
       if (!this.showDropdown) {
         this.searchValue = "";
-      } else {
-        this.handleRequest();
       }
+      console.log("work");
     },
     handleRequest() {
       this.$emit("request");
@@ -213,18 +222,26 @@ export default {
   mounted() {
     watch(
       [() => this.options, () => this.showDropdown, this.error],
-      async () => {
+      async ([newOptions, newDropdown]) => {
         await this.$nextTick();
         if (!this.showDropdown || this.error) return;
         const dropdownSelectListItemElements =
-          this.$refs.dropdownListRef?.children ?? [];
-        const totalHeight = Array.from(dropdownSelectListItemElements)
-          .slice(0, 6)
-          .reduce((acc, elem) => {
-            const elemHeight = elem.getBoundingClientRect().height;
-            return acc + elemHeight;
-          }, 0);
-        this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
+          this.$refs.dropdownListRef?.querySelectorAll(
+            ".dropdown-select-list-item"
+          ) ?? [];
+
+        if (newOptions) {
+          console.dir(
+            this.$refs.dropdownListRef?.firstElementChild.children[1].children
+          );
+        }
+        // const totalHeight = Array.from(dropdownSelectListItemElements)
+        //   .slice(0, 6)
+        //   .reduce((acc, elem) => {
+        //     const elemHeight = elem.getBoundingClientRect().height;
+        //     return acc + elemHeight;
+        //   }, 0);
+        // this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
       }
     );
   },
@@ -352,5 +369,8 @@ export default {
   color: #404f6f;
   font-size: 15px;
   line-height: 20px;
+}
+.dropdown-select-list-virtual-scroll {
+  height: 100%;
 }
 </style>

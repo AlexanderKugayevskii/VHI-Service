@@ -16,48 +16,29 @@ function getClientsByCode(code) {
     params: {
       dms_code: code,
     },
-   
   });
 }
 
-function getClientsBySearch(q = "") {
-  return api.get(`/clients`, {
+function getClientsByName(name) {
+  return api.get("/clinics/search-by-name", {
     params: {
-      q: q,
+      full_name: name,
     },
   });
 }
 
-function getClientByUserID(userID) {
-  return api.get("/clients", {
+function getClientsByPassport(passport) {
+  return api.get("/clinics/search-by-passport", {
     params: {
-      userID: userID,
+      passport: passport,
     },
   });
 }
-
-function getClientByPassport(passportSeries) {
-  return api.get("/clients", {
-    params: {
-      passportSeries: encodeURIComponent(passportSeries),
-    },
-  });
-}
-
-function getClientByClientName(clientName) {
-  return api.get("/clients", {
-    params: {
-      clientName: clientName,
-    },
-  });
-}
-
+  
 export default {
   getClients,
-  getClientsBySearch,
 
-  getClientByUserID,
-  getClientByPassport,
-  getClientByClientName,
   getClientsByCode,
+  getClientsByName,
+  getClientsByPassport,
 };
