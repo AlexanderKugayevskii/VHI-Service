@@ -117,68 +117,33 @@
                       >
                         <q-tab-panel name="clinics" key="clinics">
                           <div class="tab-header">
-                            <DropdownSelect
-                              label="Клиника"
-                              :placeholder="
-                                $t('create_appeal.dropdowns.clinic')
-                              "
-                              class="appeal-dropdown"
-                              id-key="id"
-                              name-key="clinicName"
+                            <DropdownSelectNew
+                              class="dropdown-space"
+                              label="выберите клинику"
                               :multiple="false"
-                              :fetch-function="appealStore.fetchClinics"
-                              @update:selected-options="appealStore.setClinic"
+                              :loading="appealStore.loading"
+                              :options="appealStore.clinics"
+                              :selected-options="appealStore.selectedClinic"
+                              @select-option="appealStore.selectClinic"
+                              @request="appealStore.fetchClinics"
                             >
                               <template #placeholder>
-                                <span
-                                  v-if="appealStore.clinic?.length"
-                                  class="dropdown-button-btn-text-selected"
-                                >
-                                  {{ appealStore.clinic[0].clinicName }}
-                                </span>
-                                <span v-else>
-                                  {{ $t("create_appeal.dropdowns.clinic") }}
-                                </span>
+                                Выберете клинику
                               </template>
-                              <template #selected-options-once="{ option }">
-                                {{ option.clinicName }}
+                              <template v-slot:selected-options-once="props">
+                                <div>{{ props.option.name }}</div>
                               </template>
-                              <template #option-content="{ option }">
-                                <div class="option-content">
-                                  <div class="image-wrapper">
-                                    <img
-                                      src="/src/assets/temp/propfmedservice.png"
-                                    />
-                                  </div>
-                                  <span>
-                                    {{ option.clinicName }}
-                                  </span>
-                                  <q-icon
-                                    v-if="
-                                      appealStore.clinic?.some((clinic) => {
-                                        return clinic.id === option.id;
-                                      })
-                                    "
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="17"
-                                      height="12"
-                                      viewBox="0 0 17 12"
-                                      fill="none"
-                                    >
-                                      <path
-                                        d="M1 6L6 11L16 1"
-                                        stroke="#13B8BA"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                      />
-                                    </svg>
-                                  </q-icon>
-                                </div>
+                              <template v-slot:option-content="props">
+                                <div>{{ props.option.name }}</div>
+                                <CheckIcon
+                                  v-if="
+                                    appealStore.checkSelectedClinic(
+                                      props.option
+                                    )
+                                  "
+                                />
                               </template>
-                            </DropdownSelect>
+                            </DropdownSelectNew>
                             <SimpleInput
                               label="Диагноз"
                               placeholder="Введите диагноз"
@@ -513,7 +478,7 @@
 
 <script setup>
 import StatusBar from "src/components/Shared/StatusBar.vue";
-import DropdownSelect from "src/components/Shared/DropdownSelect.vue";
+import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
@@ -719,6 +684,9 @@ const handleAddDrug = () => {
   }
 }
 .drugstore-header {
+  margin-bottom: 20px;
+}
+.dropdown-space {
   margin-bottom: 20px;
 }
 </style>

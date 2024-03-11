@@ -20,6 +20,7 @@ api.interceptors.request.use((config) => {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
   config.headers["Access-Control-Allow-Origin"] = "*";
+  console.log('any request')
   return config;
 });
 

@@ -3,14 +3,14 @@ import { ref, reactive, watch } from "vue";
 import AppealService from "src/services/AppealService";
 
 export const useAppealStore = defineStore("appeal", () => {
-  const loading = ref(null); 
+  const loading = ref(null);
   const client = ref(null);
 
   const setClient = (item) => {
     client.value = item;
   };
 
-  const clinics = ref(null);
+  const clinics = ref([]);
   const selectedClinic = ref(null);
 
   const selectClinic = (clinic) => {
@@ -35,27 +35,30 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchClinics = async () => {
-    loading.value = true; 
+    loading.value = true;
     try {
       const response = await AppealService.getClinics();
-      clinics.value = response.data; 
+      clinics.value = response.data;
       console.log(clinics.value);
     } catch (e) {
-      
     } finally {
-      loading.value = false; 
+      loading.value = false;
     }
   };
 
-  watch(selectedClinic, () => {
-  });
+  const checkSelectedClinic = (option) =>
+    selectedClinic.value?.id === option.id;
+
+  watch(selectedClinic, () => {});
 
   return {
     loading,
     client,
+    setClient,
     clinics,
     selectedClinic,
     fetchClinics,
     selectClinic,
+    checkSelectedClinic,
   };
 });

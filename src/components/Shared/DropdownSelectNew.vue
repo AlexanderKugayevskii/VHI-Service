@@ -56,12 +56,18 @@
     <teleport to="body">
       <Transition name="fade">
         <div
+          v-click-out-side="closeModal"
           key="dropdown-select"
           class="dropdown-select"
+          ref="dropdownSelect"
           v-if="showDropdown"
           :style="dropDownStyle"
         >
-          <div class="dropdown-select-scroll">
+          <div
+            class="dropdown-select-scroll"
+            id="virtual-scroll-target"
+            style="max-height: 324px"
+          >
             <div class="dropdown-select-search">
               <label class="dropdown-select-search-label">
                 <input
@@ -124,23 +130,25 @@
               <q-spinner-tail color="teal" />
             </div>
 
-            <div class="dropdown-select-list" ref="dropdownListRef" v-else>
-              <q-virtual-scroll
-                class="dropdown-select-list-virtual-scroll"
-                :items="options.data"
-                v-slot="{ item, index }"
+            <!-- <div class="dropdown-select-list" ref="dropdownListRef" v-else> -->
+            <q-virtual-scroll
+              v-else
+              scroll-target="#virtual-scroll-target"
+              class="dropdown-select-list-virtual-scroll"
+              :items="options.data"
+              v-slot="{ item, index }"
+            >
+              <div
+                class="dropdown-select-list-item"
+                :key="index"
+                @click="selectOption(item)"
               >
-                <div
-                  class="dropdown-select-list-item"
-                  :key="index"
-                  @click="selectOption(item)"
-                >
-                  <div class="dropdown-select-list-item-text">
-                    <slot name="option-content" :option="item"></slot>
-                  </div>
+                <div class="dropdown-select-list-item-text">
+                  <slot name="option-content" :option="item"></slot>
                 </div>
-              </q-virtual-scroll>
-            </div>
+              </div>
+            </q-virtual-scroll>
+            <!-- </div> -->
           </div>
         </div>
       </Transition>
@@ -149,9 +157,16 @@
 </template>
 
 <script>
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import { ref } from "vue";
+import clickOutSide from "@mahdikhashan/vue3-click-outside";
+import { useThrottledRefHistory } from "@vueuse/core";
+
 export default {
+  name: "dropdownSelect",
+  directives: {
+    clickOutSide,
+  },
   props: {
     loading: Boolean,
     label: String,
@@ -164,25 +179,45 @@ export default {
       default: false,
     },
   },
+
   data() {
     return {
       error: null,
       showDropdown: false,
+      dropdownActive: false,
       searchValue: false,
     };
   },
-  setup() {},
+  setup() {
+    const scrollTarget = ref(null);
+    const virtualListScrollTargetRef = ref(null);
+    onMounted(() => {
+      scrollTarget.value = virtualListScrollTargetRef.value;
+    });
+    return {
+      virtualListScrollTargetRef,
+      scrollTarget,
+    };
+  },
 
   methods: {
-    onClickOutside(event) {
-      console.log("Clicked outside. Event: ", event);
+    closeModal(event) {
+      if (this.dropdownActive) {
+        return;
+      }
+
+      this.showDropdown = false;
     },
+
     handleDropdown() {
       this.showDropdown = !this.showDropdown;
+      this.dropdownActive = true;
       if (!this.showDropdown) {
         this.searchValue = "";
       }
-      console.log("work");
+      setTimeout(() => {
+        this.dropdownActive = false;
+      }, 50);
     },
     handleRequest() {
       this.$emit("request");
@@ -211,8 +246,9 @@ export default {
         return {
           position: "fixed",
           left: `${buttonRect.left}px`,
-          top: `${buttonRect.bottom}px`,
+          top: `${buttonRect.bottom + 4}px`,
           width: `${buttonRect.width}px`,
+          "z-index": "9999",
         };
       }
       return {};
@@ -220,30 +256,29 @@ export default {
   },
 
   mounted() {
-    watch(
-      [() => this.options, () => this.showDropdown, this.error],
-      async ([newOptions, newDropdown]) => {
-        await this.$nextTick();
-        if (!this.showDropdown || this.error) return;
-        const dropdownSelectListItemElements =
-          this.$refs.dropdownListRef?.querySelectorAll(
-            ".dropdown-select-list-item"
-          ) ?? [];
-
-        if (newOptions) {
-          console.dir(
-            this.$refs.dropdownListRef?.firstElementChild.children[1].children
-          );
-        }
-        // const totalHeight = Array.from(dropdownSelectListItemElements)
-        //   .slice(0, 6)
-        //   .reduce((acc, elem) => {
-        //     const elemHeight = elem.getBoundingClientRect().height;
-        //     return acc + elemHeight;
-        //   }, 0);
-        // this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
-      }
-    );
+    // watch(
+    //   [() => this.options, () => this.showDropdown, this.error],
+    //   async ([newOptions, newDropdown]) => {
+    //     await this.$nextTick();
+    //     if (!this.showDropdown || this.error) return;
+    //     console.log(`-------`, this.options);
+    //     document.addEventListener("load", () => {
+    //       const dropdownItems = document.querySelectorAll(
+    //         ".dropdown-select-list-item"
+    //       );
+    //       console.log(dropdownItems);
+    //     });
+    //     const dropdownSelectListItemElements =
+    //       this.$refs.dropdownListRef?.children ?? [];
+    //     const totalHeight = Array.from(dropdownSelectListItemElements)
+    //       .slice(0, 6)
+    //       .reduce((acc, elem) => {
+    //         const elemHeight = elem.getBoundingClientRect().height;
+    //         return acc + elemHeight;
+    //       }, 0);
+    //     this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
+    //   }
+    // );
   },
 };
 </script>
@@ -326,8 +361,9 @@ export default {
     }
   }
 }
-.dropdown-select-list {
-}
+// .dropdown-select-list {
+//   max-height: 285px;
+// }
 .dropdown-select-list-item {
   padding: 4px 0;
 }
@@ -369,8 +405,5 @@ export default {
   color: #404f6f;
   font-size: 15px;
   line-height: 20px;
-}
-.dropdown-select-list-virtual-scroll {
-  height: 100%;
 }
 </style>

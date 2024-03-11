@@ -14,7 +14,9 @@
     "server": "npx json-server api/db.json"
   },
   "dependencies": {
+    "@mahdikhashan/vue3-click-outside": "^0.1.2",
     "@quasar/extras": "^1.16.4",
+    "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.2.1",
     "lodash": "^4.17.21",

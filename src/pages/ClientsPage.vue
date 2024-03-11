@@ -5,7 +5,7 @@
       <DropdownSelectNew
         label="выберите клинику"
         :multiple="false"
-        :loading = "appealStore.loading"
+        :loading="appealStore.loading"
         :options="appealStore.clinics"
         :selected-options="appealStore.selectedClinic"
         @select-option="appealStore.selectClinic"
@@ -17,7 +17,7 @@
         </template>
         <template v-slot:option-content="props">
           <div>{{ props.option.name }}</div>
-          <CheckIcon v-if="testStore.checkSelectOption(props.option)" />
+          <CheckIcon v-if="appealStore.checkSelectedClinic(props.option)" />
         </template>
       </DropdownSelectNew>
     </div>
