@@ -74,7 +74,7 @@
                   type="text"
                   :placeholder="$t('search')"
                   class="dropdown-select-search__field"
-                  @input="updateSearchValue($event.target.value)"
+                  v-model="searchValue"
                 />
                 <q-icon size="20px">
                   <svg
@@ -135,7 +135,7 @@
               v-else
               scroll-target="#virtual-scroll-target"
               class="dropdown-select-list-virtual-scroll"
-              :items="options.data"
+              :items="filteredOptions"
               v-slot="{ item, index }"
             >
               <div
@@ -160,7 +160,7 @@
 import { onMounted, watch } from "vue";
 import { ref } from "vue";
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
-import { useThrottledRefHistory } from "@vueuse/core";
+
 
 export default {
   name: "dropdownSelect",
@@ -185,7 +185,8 @@ export default {
       error: null,
       showDropdown: false,
       dropdownActive: false,
-      searchValue: false,
+      searchField: false,
+      searchValue: "",
     };
   },
   setup() {
@@ -226,6 +227,7 @@ export default {
       this.$emit("selectOption", option);
       if (!this.multiple) {
         this.showDropdown = false;
+        this.searchValue = "";
       }
     },
   },
@@ -252,6 +254,10 @@ export default {
         };
       }
       return {};
+    },
+    filteredOptions() {
+      const regex = new RegExp(this.searchValue, "i");
+      return this.options.data.filter((option) => regex.test(option.name));
     },
   },
 

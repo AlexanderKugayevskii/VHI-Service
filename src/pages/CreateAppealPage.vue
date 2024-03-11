@@ -119,7 +119,7 @@
                           <div class="tab-header">
                             <DropdownSelectNew
                               class="dropdown-space"
-                              label="выберите клинику"
+                              label="Выберите клинику"
                               :multiple="false"
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
@@ -484,6 +484,7 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
+import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -496,7 +497,6 @@ const doctorsData = computed(() => appealStore.doctorsData);
 const servicesData = computed(() => appealStore.servicesData);
 const drugsData = computed(() => appealStore.drugsData.drugs);
 const { client: clientData, drug: drugData } = storeToRefs(appealStore);
-console.log(appealStore.drugsData);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
