@@ -38,7 +38,7 @@ export const useAppealStore = defineStore("appeal", () => {
     loading.value = true;
     try {
       const response = await AppealService.getClinics();
-      clinics.value = response.data;
+      clinics.value = response.data.data;
       console.log(clinics.value);
     } catch (e) {
     } finally {

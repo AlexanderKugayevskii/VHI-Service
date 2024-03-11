@@ -118,8 +118,7 @@
                         <q-tab-panel name="clinics" key="clinics">
                           <div class="tab-header">
                             <DropdownSelectNew
-                              class="dropdown-space"
-                              label="Выберите клинику"
+                              label="выберите клинику"
                               :multiple="false"
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
@@ -155,81 +154,33 @@
 
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
-                            <DropdownSelect
-                              :placeholder="
-                                $t('create_appeal.dropdowns.doctors')
-                              "
-                              id-key="id"
-                              name-key="doctorName"
-                              :multiple="true"
-                              :selected-data="doctorsData"
-                              :fetch-function="appealStore.fetchDoctors"
-                              @update:selected-options="appealStore.setDoctors"
+                            <!-- <DropdownSelectNew
+                              class="dropdown-space"
+                              label="Выберите клинику"
+                              :multiple="false"
+                              :loading="appealStore.loading"
+                              :options="appealStore.clinics"
+                              :selected-options="appealStore.selectedClinic"
+                              @select-option="appealStore.selectClinic"
+                              @request="appealStore.fetchClinics"
                             >
                               <template #placeholder>
-                                <span
-                                  v-if="appealStore.doctorsData?.length > 0"
-                                  class="dropdown-button-btn-text-selected"
-                                >
-                                  {{
-                                    doctorsData.length === 1
-                                      ? doctorsData[0].specialization
-                                      : $t(
-                                          "create_appeal.dropdowns.doctors_choise",
-                                          doctorsData.length
-                                        )
-                                  }}
-                                </span>
-                                <span v-else>
-                                  {{ $t("create_appeal.dropdowns.doctors") }}
-                                </span>
+                                Выберете клинику
                               </template>
-                              <template #selected-options-once="{ option }">
-                                {{ option.specialization }}
+                              <template v-slot:selected-options-once="props">
+                                <div>{{ props.option.name }}</div>
                               </template>
-                              <template #selected-options-length="{ length }">
-                                {{
-                                  $t(
-                                    "create_appeal.dropdowns.doctors_choise",
-                                    length
-                                  )
-                                }}
+                              <template v-slot:option-content="props">
+                                <div>{{ props.option.name }}</div>
+                                <CheckIcon
+                                  v-if="
+                                    appealStore.checkSelectedClinic(
+                                      props.option
+                                    )
+                                  "
+                                />
                               </template>
-                              <template #option-content="{ option }">
-                                <div class="option-content">
-                                  <span>
-                                    {{ option.specialization }}
-                                  </span>
-                                  -
-                                  <span class="option-content-extra">
-                                    {{ formatPrice(option.price) }}
-                                  </span>
-                                  <q-icon
-                                    v-if="
-                                      appealStore.doctorsData?.some(
-                                        (doctor) => doctor.id === option.id
-                                      )
-                                    "
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="17"
-                                      height="12"
-                                      viewBox="0 0 17 12"
-                                      fill="none"
-                                    >
-                                      <path
-                                        d="M1 6L6 11L16 1"
-                                        stroke="#13B8BA"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                      />
-                                    </svg>
-                                  </q-icon>
-                                </div>
-                              </template>
-                            </DropdownSelect>
+                            </DropdownSelectNew> -->
                           </div>
                           <div class="tab-body">
                             <SelectedItem
@@ -247,81 +198,33 @@
 
                         <q-tab-panel name="services" key="services">
                           <div class="tab-header">
-                            <DropdownSelect
-                              :placeholder="
-                                $t('create_appeal.dropdowns.services')
-                              "
-                              id-key="id"
-                              name-key="serviceName"
-                              :multiple="true"
-                              :selected-data="appealStore.servicesData"
-                              :fetch-function="appealStore.fetchServices"
-                              @update:selected-options="appealStore.setServices"
+                            <!-- <DropdownSelectNew
+                              class="dropdown-space"
+                              label="Выберите клинику"
+                              :multiple="false"
+                              :loading="appealStore.loading"
+                              :options="appealStore.clinics"
+                              :selected-options="appealStore.selectedClinic"
+                              @select-option="appealStore.selectClinic"
+                              @request="appealStore.fetchClinics"
                             >
                               <template #placeholder>
-                                <span
-                                  v-if="appealStore.servicesData?.length > 0"
-                                  class="dropdown-button-btn-text-selected"
-                                >
-                                  {{
-                                    appealStore.servicesData.length === 1
-                                      ? appealStore.servicesData[0].serviceName
-                                      : `${$t(
-                                          "create_appeal.dropdowns.services_choise",
-                                          appealStore.servicesData.length
-                                        )} `
-                                  }}
-                                </span>
-                                <span v-else>
-                                  {{ $t("create_appeal.dropdowns.services") }}
-                                </span>
+                                Выберете клинику
                               </template>
-                              <template #selected-options-once="{ option }">
-                                {{ option.serviceName }}
+                              <template v-slot:selected-options-once="props">
+                                <div>{{ props.option.name }}</div>
                               </template>
-                              <template #selected-options-length="{ length }">
-                                {{
-                                  $t(
-                                    "create_appeal.dropdowns.services_choise",
-                                    length
-                                  )
-                                }}
+                              <template v-slot:option-content="props">
+                                <div>{{ props.option.name }}</div>
+                                <CheckIcon
+                                  v-if="
+                                    appealStore.checkSelectedClinic(
+                                      props.option
+                                    )
+                                  "
+                                />
                               </template>
-                              <template #option-content="{ option }">
-                                <div class="option-content">
-                                  <span>
-                                    {{ option.serviceName }}
-                                  </span>
-                                  -
-                                  <span class="option-content-extra">
-                                    {{ formatPrice(option.price) }}
-                                  </span>
-                                  <q-icon
-                                    v-if="
-                                      appealStore.servicesData?.some(
-                                        (service) => service.id === option.id
-                                      )
-                                    "
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="17"
-                                      height="12"
-                                      viewBox="0 0 17 12"
-                                      fill="none"
-                                    >
-                                      <path
-                                        d="M1 6L6 11L16 1"
-                                        stroke="#13B8BA"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                      />
-                                    </svg>
-                                  </q-icon>
-                                </div>
-                              </template>
-                            </DropdownSelect>
+                            </DropdownSelectNew> -->
                           </div>
                           <div class="tab-body">
                             <SelectedItem
@@ -493,9 +396,9 @@ import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 
 const appealStore = useAppealStore();
-const doctorsData = computed(() => appealStore.doctorsData);
-const servicesData = computed(() => appealStore.servicesData);
-const drugsData = computed(() => appealStore.drugsData.drugs);
+// const doctorsData = computed(() => appealStore.doctorsData);
+// const servicesData = computed(() => appealStore.servicesData);
+// const drugsData = computed(() => appealStore.drugsData.drugs);
 const { client: clientData, drug: drugData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
@@ -509,18 +412,18 @@ const hideModal = () => {
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 
-const handleRemoveDoctor = (item) => {
-  appealStore.clearDoctors(item);
-};
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
-};
-const handleRemoveDrug = (item) => {
-  appealStore.clearDrugs(item);
-};
-const handleAddDrug = () => {
-  appealStore.setDrugs(drugData);
-};
+// const handleRemoveDoctor = (item) => {
+//   appealStore.clearDoctors(item);
+// };
+// const handleRemoveService = (item) => {
+//   appealStore.clearServices(item);
+// };
+// const handleRemoveDrug = (item) => {
+//   appealStore.clearDrugs(item);
+// };
+// const handleAddDrug = () => {
+//   appealStore.setDrugs(drugData);
+// };
 </script>
 
 <style lang="scss" scoped>
