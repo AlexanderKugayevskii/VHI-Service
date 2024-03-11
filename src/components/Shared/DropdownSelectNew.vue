@@ -1,16 +1,18 @@
 <template>
   <div class="dropdown" id="dropdown">
-    <label class="dropdown-label">
+    <div class="dropdown-label">
       <div class="dropdown-label-wrapper">
         <span class="dropdown-label-text">{{ label }}</span>
       </div>
 
-      <div class="dropdown-button" ref="button">
-        <button
-          class="dropdown-button-btn"
-          @click.once="handleRequest"
-          @click="handleDropdown"
-        >
+      <div
+        class="dropdown-button"
+        ref="button"
+        role="button"
+        @click.once="handleRequest"
+        @click="handleDropdown"
+      >
+        <button class="dropdown-button-btn">
           <span
             class="dropdown-button-btn-text"
             v-if="
@@ -52,7 +54,7 @@
           </svg>
         </q-icon>
       </div>
-    </label>
+    </div>
 
     <Transition name="fade">
       <div
@@ -105,7 +107,7 @@
           </div>
           <div
             class="dropdown-select-error-message flex items-center"
-            v-if="error"
+            v-if="filteredOptions.length === 0"
           >
             <q-icon size="20px">
               <svg
@@ -123,12 +125,10 @@
                 />
               </svg>
             </q-icon>
-            <span>
-              {{ error && "Не удалось найти" }}
-            </span>
+            <span> Не удалось найти </span>
           </div>
           <div class="dropdown-loading flex flex-center" v-if="loading">
-            <q-spinner-tail color="teal" />
+            <q-spinner-tail color="teal" size="20px" />
           </div>
 
           <!-- <div class="dropdown-select-list" ref="dropdownListRef" v-else> -->
@@ -163,6 +163,7 @@ import clickOutSide from "@mahdikhashan/vue3-click-outside";
 
 export default {
   name: "dropdownSelect",
+  emits: ["selectOption", "request"],
   directives: {
     clickOutSide,
   },
@@ -334,6 +335,7 @@ export default {
   display: flex;
   background-color: #f2f5fa;
   border-radius: 16px;
+  cursor: pointer;
 }
 .dropdown-button-btn {
   width: 100%;
@@ -343,6 +345,7 @@ export default {
   align-items: center;
   color: #7a88a6;
   padding: 0;
+  cursor: pointer;
 }
 
 .dropdown-select-search {
@@ -399,9 +402,6 @@ export default {
     background-color: #edf0f7;
   }
 }
-.dropdown-label {
-  cursor: pointer;
-}
 
 .dropdown-button-btn-text-selected {
   color: #404f6f;
@@ -421,5 +421,8 @@ export default {
   color: #404f6f;
   font-size: 15px;
   line-height: 20px;
+}
+.dropdown-loading {
+  padding: 20px 0;
 }
 </style>

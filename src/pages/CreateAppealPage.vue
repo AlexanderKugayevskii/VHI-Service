@@ -119,6 +119,7 @@
                         <q-tab-panel name="clinics" key="clinics">
                           <div class="tab-header">
                             <DropdownSelectNew
+                              class="dropdown-space"
                               label="выберите клинику"
                               :multiple="false"
                               :loading="appealStore.loading"
