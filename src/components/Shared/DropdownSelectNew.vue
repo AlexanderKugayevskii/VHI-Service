@@ -69,12 +69,14 @@
             style="max-height: 324px"
           >
             <div class="dropdown-select-search">
-              <label class="dropdown-select-search-label">
+              <label class="dropdown-select-search-label" for="filterSearch">
                 <input
                   type="text"
+                  id="filterSearch"
                   :placeholder="$t('search')"
                   class="dropdown-select-search__field"
                   v-model="searchValue"
+                  ref="filterSearch"
                 />
                 <q-icon size="20px">
                   <svg
@@ -161,7 +163,6 @@ import { onMounted, watch } from "vue";
 import { ref } from "vue";
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
 
-
 export default {
   name: "dropdownSelect",
   directives: {
@@ -206,7 +207,6 @@ export default {
       if (this.dropdownActive) {
         return;
       }
-
       this.showDropdown = false;
     },
 
@@ -250,18 +250,26 @@ export default {
           left: `${buttonRect.left}px`,
           top: `${buttonRect.bottom + 4}px`,
           width: `${buttonRect.width}px`,
-          "z-index": "9999",
+          "z-index": "100000",
         };
       }
       return {};
     },
     filteredOptions() {
       const regex = new RegExp(this.searchValue, "i");
-      return this.options.data.filter((option) => regex.test(option.name));
+      return this.options.filter((option) => regex.test(option.name));
     },
   },
 
   mounted() {
+    watch(
+      () => this.showDropdown,
+      (newVal) => {
+        if (newVal) {
+          this.$refs["filterSearch"].focus();
+        }
+      }
+    );
     // watch(
     //   [() => this.options, () => this.showDropdown, this.error],
     //   async ([newOptions, newDropdown]) => {
@@ -344,7 +352,7 @@ export default {
   height: 40px;
   background-color: #fff;
   position: sticky;
-  z-index: 10;
+  z-index: 9999;
   top: 0;
 }
 .dropdown-select-search-label {
