@@ -105,9 +105,13 @@
               </q-icon>
             </label>
           </div>
+
+          <div class="dropdown-loading flex flex-center" v-if="loading">
+            <q-spinner-tail color="teal" size="20px" />
+          </div>
           <div
             class="dropdown-select-error-message flex items-center"
-            v-if="filteredOptions.length === 0"
+            v-else-if="filteredOptions.length === 0"
           >
             <q-icon size="20px">
               <svg
@@ -127,10 +131,6 @@
             </q-icon>
             <span> Не удалось найти </span>
           </div>
-          <div class="dropdown-loading flex flex-center" v-if="loading">
-            <q-spinner-tail color="teal" size="20px" />
-          </div>
-
           <!-- <div class="dropdown-select-list" ref="dropdownListRef" v-else> -->
           <q-virtual-scroll
             v-else

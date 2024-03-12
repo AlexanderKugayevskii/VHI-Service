@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="selected-item-right">
-      <div class="selected-item-price">{{ formatPrice(item.price) }}</div>
+      <!-- <div class="selected-item-price">{{ formatPrice(item.price) }}</div> -->
       <div class="selected-item-actions">
         <button
           type="button"
@@ -51,9 +51,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:select"]);
+const emit = defineEmits(["update:remove"]);
 const emitClick = (event, item) => {
-  emit("update:select", item);
+  emit("update:remove", item);
 };
 </script>
 

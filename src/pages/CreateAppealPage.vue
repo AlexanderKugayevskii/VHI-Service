@@ -129,7 +129,7 @@
                               @request="appealStore.fetchClinics"
                             >
                               <template #placeholder>
-                                Выберете клинику
+                                {{ $t("create_appeal.dropdowns.doctors") }}
                               </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
@@ -156,43 +156,50 @@
 
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
-                            <!-- <DropdownSelectNew
+                            <DropdownSelectNew
                               class="dropdown-space"
-                              label="Выберите клинику"
-                              :multiple="false"
+                              :multiple="true"
                               :loading="appealStore.loading"
-                              :options="appealStore.clinics"
-                              :selected-options="appealStore.selectedClinic"
-                              @select-option="appealStore.selectClinic"
-                              @request="appealStore.fetchClinics"
+                              :options="appealStore.doctors"
+                              :selected-options="appealStore.selectedDoctors"
+                              @select-option="appealStore.selectDoctors"
+                              @request="appealStore.fetchDoctors"
                             >
-                              <template #placeholder>
-                                Выберете клинику
-                              </template>
+                              <template #placeholder> Выберете врача </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
+                              </template>
+                              <template
+                                v-slot:selected-options-length="{ length }"
+                              >
+                                {{
+                                  $t(
+                                    "create_appeal.dropdowns.doctors_choise",
+                                    length
+                                  )
+                                }}
                               </template>
                               <template v-slot:option-content="props">
                                 <div>{{ props.option.name }}</div>
                                 <CheckIcon
                                   v-if="
-                                    appealStore.checkSelectedClinic(
+                                    appealStore.checkSelectedDoctors(
                                       props.option
                                     )
                                   "
                                 />
                               </template>
-                            </DropdownSelectNew> -->
+                            </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
                             <SelectedItem
-                              v-for="item in doctorsData"
-                              :item="item"
-                              :key="item.id"
-                              @update:select="handleRemoveDoctor"
+                              v-for="doctor in appealStore.selectedDoctors"
+                              :item="doctor"
+                              :key="doctor.id"
+                              @update:remove="handleRemoveDoctor"
                             >
                               <template #label>
-                                {{ item.specialization }}
+                                {{ doctor.name }}
                               </template>
                             </SelectedItem>
                           </div>
@@ -200,43 +207,52 @@
 
                         <q-tab-panel name="services" key="services">
                           <div class="tab-header">
-                            <!-- <DropdownSelectNew
+                            <DropdownSelectNew
                               class="dropdown-space"
-                              label="Выберите клинику"
-                              :multiple="false"
+                              :multiple="true"
                               :loading="appealStore.loading"
-                              :options="appealStore.clinics"
-                              :selected-options="appealStore.selectedClinic"
-                              @select-option="appealStore.selectClinic"
-                              @request="appealStore.fetchClinics"
+                              :options="appealStore.services"
+                              :selected-options="appealStore.selectedServices"
+                              @select-option="appealStore.selectServices"
+                              @request="appealStore.fetchServices"
                             >
                               <template #placeholder>
-                                Выберете клинику
+                                {{ $t("create_appeal.dropdowns.services") }}
                               </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
+                              </template>
+                              <template
+                                v-slot:selected-options-length="{ length }"
+                              >
+                                {{
+                                  $t(
+                                    "create_appeal.dropdowns.services_choise",
+                                    length
+                                  )
+                                }}
                               </template>
                               <template v-slot:option-content="props">
                                 <div>{{ props.option.name }}</div>
                                 <CheckIcon
                                   v-if="
-                                    appealStore.checkSelectedClinic(
+                                    appealStore.checkSelectedServices(
                                       props.option
                                     )
                                   "
                                 />
                               </template>
-                            </DropdownSelectNew> -->
+                            </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
                             <SelectedItem
-                              v-for="item in servicesData"
-                              :item="item"
-                              :key="item.id"
-                              @update:select="handleRemoveService"
+                              v-for="service in appealStore.selectedServices"
+                              :item="service"
+                              :key="service.id"
+                              @update:remove="handleRemoveService"
                             >
                               <template #label>
-                                {{ item.serviceName }}
+                                {{ service.name }}
                               </template>
                             </SelectedItem>
                           </div>
@@ -414,12 +430,12 @@ const hideModal = () => {
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 
-// const handleRemoveDoctor = (item) => {
-//   appealStore.clearDoctors(item);
-// };
-// const handleRemoveService = (item) => {
-//   appealStore.clearServices(item);
-// };
+const handleRemoveDoctor = (item) => {
+  appealStore.clearDoctors(item);
+};
+const handleRemoveService = (item) => {
+  appealStore.clearServices(item);
+};
 // const handleRemoveDrug = (item) => {
 //   appealStore.clearDrugs(item);
 // };

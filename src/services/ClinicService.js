@@ -5,8 +5,7 @@ function getClinics() {
 }
 
 function getDoctors(id) {
-  console.log(id);
-  return api.get(`/clinics/${id}/doctors`);
+  return api.get(`/clinics/doctors/${id}`);
 }
 
 function getServices(id) {
