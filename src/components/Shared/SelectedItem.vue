@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="selected-item-right">
-      <!-- <div class="selected-item-price">{{ formatPrice(item.price) }}</div> -->
+      <div class="selected-item-price"><slot name="price"></slot></div>
       <div class="selected-item-actions">
         <button
           type="button"
@@ -81,6 +81,7 @@ const emitClick = (event, item) => {
   column-gap: 16px;
 }
 .selected-item-price {
+  white-space: nowrap;
   font-size: 15px;
   font-style: normal;
   font-weight: 600;

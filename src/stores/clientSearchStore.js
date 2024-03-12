@@ -16,10 +16,11 @@ export const useSearchClientsStore = defineStore("clients", () => {
     clients.value = [];
     const response = await ClientService.getClientsByCode(code);
     clients.value = response.data.data;
+
     searchClients.value = clients.value.map((item) => {
       return {
-        id: item.id,
-        clientId: item.client.id,
+        id: item.id, //contract_client_id
+        clientId: item.client.id, //client_id
         firstname: item.client.name,
         lastname: item.client.lastname,
         dmsCode: item.dms_code,
@@ -29,7 +30,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    console.log(searchClients);
+    console.log(response);
   };
   const getClientByName = async (name) => {
     searchClients.value = [];

@@ -4,10 +4,21 @@ import AppealService from "src/services/AppealService";
 
 export const useAppealStore = defineStore("appeal", () => {
   const loading = ref(null);
+  const successAppeal = ref(false);
   const client = ref(null);
+
+  const setSuccessAppeal = (flag) => {
+    successAppeal.value = flag; 
+  }
 
   const setClient = (item) => {
     client.value = item;
+  };
+
+  const diagnosis = ref("");
+
+  const setDiagnosis = (value) => {
+    diagnosis.value = value;
   };
 
   const clinics = ref([]);
@@ -25,7 +36,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const selectDoctors = (doctor) => {
     const index = selectedDoctors.value.findIndex(
-      (item) => item.id === doctor.id
+      (item) => item?.id === doctor.id
     );
     if (index > -1) {
       selectedDoctors.value.splice(index, 1);
@@ -57,6 +68,22 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const fetchHospitalData = async () => {
+    loading.value = true;
+    try {
+      const response = await AppealService.getHospitalDataById(
+        selectedClinic.value.id
+      );
+      const data = response.data.data;
+      doctors.value = data.doctors;
+      services.value = data.med_services;
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
   const fetchDoctors = async () => {
     loading.value = true;
     try {
@@ -69,13 +96,38 @@ export const useAppealStore = defineStore("appeal", () => {
       loading.value = false;
     }
   };
-
   const fetchServices = async () => {
     loading.value = true;
     try {
       const response = await AppealService.getServices(selectedClinic.value.id);
       services.value = response.data.data;
       console.log(response.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+  const postAppealData = async () => {
+    const payload = {
+      hospital_id: selectedClinic.value.id,
+      contract_client_id: client.value.id,
+      client_type: 0,
+      client_id: client.value.clientId,
+      services: selectedServices.value.map((service) => service.id),
+      doctors: selectedDoctors.value.map((doctor) => doctor.id),
+      diagnosis: diagnosis.value,
+    };
+    loading.value = true;
+    try {
+      const response = await AppealService.saveAppealByAgent(payload);
+      console.log(`response`, response);
+      if (
+        response.status === 200 &&
+        response.data.message === "created successfully"
+      ) {
+        setSuccessAppeal(true)
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -117,8 +169,12 @@ export const useAppealStore = defineStore("appeal", () => {
 
   return {
     loading,
+    successAppeal,
+    setSuccessAppeal,
     client,
     setClient,
+    diagnosis,
+    setDiagnosis,
     clinics,
     selectedClinic,
     doctors,
@@ -128,6 +184,7 @@ export const useAppealStore = defineStore("appeal", () => {
     fetchClinics,
     fetchDoctors,
     fetchServices,
+    fetchHospitalData,
     selectClinic,
     selectDoctors,
     selectServices,
@@ -136,5 +193,6 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSelectedServices,
     clearDoctors,
     clearServices,
+    postAppealData,
   };
 });

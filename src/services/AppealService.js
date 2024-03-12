@@ -8,13 +8,22 @@ function getDoctors(id) {
   return api.get(`/clinics/doctors/${id}`);
 }
 
-
 function getServices(id) {
   return api.get(`/clinics/services/${id}`);
+}
+
+function getHospitalDataById(id) {
+  return api.get(`/clinics/hospitals/${id}`);
+}
+
+function saveAppealByAgent(payload) {
+  return api.post("/clinics/application-agent", payload);
 }
 
 export default {
   getClinics,
   getDoctors,
-  getServices
+  getServices,
+  getHospitalDataById,
+  saveAppealByAgent,
 };

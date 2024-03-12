@@ -163,7 +163,7 @@ import clickOutSide from "@mahdikhashan/vue3-click-outside";
 
 export default {
   name: "dropdownSelect",
-  emits: ["selectOption", "request"],
+  emits: ["selectOption", "request", "requestBySelect"],
   directives: {
     clickOutSide,
   },
@@ -224,6 +224,7 @@ export default {
     },
     selectOption(option) {
       this.$emit("selectOption", option);
+      this.$emit("requestBySelect");
       if (!this.multiple) {
         this.showDropdown = false;
         this.searchValue = "";
@@ -390,7 +391,8 @@ export default {
   font-size: 15px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 8px;
+
   border-radius: 8px;
   color: #404f6f;
   cursor: pointer;
