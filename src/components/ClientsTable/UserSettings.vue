@@ -101,7 +101,7 @@ const goToAppeal = () => {
     Trans.i18nRoute({
       name: "createAppeal",
       params: {
-        id: props.client.clientID,
+        id: props.client.contractClientId,
       },
     })
   );

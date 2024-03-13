@@ -26,7 +26,7 @@ defineProps(["options"]);
 
 // const route = useRoute();
 
-const optionsRowsPerPage = ref([10, 25, 30]);
+const optionsRowsPerPage = ref([10, 25, 50]);
 const selectedOption = ref(10);
 
 // watch(

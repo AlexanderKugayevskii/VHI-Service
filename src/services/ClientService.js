@@ -1,10 +1,12 @@
 import { api } from "../boot/axios";
 
 function getClients(page, limit, search, filterQueries) {
-  return api.get(`/api`, {
+  console.log("page", page);
+  console.log("limit", limit);
+  return api.get(`/clinics/applications`, {
     params: {
-      _page: page,
-      _limit: limit,
+      limit: limit,
+      page: page,
       q: search,
       ...filterQueries,
     },
@@ -34,7 +36,7 @@ function getClientsByPassport(passport) {
     },
   });
 }
-  
+
 export default {
   getClients,
 

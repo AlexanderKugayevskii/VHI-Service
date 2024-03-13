@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import { i18n } from "src/i18n";
+import formatDate from "src/helpers/formatDate";
 const columns = computed(() => [
   {
     name: "index",
@@ -78,7 +79,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     loading.value = true;
     ClientService.getClients(page, limit, search)
       .then((response) => {
-        users.value = response.data;
+        users.value = response.data.data.data;
         // router.push({
         //   name: "appeals-page",
         //   query: {
@@ -89,9 +90,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
-        pagination.value.rowsNumber = parseInt(
-          response.headers.get("x-total-count")
-        );
+        pagination.value.rowsNumber = response.data.data.total;
       })
       .catch(() => {})
       .finally(() => {
@@ -100,6 +99,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   }
 
   const handleRequest = (props) => {
+    console.log(props);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
@@ -107,10 +107,27 @@ export const useClientTableStore = defineStore("clientTable", () => {
     );
   };
 
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
   const rows = computed(() => {
     return users.value.map((row, index) => {
+      const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
+      const services = row.services.map((service) => service.name).join(", ");
       return {
-        ...row,
+        contractClientId: row.contract_client_id,
+        clientName: row.client.lastname + " " + row.client.name,
+        appealDate: formatDate(row.created_at),
+        appealStatus: row.status,
+        clinicName: row.hospital.name,
+        doctorName: doctors,
+        serviceName: services,
+        diagnosisName: row.diagnosis ?? "",
+        expenseAmount: row.total_amount ?? "",
         userSettings: "",
         index:
           (pagination.value.page - 1) * pagination.value.rowsPerPage +
@@ -119,5 +136,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
       };
     });
   });
+
   return { pagination, loading, rows, columns, handleRequest };
 });

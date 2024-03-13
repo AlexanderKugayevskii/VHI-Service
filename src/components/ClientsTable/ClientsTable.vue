@@ -70,7 +70,7 @@
               :to="
                 Trans.i18nRoute({
                   name: 'createAppeal',
-                  params: { id: props.row.clientID },
+                  params: { id: props.row.contractClientId },
                 })
               "
               replace
@@ -105,6 +105,7 @@
         </q-tr>
       </template>
     </q-table>
+
   </div>
   <div class="flex q-my-lg">
     <!-- <PaginationTable :pagination="pagination" @change-page="updatePage" /> -->
@@ -134,7 +135,7 @@
               />
             </svg>
           </q-icon>
-          <span>{{$t('pagination.prev')}}</span>
+          <span>{{ $t("pagination.prev") }}</span>
         </button>
 
         <button
@@ -157,7 +158,7 @@
           @click="incrementPage"
           class="pagination-btn-control"
         >
-          <span>{{$t('pagination.next')}}</span>
+          <span>{{ $t("pagination.next") }}</span>
           <q-icon size="20px"
             ><svg
               width="20"
@@ -259,6 +260,8 @@ onMounted(() => {
   qTableInnerElement.className = "q-table-inner-element";
   qTableInnerElement.appendChild(qTableElement);
   qTableMiddleElement.appendChild(qTableInnerElement);
+
+
 });
 </script>
 

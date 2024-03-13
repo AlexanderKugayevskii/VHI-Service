@@ -15,8 +15,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 const props = defineProps({
   status: {
-    type: String,
-    default: "NEW",
+    type: Number,
+    default: 0,
   },
   label: {
     type: Boolean,
@@ -31,16 +31,16 @@ const props = defineProps({
 const { t } = useI18n();
 
 const statuses = {
-  NEW: t("statuses.new"),
-  IN_PROGRESS: t("statuses.in_progress"),
-  COMPLETED: t("statuses.completed"),
+  '0': t("statuses.new"),
+  '1': t("statuses.in_progress"),
+  '2': t("statuses.completed"),
 };
 const statusArr = computed(() => {
   return Object.entries(statuses);
 });
 const findIndex = computed(() => {
   return statusArr.value.findIndex((item) => {
-    return item[0].toLowerCase() === props.status.toLowerCase();
+    return item[0] === String(props.status);
   });
 });
 </script>
