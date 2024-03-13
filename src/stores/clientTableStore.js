@@ -103,7 +103,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
   }
 
   const handleRequest = (props) => {
-    console.log(props);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
@@ -124,7 +123,9 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const services = row.services.map((service) => service.name).join(", ");
       return {
         contractClientId: row.contract_client_id,
-        clientName: row.client.lastname + " " + row.client.name,
+        appealId: row.id,
+        clientFirstname: row.client.name,
+        clientLastname: row.client.lastname,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         clinicName: row.hospital.name,
@@ -132,6 +133,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
         serviceName: services,
         diagnosisName: row.diagnosis ?? "",
         expenseAmount: row.total_amount ?? "",
+        dmsCode: row.contract_client.dms_code,
+        program: row.contract_client.program.name,
         userSettings: "",
         index:
           (pagination.value.page - 1) * pagination.value.rowsPerPage +

@@ -13,7 +13,6 @@ export const useAuthStore = defineStore("auth", () => {
   //   const { t } = useI18n();
   //actions
   const setUser = (payload) => {
-    console.log(payload);
     user.value = payload.user;
     token.value = payload.token;
 
@@ -46,7 +45,6 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await LoginService.login(credentials);
       const data = response.data;
-      console.log(data);
       setUser({ user: data.user, token: data.token });
       setLoading(false);
       return true;

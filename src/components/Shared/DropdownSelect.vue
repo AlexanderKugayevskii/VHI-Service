@@ -206,7 +206,6 @@ const toggleOption = (option) => {
 
     emit("update:selectedOptions", selectedOptions.value);
   }
-  console.log(selectedOptions.value);
 };
 
 const checkSelected = (option) => {

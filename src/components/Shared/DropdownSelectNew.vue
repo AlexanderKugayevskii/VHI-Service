@@ -5,14 +5,13 @@
         <span class="dropdown-label-text">{{ label }}</span>
       </div>
 
-      <div
-        class="dropdown-button"
-        ref="button"
-        role="button"
-        @click.once="handleRequest"
-        @click="handleDropdown"
-      >
-        <button class="dropdown-button-btn">
+      <div class="dropdown-button" ref="button" role="button">
+        <button
+          class="dropdown-button-btn"
+          :disabled="disableChoise"
+          @click.once="handleRequest"
+          @click="handleDropdown"
+        >
           <span
             class="dropdown-button-btn-text"
             v-if="
@@ -36,7 +35,7 @@
             ></slot>
           </span>
         </button>
-        <q-icon size="20px">
+        <q-icon size="20px" v-if="!disableChoise">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -168,6 +167,7 @@ export default {
     clickOutSide,
   },
   props: {
+    disableChoise: Boolean,
     loading: Boolean,
     label: String,
     options: Array,

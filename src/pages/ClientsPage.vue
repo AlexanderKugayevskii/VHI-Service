@@ -155,7 +155,6 @@ const handleTest = (options) => {
 
 const appealStore = useAppealStore();
 const testStore = useCounterStore();
-console.log(testStore);
 </script>
 
 <style lang="scss">

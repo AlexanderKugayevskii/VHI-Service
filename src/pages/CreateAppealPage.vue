@@ -15,10 +15,7 @@
           <h4 class="page-title q-my-none q-mb-md">
             {{ $t("create_appeal.title") }}
           </h4>
-          <StatusBar
-            :status="0"
-            :label="true"
-          ></StatusBar>
+          <StatusBar :status="0" :label="true"></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -31,7 +28,11 @@
                   <span
                     >Клиент:
                     <b
-                      >{{ clientData.firstname + " " + clientData.lastname }}
+                      >{{
+                        clientData.clientFirstname +
+                        " " +
+                        clientData.clientLastname
+                      }}
                     </b></span
                   >
                   <span
@@ -121,10 +122,15 @@
                           <div class="tab-header">
                             <DropdownSelectNew
                               class="dropdown-space"
-                              :label="$t('create_appeal.dropdowns.clinic')"
+                              :label="
+                                user.role.id === 8
+                                  ? 'Ваша клиника'
+                                  : $t('create_appeal.dropdowns.clinic')
+                              "
                               :multiple="false"
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
+                              :disable-choise="user.role.id === 8"
                               :selected-options="appealStore.selectedClinic"
                               @select-option="appealStore.selectClinic"
                               @request="appealStore.fetchClinics"
@@ -434,10 +440,13 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
+import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 // const doctorsData = computed(() => appealStore.doctorsData);
 // const servicesData = computed(() => appealStore.servicesData);
@@ -461,7 +470,6 @@ watch(
       appealStore.setSuccessAppeal(false);
       createAppealModalRef.value.hide();
       router.replace(Trans.i18nRoute({ name: "appeals-page" }));
-      console.log("work");
     }
   }
 );

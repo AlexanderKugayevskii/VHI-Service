@@ -21,8 +21,8 @@ export const useSearchClientsStore = defineStore("clients", () => {
       return {
         id: item.id, //contract_client_id
         clientId: item.client.id, //client_id
-        firstname: item.client.name,
-        lastname: item.client.lastname,
+        clientFirstname: item.client.name,
+        clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
@@ -30,20 +30,18 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    console.log(response);
   };
   const getClientByName = async (name) => {
     searchClients.value = [];
     clients.value = [];
     const response = await ClientService.getClientsByName(name);
-    console.log(response);
     clients.value = response.data.data;
     searchClients.value = clients.value.map((item) => {
       return {
         id: item.id,
         clientId: item.client.id,
-        firstname: item.client.name,
-        lastname: item.client.lastname,
+        clientFirstname: item.client.name,
+        clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
@@ -51,21 +49,19 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    console.log("searchClients", searchClients);
   };
 
   const getClientByPassport = async (passport) => {
     searchClients.value = [];
     clients.value = [];
     const response = await ClientService.getClientsByPassport(passport);
-    console.log(response);
     clients.value = response.data.data;
     searchClients.value = clients.value.map((item) => {
       return {
         id: item.id,
         clientId: item.client.id,
-        firstname: item.client.name,
-        lastname: item.client.lastname,
+        clientFirstname: item.client.name,
+        clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
@@ -73,7 +69,6 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    console.log("searchClients", searchClients);
   };
 
   function $resetSearchClients() {

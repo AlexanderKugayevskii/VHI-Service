@@ -64,19 +64,9 @@
             {{ props.row.index }}
           </q-td>
           <q-td key="client" :props="props" class="appeals-td">
-            <RouterLink
-              class="appeal-link"
-              @click="appealStore.setClient(props.row)"
-              :to="
-                Trans.i18nRoute({
-                  name: 'createAppeal',
-                  params: { id: props.row.contractClientId },
-                })
-              "
-              replace
-            >
-              {{ props.row.clientName }}
-            </RouterLink>
+            <a class="appeal-link" @click="openAppealPage(props.row)">
+              {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+            </a>
           </q-td>
           <q-td key="appealDate" :props="props" class="appeals-td">
             {{ props.row.appealDate }}
@@ -186,17 +176,19 @@
 
 <script setup>
 import Trans from "src/i18n/translation";
+import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
 import StatusBar from "../Shared/StatusBar.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, ref, watch } from "vue";
 
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import usePaginate from "src/composables/usePaginate";
 
+const router = useRouter();
 const searchProp = defineProps(["search"]);
 const search = computed(() => searchProp.search);
 
@@ -229,6 +221,26 @@ const selectOption = (option) => {
     rowsPerPage: option,
   });
 };
+
+const openAppealPage = async (client) => {
+  appealStore.setClient(client);
+  await appealStore.fetchApplicantData();
+  await appealStore.fetchHospitalData();
+};
+
+watch(
+  () => appealStore.loading,
+  () => {
+    if (!appealStore.loading) {
+      router.replace(
+        Trans.i18nRoute({
+          name: "createAppeal",
+          params: { id: appealStore.client.contractClientId },
+        })
+      );
+    }
+  }
+);
 
 //only router if needs
 //if query page or limit will changes, pagination will changes

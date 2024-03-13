@@ -23,6 +23,8 @@ function saveAppealByClinic(payload) {
   return api.post("/clinics/application-clinic", payload);
 }
 
+
+
 export default {
   getClinics,
   getDoctors,
