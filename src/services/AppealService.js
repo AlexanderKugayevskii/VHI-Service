@@ -19,6 +19,9 @@ function getHospitalDataById(id) {
 function saveAppealByAgent(payload) {
   return api.post("/clinics/application-agent", payload);
 }
+function saveAppealByClinic(payload) {
+  return api.post("/clinics/application-clinic", payload);
+}
 
 export default {
   getClinics,
@@ -26,4 +29,5 @@ export default {
   getServices,
   getHospitalDataById,
   saveAppealByAgent,
+  saveAppealByClinic,
 };

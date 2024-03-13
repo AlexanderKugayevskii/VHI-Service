@@ -282,7 +282,7 @@ onMounted(() => {
   width: 250px;
 }
 .appeals-th:nth-of-type(4) {
-  width: 120px;
+  min-width: 120px;
 }
 
 .appeals-td {

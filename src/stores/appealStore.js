@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, reactive, watch } from "vue";
 import AppealService from "src/services/AppealService";
+import { useAuthStore } from "./authStore";
 
 export const useAppealStore = defineStore("appeal", () => {
   const loading = ref(null);
@@ -111,18 +112,14 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const postAppealData = async () => {
     loading.value = true;
-    
+
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
       client_type: 0,
       client_id: client.value.clientId,
-      services: selectedServices.value.map((service) => {
-        return { id: service.id, price: service.pivot.price };
-      }),
-      doctors: selectedDoctors.value.map((doctor) => {
-        return { id: doctor.id, price: doctor.pivot.price };
-      }),
+      services: selectedServices.value.map((service) => service.id),
+      doctors: selectedDoctors.value.map((doctor) => doctor.id),
       diagnosis: diagnosis.value,
     };
     console.log(payload);
