@@ -16,7 +16,7 @@
             {{ $t("create_appeal.title") }}
           </h4>
           <StatusBar
-            :status="appealStore.client?.appealStatus ?? 'NEW'"
+            :status="0"
             :label="true"
           ></StatusBar>
         </div>

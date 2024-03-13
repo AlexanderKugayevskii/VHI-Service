@@ -105,7 +105,6 @@
         </q-tr>
       </template>
     </q-table>
-
   </div>
   <div class="flex q-my-lg">
     <!-- <PaginationTable :pagination="pagination" @change-page="updatePage" /> -->
@@ -253,15 +252,13 @@ onMounted(() => {
 //calculate table height for showing only 10 rows
 onMounted(() => {
   const qTableMiddleElement = document.querySelector(".q-table__middle");
-  qTableMiddleElement.style.height = `${48 + 44 * 10}px`;
+  qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
 
   const qTableElement = document.querySelector(".q-table");
   const qTableInnerElement = document.createElement("div");
   qTableInnerElement.className = "q-table-inner-element";
   qTableInnerElement.appendChild(qTableElement);
   qTableMiddleElement.appendChild(qTableInnerElement);
-
-
 });
 </script>
 

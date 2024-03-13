@@ -8,8 +8,8 @@ export const useAppealStore = defineStore("appeal", () => {
   const client = ref(null);
 
   const setSuccessAppeal = (flag) => {
-    successAppeal.value = flag; 
-  }
+    successAppeal.value = flag;
+  };
 
   const setClient = (item) => {
     client.value = item;
@@ -61,6 +61,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getClinics();
       clinics.value = response.data.data;
+      console.log(clinics.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -109,16 +110,22 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
   const postAppealData = async () => {
+    loading.value = true;
+    
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
       client_type: 0,
       client_id: client.value.clientId,
-      services: selectedServices.value.map((service) => service.id),
-      doctors: selectedDoctors.value.map((doctor) => doctor.id),
+      services: selectedServices.value.map((service) => {
+        return { id: service.id, price: service.pivot.price };
+      }),
+      doctors: selectedDoctors.value.map((doctor) => {
+        return { id: doctor.id, price: doctor.pivot.price };
+      }),
       diagnosis: diagnosis.value,
     };
-    loading.value = true;
+    console.log(payload);
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       console.log(`response`, response);
@@ -126,7 +133,7 @@ export const useAppealStore = defineStore("appeal", () => {
         response.status === 200 &&
         response.data.message === "created successfully"
       ) {
-        setSuccessAppeal(true)
+        setSuccessAppeal(true);
       }
     } catch (e) {
       console.error(e);
