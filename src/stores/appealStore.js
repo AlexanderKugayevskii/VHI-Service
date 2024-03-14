@@ -3,14 +3,25 @@ import { ref, reactive, watch } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
+import { storeToRefs } from "pinia";
 
+const TYPE_OF_APPEALS = {
+  NEW: 0,
+  CHANGE: 1,
+};
 export const useAppealStore = defineStore("appeal", () => {
+  const authStore = useAuthStore();
+  const { user } = storeToRefs(authStore);
   const loading = ref(null);
   const successAppeal = ref(false);
   const client = ref(null);
-
+  const typeOfAppeal = ref(0);
   const setSuccessAppeal = (flag) => {
     successAppeal.value = flag;
+  };
+
+  const setTypeOfAppeal = (type) => {
+    typeOfAppeal.value = TYPE_OF_APPEALS[type];
   };
 
   const setClient = (item) => {
@@ -34,6 +45,13 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
+    clearAppealData();
+  };
+
+  const setClinic = () => {
+    if (user.value.role.id === 8) {
+      selectedClinic.value = user.value.hospital;
+    }
   };
 
   const selectDoctors = (doctor) => {
@@ -58,6 +76,16 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const clearAppealData = () => {
+    doctors.value = [];
+    services.value = [];
+    selectedDoctors.value = [];
+    selectedServices.value = [];
+  };
+
+  const clearClinicData = () => {
+    selectedClinic.value = [];
+  };
   const fetchClinics = async () => {
     loading.value = true;
     try {
@@ -107,6 +135,7 @@ export const useAppealStore = defineStore("appeal", () => {
       loading.value = false;
     }
   };
+
   const postAppealData = async () => {
     loading.value = true;
 
@@ -119,6 +148,7 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors: selectedDoctors.value.map((doctor) => doctor.id),
       diagnosis: diagnosis.value,
     };
+    console.log(payload);
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       if (
@@ -163,13 +193,6 @@ export const useAppealStore = defineStore("appeal", () => {
     return selectedServices.value.some((service) => service?.id === option.id);
   };
 
-  // watch(selectedClinic, () => {
-  //   doctors.value = [];
-  //   selectedDoctors.value = [];
-  //   services.value = [];
-  //   selectedServices.value = [];
-  // });
-
   const clearDoctors = (doctor) => {
     selectedDoctors.value = selectedDoctors.value.filter(
       (item) => item.id !== doctor.id
@@ -190,6 +213,8 @@ export const useAppealStore = defineStore("appeal", () => {
     loading,
     successAppeal,
     setSuccessAppeal,
+    typeOfAppeal,
+    setTypeOfAppeal,
     client,
     setClient,
     diagnosis,
@@ -214,5 +239,8 @@ export const useAppealStore = defineStore("appeal", () => {
     clearDoctors,
     clearServices,
     postAppealData,
+    clearAppealData,
+    clearClinicData,
+    setClinic,
   };
 });

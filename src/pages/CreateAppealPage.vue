@@ -136,7 +136,7 @@
                               @request="appealStore.fetchClinics"
                               @requestBySelect="appealStore.fetchHospitalData"
                             >
-                              <template #placeholder>
+                              <template #placeholder v-if="user.role.id !== 8">
                                 {{ $t("create_appeal.dropdowns.doctors") }}
                               </template>
                               <template v-slot:selected-options-once="props">
@@ -366,7 +366,11 @@
                 <div class="create-appeal-actions">
                   <div class="create-appeal-actions-btns">
                     <SimpleButton
-                      :label="$t('create_appeal.buttons.save_appeal')"
+                      :label="
+                        appealStore.typeOfAppeal === 0
+                          ? $t('create_appeal.buttons.save_appeal')
+                          : 'Изменить обращение'
+                      "
                       type="submit"
                       customClass="btn-action"
                       @click="handleCreateAppeal"
@@ -476,6 +480,8 @@ watch(
 
 const hideModal = () => {
   createAppealModalRef.value.hide();
+  appealStore.clearAppealData();
+  appealStore.clearClinicData();
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 

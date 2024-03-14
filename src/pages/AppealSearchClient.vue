@@ -188,7 +188,10 @@ const handleSelectItem = (item) => {
   appealStore.setClient(selectedClient.value);
 };
 
-const goToAppeal = () => {
+const goToAppeal = async () => {
+  appealStore.setClinic();
+  await appealStore.fetchHospitalData();
+  appealStore.setTypeOfAppeal("NEW");
   router.replace(
     Trans.i18nRoute({
       name: "createAppeal",

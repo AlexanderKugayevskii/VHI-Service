@@ -24,7 +24,7 @@
       <div class="client-result-item-info">
         <span class="client-result-item-info-title">Фамилия и Имя </span>
         <span class="client-result-item-info-descr">{{
-          item.lastname + " " +  item.firstname 
+          item.clientLastname + " " + item.clientFirstname
         }}</span>
       </div>
       <div class="client-result-item-info">

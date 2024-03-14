@@ -232,6 +232,7 @@ watch(
   () => appealStore.loading,
   () => {
     if (!appealStore.loading) {
+      appealStore.setTypeOfAppeal("CHANGE");
       router.replace(
         Trans.i18nRoute({
           name: "createAppeal",
