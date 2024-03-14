@@ -392,17 +392,23 @@ export default {
   display: flex;
   align-items: center;
   column-gap: 8px;
-
   border-radius: 8px;
   color: #404f6f;
-  cursor: pointer;
+
   transition: 0.3s;
-  &:hover {
-    background-color: #edf0f7;
-  }
+
   &--active {
     background-color: #edf0f7;
   }
+}
+.dropdown-select-list-item-text:hover:not(:has(.disabled-option)) {
+  background-color: #edf0f7;
+}
+.dropdown-select-list-item:hover:not(:has(.disabled-option)) {
+  cursor: pointer;
+}
+.dropdown-select-list-item:hover:has(.disabled-option) {
+  cursor: not-allowed;
 }
 
 .dropdown-button-btn-text-selected {

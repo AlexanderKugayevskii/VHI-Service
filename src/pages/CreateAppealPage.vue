@@ -189,13 +189,34 @@
                                 }}
                               </template>
                               <template v-slot:option-content="props">
-                                <div>
+                                <div
+                                  :class="{
+                                    'disabled-option':
+                                      appealStore.checkSuggestedDoctors(
+                                        props.option
+                                      ),
+                                  }"
+                                >
                                   <span>
                                     {{ props.option.name }}
                                   </span>
                                   -
                                   <span class="price">
                                     {{ formatPrice(props.option.pivot.price) }}
+                                  </span>
+                                  <span
+                                    v-if="
+                                      appealStore.checkSuggestedDoctors(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    (добавлено
+                                    {{
+                                      appealStore.isClinic
+                                        ? "компанией"
+                                        : "клиникой"
+                                    }})
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -224,9 +245,7 @@
                             </SelectedItem>
                             <div
                               class=""
-                              v-if="
-                                appealStore.selectedDoctorsByOther.length > 0
-                              "
+                              v-if="appealStore.suggestedDoctors.length > 0"
                             >
                               <p
                                 class="added-by-title"
@@ -238,7 +257,7 @@
                                 Добавлено компанией
                               </p>
                               <SelectListItem
-                                v-for="doctor in appealStore.selectedDoctorsByOther"
+                                v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
                                 :key="doctor.id"
                                 @update:status="handleStatusDoctor"
@@ -497,7 +516,6 @@ const handleCreateAppeal = () => {
   appealStore.postAppealData();
 };
 
-
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -708,5 +726,8 @@ const handleRemoveService = (item) => {
   font-weight: 600;
   color: #404f6f;
   margin: 12px 0 8px;
+}
+.disabled-option {
+  opacity: 0.7;
 }
 </style>

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, registerRuntimeCompiler } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
@@ -9,9 +9,31 @@ const TYPE_OF_APPEALS = {
   NEW: 0,
   CHANGE: 1,
 };
+
+function filterItems(data, suggestedArr, selectedArr, isClinic) {
+  data.forEach((item) => {
+    const createdByClinic = item.pivot.created_by_clinic === 0;
+    if (isClinic) {
+      if (createdByClinic) {
+        suggestedArr.push(item);
+      } else {
+        selectedArr.push(item);
+      }
+    } else {
+      if (createdByClinic) {
+        selectedArr.push(item);
+      } else {
+        suggestedArr.push(item);
+      }
+    }
+  });
+}
+
 export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
+  const isClinic = user.value.role.id === 8;
+
   const loading = ref(null);
   const successAppeal = ref(false);
   const client = ref(null);
@@ -39,11 +61,11 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const doctors = ref([]);
   const selectedDoctors = ref([]);
-  const selectedDoctorsByOther = ref([]);
+  const suggestedDoctors = ref([]);
 
   const services = ref([]);
   const selectedServices = ref([]);
-  const selectedServicesByOther = ref([]);
+  const suggestedServices = ref([]);
 
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
@@ -56,7 +78,14 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const checkSuggestedDoctors = (doctor) => {
+    return suggestedDoctors.value.some((item) => doctor.id === item.id);
+  };
   const selectDoctors = (doctor) => {
+    if (checkSuggestedDoctors(doctor)) {
+      return;
+    }
+
     const index = selectedDoctors.value.findIndex(
       (item) => item?.id === doctor.id
     );
@@ -83,6 +112,8 @@ export const useAppealStore = defineStore("appeal", () => {
     services.value = [];
     selectedDoctors.value = [];
     selectedServices.value = [];
+    suggestedDoctors.value = [];
+    suggestedServices.value = [];
   };
 
   const clearClinicData = () => {
@@ -178,17 +209,20 @@ export const useAppealStore = defineStore("appeal", () => {
       client.value.clientId = data.contract_client.client_id;
 
       selectedClinic.value = data.hospital;
-      selectedDoctors.value = data.doctors;
+
+      filterItems(
+        data.doctors,
+        suggestedDoctors.value,
+        selectedDoctors.value,
+        isClinic
+      );
+
+      console.log(`Suggested by other`, suggestedDoctors.value);
+      console.log(`Selected by owner`, selectedDoctors.value);
+      // selectedDoctors.value = data.doctors;
       selectedServices.value = data.services;
       diagnosis.value = data.diagnosis;
 
-      selectedDoctorsByOther.value = selectedDoctors.value.filter((doctor) => {
-        if (user.value.role.id === 8) {
-          return doctor.pivot.created_by_clinic === 0;
-        } else {
-          return doctor.pivot.created_by_clinic === 1;
-        }
-      });
     } catch (e) {
     } finally {
       loading.value = false;
@@ -209,20 +243,18 @@ export const useAppealStore = defineStore("appeal", () => {
       (item) => item.id !== doctor.id
     );
   };
-  const changeStatusDoctor = (item) => {
-    selectedDoctorsByOther.value = selectedDoctorsByOther.value.map(
-      (doctor) => {
-        if (item.item.id === doctor.id) {
-          return {
-            ...doctor,
-            status: item.status,
-          };
-        }
-        return doctor;
+  const changeStatusDoctor = (selectedItem) => {
+    suggestedDoctors.value = suggestedDoctors.value.map((doctor) => {
+      if (selectedItem.item.id === doctor.id) {
+        return {
+          ...doctor,
+          status: selectedItem.status,
+        };
       }
-    );
-    console.log(selectedDoctorsByOther.value);
+      return doctor;
+    });
   };
+
   const clearServices = (service) => {
     selectedServices.value = selectedServices.value.filter(
       (item) => item.id !== service.id
@@ -236,6 +268,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   return {
     loading,
+    isClinic,
     successAppeal,
     setSuccessAppeal,
     typeOfAppeal,
@@ -248,7 +281,7 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedClinic,
     doctors,
     selectedDoctors,
-    selectedDoctorsByOther,
+    suggestedDoctors,
     services,
     selectedServices,
     fetchClinics,
@@ -269,5 +302,6 @@ export const useAppealStore = defineStore("appeal", () => {
     clearClinicData,
     setClinic,
     changeStatusDoctor,
+    checkSuggestedDoctors,
   };
 });
