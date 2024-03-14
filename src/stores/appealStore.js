@@ -39,9 +39,11 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const doctors = ref([]);
   const selectedDoctors = ref([]);
+  const selectedDoctorsByOther = ref([]);
 
   const services = ref([]);
   const selectedServices = ref([]);
+  const selectedServicesByOther = ref([]);
 
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
@@ -178,6 +180,15 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedClinic.value = data.hospital;
       selectedDoctors.value = data.doctors;
       selectedServices.value = data.services;
+      diagnosis.value = data.diagnosis;
+
+      selectedDoctorsByOther.value = selectedDoctors.value.filter((doctor) => {
+        if (user.value.role.id === 8) {
+          return doctor.pivot.created_by_clinic === 0;
+        } else {
+          return doctor.pivot.created_by_clinic === 1;
+        }
+      });
     } catch (e) {
     } finally {
       loading.value = false;
@@ -197,6 +208,20 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedDoctors.value = selectedDoctors.value.filter(
       (item) => item.id !== doctor.id
     );
+  };
+  const changeStatusDoctor = (item) => {
+    selectedDoctorsByOther.value = selectedDoctorsByOther.value.map(
+      (doctor) => {
+        if (item.item.id === doctor.id) {
+          return {
+            ...doctor,
+            status: item.status,
+          };
+        }
+        return doctor;
+      }
+    );
+    console.log(selectedDoctorsByOther.value);
   };
   const clearServices = (service) => {
     selectedServices.value = selectedServices.value.filter(
@@ -223,6 +248,7 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedClinic,
     doctors,
     selectedDoctors,
+    selectedDoctorsByOther,
     services,
     selectedServices,
     fetchClinics,
@@ -242,5 +268,6 @@ export const useAppealStore = defineStore("appeal", () => {
     clearAppealData,
     clearClinicData,
     setClinic,
+    changeStatusDoctor,
   };
 });

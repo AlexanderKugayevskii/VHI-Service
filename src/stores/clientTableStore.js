@@ -5,7 +5,7 @@ import formatDate from "src/helpers/formatDate";
 
 import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
-  const i18n = useI18n();
+  const { t } = useI18n();
 
   const columns = computed(() => [
     {
@@ -17,49 +17,49 @@ export const useClientTableStore = defineStore("clientTable", () => {
     {
       name: "client",
       align: "left",
-      label: i18n.t("client_table.clients"),
+      label: t("client_table.clients"),
       field: "clientName",
     },
     {
       name: "appealDate",
       align: "left",
-      label: i18n.t("client_table.date_of_appeal"),
+      label: t("client_table.date_of_appeal"),
       field: "appealDate",
     },
     {
       name: "appealStatus",
       align: "left",
-      label: i18n.t("client_table.appeal_status"),
+      label: t("client_table.appeal_status"),
       field: "appealStatus",
     },
     {
       name: "clinicName",
       align: "left",
-      label: i18n.t("client_table.clinic"),
+      label: t("client_table.clinic"),
       field: "clinicName",
     },
     {
       name: "doctorName",
       align: "left",
-      label: i18n.t("client_table.doctor"),
+      label: t("client_table.doctor"),
       field: "doctorName",
     },
     {
       name: "serviceName",
       align: "left",
-      label: i18n.t("client_table.service"),
+      label: t("client_table.service"),
       field: "serviceName",
     },
     {
       name: "diagnosisName",
       align: "left",
-      label: i18n.t("client_table.diagnosis"),
+      label: t("client_table.diagnosis"),
       field: "diagnosisName",
     },
     {
       name: "expenseAmount",
       align: "right",
-      label: i18n.t("client_table.expense", { currency: "UZS" }),
+      label: t("client_table.expense", { currency: "UZS" }),
       field: "expenseAmount",
     },
     {

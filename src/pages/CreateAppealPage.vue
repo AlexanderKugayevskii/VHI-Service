@@ -219,9 +219,38 @@
                                 {{ doctor.name }}
                               </template>
                               <template #price>
-                                {{ formatPrice(doctor.pivot.price) }}
+                                {{ formatPrice(Number(doctor.pivot.price)) }}
                               </template>
                             </SelectedItem>
+                            <div
+                              class=""
+                              v-if="
+                                appealStore.selectedDoctorsByOther.length > 0
+                              "
+                            >
+                              <p
+                                class="added-by-title"
+                                v-if="user.role.id !== 8"
+                              >
+                                Добавлено клиникой
+                              </p>
+                              <p class="added-by-title" v-else>
+                                Добавлено компанией
+                              </p>
+                              <SelectListItem
+                                v-for="doctor in appealStore.selectedDoctorsByOther"
+                                :item="doctor"
+                                :key="doctor.id"
+                                @update:status="handleStatusDoctor"
+                              >
+                                <template #label>
+                                  {{ doctor.name }}
+                                </template>
+                                <template #price>
+                                  {{ formatPrice(Number(doctor.pivot.price)) }}
+                                </template>
+                              </SelectListItem>
+                            </div>
                           </div>
                         </q-tab-panel>
 
@@ -439,6 +468,7 @@ import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
+import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import { ref, computed, watch } from "vue";
@@ -467,6 +497,7 @@ const handleCreateAppeal = () => {
   appealStore.postAppealData();
 };
 
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -487,6 +518,10 @@ const hideModal = () => {
 
 const handleRemoveDoctor = (item) => {
   appealStore.clearDoctors(item);
+};
+const handleStatusDoctor = (item) => {
+  console.log(item);
+  appealStore.changeStatusDoctor(item);
 };
 const handleRemoveService = (item) => {
   appealStore.clearServices(item);
@@ -667,5 +702,11 @@ const handleRemoveService = (item) => {
 }
 .price {
   color: #1a2133;
+}
+.added-by-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #404f6f;
+  margin: 12px 0 8px;
 }
 </style>

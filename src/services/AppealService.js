@@ -17,13 +17,11 @@ function getHospitalDataById(id) {
 }
 
 function saveAppealByAgent(payload) {
-  return api.post("/clinics/application-agent", payload);
+  return api.post("/clinics/applications", payload);
 }
 function saveAppealByClinic(payload) {
   return api.post("/clinics/application-clinic", payload);
 }
-
-
 
 export default {
   getClinics,
