@@ -22,6 +22,9 @@ function saveAppealByAgent(payload) {
 function saveAppealByClinic(payload) {
   return api.post("/clinics/application-clinic", payload);
 }
+function changeAppealData(appealId, payload) {
+  return api.put(`/clinics/applications/${appealId}`, payload);
+}
 
 export default {
   getClinics,
@@ -30,4 +33,5 @@ export default {
   getHospitalDataById,
   saveAppealByAgent,
   saveAppealByClinic,
+  changeAppealData,
 };

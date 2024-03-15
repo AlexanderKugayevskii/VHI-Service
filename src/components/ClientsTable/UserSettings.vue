@@ -60,7 +60,7 @@
           clickable
           v-close-popup
           class="item--no-hover"
-          @click="goToAppeal"
+          @click="openAppealPage"
         >
           <q-icon>
             <svg
@@ -86,26 +86,36 @@
 </template>
 
 <script setup>
+import { watch } from "vue";
 import DropdownSettings from "../Shared/DropdownSettings.vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import Trans from "src/i18n/translation";
 const props = defineProps(["client"]);
 
-const appealStore = useAppealStore();
 const router = useRouter();
+const appealStore = useAppealStore();
 
-const goToAppeal = () => {
+const openAppealPage = async () => {
   appealStore.setClient(props.client);
-  router.replace(
-    Trans.i18nRoute({
-      name: "createAppeal",
-      params: {
-        id: props.client.contractClientId,
-      },
-    })
-  );
+  await appealStore.fetchApplicantData();
+  await appealStore.fetchHospitalData();
 };
+
+watch(
+  () => appealStore.loading,
+  () => {
+    if (!appealStore.loading) {
+      appealStore.setTypeOfAppeal("CHANGE");
+      router.replace(
+        Trans.i18nRoute({
+          name: "createAppeal",
+          params: { id: appealStore.client.contractClientId },
+        })
+      );
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped>

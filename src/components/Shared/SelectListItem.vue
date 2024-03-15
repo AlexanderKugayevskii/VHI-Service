@@ -11,12 +11,12 @@
         <ResolveIcon
           :variant="true"
           @change="handleStatus"
-          :checked="item.status === 1"
+          :checked="item.pivot.status === 1"
         />
         <ResolveIcon
           :variant="false"
           @change="handleStatus"
-          :checked="item.status === 2"
+          :checked="item.pivot.status === 2"
         />
       </div>
     </div>

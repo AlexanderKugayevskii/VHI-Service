@@ -101,12 +101,11 @@ const emitChange = (event) => {
   width: 100%;
   height: 100%;
 }
-// .check-icon {
-//   display: none;
-// }
-// .checkbox-input:checked + .check-icon {
-//   display: inline-block;
-// }
+
+.check-icon svg path {
+  transition: 0.3s;
+}
+
 .checkbox-label--checked {
   background-color: #13b8ba;
 }

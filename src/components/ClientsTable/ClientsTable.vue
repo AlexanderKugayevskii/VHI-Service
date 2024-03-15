@@ -260,6 +260,14 @@ watch(
 //first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
+  watch(
+    () => appealStore.successAppeal,
+    (newSuccessAppeal) => {
+      if (newSuccessAppeal) {
+        tableRef.value.requestServerInteraction();
+      }
+    }
+  );
 });
 
 //calculate table height for showing only 10 rows

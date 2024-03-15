@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { ref, reactive, watch, registerRuntimeCompiler } from "vue";
+import { ref, reactive, watch, registerRuntimeCompiler, computed } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
+import { all } from "axios";
 
 const TYPE_OF_APPEALS = {
   NEW: 0,
@@ -62,10 +63,37 @@ export const useAppealStore = defineStore("appeal", () => {
   const doctors = ref([]);
   const selectedDoctors = ref([]);
   const suggestedDoctors = ref([]);
+  const allDoctorsStatus = computed(() =>
+    selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
+      return {
+        id: doctor.id,
+        status: doctor.pivot.status ?? 0,
+      };
+    })
+  );
 
   const services = ref([]);
   const selectedServices = ref([]);
   const suggestedServices = ref([]);
+  const allServicesStatus = computed(() =>
+    selectedServices.value.concat(suggestedServices.value).map((service) => {
+      return {
+        id: service.id,
+        status: service.pivot.status ?? 0,
+      };
+    })
+  );
+
+  const appealTotalConsumption = computed(() => {
+    const allData = [
+      ...selectedDoctors.value,
+      ...suggestedDoctors.value,
+      ...selectedServices.value,
+      ...suggestedServices.value,
+    ];
+
+    return allData.reduce((acc, curr) => acc + Number(curr.pivot.price), 0);
+  });
 
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
@@ -96,7 +124,14 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const checkSuggestedServices = (service) => {
+    return suggestedServices.value.some((item) => service.id === item.id);
+  };
   const selectServices = (service) => {
+    if (checkSuggestedServices(service)) {
+      return;
+    }
+
     const index = selectedServices.value.findIndex(
       (item) => item.id === service.id
     );
@@ -181,7 +216,6 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors: selectedDoctors.value.map((doctor) => doctor.id),
       diagnosis: diagnosis.value,
     };
-    console.log(payload);
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       if (
@@ -189,6 +223,35 @@ export const useAppealStore = defineStore("appeal", () => {
         response.data.message === "created successfully"
       ) {
         setSuccessAppeal(true);
+        clearAppealData();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const changeAppealData = async () => {
+    loading.value = true;
+    const payload = {
+      hospital_id: selectedClinic.value.id,
+      contract_client_id: client.value.id,
+      client_type: 0,
+      client_id: client.value.clientId,
+      services: allServicesStatus.value,
+      doctors: allDoctorsStatus.value,
+      diagnosis: diagnosis.value,
+    };
+    try {
+      const response = await AppealService.changeAppealData(
+        client.value.appealId,
+        payload
+      );
+
+      if (response.status === 200 && response.data.message === "success") {
+        setSuccessAppeal(true);
+        clearAppealData();
       }
     } catch (e) {
       console.error(e);
@@ -209,6 +272,7 @@ export const useAppealStore = defineStore("appeal", () => {
       client.value.clientId = data.contract_client.client_id;
 
       selectedClinic.value = data.hospital;
+      diagnosis.value = data.diagnosis;
 
       filterItems(
         data.doctors,
@@ -217,12 +281,18 @@ export const useAppealStore = defineStore("appeal", () => {
         isClinic
       );
 
+      filterItems(
+        data.services,
+        suggestedServices.value,
+        selectedServices.value,
+        isClinic
+      );
+
       console.log(`Suggested by other`, suggestedDoctors.value);
       console.log(`Selected by owner`, selectedDoctors.value);
-      // selectedDoctors.value = data.doctors;
-      selectedServices.value = data.services;
-      diagnosis.value = data.diagnosis;
-
+      console.log("-------------------------------------");
+      console.log(`Suggested by other`, suggestedServices.value);
+      console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
     } finally {
       loading.value = false;
@@ -248,10 +318,30 @@ export const useAppealStore = defineStore("appeal", () => {
       if (selectedItem.item.id === doctor.id) {
         return {
           ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            status: selectedItem.status,
+          },
           status: selectedItem.status,
         };
       }
       return doctor;
+    });
+  };
+
+  const changeStatusService = (selectedItem) => {
+    suggestedServices.value = suggestedServices.value.map((service) => {
+      if (selectedItem.item.id === service.id) {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            status: selectedItem.status,
+          },
+          status: selectedItem.status,
+        };
+      }
+      return service;
     });
   };
 
@@ -269,6 +359,7 @@ export const useAppealStore = defineStore("appeal", () => {
   return {
     loading,
     isClinic,
+    appealTotalConsumption,
     successAppeal,
     setSuccessAppeal,
     typeOfAppeal,
@@ -284,6 +375,7 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDoctors,
     services,
     selectedServices,
+    suggestedServices,
     fetchClinics,
     fetchDoctors,
     fetchServices,
@@ -298,10 +390,13 @@ export const useAppealStore = defineStore("appeal", () => {
     clearDoctors,
     clearServices,
     postAppealData,
+    changeAppealData,
     clearAppealData,
     clearClinicData,
     setClinic,
     changeStatusDoctor,
+    changeStatusService,
     checkSuggestedDoctors,
+    checkSuggestedServices,
   };
 });

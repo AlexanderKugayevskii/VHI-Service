@@ -249,7 +249,7 @@
                             >
                               <p
                                 class="added-by-title"
-                                v-if="user.role.id !== 8"
+                                v-if="!appealStore.isClinic"
                               >
                                 Добавлено клиникой
                               </p>
@@ -300,13 +300,34 @@
                                 }}
                               </template>
                               <template v-slot:option-content="props">
-                                <div>
+                                <div
+                                  :class="{
+                                    'disabled-option':
+                                      appealStore.checkSuggestedServices(
+                                        props.option
+                                      ),
+                                  }"
+                                >
                                   <span>
                                     {{ props.option.name }}
                                   </span>
                                   -
                                   <span class="price">
                                     {{ formatPrice(props.option.pivot.price) }}
+                                  </span>
+                                  <span
+                                    v-if="
+                                      appealStore.checkSuggestedServices(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    (добавлено
+                                    {{
+                                      appealStore.isClinic
+                                        ? "компанией"
+                                        : "клиникой"
+                                    }})
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -330,9 +351,37 @@
                                 {{ service.name }}
                               </template>
                               <template #price>
-                                {{ formatPrice(service.pivot.price) }}
+                                {{ formatPrice(Number(service.pivot.price)) }}
                               </template>
                             </SelectedItem>
+
+                            <div
+                              class=""
+                              v-if="appealStore.suggestedServices.length > 0"
+                            >
+                              <p
+                                class="added-by-title"
+                                v-if="!appealStore.isClinic"
+                              >
+                                Добавлено клиникой
+                              </p>
+                              <p class="added-by-title" v-else>
+                                Добавлено компанией
+                              </p>
+                              <SelectListItem
+                                v-for="service in appealStore.suggestedServices"
+                                :item="service"
+                                :key="service.id"
+                                @update:status="handleStatusService"
+                              >
+                                <template #label>
+                                  {{ service.name }}
+                                </template>
+                                <template #price>
+                                  {{ formatPrice(Number(service.pivot.price)) }}
+                                </template>
+                              </SelectListItem>
+                            </div>
                           </div>
                         </q-tab-panel>
 
@@ -414,14 +463,18 @@
                 <div class="create-appeal-actions">
                   <div class="create-appeal-actions-btns">
                     <SimpleButton
-                      :label="
-                        appealStore.typeOfAppeal === 0
-                          ? $t('create_appeal.buttons.save_appeal')
-                          : 'Изменить обращение'
-                      "
+                      v-if="appealStore.typeOfAppeal === 0"
+                      :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
                       @click="handleCreateAppeal"
+                    ></SimpleButton>
+                    <SimpleButton
+                      v-else
+                      label="Изменить обращение"
+                      type="submit"
+                      customClass="btn-action"
+                      @click="handleChangeAppeal"
                     ></SimpleButton>
                     <SimpleButton
                       :label="$t('create_appeal.buttons.exit_appeal')"
@@ -435,9 +488,9 @@
                       >Общий расход:
                     </span>
 
-                    <span class="create-appeal-action-expences-total"
-                      >2 020 000</span
-                    >
+                    <span class="create-appeal-action-expences-total">{{
+                      formatPrice(appealStore.appealTotalConsumption)
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -501,9 +554,7 @@ import formatPrice from "src/helpers/formatPrice";
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
-// const doctorsData = computed(() => appealStore.doctorsData);
-// const servicesData = computed(() => appealStore.servicesData);
-// const drugsData = computed(() => appealStore.drugsData.drugs);
+
 const { client: clientData, drug: drugData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
@@ -515,7 +566,9 @@ const createAppealModalRef = ref(null);
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
 };
-
+const handleChangeAppeal = () => {
+  appealStore.changeAppealData();
+};
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -537,13 +590,18 @@ const hideModal = () => {
 const handleRemoveDoctor = (item) => {
   appealStore.clearDoctors(item);
 };
+const handleRemoveService = (item) => {
+  appealStore.clearServices(item);
+};
 const handleStatusDoctor = (item) => {
   console.log(item);
   appealStore.changeStatusDoctor(item);
 };
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
+const handleStatusService = (item) => {
+  console.log(item);
+  appealStore.changeStatusService(item);
 };
+
 // const handleRemoveDrug = (item) => {
 //   appealStore.clearDrugs(item);
 // };
