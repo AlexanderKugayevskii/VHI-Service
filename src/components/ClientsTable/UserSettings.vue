@@ -36,7 +36,12 @@
         </q-icon>
       </template>
       <template v-slot:options>
-        <q-item clickable v-close-popup class="item--no-hover">
+        <q-item
+          clickable
+          v-close-popup
+          class="item--no-hover"
+          @click="openAppealPage"
+        >
           <q-icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -10,7 +10,8 @@
             <span class="balance-amount">190 000 UZS</span>
           </div> -->
 
-          <q-btn dense flat :ripple="false" class="btn--no-hover">
+          <!-- notification -->
+          <!-- <q-btn dense flat :ripple="false" class="btn--no-hover">
             <svg
               width="24"
               height="24"
@@ -26,7 +27,7 @@
               />
             </svg>
             <q-badge color="negative" floating rounded>4</q-badge>
-          </q-btn>
+          </q-btn> -->
         </div>
       </q-toolbar>
     </q-header>

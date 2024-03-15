@@ -4,7 +4,7 @@
       <h2 class="page-title q-my-none q-mb-md">Обращения</h2>
 
       <div class="appeals-actions">
-        <div class="appeals-filter">
+        <!-- <div class="appeals-filter">
           <div class="appeals-search-input">
             <q-input
               rounded
@@ -98,7 +98,7 @@
               </Transition>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <SimpleButton
           :label="$t('create_appeal.buttons.create_appeal')"
@@ -213,7 +213,7 @@ onMounted(() => {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
 }
 .appeals-filter {
   display: flex;
