@@ -175,6 +175,8 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
+
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
@@ -187,6 +189,8 @@ import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import usePaginate from "src/composables/usePaginate";
+
+const $q = useQuasar();
 
 const router = useRouter();
 const searchProp = defineProps(["search"]);
@@ -224,24 +228,19 @@ const selectOption = (option) => {
 
 const openAppealPage = async (client) => {
   appealStore.setClient(client);
+  appealStore.setTypeOfAppeal("CHANGE");
+  $q.loading.show();
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
-};
 
-watch(
-  () => appealStore.loading,
-  () => {
-    if (!appealStore.loading) {
-      appealStore.setTypeOfAppeal("CHANGE");
-      router.replace(
-        Trans.i18nRoute({
-          name: "createAppeal",
-          params: { id: appealStore.client.contractClientId },
-        })
-      );
-    }
-  }
-);
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppeal",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
+};
 
 //only router if needs
 //if query page or limit will changes, pagination will changes

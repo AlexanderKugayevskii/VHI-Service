@@ -160,7 +160,6 @@
                               :modelValue="appealStore.diagnosis"
                             ></SimpleInput>
                           </div>
-                          {{ appealStore.typeOfAppeal }}
                         </q-tab-panel>
 
                         <q-tab-panel name="doctors" key="doctors">
@@ -709,8 +708,12 @@ const handleStatusService = (item) => {
   height: 44px;
   flex: 1;
 }
+.q-tab-panel {
+  overflow: hidden;
+}
 .tabs-content {
   height: 100%;
+
   display: flex;
 }
 .q-tab-panels {
@@ -719,6 +722,7 @@ const handleStatusService = (item) => {
 .q-panel > div {
   height: auto;
 }
+
 .tab-header {
   height: 100%;
   margin-bottom: 12px;

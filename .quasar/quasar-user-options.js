@@ -19,5 +19,5 @@ import {Loading} from 'quasar'
 
 
 
-export default { config: {},iconSet,plugins: {Loading} }
+export default { config: {"loading":{"spinnerSize":"64px","spinnerColor":"accent","backgroundColor":"white","delay":400}},iconSet,plugins: {Loading} }
 

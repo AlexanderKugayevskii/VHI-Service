@@ -44,6 +44,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const setTypeOfAppeal = (type) => {
+    console.log(type);
     typeOfAppeal.value = TYPE_OF_APPEALS[type];
   };
 
