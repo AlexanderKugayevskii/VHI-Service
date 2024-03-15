@@ -189,8 +189,7 @@ const handleSelectItem = (item) => {
 };
 
 const goToAppeal = async () => {
-  appealStore.setClinic();
-  await appealStore.fetchHospitalData();
+  await appealStore.setClinic();
   appealStore.setTypeOfAppeal("NEW");
   router.replace(
     Trans.i18nRoute({

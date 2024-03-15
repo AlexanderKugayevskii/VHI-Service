@@ -100,9 +100,10 @@ export const useAppealStore = defineStore("appeal", () => {
     clearAppealData();
   };
 
-  const setClinic = () => {
+  const setClinic = async () => {
     if (user.value.role.id === 8) {
       selectedClinic.value = user.value.hospital;
+      await fetchHospitalData();
     }
   };
 
@@ -150,10 +151,10 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDoctors.value = [];
     suggestedServices.value = [];
   };
-
   const clearClinicData = () => {
     selectedClinic.value = [];
   };
+
   const fetchClinics = async () => {
     loading.value = true;
     try {

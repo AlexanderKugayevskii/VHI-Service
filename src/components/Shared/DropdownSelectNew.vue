@@ -5,13 +5,14 @@
         <span class="dropdown-label-text">{{ label }}</span>
       </div>
 
-      <div class="dropdown-button" ref="button" role="button">
-        <button
-          class="dropdown-button-btn"
-          :disabled="disableChoise"
-          @click.once="handleRequest"
-          @click="handleDropdown"
-        >
+      <div
+        class="dropdown-button"
+        ref="button"
+        role="button"
+        @click.once="handleRequest"
+        @click="handleDropdown"
+      >
+        <button class="dropdown-button-btn" :disabled="disableChoise">
           <span
             class="dropdown-button-btn-text"
             v-if="

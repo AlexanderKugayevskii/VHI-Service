@@ -123,21 +123,21 @@
                             <DropdownSelectNew
                               class="dropdown-space"
                               :label="
-                                user.role.id === 8
+                                appealStore.isClinic
                                   ? 'Ваша клиника'
                                   : $t('create_appeal.dropdowns.clinic')
                               "
                               :multiple="false"
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
-                              :disable-choise="user.role.id === 8"
+                              :disable-choise="appealStore.isClinic"
                               :selected-options="appealStore.selectedClinic"
                               @select-option="appealStore.selectClinic"
                               @request="appealStore.fetchClinics"
                               @requestBySelect="appealStore.fetchHospitalData"
                             >
                               <template #placeholder v-if="user.role.id !== 8">
-                                {{ $t("create_appeal.dropdowns.doctors") }}
+                                {{ $t("create_appeal.dropdowns.clinic") }}
                               </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
@@ -160,6 +160,7 @@
                               :modelValue="appealStore.diagnosis"
                             ></SimpleInput>
                           </div>
+                          {{ appealStore.typeOfAppeal }}
                         </q-tab-panel>
 
                         <q-tab-panel name="doctors" key="doctors">
@@ -575,6 +576,9 @@ watch(
     if (newVal) {
       appealStore.setSuccessAppeal(false);
       createAppealModalRef.value.hide();
+      appealStore.clearAppealData();
+      appealStore.clearClinicData();
+
       router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }

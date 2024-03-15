@@ -20,7 +20,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
     searchClients.value = clients.value.map((item) => {
       return {
         id: item.id, //contract_client_id
-        clientId: item.client.id, //client_id
+        clientId: item.client_id, //client_id
         clientFirstname: item.client.name,
         clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
@@ -39,7 +39,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
     searchClients.value = clients.value.map((item) => {
       return {
         id: item.id,
-        clientId: item.client.id,
+        clientId: item.client_id,
         clientFirstname: item.client.name,
         clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
@@ -56,10 +56,11 @@ export const useSearchClientsStore = defineStore("clients", () => {
     clients.value = [];
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
+
     searchClients.value = clients.value.map((item) => {
       return {
         id: item.id,
-        clientId: item.client.id,
+        clientId: item.client_id,
         clientFirstname: item.client.name,
         clientLastname: item.client.lastname,
         dmsCode: item.dms_code,
