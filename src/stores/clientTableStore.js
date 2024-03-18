@@ -112,6 +112,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   const rows = computed(() => {
     return users.value.map((row, index) => {
+      
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
       return {

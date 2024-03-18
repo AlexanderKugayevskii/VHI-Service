@@ -266,6 +266,29 @@ button[class^="btn"] {
   }
 }
 
+.tabs-content {
+  .q-panel {
+    height: calc(100vh - 380px);
+  }
+  .q-tab-panel {
+    padding-right: 8px;
+  }
+  .scroll {
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 50px;
+      background-color: #f2f5fa;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 50px;
+      background-color: #e3e8f0;
+    }
+  }
+}
 // .tabs-content .scroll {
 //   overflow: hidden;
 // }
@@ -287,8 +310,4 @@ button[class^="btn"] {
 // .scroll::-webkit-scrollbar-thumb {
 //   border-radius: 50px;
 //   background-color: #e3e8f0;
-// }
-
-// .q-tab-panel {
-//   padding-right: 8px;
 // }

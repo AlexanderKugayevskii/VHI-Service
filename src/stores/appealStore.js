@@ -173,7 +173,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getHospitalDataById(
         selectedClinic.value.id
-      );
+      );  
       const data = response.data.data;
       doctors.value = data.doctors;
       services.value = data.med_services;
