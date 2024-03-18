@@ -187,10 +187,10 @@ import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 import { defineComponent, onMounted } from "vue";
 import RouteLink from "components/RouteLink/RouteLink.vue";
 import Trans from "src/i18n/translation";
-import { useAuthStore } from "src/stores/authStore"; 
+import { useAuthStore } from "src/stores/authStore";
+import { useAppealStore } from "src/stores/appealStore";
 import { useRouter } from "vue-router";
 import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
-
 export default defineComponent({
   name: "MainLayout",
   components: {
@@ -202,10 +202,13 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const authStore = useAuthStore();
+    const appealStore = useAppealStore();
 
     const handleLogout = () => {
       authStore.logout();
       router.replace({ name: "Login" });
+      appealStore.clearAppealData();
+      appealStore.clearClinicData();
     };
     onMounted(() => {
       console.log(authStore.user);
