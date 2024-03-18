@@ -1,5 +1,5 @@
 ARG REGISTRY_URL
-FROM ${REGISTRY_URL}/website/frontend:base as BUILD
+FROM ${REGISTRY_URL}/dms-service/frontend:base as BUILD
 RUN mkdir -p /var/www/
 WORKDIR /var/www
 COPY . .
