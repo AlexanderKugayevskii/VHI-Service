@@ -130,7 +130,10 @@
                               :multiple="false"
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
-                              :disable-choise="appealStore.isClinic"
+                              :disable-choise="
+                                appealStore.isClinic ||
+                                appealStore.typeOfAppeal === 1
+                              "
                               :selected-options="appealStore.selectedClinic"
                               @select-option="appealStore.selectClinic"
                               @request="appealStore.fetchClinics"
@@ -200,7 +203,10 @@
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span class="price" v-if="!appealStore.isClinic">
+                                  <span
+                                    class="price"
+                                    v-if="!appealStore.isClinic"
+                                  >
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -311,7 +317,10 @@
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span class="price" v-if="!appealStore.isClinic">
+                                  <span
+                                    class="price"
+                                    v-if="!appealStore.isClinic"
+                                  >
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -483,7 +492,10 @@
                       @click="hideModal"
                     ></SimpleButton>
                   </div>
-                  <div class="create-appeal-action-expences" v-if="!appealStore.isClinic">
+                  <div
+                    class="create-appeal-action-expences"
+                    v-if="!appealStore.isClinic"
+                  >
                     <span class="create-appeal-action-expences-title"
                       >Общий расход:
                     </span>
@@ -714,8 +726,6 @@ const handleStatusService = (item) => {
 .tabs-content {
   height: 100%;
   display: flex;
-
-
 }
 .q-tab-panels {
   flex-grow: 1;
