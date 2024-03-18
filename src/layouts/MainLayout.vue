@@ -187,7 +187,7 @@ import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 import { defineComponent, onMounted } from "vue";
 import RouteLink from "components/RouteLink/RouteLink.vue";
 import Trans from "src/i18n/translation";
-import { useAuthStore } from "src/stores/authStore";
+import { useAuthStore } from "src/stores/authStore"; 
 import { useRouter } from "vue-router";
 import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
 
