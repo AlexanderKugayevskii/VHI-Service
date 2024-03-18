@@ -1,0 +1,120 @@
+name: build-and-deploy-dev
+run-name: ${{ github.actor }} is building and deploying dms service frontend for dev
+on: 
+  push:
+    branches:
+      - "development"
+  workflow_dispatch:
+
+env:
+  REGISTRY_URL: registry.megahertz.uz
+  IMAGE_PREFIX: dms-service/frontend
+  ENVIRONMENT: dev
+  SERVER_1_HOST: 82.148.2.170
+  SERVER_1_SSH_PORT: 22022 
+  SERVER_2_HOST: 94.158.51.153
+  SERVER_2_SSH_PORT: 22
+
+jobs:
+  build-and-push:
+    runs-on: 
+      - self-hosted
+      - uz-east-1a
+    concurrency: 
+      group: ${{ github.repository }}
+    container:
+      image: docker:cli
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    steps:
+
+      - name: install required packages
+        run: |
+          apk add git --no-cache
+          git config --global --add safe.directory /__w/dms-service-frontend/dms-service-frontend
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
+          password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: filter file changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: development
+          filters: |
+            package:
+              - 'package.json'
+
+      - name: Build and push frontend base image
+        if: steps.filter.outputs.package == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/base.Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY_URL }}/${{ env.IMAGE_PREFIX }}:base
+
+      - name: Build and push dms service frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          build-args: |
+            REGISTRY_URL=${{ env.REGISTRY_URL }}
+          tags: |
+            ${{ env.REGISTRY_URL }}/${{ env.IMAGE_PREFIX }}:development
+
+  deploy:
+    needs: build-and-push
+    runs-on: 
+      - self-hosted
+      - uz-east-1a
+    concurrency: 
+      group: ${{ github.repository }}
+    container:
+      image: docker:cli
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: 'neoinsurance/deployment'
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+
+      - name: Deploy to datacenter
+        uses: ./.github/actions/compose-deploy
+        with:
+          ssh_private_key: ${{ secrets.MASTER_SSH_PRIVATE_KEY }}
+          server_host: ${{ env.SERVER_1_HOST }}
+          ssh_port: ${{ env.SERVER_1_SSH_PORT }}
+          registry_url: ${{ env.REGISTRY_URL }}
+          registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
+          registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
+          service_name: dms-service-frontend
+          environment: ${{ env.ENVIRONMENT }}
+
+      - name: Deploy to office
+        uses: ./.github/actions/compose-deploy
+        with:
+          ssh_private_key: ${{ secrets.MASTER_SSH_PRIVATE_KEY }}
+          server_host: ${{ env.SERVER_2_HOST }}
+          ssh_port: ${{ env.SERVER_2_SSH_PORT }}
+          registry_url: ${{ env.REGISTRY_URL }}
+          registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
+          registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
+          service_name: dms-service-frontend
+          environment: ${{ env.ENVIRONMENT }}
