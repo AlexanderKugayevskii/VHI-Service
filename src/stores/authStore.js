@@ -2,8 +2,10 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
+import { useAppealStore } from "./appealStore";
 
 export const useAuthStore = defineStore("auth", () => {
+  const appealStore = useAppealStore();
   //state
   const user = ref(null);
   const token = ref(null);
@@ -37,6 +39,8 @@ export const useAuthStore = defineStore("auth", () => {
   };
   const logout = () => {
     clearUser();
+    appealStore.clearClinicData();
+    appealStore.clearAppealData();
   };
 
   const login = async (credentials) => {

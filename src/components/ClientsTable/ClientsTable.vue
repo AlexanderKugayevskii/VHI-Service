@@ -229,7 +229,9 @@ const selectOption = (option) => {
 const openAppealPage = async (client) => {
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
-  $q.loading.show();
+  $q.loading.show({
+    delay: 500,
+  });
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
 
