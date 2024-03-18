@@ -33,7 +33,7 @@ function filterItems(data, suggestedArr, selectedArr, isClinic) {
 export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
-  const isClinic = user.value.role.id === 8;
+  const isClinic = computed(() => user.value.role.id === 8);
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -173,7 +173,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getHospitalDataById(
         selectedClinic.value.id
-      );  
+      );
       const data = response.data.data;
       doctors.value = data.doctors;
       services.value = data.med_services;
@@ -280,14 +280,14 @@ export const useAppealStore = defineStore("appeal", () => {
         data.doctors,
         suggestedDoctors.value,
         selectedDoctors.value,
-        isClinic
+        isClinic.value
       );
 
       filterItems(
         data.services,
         suggestedServices.value,
         selectedServices.value,
-        isClinic
+        isClinic.value
       );
 
       console.log(`Suggested by other`, suggestedDoctors.value);
