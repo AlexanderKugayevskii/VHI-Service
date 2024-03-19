@@ -225,7 +225,7 @@ export const useAppealStore = defineStore("appeal", () => {
         response.data.message === "created successfully"
       ) {
         setSuccessAppeal(true);
-        clearAppealData();
+        // clearAppealData();
       }
     } catch (e) {
       console.error(e);
@@ -253,7 +253,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
-        clearAppealData();
+        // clearAppealData();
       }
     } catch (e) {
       console.error(e);

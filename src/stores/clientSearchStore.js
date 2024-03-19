@@ -26,7 +26,8 @@ export const useSearchClientsStore = defineStore("clients", () => {
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
-        program: item.program.name,
+        program: item.program ? item.program.name : "no program",
+
         type: "Клиент",
       };
     });
@@ -45,7 +46,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
-        program: item.program.name ? item.program.name : "no program",
+        program: item.program ? item.program.name : "no program",
         type: "Клиент",
       };
     });
@@ -66,7 +67,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         dmsCode: item.dms_code,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
-        program: item.program.name ? item.program.name : "no program",
+        program: item.program ? item.program.name : "no program",
         type: "Клиент",
       };
     });

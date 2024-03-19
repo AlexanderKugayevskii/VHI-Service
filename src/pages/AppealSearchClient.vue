@@ -106,14 +106,14 @@
 
             <q-tab-panel name="byPassport">
               <div class="tab-header">
-                <SimpleInput
+                <PassportInput
                   :label="$t('appeal_search.passport_label')"
                   debounce-time="300"
                   :placeholder="$t('appeal_search.passport_input')"
                   :show-icon="true"
-                  v-model:model-value="searchPassport"
+                  @update:model-value="handleInput"
                 >
-                </SimpleInput>
+                </PassportInput>
               </div>
               <div class="client-results">
                 <SearchClientResult
@@ -151,6 +151,7 @@
 <script setup>
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
+import PassportInput from "src/components/Shared/PassportInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -169,6 +170,9 @@ const clientStore = useSearchClientsStore();
 const appealStore = useAppealStore();
 
 const router = useRouter();
+const handleInput = (val) => {
+  searchPassport.value = val;
+};
 
 const clearFields = () => {
   searchId.value = "";

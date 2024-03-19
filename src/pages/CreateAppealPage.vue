@@ -111,7 +111,7 @@
                       />
                     </q-tabs>
                   </div>
-                  <div class="tabs-content">
+                  <div class="tabs-content appeal-content">
                     <keep-alive>
                       <q-tab-panels
                         v-model="tab"
@@ -478,14 +478,22 @@
                       :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
+                      :loading="appealStore.loading"
                       @click="handleCreateAppeal"
-                    ></SimpleButton>
+                    >
+                      <template #loading-spinner>
+                        <LoadingSpinner />
+                      </template>
+                    </SimpleButton>
                     <SimpleButton
                       v-else
-                      label="Изменить обращение"
+                      :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
+                      :loading="appealStore.loading"
                       @click="handleChangeAppeal"
+                    >
+                      <template #loading-spinner> <LoadingSpinner /> </template
                     ></SimpleButton>
                     <SimpleButton
                       :label="$t('create_appeal.buttons.exit_appeal')"
@@ -557,6 +565,7 @@ import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
+import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -588,11 +597,11 @@ watch(
   (newVal) => {
     if (newVal) {
       appealStore.setSuccessAppeal(false);
-      createAppealModalRef.value.hide();
-      appealStore.clearAppealData();
-      appealStore.clearClinicData();
+      // createAppealModalRef.value.hide();
+      // appealStore.clearAppealData();
+      // appealStore.clearClinicData();
 
-      router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+      // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }
 );
@@ -611,7 +620,6 @@ const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
 const handleStatusDoctor = (item) => {
-  console.log(item);
   appealStore.changeStatusDoctor(item);
 };
 const handleStatusService = (item) => {
