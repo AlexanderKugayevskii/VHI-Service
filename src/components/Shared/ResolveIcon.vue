@@ -1,11 +1,12 @@
 <template>
   <div class="checkbox-wrapper">
-    <label class="checkbox-label">
+    <label :class="['checkbox-label', { disabled: disabled }]">
       <input
         type="checkbox"
         class="checkbox-input"
         :name="name"
         :checked="checked"
+        :disabled="disabled"
         @change="emitChange"
       />
       <q-icon size="20px" class="check-icon" v-if="variant">
@@ -56,6 +57,10 @@ const props = defineProps({
   checked: {
     type: Boolean,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["change"]);
@@ -82,6 +87,11 @@ const emitChange = (event) => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &.disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed;
+  }
 }
 .checkbox-input {
   position: absolute;
@@ -93,7 +103,6 @@ const emitChange = (event) => {
   width: 100%;
   height: 100%;
 }
-
 .check-icon svg path {
   transition: 0.3s;
 }

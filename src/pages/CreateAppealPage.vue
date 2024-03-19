@@ -254,7 +254,13 @@
                               v-for="doctor in appealStore.selectedDoctors"
                               :item="doctor"
                               :key="doctor.id"
-                              @update:status="handleStatusDoctor"
+                              :isAgent="appealStore.isAgent"
+                              @update:status="
+                                (item) => handleStatusDoctor(item, false)
+                              "
+                              @update:progress="
+                                (item) => handleStatusDoctor(item, false)
+                              "
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -280,7 +286,14 @@
                                 v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
                                 :key="doctor.id"
-                                @update:status="handleStatusDoctor"
+                              :isAgent="appealStore.isAgent"
+
+                                @update:status="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
+                                @update:progress="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
                               >
                                 <template #label>
                                   {{ doctor.name }}
@@ -575,7 +588,6 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
-import DragNdrop from "src/components/DragNdrop.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, computed, watch } from "vue";
@@ -631,12 +643,10 @@ const handleRemoveDoctor = (item) => {
 const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
-const handleStatusDoctor = (item) => {
-  if (item.isNew) {
-    return;
-  }
+const handleStatusDoctor = (item, isSuggested) => {
   console.log(item);
-  appealStore.changeStatusDoctor(item);
+
+  appealStore.changeStatusDoctor(item, isSuggested);
 };
 const handleStatusService = (item) => {
   console.log(item);

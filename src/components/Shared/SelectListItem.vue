@@ -6,17 +6,25 @@
       </div>
     </div>
     <div class="selected-item-right">
+      <StatusSwitcher
+        :isAgent="isAgent"
+        :progress="item.pivot.progress"
+        v-if="item.pivot.status === 1"
+        @update:change="handleProgress"
+      />
       <div class="selected-item-price"><slot name="price"></slot></div>
       <div class="selected-item-actions">
         <ResolveIcon
           :variant="true"
           @change="handleStatus"
           :checked="item.pivot.status === 1"
+          :disabled="item.isNew"
         />
         <ResolveIcon
           :variant="false"
           @change="handleStatus"
           :checked="item.pivot.status === 2"
+          :disabled="item.isNew"
         />
       </div>
     </div>
@@ -25,17 +33,24 @@
 
 <script setup>
 import ResolveIcon from "./ResolveIcon.vue";
+import StatusSwitcher from "./StatusSwitcher.vue";
 
 const props = defineProps({
   item: {
     type: Object,
   },
+  isAgent: {
+    type: Boolean,
+  },
 });
 
-const emit = defineEmits(["update:status"]);
+const emit = defineEmits(["update:status", "update:progress"]);
 
 const handleStatus = (status) => {
   emit("update:status", { status, item: props.item });
+};
+const handleProgress = (progress) => {
+  emit("update:progress", { progress, item: props.item });
 };
 </script>
 
@@ -45,6 +60,7 @@ const handleStatus = (status) => {
   padding: 10px 16px;
   border-radius: 16px;
   display: flex;
+  align-items: center;
   column-gap: 16px;
   margin-bottom: 8px;
 }

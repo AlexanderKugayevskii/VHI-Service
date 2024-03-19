@@ -1,21 +1,21 @@
 <template>
   <div :class="['status-row', dense && 'status-row-dense']">
-    <div v-if="!notAgent && progress === 0" class="status-item">
-      Ожидает подтверждения
+    <div v-if="isAgent && progress === 0" class="status-item">
+      Ожидает завершения
     </div>
     <div
-      v-if="notAgent && progress === 0"
+      v-if="!isAgent && progress === 0"
       class="status-item clickable"
       @click="handleChangeProgress(1)"
     >
       Завершить
     </div>
     <div class="status-item status-done" v-if="progress >= 1">Завершено</div>
-    <div class="status-item" v-if="notAgent && progress === 1">Ожидание</div>
+    <div class="status-item" v-if="!isAgent && progress === 1">Ожидание</div>
     <div
       class="status-item clickable"
       @click="handleChangeProgress(2)"
-      v-if="!notAgent && progress === 1"
+      v-if="isAgent && progress === 1"
     >
       Подтвердить
     </div>
@@ -41,14 +41,12 @@
     <div>Подтверждено - клиника и агент</div>
 -->
 <script setup>
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 const props = defineProps({
   progress: {
     type: Number,
     default: 0,
   },
-  notAgent: {
+  isAgent: {
     type: Boolean,
   },
   label: {
@@ -61,15 +59,11 @@ const props = defineProps({
   },
 });
 
-const statusTypes = {};
-
-const emits = defineEmits(["update:change"]);
+const emit = defineEmits(["update:change"]);
 
 const handleChangeProgress = (progress) => {
   emit("update:change", progress);
 };
-
-const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>
@@ -81,6 +75,7 @@ const { t } = useI18n();
   overflow: hidden;
   display: flex;
   width: 200px;
+  margin-bottom: 0;
   &-dense {
     height: 8px;
   }

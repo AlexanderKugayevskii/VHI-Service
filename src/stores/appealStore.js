@@ -33,6 +33,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value.role.id === 8);
+  const isAgent = computed(() => user.value.role.id !== 8); //temp
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -68,6 +69,7 @@ export const useAppealStore = defineStore("appeal", () => {
       return {
         id: doctor.id,
         status: doctor.pivot.status ?? 0,
+        progress: doctor.pivot.progress ?? 0,
       };
     })
   );
@@ -92,7 +94,12 @@ export const useAppealStore = defineStore("appeal", () => {
       ...suggestedServices.value,
     ];
 
-    return allData.reduce((acc, curr) => acc + Number(curr.pivot.price), 0);
+    return allData.reduce((acc, curr) => {
+      if (curr.pivot.status === 1) {
+        return acc + Number(curr.pivot.price);
+      }
+      return acc;
+    }, 0);
   });
 
   const selectClinic = (clinic) => {
@@ -110,6 +117,11 @@ export const useAppealStore = defineStore("appeal", () => {
   const checkSuggestedDoctors = (doctor) => {
     return suggestedDoctors.value.some((item) => doctor.id === item.id);
   };
+
+  //если статус не 0 и если это клиника => не даем удалить доктора в дропдауне
+  //если прогресс 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
+
+  //если прогресс 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
   const selectDoctors = (doctor) => {
     if (checkSuggestedDoctors(doctor)) {
       return;
@@ -121,7 +133,15 @@ export const useAppealStore = defineStore("appeal", () => {
     if (index > -1) {
       selectedDoctors.value.splice(index, 1);
     } else {
-      selectedDoctors.value.push({ ...doctor, isNew: true });
+      selectedDoctors.value.push({
+        ...doctor,
+        pivot: {
+          ...doctor.pivot,
+          status: 0,
+          progress: 0,
+        },
+        isNew: true,
+      });
     }
   };
 
@@ -315,20 +335,28 @@ export const useAppealStore = defineStore("appeal", () => {
       (item) => item.id !== doctor.id
     );
   };
-  const changeStatusDoctor = (selectedItem) => {
-    suggestedDoctors.value = suggestedDoctors.value.map((doctor) => {
+  const changeStatusDoctor = (selectedItem, isSuggested = true) => {
+    let doctors = isSuggested ? suggestedDoctors.value : selectedDoctors.value;
+    doctors = doctors.map((doctor) => {
       if (selectedItem.item.id === doctor.id) {
         return {
           ...doctor,
           pivot: {
             ...doctor.pivot,
-            status: selectedItem.status,
+            status: selectedItem.status ?? doctor.pivot.status,
+            progress: selectedItem.progress ?? doctor.pivot.progress,
           },
           status: selectedItem.status,
         };
       }
       return doctor;
     });
+
+    if (isSuggested) {
+      suggestedDoctors.value = doctors;
+    } else {
+      selectedDoctors.value = doctors;
+    }
   };
 
   const changeStatusService = (selectedItem) => {
@@ -361,6 +389,7 @@ export const useAppealStore = defineStore("appeal", () => {
   return {
     loading,
     isClinic,
+    isAgent,
     appealTotalConsumption,
     successAppeal,
     setSuccessAppeal,
