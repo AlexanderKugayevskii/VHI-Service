@@ -38,6 +38,8 @@
                   <span
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
+
+                  {{ appealStore.isClinic }}
                   <!-- <span
                     >Родственник: <b>{{ clientData.clientName }} </b></span
                   > -->
