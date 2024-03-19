@@ -1,10 +1,9 @@
 import { defineStore } from "pinia";
-import { ref, reactive, watch, registerRuntimeCompiler, computed } from "vue";
+import { ref, computed } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
-import { all } from "axios";
 
 const TYPE_OF_APPEALS = {
   NEW: 0,
@@ -122,7 +121,7 @@ export const useAppealStore = defineStore("appeal", () => {
     if (index > -1) {
       selectedDoctors.value.splice(index, 1);
     } else {
-      selectedDoctors.value.push(doctor);
+      selectedDoctors.value.push({ ...doctor, isNew: true });
     }
   };
 
@@ -145,6 +144,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const clearAppealData = () => {
+    diagnosis.value = "";
     doctors.value = [];
     services.value = [];
     selectedDoctors.value = [];

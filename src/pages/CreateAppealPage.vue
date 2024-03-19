@@ -39,7 +39,6 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
 
-                  {{ appealStore.isClinic }}
                   <!-- <span
                     >Родственник: <b>{{ clientData.clientName }} </b></span
                   > -->
@@ -102,13 +101,13 @@
                         :ripple="false"
                         class="tab--no-hover"
                       />
-                      <q-tab
+                      <!-- <q-tab
                         name="drugstore"
                         :label="`${$t('create_appeal.tabs.drugstore')} (скоро)`"
                         :ripple="false"
                         class="tab--no-hover"
                         disable
-                      />
+                      /> -->
                     </q-tabs>
                   </div>
                   <div class="tabs-content appeal-content">
@@ -238,7 +237,7 @@
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
-                            <SelectedItem
+                            <!-- <SelectedItem
                               v-for="doctor in appealStore.selectedDoctors"
                               :item="doctor"
                               :key="doctor.id"
@@ -250,7 +249,20 @@
                               <template #price v-if="!appealStore.isClinic">
                                 {{ formatPrice(Number(doctor.pivot.price)) }}
                               </template>
-                            </SelectedItem>
+                            </SelectedItem> -->
+                            <SelectListItem
+                              v-for="doctor in appealStore.selectedDoctors"
+                              :item="doctor"
+                              :key="doctor.id"
+                              @update:status="handleStatusDoctor"
+                            >
+                              <template #label>
+                                {{ doctor.name }}
+                              </template>
+                              <template #price v-if="!appealStore.isClinic">
+                                {{ formatPrice(Number(doctor.pivot.price)) }}
+                              </template>
+                            </SelectListItem>
                             <div
                               class=""
                               v-if="appealStore.suggestedDoctors.length > 0"
@@ -396,7 +408,7 @@
                           </div>
                         </q-tab-panel>
 
-                        <q-tab-panel name="drugstore" key="drugstore">
+                        <!-- <q-tab-panel name="drugstore" key="drugstore">
                           <div class="tab-header drugstore-header">
                             <DragNdrop></DragNdrop>
                           </div>
@@ -465,7 +477,7 @@
                               </template>
                             </SelectedItem>
                           </div>
-                        </q-tab-panel>
+                        </q-tab-panel> -->
                       </q-tab-panels>
                     </keep-alive>
                   </div>
@@ -620,6 +632,10 @@ const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
 const handleStatusDoctor = (item) => {
+  if (item.isNew) {
+    return;
+  }
+  console.log(item);
   appealStore.changeStatusDoctor(item);
 };
 const handleStatusService = (item) => {
