@@ -18,13 +18,13 @@
           :variant="true"
           @change="handleStatus"
           :checked="item.pivot.status === 1"
-          :disabled="item.isNew"
+          :disabled="disabledRule"
         />
         <ResolveIcon
           :variant="false"
           @change="handleStatus"
           :checked="item.pivot.status === 2"
-          :disabled="item.isNew"
+          :disabled="disabledRule"
         />
       </div>
     </div>
@@ -32,6 +32,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
 
@@ -45,6 +46,23 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:status", "update:progress"]);
+
+const disabledRule = computed(() => {
+  return (
+    props.item.isNew ||
+    props.item.pivot.progress >= 1 ||
+    (!props.isAgent &&
+      props.item.pivot.status !== 0 &&
+      props.item.pivot.progress >= 1 &&
+      props.item.pivot.created_by_clinic === 0) ||
+    (props.isAgent &&
+      props.item.pivot.created_by_clinic === 0 &&
+      props.item.pivot.status === 0) ||
+    (!props.isAgent &&
+      props.item.pivot.created_by_clinic === 1 &&
+      props.item.pivot.status === 0)
+  );
+});
 
 const handleStatus = (status) => {
   emit("update:status", { status, item: props.item });

@@ -198,6 +198,9 @@
                                     'disabled-option':
                                       appealStore.checkSuggestedDoctors(
                                         props.option
+                                      ) ||
+                                      appealStore.cantRemoveFromSelectedDoctors(
+                                        props.option
                                       ),
                                   }"
                                 >
@@ -225,10 +228,26 @@
                                         : "клиникой"
                                     }})
                                   </span>
+                                  <span
+                                    v-if="
+                                      appealStore.cantRemoveFromSelectedDoctors(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      appealStore.isAgent
+                                        ? " (завершено клиникой)"
+                                        : " (решение компании)"
+                                    }}
+                                  </span>
                                 </div>
                                 <CheckIcon
                                   v-if="
                                     appealStore.checkSelectedDoctors(
+                                      props.option
+                                    ) &&
+                                    !appealStore.cantRemoveFromSelectedDoctors(
                                       props.option
                                     )
                                   "
@@ -237,19 +256,6 @@
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
-                            <!-- <SelectedItem
-                              v-for="doctor in appealStore.selectedDoctors"
-                              :item="doctor"
-                              :key="doctor.id"
-                              @update:remove="handleRemoveDoctor"
-                            >
-                              <template #label>
-                                {{ doctor.name }}
-                              </template>
-                              <template #price v-if="!appealStore.isClinic">
-                                {{ formatPrice(Number(doctor.pivot.price)) }}
-                              </template>
-                            </SelectedItem> -->
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
                               :item="doctor"
@@ -286,8 +292,7 @@
                                 v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
                                 :key="doctor.id"
-                              :isAgent="appealStore.isAgent"
-
+                                :isAgent="appealStore.isAgent"
                                 @update:status="
                                   (item) => handleStatusDoctor(item, true)
                                 "

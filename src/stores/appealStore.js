@@ -118,12 +118,27 @@ export const useAppealStore = defineStore("appeal", () => {
     return suggestedDoctors.value.some((item) => doctor.id === item.id);
   };
 
+  const cantRemoveFromSelectedDoctors = (doctor) => {
+    return selectedDoctors.value.some((item) => {
+      if (doctor.id === item.id) {
+        return (
+          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.status !== 0 && !isAgent.value)
+        );
+      }
+    });
+  };
+
   //если статус не 0 и если это клиника => не даем удалить доктора в дропдауне
-  //если прогресс 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
+  //если прогресс >= 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
 
   //если прогресс 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
   const selectDoctors = (doctor) => {
     if (checkSuggestedDoctors(doctor)) {
+      return;
+    }
+    if (cantRemoveFromSelectedDoctors(doctor)) {
+      console.log("true");
       return;
     }
 
@@ -143,6 +158,8 @@ export const useAppealStore = defineStore("appeal", () => {
         isNew: true,
       });
     }
+
+    console.log(selectedDoctors.value);
   };
 
   const checkSuggestedServices = (service) => {
@@ -429,5 +446,6 @@ export const useAppealStore = defineStore("appeal", () => {
     changeStatusService,
     checkSuggestedDoctors,
     checkSuggestedServices,
+    cantRemoveFromSelectedDoctors,
   };
 });
