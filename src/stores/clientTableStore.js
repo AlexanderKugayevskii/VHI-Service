@@ -128,7 +128,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         diagnosisName: row.diagnosis ?? "",
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
-        program: row.contract_client.program.name,
+        program: row.contract_client.program?.name,
         userSettings: "",
         index:
           (pagination.value.page - 1) * pagination.value.rowsPerPage +

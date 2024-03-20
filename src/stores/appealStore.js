@@ -82,6 +82,7 @@ export const useAppealStore = defineStore("appeal", () => {
       return {
         id: service.id,
         status: service.pivot.status ?? 0,
+        progress: service.pivot.progress ?? 0,
       };
     })
   );
@@ -129,6 +130,16 @@ export const useAppealStore = defineStore("appeal", () => {
     });
   };
 
+  const cantRemoveFromSelectedServices = (service) => {
+    return selectedServices.value.some((item) => {
+      if (service.id === item.id) {
+        return (
+          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.status !== 0 && !isAgent.value)
+        );
+      }
+    });
+  };
   //если статус не 0 и если это клиника => не даем удалить доктора в дропдауне
   //если прогресс >= 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
 
@@ -138,7 +149,6 @@ export const useAppealStore = defineStore("appeal", () => {
       return;
     }
     if (cantRemoveFromSelectedDoctors(doctor)) {
-      console.log("true");
       return;
     }
 
@@ -158,8 +168,6 @@ export const useAppealStore = defineStore("appeal", () => {
         isNew: true,
       });
     }
-
-    console.log(selectedDoctors.value);
   };
 
   const checkSuggestedServices = (service) => {
@@ -169,6 +177,9 @@ export const useAppealStore = defineStore("appeal", () => {
     if (checkSuggestedServices(service)) {
       return;
     }
+    if (cantRemoveFromSelectedServices(service)) {
+      return;
+    }
 
     const index = selectedServices.value.findIndex(
       (item) => item.id === service.id
@@ -176,7 +187,15 @@ export const useAppealStore = defineStore("appeal", () => {
     if (index > -1) {
       selectedServices.value.splice(index, 1);
     } else {
-      selectedServices.value.push(service);
+      selectedServices.value.push({
+        ...service,
+        pivot: {
+          ...service.pivot,
+          status: 0,
+          progress: 0,
+        },
+        isNew: true,
+      });
     }
   };
 
@@ -250,6 +269,7 @@ export const useAppealStore = defineStore("appeal", () => {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
       client_type: 0,
+      is_hospital: true,
       client_id: client.value.clientId,
       services: selectedServices.value.map((service) => service.id),
       doctors: selectedDoctors.value.map((doctor) => doctor.id),
@@ -376,20 +396,30 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
-  const changeStatusService = (selectedItem) => {
-    suggestedServices.value = suggestedServices.value.map((service) => {
+  const changeStatusService = (selectedItem, isSuggested = true) => {
+    let services = isSuggested
+      ? suggestedServices.value
+      : selectedServices.value;
+    services = services.map((service) => {
       if (selectedItem.item.id === service.id) {
         return {
           ...service,
           pivot: {
             ...service.pivot,
-            status: selectedItem.status,
+            status: selectedItem.status ?? service.pivot.status,
+            progress: selectedItem.progress ?? service.pivot.status,
           },
           status: selectedItem.status,
         };
       }
       return service;
     });
+
+    if (isSuggested) {
+      suggestedServices.value = services;
+    } else {
+      selectedServices.value = services;
+    }
   };
 
   const clearServices = (service) => {
@@ -447,5 +477,6 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSuggestedDoctors,
     checkSuggestedServices,
     cantRemoveFromSelectedDoctors,
+    cantRemoveFromSelectedServices,
   };
 });

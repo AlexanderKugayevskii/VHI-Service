@@ -10,16 +10,26 @@
     >
       Завершить
     </div>
-    <div class="status-item status-done" v-if="progress >= 1">Завершено</div>
+    <div
+      class="status-item status-done"
+      v-if="progress >= 1"
+      @click="() => progress === 1 && handleChangeProgress(0)"
+    >
+      Завершено
+    </div>
     <div class="status-item" v-if="!isAgent && progress === 1">Ожидание</div>
     <div
       class="status-item clickable"
-      @click="handleChangeProgress(2)"
+      @click="() => isAgent && handleChangeProgress(2)"
       v-if="isAgent && progress === 1"
     >
       Подтвердить
     </div>
-    <div class="status-item status-done clickable" v-if="progress === 2">
+    <div
+      class="status-item status-done clickable"
+      @click="() => isAgent && handleChangeProgress(1)"
+      v-if="progress === 2"
+    >
       Подтверждено
     </div>
   </div>
@@ -109,6 +119,7 @@ const handleChangeProgress = (progress) => {
   background-color: #13b8ba;
   &.clickable {
     color: #fff;
+    cursor: pointer;
   }
 }
 </style>

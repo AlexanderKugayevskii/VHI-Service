@@ -60,7 +60,7 @@ const disabledRule = computed(() => {
       props.item.pivot.status === 0) ||
     (!props.isAgent &&
       props.item.pivot.created_by_clinic === 1 &&
-      props.item.pivot.status === 0)
+      props.item.pivot.status >= 0)
   );
 });
 

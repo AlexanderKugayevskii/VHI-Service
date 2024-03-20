@@ -89,7 +89,7 @@ const emitChange = (event) => {
   cursor: pointer;
 
   &.disabled {
-    opacity: 0.5 !important;
+    opacity: 1 !important;
     cursor: not-allowed;
   }
 }

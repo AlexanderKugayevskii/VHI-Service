@@ -343,6 +343,9 @@
                                     'disabled-option':
                                       appealStore.checkSuggestedServices(
                                         props.option
+                                      ) ||
+                                      appealStore.cantRemoveFromSelectedServices(
+                                        props.option
                                       ),
                                   }"
                                 >
@@ -370,10 +373,26 @@
                                         : "клиникой"
                                     }})
                                   </span>
+                                  <span
+                                    v-if="
+                                      appealStore.cantRemoveFromSelectedServices(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      appealStore.isAgent
+                                        ? " (завершено клиникой)"
+                                        : " (решение компании)"
+                                    }}
+                                  </span>
                                 </div>
                                 <CheckIcon
                                   v-if="
                                     appealStore.checkSelectedServices(
+                                      props.option
+                                    ) &&
+                                    !appealStore.cantRemoveFromSelectedServices(
                                       props.option
                                     )
                                   "
@@ -382,11 +401,17 @@
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
-                            <SelectedItem
+                            <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
                               :key="service.id"
-                              @update:remove="handleRemoveService"
+                              :isAgent="appealStore.isAgent"
+                              @update:status="
+                                (item) => handleStatusService(item, false)
+                              "
+                              @update:progress="
+                                (item) => handleStatusService(item, false)
+                              "
                             >
                               <template #label>
                                 {{ service.name }}
@@ -394,7 +419,7 @@
                               <template #price v-if="!appealStore.isClinic">
                                 {{ formatPrice(Number(service.pivot.price)) }}
                               </template>
-                            </SelectedItem>
+                            </SelectListItem>
 
                             <div
                               class=""
@@ -413,7 +438,13 @@
                                 v-for="service in appealStore.suggestedServices"
                                 :item="service"
                                 :key="service.id"
-                                @update:status="handleStatusService"
+                                :isAgent="appealStore.isAgent"
+                                @update:status="
+                                  (item) => handleStatusService(item, true)
+                                "
+                                @update:progress="
+                                  (item) => handleStatusService(item, true)
+                                "
                               >
                                 <template #label>
                                   {{ service.name }}
@@ -649,13 +680,10 @@ const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
 const handleStatusDoctor = (item, isSuggested) => {
-  console.log(item);
-
   appealStore.changeStatusDoctor(item, isSuggested);
 };
-const handleStatusService = (item) => {
-  console.log(item);
-  appealStore.changeStatusService(item);
+const handleStatusService = (item, isSuggested) => {
+  appealStore.changeStatusService(item, isSuggested);
 };
 
 // const handleRemoveDrug = (item) => {
