@@ -130,16 +130,6 @@ export const useAppealStore = defineStore("appeal", () => {
     });
   };
 
-  const cantRemoveFromSelectedServices = (service) => {
-    return selectedServices.value.some((item) => {
-      if (service.id === item.id) {
-        return (
-          (item.pivot.progress >= 1 && isAgent.value) ||
-          (item.pivot.status !== 0 && !isAgent.value)
-        );
-      }
-    });
-  };
   //если статус не 0 и если это клиника => не даем удалить доктора в дропдауне
   //если прогресс >= 1 и если это агент => не даем удалить доктора в дропдауне и не даем отменить доктора
 
@@ -173,6 +163,18 @@ export const useAppealStore = defineStore("appeal", () => {
   const checkSuggestedServices = (service) => {
     return suggestedServices.value.some((item) => service.id === item.id);
   };
+
+  const cantRemoveFromSelectedServices = (service) => {
+    return selectedServices.value.some((item) => {
+      if (service.id === item.id) {
+        return (
+          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.status !== 0 && !isAgent.value)
+        );
+      }
+    });
+  };
+
   const selectServices = (service) => {
     if (checkSuggestedServices(service)) {
       return;
@@ -407,7 +409,7 @@ export const useAppealStore = defineStore("appeal", () => {
           pivot: {
             ...service.pivot,
             status: selectedItem.status ?? service.pivot.status,
-            progress: selectedItem.progress ?? service.pivot.status,
+            progress: selectedItem.progress ?? service.pivot.progress,
           },
           status: selectedItem.status,
         };

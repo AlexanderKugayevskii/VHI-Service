@@ -59,12 +59,12 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props">
+        <q-tr :props="props" @click="openAppealPage(props.row)">
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
           <q-td key="client" :props="props" class="appeals-td">
-            <a class="appeal-link" @click="openAppealPage(props.row)">
+            <a class="appeal-link" >
               {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
             </a>
           </q-td>
@@ -290,6 +290,7 @@ onMounted(() => {
   line-height: 20px;
   color: #13b8ba;
   text-decoration: none;
+  cursor: pointer;
 }
 .appeals-th {
   color: #404f6f;
