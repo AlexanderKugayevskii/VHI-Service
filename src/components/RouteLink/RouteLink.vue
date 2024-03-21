@@ -1,11 +1,8 @@
 <template>
-  <q-item class="q-py-none q-px-sm">
-    <router-link :to="routeTo" class="flex q-px-sm q-py-sm nav-item">
-      <q-item-section side class="q-pr-xs">
-        <q-icon size="20">
-          <slot name="icon"></slot>
-        </q-icon>
-      </q-item-section>
+  <q-item class="q-py-none q-px-none">
+    <router-link :to="routeTo" class="nav-item">
+      <slot name="icon"></slot>
+
       <q-item-section>
         <q-item-label>{{ caption }}</q-item-label>
       </q-item-section>
@@ -33,16 +30,18 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.nav-item {
+:global(.nav-item) {
   border-radius: 12px;
   cursor: pointer;
   transition: 0.3s;
   width: 100%;
   font-size: 15px;
-  line-height: 20px;
+
   text-decoration: none;
+  padding: 12px 12px 12px 20px;
   color: $primary;
 }
+
 .router-link-exact-active {
   background-color: $hover;
 }
@@ -52,7 +51,7 @@ defineProps({
 .no-hover:hover {
   background: none;
 }
-.nav-item:hover {
+.nav-item-btn:hover {
   background-color: $hover;
 }
 </style>
