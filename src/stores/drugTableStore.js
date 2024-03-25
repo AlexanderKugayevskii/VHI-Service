@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
-import ClientService from "src/services/ClientService";
+import DrugsService from "src/services/DrugsService";
 import formatDate from "src/helpers/formatDate";
 
 import { useI18n } from "vue-i18n";
@@ -69,7 +69,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
-    ClientService.getClients(page, limit, search)
+    DrugsService.getClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
         // router.push({
@@ -100,6 +100,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
 
   const rows = computed(() => {
     return users.value.map((row, index) => {
+      const medicines = row.drugs.map((drug) => drug.name).join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -107,8 +109,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         clientLastname: row.client.lastname,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
-        drugstore: "",
-        medicines: "",
+        drugstore: row.drugstore ?? 'нет аптеки',
+        medicines: medicines,
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,

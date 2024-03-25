@@ -1,5 +1,6 @@
 import Trans from "src/i18n/translation";
 import { RouterView } from "vue-router";
+import { useAuthStore } from "src/stores/authStore";
 const routes = [
   {
     path: "/:locale?",
@@ -48,6 +49,35 @@ const routes = [
             path: "drugstore",
             component: () => import("pages/DrugstorePage.vue"),
             name: "drugstore-page",
+            beforeEnter: (to, from, next) => {
+              const { user } = useAuthStore();
+
+              if (user.role.id !== 8) {
+                next();
+              } else {
+                next({ path: "" });
+              }
+            },
+            children: [
+              {
+                path: "create-appeal/:id",
+                name: "createDrugsAppeal",
+                props: (route) => {
+                  return {
+                    id: route.params.id,
+                    key: route.params.id,
+                  };
+                },
+                component: () => import("pages/CreateDrugAppealPage.vue"),
+                beforeEnter: (to, from, next) => {
+                  if (from.name) {
+                    next();
+                  } else {
+                    next("/");
+                  }
+                },
+              },
+            ],
           },
           {
             path: "clients",

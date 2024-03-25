@@ -324,6 +324,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const fetchApplicantData = async () => {
     loading.value = true;
     try {
+      console.log(client.value.appealId);
       const response = await ClientService.getClientByAppealId(
         client.value.appealId
       );
@@ -355,6 +356,7 @@ export const useAppealStore = defineStore("appeal", () => {
       console.log(`Suggested by other`, suggestedServices.value);
       console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
+      console.error("ERROR");
     } finally {
       loading.value = false;
     }

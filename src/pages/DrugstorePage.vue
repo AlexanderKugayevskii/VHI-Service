@@ -111,9 +111,16 @@
       <!-- <ClientsTable :search="search" /> -->
     </div>
 
-    <AppealSearchClient v-model:="searchFilterFixed"></AppealSearchClient>
+    <AppealSearchClient
+      v-model:="searchFilterFixed"
+      @openTypeModal="openAppealTypeModal"
+    ></AppealSearchClient>
     <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
 
+    <AppealType
+      v-model:="appealTypeFixed"
+      @move-back="handleMoveBackToAppealSearch"
+    />
     <router-view></router-view>
   </q-page>
 </template>
@@ -126,6 +133,8 @@ import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
+import AppealType from "./AppealType.vue";
+
 import CreateAppeal from "./CreateAppealPage.vue";
 // const props = defineProps(["page", "perPage"])
 // const page = computed(() => props.page);
@@ -134,6 +143,14 @@ const search = ref("");
 
 const modalFilterFixed = ref(false);
 const searchFilterFixed = ref(false);
+const appealTypeFixed = ref(false);
+
+const handleMoveBackToAppealSearch = (val) => {
+  searchFilterFixed.value = val;
+};
+const openAppealTypeModal = (type) => {
+  appealTypeFixed.value = type;
+};
 
 const filterOptions = reactive([
   {

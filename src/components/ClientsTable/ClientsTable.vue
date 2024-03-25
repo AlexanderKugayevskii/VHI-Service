@@ -59,12 +59,12 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props" @click.prevent.stop="openAppealPage(props.row)">
+        <q-tr :props="props" @click="openAppealPage(props.row)">
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
           <q-td key="client" :props="props" class="appeals-td">
-            <a class="appeal-link" >
+            <a class="appeal-link">
               {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
             </a>
           </q-td>
@@ -232,6 +232,7 @@ const openAppealPage = async (client) => {
   $q.loading.show({
     delay: 500,
   });
+
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
 
@@ -239,6 +240,7 @@ const openAppealPage = async (client) => {
   router.replace(
     Trans.i18nRoute({
       name: "createAppeal",
+
       params: { id: appealStore.client.contractClientId },
     })
   );
@@ -305,7 +307,7 @@ onMounted(() => {
   width: 250px;
 }
 .appeals-th:nth-of-type(4) {
-  min-width: 120px;
+  width: 120px;
 }
 
 .appeals-td {

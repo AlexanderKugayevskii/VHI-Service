@@ -135,13 +135,13 @@
           @click="hideModal"
         />
         <SimpleButton
-          :label="$t('create_appeal.buttons.create_appeal')"
+          label="Продолжить"
           :custom-class="[
             'btn-action',
             selectedClient === null ? 'btn--disabled' : '',
           ]"
           :disabled="selectedClient === null"
-          @click="goToAppeal"
+          @click="openTypeModal"
         ></SimpleButton>
       </div>
     </div>
@@ -153,12 +153,14 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import PassportInput from "src/components/Shared/PassportInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
+
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import { useSearchClientsStore } from "src/stores/clientSearchStore";
 import Trans from "src/i18n/translation";
 
+const emit = defineEmits(["openTypeModal"]);
 const searchId = ref("");
 const searchName = ref("");
 const searchPassport = ref("");
@@ -190,6 +192,12 @@ const hideModal = () => {
 const handleSelectItem = (item) => {
   selectedClient.value = item;
   appealStore.setClient(selectedClient.value);
+};
+
+const openTypeModal = () => {
+  appealSearchClientRef.value.hide();
+  searchId.value = "";
+  emit("openTypeModal", true);
 };
 
 const goToAppeal = async () => {

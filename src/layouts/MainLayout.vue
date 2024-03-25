@@ -62,8 +62,11 @@
                       />
                     </svg>
                   </q-icon>
-                  <span>
-                    {{ $t("nav.appeals") }}
+                  <span class = "flex column">
+                    <span>
+                      {{ $t("nav.appeals") }}
+                    </span>
+                    <span class="menu-expand-subtitle"> Клиники, аптеки </span>
                   </span>
                 </span>
                 <q-icon size="20px">
@@ -99,11 +102,7 @@
               </div>
             </Collapse>
           </div>
-          <RouteLink
-            class="q-px-sm"
-            :caption="$t('nav.clients')"
-            disabled
-            >
+          <RouteLink class="q-px-sm" :caption="$t('nav.clients')" disabled>
             <!-- :routeTo="Trans.i18nRoute({ name: 'clients' })" -->
           </RouteLink>
         </q-list>
@@ -377,7 +376,11 @@ export default defineComponent({
 .menu-expand-item-header {
   margin-bottom: 4px;
 }
-
+.menu-expand-subtitle {
+  font-size: 12px;
+  color: #7a88a6;
+  font-weight: 400;
+}
 .menu-expand-item-content {
   padding-left: 33px;
   position: relative;
