@@ -85,24 +85,27 @@
                 </q-icon>
               </button>
             </div>
-            <div
-              class="menu-expand-item-content"
-              ref="menuExpandContent"
-              v-show="isMenuOpen"
-            >
-              <RouteLink
-                :caption="$t('nav.appeals')"
-                :routeTo="Trans.i18nRoute({ name: 'appeals-page' })"
-              >
-              </RouteLink>
-              <RouteLink
-                :caption="$t('nav.clients')"
-                :routeTo="Trans.i18nRoute({ name: 'clients' })"
-                disabled
-              >
-              </RouteLink>
-            </div>
+            <Collapse :when="isMenuOpen" class="v-collapse">
+              <div class="menu-expand-item-content" ref="menuExpandContent">
+                <RouteLink
+                  caption="Клиники"
+                  :routeTo="Trans.i18nRoute({ name: 'appeals-page' })"
+                >
+                </RouteLink>
+                <RouteLink
+                  caption="Аптеки"
+                  :routeTo="Trans.i18nRoute({ name: 'drugstore-page' })"
+                ></RouteLink>
+              </div>
+            </Collapse>
           </div>
+          <RouteLink
+            class="q-px-sm"
+            :caption="$t('nav.clients')"
+            disabled
+            >
+            <!-- :routeTo="Trans.i18nRoute({ name: 'clients' })" -->
+          </RouteLink>
         </q-list>
         <div class="q-px-sm">
           <q-item class="q-pa-xs user justify-between">
@@ -210,10 +213,12 @@ import { useAuthStore } from "src/stores/authStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { useRouter } from "vue-router";
 import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
+import { Collapse } from "vue-collapsed";
 import { nextTick } from "vue";
 export default defineComponent({
   name: "MainLayout",
   components: {
+    Collapse,
     RouteLink,
     LanguageSwitcher,
     DropdownSettings,
@@ -224,8 +229,7 @@ export default defineComponent({
     const authStore = useAuthStore();
     const appealStore = useAppealStore();
     const isMenuOpen = ref(false);
-    const menuExpandContent = ref(null);
-    const menuExpandContentInner = ref(null);
+
     const handleLogout = () => {
       authStore.logout();
       router.replace({ name: "Login" });
@@ -235,17 +239,6 @@ export default defineComponent({
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
-      if (isMenuOpen.value) {
-        console.log("open");
-        nextTick(() => {
-          menuExpandContent.value.style.height =
-            menuExpandContent.value.getBoundingClientRect().height + "px";
-        });
-      } else {
-        nextTick(() => {
-          menuExpandContent.value.style.height = "0px";
-        });
-      }
     };
     onMounted(() => {
       console.log(authStore.user);
@@ -256,7 +249,6 @@ export default defineComponent({
       handleLogout,
       isMenuOpen,
       toggleMenu,
-      menuExpandContent,
     };
   },
 });
@@ -265,6 +257,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .q-item {
   min-height: 44px;
+  margin-bottom: 0;
 }
 .search-input {
   background-color: $lightgray;
@@ -337,6 +330,7 @@ export default defineComponent({
 .settings-item.q-item {
   background-color: transparent;
   min-height: 0;
+  transform: scaleY(0);
   padding: 8px;
   column-gap: 8px;
   align-items: center;
@@ -377,6 +371,9 @@ export default defineComponent({
     background-color: $hover;
   }
 }
+.menu-expand-item {
+  margin-bottom: 4px;
+}
 .menu-expand-item-header {
   margin-bottom: 4px;
 }
@@ -385,7 +382,7 @@ export default defineComponent({
   padding-left: 33px;
   position: relative;
   overflow: hidden;
-  transition: height 0.3s;
+  transition: 0.3s linear;
   &::before {
     content: "";
     display: block;
@@ -396,5 +393,8 @@ export default defineComponent({
     width: 1px;
     background-color: #e3e8f0;
   }
+}
+.v-collapse {
+  transition: height 300ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 </style>

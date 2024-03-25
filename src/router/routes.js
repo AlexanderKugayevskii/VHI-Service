@@ -45,6 +45,11 @@ const routes = [
             ],
           },
           {
+            path: "drugstore",
+            component: () => import("pages/DrugstorePage.vue"),
+            name: "drugstore-page",
+          },
+          {
             path: "clients",
             name: "clients",
             component: () => import("pages/ClientsPage.vue"),

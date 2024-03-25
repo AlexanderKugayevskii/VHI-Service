@@ -40,7 +40,7 @@
           clickable
           v-close-popup
           class="item--no-hover"
-          @click="openAppealPage"
+          @click.prevent.stop="openAppealPage"
         >
           <q-icon>
             <svg
@@ -84,8 +84,8 @@
             </svg>
           </q-icon>
           <span class="option-text">Просмотр</span>
-        </q-item></template
-      >
+        </q-item>
+      </template>
     </DropdownSettings>
   </div>
 </template>
