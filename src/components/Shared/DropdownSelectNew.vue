@@ -160,11 +160,12 @@
 import { onMounted, watch } from "vue";
 import { ref } from "vue";
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
+import { debounce } from "lodash";
 
 export default {
   name: "dropdownSelect",
   emits: ["selectOption", "request", "requestBySelect", "requestBySearch"],
-  directives: { 
+  directives: {
     clickOutSide,
   },
   props: {
@@ -178,6 +179,10 @@ export default {
     multiple: {
       type: Boolean,
       default: false,
+    },
+    debounceTime: {
+      type: [Number, String],
+      default: 0,
     },
   },
 
@@ -193,6 +198,7 @@ export default {
   setup() {
     const scrollTarget = ref(null);
     const virtualListScrollTargetRef = ref(null);
+
     onMounted(() => {
       scrollTarget.value = virtualListScrollTargetRef.value;
     });
@@ -231,13 +237,25 @@ export default {
         this.searchValue = "";
       }
     },
+
     handleInput(e) {
       const val = e.target.value;
-      this.$emit("requestBySearch", val);
+      if (this.debounceTime > 0) {
+        this.debounceEmit(val);
+      } else {
+        this.$emit("requestBySearch", val);
+      }
     },
   },
 
   computed: {
+    debounceEmit() {
+      const debouceEmit = debounce((val) => {
+        this.$emit("requestBySearch", val);
+      }, this.debounceTime);
+
+      return debouceEmit;
+    },
     checkMultiOptions() {
       return Array.isArray(this.selectedOptions);
     },

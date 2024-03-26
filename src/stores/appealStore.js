@@ -87,6 +87,18 @@ export const useAppealStore = defineStore("appeal", () => {
   );
 
   const drugs = ref([]);
+  const selectedDrugs = ref([]);
+  const suggestedDrugs = ref([]);
+
+  const allDrugsStatus = computed(() =>
+    selectedDrugs.value.concat(suggestedDrugs.value).map((drug) => {
+      return {
+        id: drug.id,
+        status: drug.pivot.status ?? 0,
+        progress: drug.pivot.progress ?? 0,
+      };
+    })
+  );
 
   const appealTotalConsumption = computed(() => {
     const allData = [
@@ -202,6 +214,18 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const selectDrugs = (drug) => {
+    selectedDrugs.value.push({
+      ...drug,
+      pivot: {
+        ...drug?.pivot,
+        status: 0,
+        progress: 0,
+      },
+      isNew: true,
+    });
+  };
+
   const clearAppealData = () => {
     diagnosis.value = "";
     doctors.value = [];
@@ -311,7 +335,6 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const changeAppealData = async () => {
- 
     loading.value = true;
     const payload = {
       hospital_id: selectedClinic.value.id,
@@ -503,5 +526,6 @@ export const useAppealStore = defineStore("appeal", () => {
 
     drugs,
     fetchDrugs,
+    selectDrugs,
   };
 });

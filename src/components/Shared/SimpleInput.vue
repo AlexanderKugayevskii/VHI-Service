@@ -5,7 +5,6 @@
         <span class="input-label__text">{{ label }}</span>
       </div>
       <div class="input-field__wrapper">
-   
         <input
           :type="type"
           :placeholder="placeholder"

@@ -88,13 +88,13 @@
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
                         name="drugstore"
-                        :label="`${$t('create_appeal.tabs.drugstore')}`"
+                        label="Лекарства"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="doctors"
-                        :label="$t('create_appeal.tabs.doctors')"
+                        :label="`${$t('create_appeal.tabs.drugstore')}`"
                         :ripple="false"
                         class="tab--no-hover"
                       />
@@ -111,39 +111,30 @@
                       >
                         <q-tab-panel name="drugstore" key="drugstore">
                           <div class="tab-header drugstore-header">
-                            <DragNdrop></DragNdrop>
+                            <UploadImage></UploadImage>
                           </div>
                           <div class="tab-body">
                             <div class="drugstore-form">
                               <DropdownSelectNew
-                                label="лекарство"
+                                class="drugstore-form-drugname"
+                                label="Лекарство"
                                 :multiple="false"
+                                :debounce-time="300"
                                 :loading="appealStore.loading"
                                 :options="appealStore.drugs"
-                                :selected-options="appealStore.selectedClinic"
+                                :selected-options="selectedDrug"
                                 @request="appealStore.fetchDrugs"
                                 @request-by-search="handleSearchDrugs"
-                                @select-option="appealStore.selectDoctors"
+                                @select-option="handleSelectDrug"
                               >
-                                <!-- :selected-options="appealStore.selectedDoctors" -->
-                                <template
-                                  #placeholder
-                                  v-if="user.role.id !== 8"
-                                >
-                                  {{ $t("create_appeal.dropdowns.clinic") }}
+                                <template #placeholder>
+                                  Выберите лекарство
                                 </template>
                                 <template v-slot:selected-options-once="props">
                                   <div>{{ props.option.name }}</div>
                                 </template>
                                 <template v-slot:option-content="props">
                                   <div>{{ props.option.name }}</div>
-                                  <CheckIcon
-                                    v-if="
-                                      appealStore.checkSelectedClinic(
-                                        props.option
-                                      )
-                                    "
-                                  />
                                 </template>
                               </DropdownSelectNew>
                               <SimpleInput
@@ -151,35 +142,24 @@
                                 placeholder="0"
                                 class="drugstore-form-amount"
                               ></SimpleInput>
-                              <!-- @update:model-value="appealStore.setDrugAmount"
-                                :modelValue="drugData.drugAmount" -->
-
                               <SimpleInput
                                 class="drugstore-form-price"
                                 label="Цена"
                                 placeholder="0"
                               ></SimpleInput>
-                              <!-- @update:model-value="appealStore.setDrugPrice"
-                                :model-value="drugData.drugAmount" -->
                               <SimpleButton
                                 label="Добавить"
                                 type="button"
                                 customClass="btn-add"
                                 class="drugstore-form-btn-wrapper"
-                                @click="handleAddDrug"
                               ></SimpleButton>
                             </div>
-                            <SelectedItem
-                              v-for="(item, index) in drugsData"
-                              :item="item"
-                              :key="index"
-                              @update:select="handleRemoveDrug"
-                            >
-                              <template #label>
-                                <!-- {{ item.drugName }} -->
-                              </template>
+
+                            <SelectedItem>
+                         
                             </SelectedItem>
                           </div>
+
                         </q-tab-panel>
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
@@ -417,7 +397,7 @@
 <script setup>
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
-import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
+import UploadImage from "src/components/Shared/UploadImage.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
@@ -444,12 +424,28 @@ const route = useRoute();
 const tab = ref("drugstore");
 const createAppealModalRef = ref(null);
 
+const selectedDrug = ref(null);
+
+const handleSelectDrug = (drug) => (selectedDrug.value = drug);
+
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();
 };
+
+const handleSearchDrugs = async (name) => {
+  await appealStore.fetchDrugs(name);
+};
+
+const hideModal = () => {
+  createAppealModalRef.value.hide();
+  appealStore.clearAppealData();
+  appealStore.clearClinicData();
+  router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
+};
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -463,17 +459,6 @@ watch(
     }
   }
 );
-
-const handleSearchDrugs = async (name) => {
-  await appealStore.fetchDrugs(name);
-};
-
-const hideModal = () => {
-  createAppealModalRef.value.hide();
-  appealStore.clearAppealData();
-  appealStore.clearClinicData();
-  router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
-};
 </script>
 
 <style lang="scss" scoped>
@@ -625,16 +610,16 @@ const hideModal = () => {
     width: auto;
   }
   &-drugname {
-    flex-basis: 245px;
+    flex-grow: 1;
   }
   &-amount {
-    flex-basis: 100px;
+    flex-basis: 15%;
   }
   &-type {
-    flex-basis: 85px;
+    flex-basis: 25%;
   }
   &-price {
-    flex-basis: 140px;
+    flex-basis: 25%;
   }
   &-btn-wrapper {
   }
