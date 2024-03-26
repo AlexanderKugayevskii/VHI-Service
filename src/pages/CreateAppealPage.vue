@@ -15,7 +15,10 @@
           <h4 class="page-title q-my-none q-mb-md">
             {{ $t("create_appeal.title") }}
           </h4>
-          <StatusBar :status="0" :label="true"></StatusBar>
+          <StatusBar
+            :status="clientData.appealStatus"
+            :label="true"
+          ></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -648,6 +651,7 @@ const createAppealModalRef = ref(null);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
+  appealStore.setTypeOfAppeal(1);
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();

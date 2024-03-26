@@ -320,6 +320,7 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors: allDoctorsStatus.value,
       diagnosis: diagnosis.value,
     };
+    console.log(client.value);
     try {
       const response = await AppealService.changeAppealData(
         client.value.appealId,
