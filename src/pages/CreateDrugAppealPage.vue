@@ -114,13 +114,14 @@
                             <div class="drugstore-form">
                               <DropdownSelectNew
                                 label="лекарство"
-                                class="dropdown-space"
-                                :multiple="true"
+                                :multiple="false"
                                 :loading="appealStore.loading"
-                                :options="appealStore.doctors"
-                                :selected-options="appealStore.selectedDoctors"
+                                :options="appealStore.drugs"
+                                @request="appealStore.fetchDrugs"
+                                @request-by-search=""
                                 @select-option="appealStore.selectDoctors"
-                              >
+                                >
+                                <!-- :selected-options="appealStore.selectedDoctors" -->
                                 <template #placeholder>
                                   {{ $t("create_appeal.dropdowns.doctors") }}
                                 </template>
@@ -729,6 +730,7 @@ const handleStatusService = (item, isSuggested) => {
   margin-bottom: 20px;
 }
 .dropdown-space {
+  margin-bottom: 20px;
 }
 .price {
   color: #1a2133;

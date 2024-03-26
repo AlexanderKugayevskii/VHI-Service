@@ -76,6 +76,7 @@
                 :placeholder="$t('search')"
                 class="dropdown-select-search__field"
                 v-model="searchValue"
+                @input="handleInput"
                 ref="filterSearch"
               />
               <q-icon size="20px">
@@ -163,7 +164,7 @@ import clickOutSide from "@mahdikhashan/vue3-click-outside";
 export default {
   name: "dropdownSelect",
   emits: ["selectOption", "request", "requestBySelect", "requestBySearch"],
-  directives: {
+  directives: { 
     clickOutSide,
   },
   props: {
@@ -230,8 +231,10 @@ export default {
         this.searchValue = "";
       }
     },
-    
-    
+    handleInput(e) {
+      const val = e.target.value;
+      this.$emit("requestBySearch", val);
+    },
   },
 
   computed: {

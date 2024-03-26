@@ -87,6 +87,8 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
+  const drugs = ref([]);
+
   const appealTotalConsumption = computed(() => {
     const allData = [
       ...selectedDoctors.value,
@@ -219,6 +221,20 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getClinics();
       clinics.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const fetchDrugs = async (name) => {
+    loading.value = true;
+    try {
+      const response = await AppealService.getDrugs(name);
+      drugs.value = response.data.data;
+
+      console.log(drugs.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -482,5 +498,8 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSuggestedServices,
     cantRemoveFromSelectedDoctors,
     cantRemoveFromSelectedServices,
+
+    drugs,
+    fetchDrugs,
   };
 });
