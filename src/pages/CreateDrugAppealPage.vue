@@ -15,7 +15,10 @@
           <h4 class="page-title q-my-none q-mb-md">
             {{ $t("create_appeal.title") }}
           </h4>
-          <StatusBar :status="0" :label="true"></StatusBar>
+          <StatusBar
+            :status="clientData.appealStatus"
+            :label="true"
+          ></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -117,85 +120,26 @@
                                 :multiple="false"
                                 :loading="appealStore.loading"
                                 :options="appealStore.drugs"
+                                :selected-options="appealStore.selectedClinic"
                                 @request="appealStore.fetchDrugs"
-                                @request-by-search=""
+                                @request-by-search="handleSearchDrugs"
                                 @select-option="appealStore.selectDoctors"
-                                >
+                              >
                                 <!-- :selected-options="appealStore.selectedDoctors" -->
-                                <template #placeholder>
-                                  {{ $t("create_appeal.dropdowns.doctors") }}
+                                <template
+                                  #placeholder
+                                  v-if="user.role.id !== 8"
+                                >
+                                  {{ $t("create_appeal.dropdowns.clinic") }}
                                 </template>
                                 <template v-slot:selected-options-once="props">
                                   <div>{{ props.option.name }}</div>
                                 </template>
-                                <template
-                                  v-slot:selected-options-length="{ length }"
-                                >
-                                  {{
-                                    $t(
-                                      "create_appeal.dropdowns.doctors_choise",
-                                      length
-                                    )
-                                  }}
-                                </template>
                                 <template v-slot:option-content="props">
-                                  <div
-                                    :class="{
-                                      'disabled-option':
-                                        appealStore.checkSuggestedDoctors(
-                                          props.option
-                                        ) ||
-                                        appealStore.cantRemoveFromSelectedDoctors(
-                                          props.option
-                                        ),
-                                    }"
-                                  >
-                                    <span>
-                                      {{ props.option.name }}
-                                    </span>
-                                    <span
-                                      class="price"
-                                      v-if="!appealStore.isClinic"
-                                    >
-                                      -
-                                      {{
-                                        formatPrice(props.option.pivot.price)
-                                      }}
-                                    </span>
-                                    <span
-                                      v-if="
-                                        appealStore.checkSuggestedDoctors(
-                                          props.option
-                                        )
-                                      "
-                                    >
-                                      (добавлено
-                                      {{
-                                        appealStore.isClinic
-                                          ? "компанией"
-                                          : "клиникой"
-                                      }})
-                                    </span>
-                                    <span
-                                      v-if="
-                                        appealStore.cantRemoveFromSelectedDoctors(
-                                          props.option
-                                        )
-                                      "
-                                    >
-                                      {{
-                                        appealStore.isAgent
-                                          ? " (завершено клиникой)"
-                                          : " (решение компании)"
-                                      }}
-                                    </span>
-                                  </div>
+                                  <div>{{ props.option.name }}</div>
                                   <CheckIcon
                                     v-if="
-                                      appealStore.checkSelectedDoctors(
-                                        props.option
-                                      ) &&
-                                      !appealStore.cantRemoveFromSelectedDoctors(
+                                      appealStore.checkSelectedClinic(
                                         props.option
                                       )
                                     "
@@ -209,29 +153,7 @@
                               ></SimpleInput>
                               <!-- @update:model-value="appealStore.setDrugAmount"
                                 :modelValue="drugData.drugAmount" -->
-                              <DropdownSelectLocal
-                                class="drugstore-form-type"
-                                label="Ед. изм"
-                                placeholder="Шт"
-                                id-key="drugType"
-                                :search="false"
-                                :multiple="false"
-                                :initialOptions="[
-                                  { id: 1, drugType: 'Шт' },
-                                  { id: 2, drugType: 'Мл' },
-                                ]"
-                              >
-                                <!-- @update:selectedOptions="
-                                  appealStore.setDrugType
-                                " -->
-                                <template #option-content="{ option }">
-                                  <div class="option-content">
-                                    <span>
-                                      {{ option.drugType }}
-                                    </span>
-                                  </div>
-                                </template>
-                              </DropdownSelectLocal>
+
                               <SimpleInput
                                 class="drugstore-form-price"
                                 label="Цена"
@@ -542,24 +464,15 @@ watch(
   }
 );
 
+const handleSearchDrugs = async (name) => {
+  await appealStore.fetchDrugs(name);
+};
+
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearClinicData();
-  router.replace(Trans.i18nRoute({ name: "appeals-page" }));
-};
-
-const handleRemoveDoctor = (item) => {
-  appealStore.clearDoctors(item);
-};
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
-};
-const handleStatusDoctor = (item, isSuggested) => {
-  appealStore.changeStatusDoctor(item, isSuggested);
-};
-const handleStatusService = (item, isSuggested) => {
-  appealStore.changeStatusService(item, isSuggested);
+  router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
 };
 </script>
 

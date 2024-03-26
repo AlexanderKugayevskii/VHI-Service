@@ -112,7 +112,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   const rows = computed(() => {
     return users.value.map((row, index) => {
-      
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
       return {
@@ -130,10 +129,11 @@ export const useClientTableStore = defineStore("clientTable", () => {
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
         userSettings: "",
-        index:
-          (pagination.value.page - 1) * pagination.value.rowsPerPage +
-          index +
-          1,
+        // index:
+        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
+        //   index +
+        //   1,
+        index: row.id,
       };
     });
   });

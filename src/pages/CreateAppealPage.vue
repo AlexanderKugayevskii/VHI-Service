@@ -13,7 +13,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="page-title q-my-none q-mb-md">
-            {{ $t("create_appeal.title") }}
+            {{ $t("create_appeal.title") }} № {{ clientData.appealId }}
           </h4>
           <StatusBar
             :status="clientData.appealStatus"
