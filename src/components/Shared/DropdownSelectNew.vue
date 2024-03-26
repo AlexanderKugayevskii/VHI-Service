@@ -162,7 +162,7 @@ import clickOutSide from "@mahdikhashan/vue3-click-outside";
 
 export default {
   name: "dropdownSelect",
-  emits: ["selectOption", "request", "requestBySelect"],
+  emits: ["selectOption", "request", "requestBySelect", "requestBySearch"],
   directives: {
     clickOutSide,
   },
@@ -230,6 +230,8 @@ export default {
         this.searchValue = "";
       }
     },
+    
+    
   },
 
   computed: {
@@ -261,40 +263,7 @@ export default {
     },
   },
 
-  mounted() {
-    // watch(
-    //   () => this.showDropdown,
-    //   async (newVal) => {
-    //     await this.$nextTick();
-    //     if (newVal) {
-    //       this.$refs["filterSearch"].focus();
-    //     }
-    //   }
-    // );
-    // watch(
-    //   [() => this.options, () => this.showDropdown, this.error],
-    //   async ([newOptions, newDropdown]) => {
-    //     await this.$nextTick();
-    //     if (!this.showDropdown || this.error) return;
-    //     console.log(`-------`, this.options);
-    //     document.addEventListener("load", () => {
-    //       const dropdownItems = document.querySelectorAll(
-    //         ".dropdown-select-list-item"
-    //       );
-    //       console.log(dropdownItems);
-    //     });
-    //     const dropdownSelectListItemElements =
-    //       this.$refs.dropdownListRef?.children ?? [];
-    //     const totalHeight = Array.from(dropdownSelectListItemElements)
-    //       .slice(0, 6)
-    //       .reduce((acc, elem) => {
-    //         const elemHeight = elem.getBoundingClientRect().height;
-    //         return acc + elemHeight;
-    //       }, 0);
-    //     this.$refs.dropdownListRef.style.height = `${totalHeight}px`;
-    //   }
-    // );
-  },
+  mounted() {},
 };
 </script>
 

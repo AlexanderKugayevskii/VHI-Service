@@ -112,19 +112,101 @@
                           </div>
                           <div class="tab-body">
                             <div class="drugstore-form">
-                              <SimpleInput
-                                label="Лекарство"
-                                placeholder="Название лекарства"
-                                class="drugstore-form-drugname"
-                                ></SimpleInput>
-                                <!-- @update:model-value="appealStore.setDrugName"
-                                :modelValue="drugData.drugName" -->
+                              <DropdownSelectNew
+                                label="лекарство"
+                                class="dropdown-space"
+                                :multiple="true"
+                                :loading="appealStore.loading"
+                                :options="appealStore.doctors"
+                                :selected-options="appealStore.selectedDoctors"
+                                @select-option="appealStore.selectDoctors"
+                              >
+                                <template #placeholder>
+                                  {{ $t("create_appeal.dropdowns.doctors") }}
+                                </template>
+                                <template v-slot:selected-options-once="props">
+                                  <div>{{ props.option.name }}</div>
+                                </template>
+                                <template
+                                  v-slot:selected-options-length="{ length }"
+                                >
+                                  {{
+                                    $t(
+                                      "create_appeal.dropdowns.doctors_choise",
+                                      length
+                                    )
+                                  }}
+                                </template>
+                                <template v-slot:option-content="props">
+                                  <div
+                                    :class="{
+                                      'disabled-option':
+                                        appealStore.checkSuggestedDoctors(
+                                          props.option
+                                        ) ||
+                                        appealStore.cantRemoveFromSelectedDoctors(
+                                          props.option
+                                        ),
+                                    }"
+                                  >
+                                    <span>
+                                      {{ props.option.name }}
+                                    </span>
+                                    <span
+                                      class="price"
+                                      v-if="!appealStore.isClinic"
+                                    >
+                                      -
+                                      {{
+                                        formatPrice(props.option.pivot.price)
+                                      }}
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.checkSuggestedDoctors(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      (добавлено
+                                      {{
+                                        appealStore.isClinic
+                                          ? "компанией"
+                                          : "клиникой"
+                                      }})
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.cantRemoveFromSelectedDoctors(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      {{
+                                        appealStore.isAgent
+                                          ? " (завершено клиникой)"
+                                          : " (решение компании)"
+                                      }}
+                                    </span>
+                                  </div>
+                                  <CheckIcon
+                                    v-if="
+                                      appealStore.checkSelectedDoctors(
+                                        props.option
+                                      ) &&
+                                      !appealStore.cantRemoveFromSelectedDoctors(
+                                        props.option
+                                      )
+                                    "
+                                  />
+                                </template>
+                              </DropdownSelectNew>
                               <SimpleInput
                                 label="Кол-во"
                                 placeholder="0"
                                 class="drugstore-form-amount"
-                                ></SimpleInput>
-                                <!-- @update:model-value="appealStore.setDrugAmount"
+                              ></SimpleInput>
+                              <!-- @update:model-value="appealStore.setDrugAmount"
                                 :modelValue="drugData.drugAmount" -->
                               <DropdownSelectLocal
                                 class="drugstore-form-type"
@@ -153,8 +235,8 @@
                                 class="drugstore-form-price"
                                 label="Цена"
                                 placeholder="0"
-                                ></SimpleInput>
-                                <!-- @update:model-value="appealStore.setDrugPrice"
+                              ></SimpleInput>
+                              <!-- @update:model-value="appealStore.setDrugPrice"
                                 :model-value="drugData.drugAmount" -->
                               <SimpleButton
                                 label="Добавить"
@@ -624,7 +706,7 @@ const handleStatusService = (item, isSuggested) => {
 .drugstore-form {
   display: flex;
   column-gap: 8px;
-
+  align-items: flex-end;
   > div {
     width: auto;
   }
@@ -641,14 +723,12 @@ const handleStatusService = (item, isSuggested) => {
     flex-basis: 140px;
   }
   &-btn-wrapper {
-    align-self: flex-end;
   }
 }
 .drugstore-header {
   margin-bottom: 20px;
 }
 .dropdown-space {
-  margin-bottom: 20px;
 }
 .price {
   color: #1a2133;

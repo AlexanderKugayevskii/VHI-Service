@@ -3,7 +3,7 @@
     <div class="modal-container appeal-search-container">
       <div class="modal-header">
         <h4 class="page-title q-my-none">Выберите тип обращения</h4>
-        <button type="button" class="btn-close" @click = "hideModal">
+        <button type="button" class="btn-close" @click="hideModal">
           <q-icon size="20px">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -95,12 +95,13 @@
         <SimpleButton
           :label="$t('appeal_search.cancel')"
           custom-class="btn-cancel"
-          @click = "hideModal"
+          @click="hideModal"
         />
         <SimpleButton
           :label="$t('create_appeal.buttons.create_appeal')"
           :custom-class="['btn-action']"
           :disabled="type === null"
+          @click="goToAppeal"
         ></SimpleButton>
       </div>
     </div>
@@ -110,10 +111,18 @@
 <script setup>
 import { ref } from "vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
+import { useRouter } from "vue-router";
+
+import { useAppealStore } from "src/stores/appealStore";
+import Trans from "src/i18n/translation";
+
+const appealStore = useAppealStore();
+const router = useRouter();
+
 const appealTypeModalRef = ref(null);
 const type = ref(null); //clinic or drugstore
 
-const emit = defineEmits(['move-back'])
+const emit = defineEmits(["move-back"]);
 
 const setType = (value) => {
   type.value = value;
@@ -121,21 +130,32 @@ const setType = (value) => {
 
 const hideModal = () => {
   appealTypeModalRef.value.hide();
-  emit('move-back', true)
+  emit("move-back", true);
 };
 
-
 const goToAppeal = async () => {
-  await appealStore.setClinic();
-  appealStore.setTypeOfAppeal("NEW");
-  router.replace(
-    Trans.i18nRoute({
-      name: "createAppeal",
-      params: {
-        id: selectedClient.value.id,
-      },
-    })
-  );
+  if (type.value === 0) {
+    await appealStore.setClinic();
+    appealStore.setTypeOfAppeal("NEW");
+    router.replace(
+      Trans.i18nRoute({
+        name: "createAppeal",
+        params: {
+          id: appealStore.client.id,
+        },
+      })
+    );
+  } else if (type.value === 1) {
+    router.replace(
+      Trans.i18nRoute({
+        name: "createDrugsAppeal",
+        params: {
+          id: appealStore.client.id,
+        },
+      })
+    );
+  }
+
   hideModal();
 };
 </script>
