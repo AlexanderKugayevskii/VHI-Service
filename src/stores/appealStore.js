@@ -44,7 +44,6 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const setTypeOfAppeal = (type) => {
-    console.log(type);
     typeOfAppeal.value = TYPE_OF_APPEALS[type];
   };
 
@@ -295,6 +294,8 @@ export const useAppealStore = defineStore("appeal", () => {
     };
     try {
       const response = await AppealService.saveAppealByAgent(payload);
+      const data = response.data.data;
+      client.value.appealId = data.id;
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -310,6 +311,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const changeAppealData = async () => {
+ 
     loading.value = true;
     const payload = {
       hospital_id: selectedClinic.value.id,
@@ -320,7 +322,7 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors: allDoctorsStatus.value,
       diagnosis: diagnosis.value,
     };
-    console.log(client.value);
+
     try {
       const response = await AppealService.changeAppealData(
         client.value.appealId,
@@ -341,7 +343,6 @@ export const useAppealStore = defineStore("appeal", () => {
   const fetchApplicantData = async () => {
     loading.value = true;
     try {
-      console.log(client.value.appealId);
       const response = await ClientService.getClientByAppealId(
         client.value.appealId
       );
