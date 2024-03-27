@@ -1,6 +1,6 @@
 <template>
   <q-item class="q-py-none q-px-none">
-    <router-link :to="routeTo" class="nav-item">
+    <router-link :to="routeTo" class="nav-item flex">
       <slot name="icon"></slot>
 
       <q-item-section>
@@ -36,13 +36,16 @@ defineProps({
   transition: 0.3s;
   width: 100%;
   font-size: 15px;
-
+  column-gap: 8px;
   text-decoration: none;
   padding: 12px 12px 12px 20px;
   color: $primary;
 }
 
 .router-link-exact-active {
+  background-color: $hover;
+}
+.nav-item.router-link-active {
   background-color: $hover;
 }
 .q-item {

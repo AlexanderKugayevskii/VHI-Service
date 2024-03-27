@@ -70,6 +70,10 @@ const props = defineProps({
     type: String,
     default: "text",
   },
+  number: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -81,6 +85,9 @@ const debounceEmit = debounce((value) => {
 }, props.debounceTime);
 
 const onInput = (e) => {
+  if (props.number) {
+    e.target.value = e.target.value.replace(/\D/g, "");
+  }
   debounceInput.value = e.target.value;
   if (props.debounceTime > 0) {
     debounceEmit(debounceInput.value);

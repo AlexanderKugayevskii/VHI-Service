@@ -110,26 +110,29 @@
             <q-spinner-tail color="teal" size="20px" />
           </div>
           <div
-            class="dropdown-select-error-message flex items-center"
+            class="dropdown-select-error-message flex column items-stretch"
             v-else-if="filteredOptions.length === 0"
           >
-            <q-icon size="20px">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10ZM6.641 6.641C6.71065 6.5713 6.79335 6.51602 6.88438 6.4783C6.9754 6.44058 7.07297 6.42116 7.1715 6.42116C7.27003 6.42116 7.3676 6.44058 7.45862 6.4783C7.54965 6.51602 7.63235 6.5713 7.702 6.641L10 8.94L12.298 6.642C12.4395 6.50545 12.629 6.42994 12.8257 6.43174C13.0223 6.43354 13.2104 6.51251 13.3494 6.65163C13.4884 6.79075 13.5671 6.9789 13.5688 7.17555C13.5704 7.3722 13.4947 7.56161 13.358 7.703L11.062 10L13.36 12.298C13.4337 12.3667 13.4928 12.4495 13.5338 12.5415C13.5748 12.6335 13.5968 12.7328 13.5986 12.8335C13.6004 12.9342 13.5818 13.0342 13.5441 13.1276C13.5064 13.221 13.4503 13.3058 13.379 13.377C13.3078 13.4483 13.223 13.5044 13.1296 13.5421C13.0362 13.5798 12.9362 13.5984 12.8355 13.5966C12.7348 13.5948 12.6355 13.5728 12.5435 13.5318C12.4515 13.4908 12.3687 13.4317 12.3 13.358L10 11.062L7.702 13.36C7.55982 13.4925 7.37178 13.5646 7.17748 13.5612C6.98318 13.5577 6.79779 13.479 6.66038 13.3416C6.52297 13.2042 6.44425 13.0188 6.44083 12.8245C6.4374 12.6302 6.50952 12.4422 6.642 12.3L8.938 10L6.641 7.702C6.50055 7.56137 6.42166 7.37075 6.42166 7.172C6.42166 6.97325 6.50055 6.78263 6.641 6.642V6.641Z"
-                  fill="#CB3333"
-                />
-              </svg>
-            </q-icon>
-            <span> Не удалось найти </span>
+            <div v-if="!$slots.action">
+              <q-icon size="20px">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0C15.523 0 20 4.477 20 10ZM6.641 6.641C6.71065 6.5713 6.79335 6.51602 6.88438 6.4783C6.9754 6.44058 7.07297 6.42116 7.1715 6.42116C7.27003 6.42116 7.3676 6.44058 7.45862 6.4783C7.54965 6.51602 7.63235 6.5713 7.702 6.641L10 8.94L12.298 6.642C12.4395 6.50545 12.629 6.42994 12.8257 6.43174C13.0223 6.43354 13.2104 6.51251 13.3494 6.65163C13.4884 6.79075 13.5671 6.9789 13.5688 7.17555C13.5704 7.3722 13.4947 7.56161 13.358 7.703L11.062 10L13.36 12.298C13.4337 12.3667 13.4928 12.4495 13.5338 12.5415C13.5748 12.6335 13.5968 12.7328 13.5986 12.8335C13.6004 12.9342 13.5818 13.0342 13.5441 13.1276C13.5064 13.221 13.4503 13.3058 13.379 13.377C13.3078 13.4483 13.223 13.5044 13.1296 13.5421C13.0362 13.5798 12.9362 13.5984 12.8355 13.5966C12.7348 13.5948 12.6355 13.5728 12.5435 13.5318C12.4515 13.4908 12.3687 13.4317 12.3 13.358L10 11.062L7.702 13.36C7.55982 13.4925 7.37178 13.5646 7.17748 13.5612C6.98318 13.5577 6.79779 13.479 6.66038 13.3416C6.52297 13.2042 6.44425 13.0188 6.44083 12.8245C6.4374 12.6302 6.50952 12.4422 6.642 12.3L8.938 10L6.641 7.702C6.50055 7.56137 6.42166 7.37075 6.42166 7.172C6.42166 6.97325 6.50055 6.78263 6.641 6.642V6.641Z"
+                    fill="#CB3333"
+                  />
+                </svg>
+              </q-icon>
+              <span> Не удалось найти </span>
+            </div>
+            <slot name="action"></slot>
           </div>
           <!-- <div class="dropdown-select-list" ref="dropdownListRef" v-else> -->
           <q-virtual-scroll
@@ -164,6 +167,7 @@ import { debounce } from "lodash";
 
 export default {
   name: "dropdownSelect",
+
   emits: ["selectOption", "request", "requestBySelect", "requestBySearch"],
   directives: {
     clickOutSide,
@@ -183,6 +187,10 @@ export default {
     debounceTime: {
       type: [Number, String],
       default: 0,
+    },
+    localSearch: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -239,11 +247,10 @@ export default {
     },
 
     handleInput(e) {
-      const val = e.target.value;
       if (this.debounceTime > 0) {
-        this.debounceEmit(val);
+        this.debounceEmit(this.searchValue);
       } else {
-        this.$emit("requestBySearch", val);
+        this.$emit("requestBySearch", this.searchValue);
       }
     },
   },
@@ -279,8 +286,11 @@ export default {
       return {};
     },
     filteredOptions() {
-      const regex = new RegExp(this.searchValue, "i");
-      return this.options.filter((option) => regex.test(option.name));
+      if (this.localSearch) {
+        const regex = new RegExp(this.searchValue, "i");
+        return this.options.filter((option) => regex.test(option.name));
+      }
+      return this.options;
     },
   },
 

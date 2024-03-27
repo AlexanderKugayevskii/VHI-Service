@@ -114,7 +114,7 @@
                             <UploadImage></UploadImage>
                           </div>
                           <div class="tab-body">
-                            <div class="drugstore-form">
+                            <div class="drugstore-form q-mb-sm">
                               <DropdownSelectNew
                                 class="drugstore-form-drugname"
                                 label="Лекарство"
@@ -123,6 +123,7 @@
                                 :loading="appealStore.loading"
                                 :options="appealStore.drugs"
                                 :selected-options="selectedDrug"
+                                :local-search="false"
                                 @request="appealStore.fetchDrugs"
                                 @request-by-search="handleSearchDrugs"
                                 @select-option="handleSelectDrug"
@@ -136,30 +137,55 @@
                                 <template v-slot:option-content="props">
                                   <div>{{ props.option.name }}</div>
                                 </template>
+                                <template v-slot:action>
+                                  <SimpleButton
+                                    type="button"
+                                    label="добавить лекарство"
+                                    customClass="btn-action"
+                                    full-width
+                                  ></SimpleButton>
+                                </template>
                               </DropdownSelectNew>
                               <SimpleInput
                                 label="Кол-во"
                                 placeholder="0"
                                 class="drugstore-form-amount"
+                                number
+                                v-model:model-value="drugAmount"
                               ></SimpleInput>
                               <SimpleInput
                                 class="drugstore-form-price"
                                 label="Цена"
                                 placeholder="0"
+                                number
+                                v-model:model-value="drugPrice"
                               ></SimpleInput>
                               <SimpleButton
                                 label="Добавить"
                                 type="button"
                                 customClass="btn-add"
                                 class="drugstore-form-btn-wrapper"
+                                @click="handleAddDrugData"
                               ></SimpleButton>
                             </div>
 
-                            <SelectedItem>
-                         
-                            </SelectedItem>
+                            <SelectListItem
+                              v-for="drug in appealStore.selectedDrugs"
+                              :item="drug"
+                              :key="drug.id"
+                              :is-agent="appealStore.isAgent"
+                            >
+                              <template #label>
+                                {{ drug.name }}
+                              </template>
+                              <template #quantity>
+                                {{ drug.quantity }} шт
+                              </template>
+                              <template #price>
+                                {{ formatPrice(drug.price) }}
+                              </template>
+                            </SelectListItem>
                           </div>
-
                         </q-tab-panel>
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
@@ -411,6 +437,7 @@ import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
+import { format } from "quasar";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -425,6 +452,8 @@ const tab = ref("drugstore");
 const createAppealModalRef = ref(null);
 
 const selectedDrug = ref(null);
+const drugAmount = ref(null);
+const drugPrice = ref(null);
 
 const handleSelectDrug = (drug) => (selectedDrug.value = drug);
 
@@ -437,6 +466,21 @@ const handleChangeAppeal = () => {
 
 const handleSearchDrugs = async (name) => {
   await appealStore.fetchDrugs(name);
+};
+
+const handleAddDrugData = () => {
+  const drugData = {
+    id: selectedDrug.value.id,
+    name: selectedDrug.value.name,
+    quantity: +drugAmount.value,
+    price: +drugPrice.value,
+  };
+
+  appealStore.selectDrugs(drugData);
+
+  selectedDrug.value = null;
+  drugAmount.value = null;
+  drugPrice.value = null;
 };
 
 const hideModal = () => {

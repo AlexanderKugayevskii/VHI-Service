@@ -320,6 +320,8 @@ export const useAppealStore = defineStore("appeal", () => {
       const response = await AppealService.saveAppealByAgent(payload);
       const data = response.data.data;
       client.value.appealId = data.id;
+      client.value.appealStatus = data.status;
+      console.log(data);
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -352,8 +354,11 @@ export const useAppealStore = defineStore("appeal", () => {
         payload
       );
 
+      const data = response.data.data;
+
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
+        client.value.appealStatus = data.status;
         // clearAppealData();
       }
     } catch (e) {
@@ -525,6 +530,8 @@ export const useAppealStore = defineStore("appeal", () => {
     cantRemoveFromSelectedServices,
 
     drugs,
+    selectedDrugs,
+    suggestedDrugs,
     fetchDrugs,
     selectDrugs,
   };

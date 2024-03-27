@@ -12,7 +12,12 @@
         v-if="item.pivot.status === 1"
         @update:change="handleProgress"
       />
-      <div class="selected-item-price"><slot name="price"></slot></div>
+      <div class="selected-item-quantity" v-if="$slots.quantity">
+        <slot name="quantity"></slot>
+      </div>
+      <div class="selected-item-price" v-if="$slots.price">
+        <slot name="price"></slot>
+      </div>
       <div class="selected-item-actions">
         <ResolveIcon
           :variant="true"
@@ -94,6 +99,7 @@ const handleProgress = (progress) => {
 }
 .selected-item-right {
   display: flex;
+  align-items: center;
   column-gap: 16px;
 }
 .selected-item-price {

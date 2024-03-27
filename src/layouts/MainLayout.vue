@@ -42,7 +42,7 @@
       </div>
       <div class="flex column justify-between nav-grow">
         <q-list>
-          <div class="q-px-sm menu-expand-item">
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
             <div class="menu-expand-item-header">
               <button class="nav-item nav-item-btn q-py-sm" @click="toggleMenu">
                 <span class="nav-item-btn-left">
@@ -62,7 +62,7 @@
                       />
                     </svg>
                   </q-icon>
-                  <span class = "flex column">
+                  <span class="flex column">
                     <span>
                       {{ $t("nav.appeals") }}
                     </span>
@@ -102,8 +102,38 @@
               </div>
             </Collapse>
           </div>
-          <RouteLink class="q-px-sm" :caption="$t('nav.clients')" disabled>
+          <RouteLink
+            class="q-px-sm"
+            :caption="$t('nav.clients')"
+            disabled
+            v-if="appealStore.isAgent"
+          >
             <!-- :routeTo="Trans.i18nRoute({ name: 'clients' })" -->
+          </RouteLink>
+          <RouteLink
+            v-if="appealStore.isClinic"
+            class="q-px-sm"
+            caption="Обращения"
+            :routeTo="Trans.i18nRoute({ name: 'appeals-page' })"
+          >
+            <template v-slot:icon>
+              <q-icon size="20px">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.29163 3.16675C6.29163 2.66947 6.48917 2.19255 6.8408 1.84092C7.19243 1.48929 7.66934 1.29175 8.16663 1.29175H9.83329C10.3306 1.29175 10.8075 1.48929 11.1591 1.84092C11.5107 2.19255 11.7083 2.66947 11.7083 3.16675V4.00008H6.29163V3.16675ZM5.04163 4.00008V3.16675C5.04163 2.33795 5.37087 1.54309 5.95692 0.957039C6.54297 0.370988 7.33782 0.041748 8.16663 0.041748H9.83329C10.6621 0.041748 11.457 0.370988 12.043 0.957039C12.6291 1.54309 12.9583 2.33795 12.9583 3.16675V4.00008H14C14.884 4.00008 15.7319 4.35127 16.357 4.97639C16.9821 5.60151 17.3333 6.44936 17.3333 7.33341V14.0001C17.3333 14.8841 16.9821 15.732 16.357 16.3571C15.7319 16.9822 14.884 17.3334 14 17.3334H3.99996C3.1159 17.3334 2.26806 16.9822 1.64294 16.3571C1.01782 15.732 0.666626 14.8841 0.666626 14.0001V7.33341C0.666626 6.44936 1.01782 5.60151 1.64294 4.97639C2.26806 4.35127 3.1159 4.00008 3.99996 4.00008H5.04163ZM8.99996 7.54175C9.16572 7.54175 9.32469 7.6076 9.4419 7.72481C9.55911 7.84202 9.62496 8.00099 9.62496 8.16675V10.0417H11.5C11.6657 10.0417 11.8247 10.1076 11.9419 10.2248C12.0591 10.342 12.125 10.501 12.125 10.6667C12.125 10.8325 12.0591 10.9915 11.9419 11.1087C11.8247 11.2259 11.6657 11.2917 11.5 11.2917H9.62496V13.1667C9.62496 13.3325 9.55911 13.4915 9.4419 13.6087C9.32469 13.7259 9.16572 13.7917 8.99996 13.7917C8.8342 13.7917 8.67523 13.7259 8.55802 13.6087C8.44081 13.4915 8.37496 13.3325 8.37496 13.1667V11.2917H6.49996C6.3342 11.2917 6.17523 11.2259 6.05802 11.1087C5.94081 10.9915 5.87496 10.8325 5.87496 10.6667C5.87496 10.501 5.94081 10.342 6.05802 10.2248C6.17523 10.1076 6.3342 10.0417 6.49996 10.0417H8.37496V8.16675C8.37496 8.00099 8.44081 7.84202 8.55802 7.72481C8.67523 7.6076 8.8342 7.54175 8.99996 7.54175Z"
+                    fill="#7A88A6"
+                  />
+                </svg>
+              </q-icon>
+            </template>
           </RouteLink>
         </q-list>
         <div class="q-px-sm">
@@ -245,6 +275,7 @@ export default defineComponent({
     return {
       Trans,
       authStore,
+      appealStore,
       handleLogout,
       isMenuOpen,
       toggleMenu,
