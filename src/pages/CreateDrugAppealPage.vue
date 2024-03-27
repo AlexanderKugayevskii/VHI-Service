@@ -112,6 +112,9 @@
                           <div class="tab-header drugstore-header">
                             <UploadImage
                               @image-upladed="handleImage"
+                              :value="
+                                appealStore.drugAppealImage?.readerPhoto ?? ''
+                              "
                             ></UploadImage>
                           </div>
                           <div class="tab-body">
@@ -446,7 +449,7 @@ const handleAddDrugData = () => {
 
 const handleImage = (image) => {
   console.log(image);
-  appealStore.setDrugAppealImage(image.file);
+  appealStore.setDrugAppealImage(image);
 };
 
 const hideModal = () => {

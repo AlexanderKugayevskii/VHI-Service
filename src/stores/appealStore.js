@@ -362,8 +362,8 @@ export const useAppealStore = defineStore("appeal", () => {
     };
 
     appendFormData(formData, payload);
-    formData.append("file", drugAppealImage.value);
-    
+    formData.append("file", drugAppealImage.value.file);
+
     try {
       const response = await AppealService.saveDrugAppeal(formData);
       console.log(response.data);
@@ -606,6 +606,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
     drugs,
     drugstores,
+    drugAppealImage,
     selectedDrugs,
     suggestedDrugs,
     selectedDrugstore,
