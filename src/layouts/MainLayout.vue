@@ -329,7 +329,6 @@ export default defineComponent({
 .settings-item.q-item {
   background-color: transparent;
   min-height: 0;
-  transform: scaleY(0);
   padding: 8px;
   column-gap: 8px;
   align-items: center;
