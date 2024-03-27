@@ -641,7 +641,7 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData, drug: drugData } = storeToRefs(appealStore);
+const { client: clientData} = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();

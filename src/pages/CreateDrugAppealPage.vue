@@ -416,6 +416,7 @@ const handleSelectDrug = (drug) => (selectedDrug.value = drug);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealDrugData();
+  appealStore.setTypeOfAppeal(1);
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();

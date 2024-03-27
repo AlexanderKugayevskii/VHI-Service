@@ -91,12 +91,15 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
+
 import { watch } from "vue";
 import DropdownSettings from "../Shared/DropdownSettings.vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import Trans from "src/i18n/translation";
 const props = defineProps(["client"]);
+const $q = useQuasar();
 
 const router = useRouter();
 const appealStore = useAppealStore();

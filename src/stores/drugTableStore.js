@@ -109,7 +109,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         clientLastname: row.client.lastname,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
-        drugstore: row.drugstore ?? 'нет аптеки',
+        drugstore: row.drugstore.name ?? "",
         medicines: medicines,
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
