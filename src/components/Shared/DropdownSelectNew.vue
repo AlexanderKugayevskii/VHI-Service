@@ -1,9 +1,7 @@
 <template>
   <div class="dropdown" id="dropdown">
     <div class="dropdown-label">
-      <div class="dropdown-label-wrapper">
-        <span class="dropdown-label-text">{{ label }}</span>
-      </div>
+      <div class="dropdown-label-wrapper"><slot name="top-label"></slot></div>
 
       <div class="dropdown-button" ref="button" role="button">
         <button
@@ -134,6 +132,7 @@
             </div>
             <slot name="action"></slot>
           </div>
+
           <!-- <div class="dropdown-select-list" ref="dropdownListRef" v-else> -->
           <q-virtual-scroll
             v-else
@@ -222,6 +221,9 @@ export default {
         return;
       }
       this.showDropdown = false;
+      if (this.$slots.action) {
+        this.searchValue = "";
+      }
     },
 
     handleDropdown() {
@@ -288,7 +290,9 @@ export default {
     filteredOptions() {
       if (this.localSearch) {
         const regex = new RegExp(this.searchValue, "i");
-        return this.options.filter((option) => regex.test(option.name));
+        return this.options.filter((option) =>
+          regex.test(option.name || option.user.name)
+        );
       }
       return this.options;
     },

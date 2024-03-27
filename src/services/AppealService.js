@@ -24,18 +24,32 @@ function getDrugs(name) {
   });
 }
 
+function getDrugstores() {
+  return api.get("/clinics/drugstores");
+}
+
 function saveAppealByAgent(payload) {
   return api.post("/clinics/applications", payload);
 }
 function saveAppealByClinic(payload) {
   return api.post("/clinics/application-clinic", payload);
 }
+
+function saveDrugAppeal(payload) {
+  return api.post("/clinics/applications", payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
 function changeAppealData(appealId, payload) {
   return api.put(`/clinics/applications/${appealId}`, payload);
 }
 
 export default {
   getDrugs,
+  getDrugstores,
   getClinics,
   getDoctors,
   getServices,
@@ -43,4 +57,5 @@ export default {
   saveAppealByAgent,
   saveAppealByClinic,
   changeAppealData,
+  saveDrugAppeal,
 };

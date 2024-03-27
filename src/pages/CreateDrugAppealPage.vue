@@ -87,13 +87,13 @@
                   <div class="tabs-header q-mb-md">
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
-                        name="drugstore"
+                        name="drugs"
                         label="Лекарства"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
-                        name="doctors"
+                        name="drugstore"
                         :label="`${$t('create_appeal.tabs.drugstore')}`"
                         :ripple="false"
                         class="tab--no-hover"
@@ -105,17 +105,19 @@
                       <q-tab-panels
                         v-model="tab"
                         animated
-                        swipeable
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
-                        <q-tab-panel name="drugstore" key="drugstore">
+                        <q-tab-panel name="drugs" key="drugs">
                           <div class="tab-header drugstore-header">
-                            <UploadImage></UploadImage>
+                            <UploadImage
+                              @image-upladed="handleImage"
+                            ></UploadImage>
                           </div>
                           <div class="tab-body">
                             <div class="drugstore-form q-mb-sm">
                               <DropdownSelectNew
+                                ref="drugstoreDropdownRef"
                                 class="drugstore-form-drugname"
                                 label="Лекарство"
                                 :multiple="false"
@@ -142,6 +144,7 @@
                                     type="button"
                                     label="добавить лекарство"
                                     customClass="btn-action"
+                                    @click="handleAddCustomDrug"
                                     full-width
                                   ></SimpleButton>
                                 </template>
@@ -187,88 +190,38 @@
                             </SelectListItem>
                           </div>
                         </q-tab-panel>
-                        <q-tab-panel name="doctors" key="doctors">
+                        <q-tab-panel name="drugstore" key="drugstore">
                           <div class="tab-header">
                             <DropdownSelectNew
                               class="dropdown-space"
-                              :multiple="true"
+                              :label="
+                                appealStore.isDrugstore
+                                  ? 'Ваша аптека'
+                                  : 'Аптека'
+                              "
+                              :multiple="false"
                               :loading="appealStore.loading"
-                              :options="appealStore.doctors"
-                              :selected-options="appealStore.selectedDoctors"
-                              @select-option="appealStore.selectDoctors"
+                              :options="appealStore.drugstores"
+                              :disable-choise="
+                                appealStore.isDrugstore ||
+                                appealStore.typeOfAppeal === 1
+                              "
+                              :selected-options="appealStore.selectedDrugstore"
+                              @select-option="appealStore.selectDrugstore"
+                              @request="appealStore.fetchDrugstores"
                             >
-                              <template #placeholder>
-                                {{ $t("create_appeal.dropdowns.doctors") }}
+                              <template #top-label> Аптека </template>
+                              <template #placeholder v-if="appealStore.isAgent">
+                                Выберите аптеку
                               </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
                               </template>
-                              <template
-                                v-slot:selected-options-length="{ length }"
-                              >
-                                {{
-                                  $t(
-                                    "create_appeal.dropdowns.doctors_choise",
-                                    length
-                                  )
-                                }}
-                              </template>
                               <template v-slot:option-content="props">
-                                <div
-                                  :class="{
-                                    'disabled-option':
-                                      appealStore.checkSuggestedDoctors(
-                                        props.option
-                                      ) ||
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      ),
-                                  }"
-                                >
-                                  <span>
-                                    {{ props.option.name }}
-                                  </span>
-                                  <span
-                                    class="price"
-                                    v-if="!appealStore.isClinic"
-                                  >
-                                    -
-                                    {{ formatPrice(props.option.pivot.price) }}
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.checkSuggestedDoctors(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    (добавлено
-                                    {{
-                                      appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
-                                    }})
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
-                                    }}
-                                  </span>
-                                </div>
+                                <div>{{ props.option.name }}</div>
                                 <CheckIcon
                                   v-if="
-                                    appealStore.checkSelectedDoctors(
-                                      props.option
-                                    ) &&
-                                    !appealStore.cantRemoveFromSelectedDoctors(
+                                    appealStore.checkSelectedDrugstore(
                                       props.option
                                     )
                                   "
@@ -448,7 +401,8 @@ const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
 
-const tab = ref("drugstore");
+const tab = ref("drugs");
+const drugstoreDropdownRef = ref(null);
 const createAppealModalRef = ref(null);
 
 const selectedDrug = ref(null);
@@ -458,7 +412,7 @@ const drugPrice = ref(null);
 const handleSelectDrug = (drug) => (selectedDrug.value = drug);
 
 const handleCreateAppeal = () => {
-  appealStore.postAppealData();
+  appealStore.postAppealDrugData();
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();
@@ -466,6 +420,14 @@ const handleChangeAppeal = () => {
 
 const handleSearchDrugs = async (name) => {
   await appealStore.fetchDrugs(name);
+};
+
+const handleAddCustomDrug = () => {
+  selectedDrug.value = {
+    name: drugstoreDropdownRef.value.searchValue,
+    id: null,
+  };
+  drugstoreDropdownRef.value.closeModal();
 };
 
 const handleAddDrugData = () => {
@@ -477,10 +439,14 @@ const handleAddDrugData = () => {
   };
 
   appealStore.selectDrugs(drugData);
-
   selectedDrug.value = null;
   drugAmount.value = null;
   drugPrice.value = null;
+};
+
+const handleImage = (image) => {
+  console.log(image);
+  appealStore.setDrugAppealImage(image.file);
 };
 
 const hideModal = () => {

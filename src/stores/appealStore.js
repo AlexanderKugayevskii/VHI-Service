@@ -5,6 +5,18 @@ import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
 
+const appendFormData = (formData, data, parentKey = "") => {
+  for (const [key, value] of Object.entries(data)) {
+    const newKey = parentKey ? `${parentKey}[${key}]` : key;
+
+    if (typeof value === "object" && value !== null) {
+      appendFormData(formData, value, newKey); // Рекурсивный вызов для вложенных объектов
+    } else {
+      formData.append(newKey, value);
+    }
+  }
+};
+
 const TYPE_OF_APPEALS = {
   NEW: 0,
   CHANGE: 1,
@@ -33,7 +45,10 @@ export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value.role.id === 8);
-  const isAgent = computed(() => user.value.role.id !== 8); //temp
+  const isDrugstore = computed(() => user.value.role.id === 10);
+  const isAgent = computed(
+    () => user.value.role.id !== 8 || user.value.role.id !== 10
+  ); //temp
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -86,9 +101,13 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
+  const drugAppealImage = ref(null);
   const drugs = ref([]);
   const selectedDrugs = ref([]);
   const suggestedDrugs = ref([]);
+
+  const drugstores = ref([]);
+  const selectedDrugstore = ref(null);
 
   const allDrugsStatus = computed(() =>
     selectedDrugs.value.concat(suggestedDrugs.value).map((drug) => {
@@ -116,6 +135,9 @@ export const useAppealStore = defineStore("appeal", () => {
     }, 0);
   });
 
+  const setDrugAppealImage = (file) => {
+    drugAppealImage.value = file;
+  };
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
     clearAppealData();
@@ -127,6 +149,11 @@ export const useAppealStore = defineStore("appeal", () => {
       await fetchHospitalData();
     }
   };
+
+  const selectDrugstore = (drugstore) => {
+    selectedDrugstore.value = drugstore;
+  };
+  //setDrugstore for drugstore account
 
   const checkSuggestedDoctors = (doctor) => {
     return suggestedDoctors.value.some((item) => doctor.id === item.id);
@@ -265,6 +292,18 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const fetchDrugstores = async () => {
+    loading.value = true;
+    try {
+      const response = await AppealService.getDrugstores();
+      drugstores.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const fetchHospitalData = async () => {
     loading.value = true;
     try {
@@ -296,6 +335,38 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getServices(selectedClinic.value.id);
       services.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const postAppealDrugData = async () => {
+    loading.value = true;
+
+    const formData = new FormData();
+
+    const drugsData = selectedDrugs.value.map((drug) => {
+      const { pivot, isNew, ...other } = drug;
+      return other;
+    });
+
+    const payload = {
+      contract_client_id: client.value.id,
+      client_type: 0,
+      client_id: client.value.clientId,
+      is_hospital: false,
+      drugstore_id: selectedDrugstore.value.id,
+      drugs: drugsData,
+    };
+
+    appendFormData(formData, payload);
+    formData.append("file", drugAppealImage.value);
+    
+    try {
+      const response = await AppealService.saveDrugAppeal(formData);
+      console.log(response.data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -416,6 +487,8 @@ export const useAppealStore = defineStore("appeal", () => {
   const checkSelectedServices = (option) => {
     return selectedServices.value.some((service) => service?.id === option.id);
   };
+  const checkSelectedDrugstore = (option) =>
+    selectedDrugstore.value?.id === option.id;
 
   const clearDoctors = (doctor) => {
     selectedDoctors.value = selectedDoctors.value.filter(
@@ -486,6 +559,7 @@ export const useAppealStore = defineStore("appeal", () => {
   return {
     loading,
     isClinic,
+    isDrugstore,
     isAgent,
     appealTotalConsumption,
     successAppeal,
@@ -507,6 +581,7 @@ export const useAppealStore = defineStore("appeal", () => {
     fetchClinics,
     fetchDoctors,
     fetchServices,
+    fetchDrugstores,
     fetchHospitalData,
     fetchApplicantData,
     selectClinic,
@@ -530,9 +605,15 @@ export const useAppealStore = defineStore("appeal", () => {
     cantRemoveFromSelectedServices,
 
     drugs,
+    drugstores,
     selectedDrugs,
     suggestedDrugs,
+    selectedDrugstore,
+    checkSelectedDrugstore,
+    selectDrugstore,
     fetchDrugs,
     selectDrugs,
+    postAppealDrugData,
+    setDrugAppealImage,
   };
 });
