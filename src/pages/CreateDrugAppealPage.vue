@@ -180,6 +180,12 @@
                               :item="drug"
                               :key="drug.id"
                               :is-agent="appealStore.isAgent"
+                              @update:status="
+                                (item) => handleStatusDrugs(item, false)
+                              "
+                              @update:progress="
+                                (item) => handleStatusDrugs(item, false)
+                              "
                             >
                               <template #label>
                                 {{ drug.name }}
@@ -458,6 +464,10 @@ const hideModal = () => {
   appealStore.clearAppealData();
   appealStore.clearClinicData();
   router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
+};
+
+const handleStatusDrugs = (item, isSuggested) => {
+  appealStore.changeStatusDrugs(item, isSuggested);
 };
 
 watch(

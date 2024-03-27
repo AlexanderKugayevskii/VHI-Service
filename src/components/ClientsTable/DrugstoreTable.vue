@@ -225,8 +225,8 @@ const openAppealPage = async (client) => {
   $q.loading.show({
     delay: 500,
   });
-  await appealStore.fetchApplicantData();
-  await appealStore.fetchHospitalData();
+  
+  await appealStore.fetchApplicantDrugData();
 
   $q.loading.hide();
   router.replace(

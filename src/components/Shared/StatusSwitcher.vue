@@ -11,7 +11,7 @@
       Завершить
     </div>
     <div
-      class="status-item status-done"
+      class="status-item status-done clickable"
       v-if="progress >= 1"
       @click="() => progress === 1 && handleChangeProgress(0)"
     >

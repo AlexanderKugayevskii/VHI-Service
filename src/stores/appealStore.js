@@ -22,17 +22,21 @@ const TYPE_OF_APPEALS = {
   CHANGE: 1,
 };
 
-function filterItems(data, suggestedArr, selectedArr, isClinic) {
+function filterItems(data, suggestedArr, selectedArr, isOther) {
   data.forEach((item) => {
-    const createdByClinic = item.pivot.created_by_clinic === 0;
-    if (isClinic) {
-      if (createdByClinic) {
+    const checkCreated =
+      item.pivot?.created_by_clinic ?? item.pivot?.created_by_drugstore;
+
+    const createdByOther = checkCreated === 0;
+
+    if (isOther) {
+      if (createdByOther) {
         suggestedArr.push(item);
       } else {
         selectedArr.push(item);
       }
     } else {
-      if (createdByClinic) {
+      if (createdByOther) {
         selectedArr.push(item);
       } else {
         suggestedArr.push(item);
@@ -467,6 +471,9 @@ export const useAppealStore = defineStore("appeal", () => {
         isClinic.value
       );
 
+      // filterItems(
+      //   data.drugs,
+      // )
       console.log(`Suggested by other`, suggestedDoctors.value);
       console.log(`Selected by owner`, selectedDoctors.value);
       console.log("-------------------------------------");
@@ -474,6 +481,48 @@ export const useAppealStore = defineStore("appeal", () => {
       console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
       console.error("ERROR");
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const fetchApplicantDrugData = async () => {
+    loading.value = true;
+    try {
+      const response = await ClientService.getClientByAppealId(
+        client.value.appealId
+      );
+      const data = response.data.data;
+
+      client.value.id = data.contract_client.id;
+      client.value.clientId = data.contract_client.client_id;
+
+      selectedDrugstore.value = data.drugstore;
+
+      filterItems(
+        data.drugs,
+        suggestedDrugs.value,
+        selectedDrugs.value,
+        isDrugstore.value
+      );
+
+      selectedDrugs.value = selectedDrugs.value.map((drug) => {
+        return {
+          ...drug,
+          price: Number(drug.pivot.price.match(/\d+/)[0]),
+        };
+      });
+      suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
+        return {
+          ...drug,
+          price: Number(drug.pivot.price.match(/\d+/)[0]),
+        };
+      });
+
+      console.log(`Suggested by other`, suggestedDrugs.value);
+      console.log(`Selected by owner`, selectedDrugs.value);
+    } catch (e) {
+      console.error(e);
     } finally {
       loading.value = false;
     }
@@ -490,11 +539,6 @@ export const useAppealStore = defineStore("appeal", () => {
   const checkSelectedDrugstore = (option) =>
     selectedDrugstore.value?.id === option.id;
 
-  const clearDoctors = (doctor) => {
-    selectedDoctors.value = selectedDoctors.value.filter(
-      (item) => item.id !== doctor.id
-    );
-  };
   const changeStatusDoctor = (selectedItem, isSuggested = true) => {
     let doctors = isSuggested ? suggestedDoctors.value : selectedDoctors.value;
     doctors = doctors.map((doctor) => {
@@ -545,10 +589,29 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
-  const clearServices = (service) => {
-    selectedServices.value = selectedServices.value.filter(
-      (item) => item.id !== service.id
-    );
+  const changeStatusDrugs = (selectedItem, isSuggested = true) => {
+    let drugs = isSuggested ? suggestedDrugs.value : selectedDrugs.value;
+
+    drugs = drugs.map((drug) => {
+      if (selectedItem.item.id === drug.id) {
+        return {
+          ...drug,
+          pivot: {
+            ...drug.pivot,
+            status: selectedItem.status ?? drug.pivot.status,
+            progress: selectedItem.progress ?? drug.pivot.progress,
+          },
+          status: selectedItem.status,
+        };
+      }
+      return drug;
+    });
+
+    if (isSuggested) {
+      suggestedDrugs.value = drugs;
+    } else {
+      selectedDrugs.value = drugs;
+    }
   };
   const clearDrugs = (drug) => {
     drugsData.drugs = drugsData.drugs.filter((item) => {
@@ -590,8 +653,6 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSelectedClinic,
     checkSelectedDoctors,
     checkSelectedServices,
-    clearDoctors,
-    clearServices,
     postAppealData,
     changeAppealData,
     clearAppealData,
@@ -616,5 +677,7 @@ export const useAppealStore = defineStore("appeal", () => {
     selectDrugs,
     postAppealDrugData,
     setDrugAppealImage,
+    fetchApplicantDrugData,
+    changeStatusDrugs,
   };
 });
