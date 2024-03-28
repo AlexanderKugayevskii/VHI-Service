@@ -59,7 +59,11 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props" @click="openAppealPage(props.row)">
+        <q-tr
+          :props="props"
+          @mouseup="cancelOpenWhenSelect(props.row)"
+          class="clickable"
+        >
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
@@ -203,6 +207,16 @@ const clientTableStore = useClientTableStore();
 const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
 
+const cancelOpenWhenSelect = (client) => {
+  const selection = window.getSelection().toString();
+  console.log(selection);
+  if (!selection) {
+    openAppealPage(client);
+  } else {
+    return;
+  }
+};
+
 //incremenet decrement and change page events
 const incrementPage = () => {
   tableRef.value.nextPage();
@@ -274,16 +288,16 @@ onMounted(() => {
 });
 
 //calculate table height for showing only 10 rows
-// onMounted(() => {
-//   const qTableMiddleElement = document.querySelector(".q-table__middle");
-//   qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
+onMounted(() => {
+  const qTableMiddleElement = document.querySelector(".q-table__middle");
+  // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
 
-//   const qTableElement = document.querySelector(".q-table");
-//   const qTableInnerElement = document.createElement("div");
-//   qTableInnerElement.className = "q-table-inner-element";
-//   qTableInnerElement.appendChild(qTableElement);
-//   qTableMiddleElement.appendChild(qTableInnerElement);
-// });
+  const qTableElement = document.querySelector(".q-table");
+  const qTableInnerElement = document.createElement("div");
+  qTableInnerElement.className = "q-table-inner-element";
+  qTableInnerElement.appendChild(qTableElement);
+  qTableMiddleElement.appendChild(qTableInnerElement);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -370,5 +384,8 @@ button[type="button"]:disabled {
   background: none;
   cursor: pointer;
   padding: 0;
+}
+tr.clickable {
+  cursor: pointer;
 }
 </style>

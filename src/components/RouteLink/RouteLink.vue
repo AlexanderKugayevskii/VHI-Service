@@ -1,12 +1,16 @@
 <template>
-  <q-item class="q-py-none q-px-none">
-    <router-link :to="routeTo" class="nav-item flex" :disabled="disabled">
+  <q-item class="q-py-none q-px-none" :disable="disableLink">
+    <component
+      :is="disableLink ? 'span' : 'router-link'"
+      :to="routeTo"
+      class="nav-item flex"
+    >
       <slot name="icon"></slot>
 
       <q-item-section>
         <q-item-label>{{ caption }}</q-item-label>
       </q-item-section>
-    </router-link>
+    </component>
   </q-item>
 </template>
 
@@ -29,7 +33,7 @@ defineProps({
   disableLink: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 </script>
 
