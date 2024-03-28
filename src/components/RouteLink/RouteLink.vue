@@ -1,6 +1,6 @@
 <template>
   <q-item class="q-py-none q-px-none">
-    <router-link :to="routeTo" class="nav-item flex">
+    <router-link :to="routeTo" class="nav-item flex" :disabled="disabled">
       <slot name="icon"></slot>
 
       <q-item-section>
@@ -26,6 +26,10 @@ defineProps({
       return { path: "/" };
     },
   },
+  disableLink: {
+    type: Boolean,
+    default: false,
+  }
 });
 </script>
 

@@ -103,9 +103,9 @@
             </Collapse>
           </div>
           <RouteLink
+            :disableLink="true"
             class="q-px-sm"
             :caption="$t('nav.clients')"
-            disabled
             v-if="appealStore.isAgent"
           >
             <!-- :routeTo="Trans.i18nRoute({ name: 'clients' })" -->

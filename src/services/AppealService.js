@@ -48,7 +48,7 @@ function changeAppealData(appealId, payload) {
 }
 
 function changeAppealDrugData(appealId, payload) {
-  return api.put(`/clinics/applications/${appealId}`, payload, {
+  return api.post(`/clinics/applications/${appealId}`, payload, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
