@@ -290,8 +290,8 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedClinic.value = null;
   };
   const clearDrugStoreData = () => {
-    selectedDrugstore.value = null; 
-  }
+    selectedDrugstore.value = null;
+  };
 
   const fetchClinics = async () => {
     loading.value = true;
@@ -419,13 +419,13 @@ export const useAppealStore = defineStore("appeal", () => {
 
     const payload = {
       contract_client_id: client.value.id,
-      client_type: 0,
       client_id: client.value.clientId,
       drugstore_id: selectedDrugstore.value.id,
       drugs: allDrugsStatus.value,
     };
 
-    appendFormData(formData, payload);
+    // appendFormData(formData, payload);
+    formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);
     }
@@ -596,7 +596,7 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
-      if(data.file) {
+      if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
       console.log(drugAppealImage.value);
