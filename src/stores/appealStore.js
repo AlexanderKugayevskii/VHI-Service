@@ -105,7 +105,7 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
-  const drugAppealImage = ref(null);
+  const drugAppealImage = ref({});
   const drugs = ref([]);
   const selectedDrugs = ref([]);
   const suggestedDrugs = ref([]);
@@ -117,6 +117,9 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedDrugs.value.concat(suggestedDrugs.value).map((drug) => {
       return {
         id: drug.id,
+        name: drug.name,
+        price: drug.price,
+        quantity: drug.quantity ?? drug.pivot.quantity,
         status: drug.pivot.status ?? 0,
         progress: drug.pivot.progress ?? 0,
       };
@@ -265,6 +268,10 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedServices.value = [];
     suggestedDoctors.value = [];
     suggestedServices.value = [];
+
+    selectedDrugs.value = [];
+    suggestedDrugs.value = [];
+    drugAppealImage.value = {};
   };
   const clearClinicData = () => {
     selectedClinic.value = [];
@@ -370,7 +377,53 @@ export const useAppealStore = defineStore("appeal", () => {
 
     try {
       const response = await AppealService.saveDrugAppeal(formData);
-      console.log(response.data);
+      const data = response.data.data;
+      if (
+        response.status === 200 &&
+        response.data.message === "created successfully"
+      ) {
+        client.value.appealId = data.id;
+        client.value.appealStatus = data.status;
+        setSuccessAppeal(true);
+        // clearAppealData();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const changeAppealDrugData = async () => {
+    loading.value = true;
+    const formData = new FormData();
+
+    const payload = {
+      contract_client_id: client.value.id,
+      client_type: 0,
+      client_id: client.value.clientId,
+      drugstore_id: selectedDrugstore.value.id,
+      drugs: allDrugsStatus.value,
+    };
+
+    appendFormData(formData, payload);
+    if (drugAppealImage.value?.file) {
+      formData.append("file", drugAppealImage.value.file);
+    }
+
+    try {
+      const response = await AppealService.changeAppealDrugData(
+        client.value.appealId,
+        formData
+      );
+
+      const data = response.data.data;
+
+      if (response.status === 200 && response.data.message === "success") {
+        setSuccessAppeal(true);
+        client.value.appealStatus = data.status;
+      }
+
     } catch (e) {
       console.error(e);
     } finally {
@@ -394,13 +447,13 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       const data = response.data.data;
-      client.value.appealId = data.id;
-      client.value.appealStatus = data.status;
       console.log(data);
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
       ) {
+        client.value.appealId = data.id;
+        client.value.appealStatus = data.status;
         setSuccessAppeal(true);
         // clearAppealData();
       }
@@ -519,6 +572,8 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
+      drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
+      console.log(drugAppealImage.value);
       console.log(`Suggested by other`, suggestedDrugs.value);
       console.log(`Selected by owner`, selectedDrugs.value);
     } catch (e) {
@@ -676,6 +731,7 @@ export const useAppealStore = defineStore("appeal", () => {
     fetchDrugs,
     selectDrugs,
     postAppealDrugData,
+    changeAppealDrugData,
     setDrugAppealImage,
     fetchApplicantDrugData,
     changeStatusDrugs,

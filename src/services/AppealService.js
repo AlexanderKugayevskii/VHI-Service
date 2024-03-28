@@ -47,6 +47,14 @@ function changeAppealData(appealId, payload) {
   return api.put(`/clinics/applications/${appealId}`, payload);
 }
 
+function changeAppealDrugData(appealId, payload) {
+  return api.put(`/clinics/applications/${appealId}`, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
 export default {
   getDrugs,
   getDrugstores,
@@ -58,4 +66,5 @@ export default {
   saveAppealByClinic,
   changeAppealData,
   saveDrugAppeal,
+  changeAppealDrugData,
 };

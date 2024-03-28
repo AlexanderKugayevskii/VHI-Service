@@ -651,7 +651,7 @@ const createAppealModalRef = ref(null);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
-  appealStore.setTypeOfAppeal(1);
+  appealStore.setTypeOfAppeal("CHANGE");
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();

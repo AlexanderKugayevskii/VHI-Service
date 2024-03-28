@@ -133,6 +133,7 @@
                                 @request-by-search="handleSearchDrugs"
                                 @select-option="handleSelectDrug"
                               >
+                                <template #top-label> Лекарство </template>
                                 <template #placeholder>
                                   Выберите лекарство
                                 </template>
@@ -172,6 +173,7 @@
                                 customClass="btn-add"
                                 class="drugstore-form-btn-wrapper"
                                 @click="handleAddDrugData"
+                                :disabled="disableAddButton"
                               ></SimpleButton>
                             </div>
 
@@ -191,7 +193,7 @@
                                 {{ drug.name }}
                               </template>
                               <template #quantity>
-                                {{ drug.quantity }} шт
+                                {{ drug?.quantity ?? drug.pivot.quantity }} шт
                               </template>
                               <template #price>
                                 {{ formatPrice(drug.price) }}
@@ -238,60 +240,7 @@
                               </template>
                             </DropdownSelectNew>
                           </div>
-                          <div class="tab-body">
-                            <SelectListItem
-                              v-for="doctor in appealStore.selectedDoctors"
-                              :item="doctor"
-                              :key="doctor.id"
-                              :isAgent="appealStore.isAgent"
-                              @update:status="
-                                (item) => handleStatusDoctor(item, false)
-                              "
-                              @update:progress="
-                                (item) => handleStatusDoctor(item, false)
-                              "
-                            >
-                              <template #label>
-                                {{ doctor.name }}
-                              </template>
-                              <template #price v-if="!appealStore.isClinic">
-                                {{ formatPrice(Number(doctor.pivot.price)) }}
-                              </template>
-                            </SelectListItem>
-                            <div
-                              class=""
-                              v-if="appealStore.suggestedDoctors.length > 0"
-                            >
-                              <p
-                                class="added-by-title"
-                                v-if="!appealStore.isClinic"
-                              >
-                                Добавлено клиникой
-                              </p>
-                              <p class="added-by-title" v-else>
-                                Добавлено компанией
-                              </p>
-                              <SelectListItem
-                                v-for="doctor in appealStore.suggestedDoctors"
-                                :item="doctor"
-                                :key="doctor.id"
-                                :isAgent="appealStore.isAgent"
-                                @update:status="
-                                  (item) => handleStatusDoctor(item, true)
-                                "
-                                @update:progress="
-                                  (item) => handleStatusDoctor(item, true)
-                                "
-                              >
-                                <template #label>
-                                  {{ doctor.name }}
-                                </template>
-                                <template #price v-if="!appealStore.isClinic">
-                                  {{ formatPrice(Number(doctor.pivot.price)) }}
-                                </template>
-                              </SelectListItem>
-                            </div>
-                          </div>
+                          <div class="tab-body"></div>
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>
@@ -418,14 +367,18 @@ const selectedDrug = ref(null);
 const drugAmount = ref(null);
 const drugPrice = ref(null);
 
+const disableAddButton = computed(
+  () => !selectedDrug.value || !drugAmount.value || !drugPrice.value
+);
+
 const handleSelectDrug = (drug) => (selectedDrug.value = drug);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealDrugData();
-  appealStore.setTypeOfAppeal(1);
+  appealStore.setTypeOfAppeal("CHANGE");
 };
 const handleChangeAppeal = () => {
-  appealStore.changeAppealData();
+  appealStore.changeAppealDrugData();
 };
 
 const handleSearchDrugs = async (name) => {
