@@ -295,6 +295,7 @@
                       type="submit"
                       customClass="btn-action"
                       :loading="appealStore.loading"
+                      :disabled="!appealStore.selectedDrugstore"
                       @click="handleCreateAppeal"
                     >
                       <template #loading-spinner>

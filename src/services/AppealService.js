@@ -44,7 +44,7 @@ function saveDrugAppeal(payload) {
 }
 
 function changeAppealData(appealId, payload) {
-  return api.put(`/clinics/applications/${appealId}`, payload);
+  return api.post(`/clinics/applications/${appealId}`, payload);
 }
 
 function changeAppealDrugData(appealId, payload) {
