@@ -228,6 +228,9 @@
                                 <template #label>
                                   {{ drug.name }}
                                 </template>
+                                <template #quantity>
+                                  {{ drug?.quantity ?? drug.pivot.quantity }} шт
+                                </template>
                                 <template
                                   #price
                                   v-if="!appealStore.isDrugstore"

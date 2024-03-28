@@ -53,19 +53,18 @@ const props = defineProps({
 const emit = defineEmits(["update:status", "update:progress"]);
 
 const disabledRule = computed(() => {
+  const createdByOther =
+    props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
+
   return (
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
     (!props.isAgent &&
       props.item.pivot.status !== 0 &&
       props.item.pivot.progress >= 1 &&
-      props.item.pivot.created_by_clinic === 0) ||
-    (props.isAgent &&
-      props.item.pivot.created_by_clinic === 0 &&
-      props.item.pivot.status === 0) ||
-    (!props.isAgent &&
-      props.item.pivot.created_by_clinic === 1 &&
-      props.item.pivot.status >= 0)
+      createdByOther === 0) ||
+    (props.isAgent && createdByOther === 0 && props.item.pivot.status === 0) ||
+    (!props.isAgent && createdByOther === 1 && props.item.pivot.status >= 0)
   );
 });
 
