@@ -335,6 +335,15 @@ thead tr th {
   background-color: #fff;
   text-transform: uppercase;
 }
+thead tr th:first-child {
+  border-radius: 12px 0 0 0;
+}
+thead tr th:last-child {
+  border-radius: 0 12px 0 0;
+}
+tbody tr:last-child td:last-child {
+  border-radius: 0 0 12px 0;
+}
 thead tr:first-child th {
   top: 0;
 }
