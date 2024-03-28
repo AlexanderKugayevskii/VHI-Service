@@ -49,7 +49,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value.role.id === 8);
-  const isDrugstore = computed(() => user.value.role.id === 10);
+  const isDrugstore = computed(() => user.value.role.id === 8);
   const isAgent = computed(
     () => user.value.role.id !== 8 || user.value.role.id !== 10
   ); //temp
@@ -599,7 +599,7 @@ export const useAppealStore = defineStore("appeal", () => {
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
-      
+
       console.log(drugAppealImage.value);
       console.log(`Suggested by other`, suggestedDrugs.value);
       console.log(`Selected by owner`, selectedDrugs.value);
