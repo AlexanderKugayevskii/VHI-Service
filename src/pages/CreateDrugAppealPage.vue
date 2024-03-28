@@ -200,6 +200,42 @@
                                 {{ formatPrice(drug.pivot.price) }}
                               </template>
                             </SelectListItem>
+                            <div
+                              class=""
+                              v-if="appealStore.suggestedDrugs.length > 0"
+                            >
+                              <p
+                                class="added-by-title"
+                                v-if="!appealStore.isDrugstore"
+                              >
+                                Добавлено аптекой
+                              </p>
+                              <p class="added-by-title" v-else>
+                                Добавлено компанией
+                              </p>
+                              <SelectListItem
+                                v-for="drug in appealStore.suggestedDrugs"
+                                :item="drug"
+                                :key="drug.id"
+                                :isAgent="appealStore.isAgent"
+                                @update:status="
+                                  (item) => handleStatusDrugs(item, true)
+                                "
+                                @update:progress="
+                                  (item) => handleStatusDrugs(item, true)
+                                "
+                              >
+                                <template #label>
+                                  {{ drug.name }}
+                                </template>
+                                <template
+                                  #price
+                                  v-if="!appealStore.isDrugstore"
+                                >
+                                  {{ formatPrice(Number(drug.pivot.price)) }}
+                                </template>
+                              </SelectListItem>
+                            </div>
                           </div>
                         </q-tab-panel>
                         <q-tab-panel name="drugstore" key="drugstore">
