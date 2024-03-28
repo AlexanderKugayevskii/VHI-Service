@@ -55,7 +55,7 @@ const emit = defineEmits(["update:status", "update:progress"]);
 const disabledRule = computed(() => {
   const createdByOther =
     props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
-  console.log(props.isAgent);
+ 
   return (
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
