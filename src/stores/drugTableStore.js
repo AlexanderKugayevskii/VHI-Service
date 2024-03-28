@@ -115,13 +115,14 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
         userSettings: "",
-        index:
-          (pagination.value.page - 1) * pagination.value.rowsPerPage +
-          index +
-          1,
+        index: row.id,
       };
     });
   });
+  // index:
+  //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
+  //   index +
+  //   1,
 
   return { pagination, loading, rows, columns, handleRequest };
 });

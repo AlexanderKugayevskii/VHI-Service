@@ -13,7 +13,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="page-title q-my-none q-mb-md">
-            {{ $t("create_appeal.title") }} № {{ clientData.appealId }}
+            {{ $t("create_appeal.title") }}
+            {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
           <StatusBar
             :status="clientData.appealStatus"
@@ -641,7 +642,7 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData} = storeToRefs(appealStore);
+const { client: clientData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();

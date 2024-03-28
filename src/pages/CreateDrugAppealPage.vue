@@ -14,6 +14,7 @@
         <div class="modal-header">
           <h4 class="page-title q-my-none q-mb-md">
             {{ $t("create_appeal.title") }}
+            {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
           <StatusBar
             :status="clientData.appealStatus"
@@ -196,7 +197,7 @@
                                 {{ drug?.quantity ?? drug.pivot.quantity }} шт
                               </template>
                               <template #price>
-                                {{ formatPrice(drug.price) }}
+                                {{ formatPrice(drug.pivot.price) }}
                               </template>
                             </SelectListItem>
                           </div>
@@ -287,7 +288,7 @@
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
-                      formatPrice(appealStore.appealTotalConsumption)
+                      formatPrice(appealStore.appealTotalDrugConsumption)
                     }}</span>
                   </div>
                 </div>
@@ -415,7 +416,7 @@ const handleImage = (image) => {
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
-  appealStore.clearClinicData();
+  appealStore.clearDrugStoreData();
   router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
 };
 

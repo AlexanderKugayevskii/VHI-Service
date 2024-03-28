@@ -118,7 +118,7 @@ export const useAppealStore = defineStore("appeal", () => {
       return {
         id: drug.id,
         name: drug.name,
-        price: drug.price,
+        price: drug.pivot.price,
         quantity: drug.quantity ?? drug.pivot.quantity,
         status: drug.pivot.status ?? 0,
         progress: drug.pivot.progress ?? 0,
@@ -133,6 +133,17 @@ export const useAppealStore = defineStore("appeal", () => {
       ...selectedServices.value,
       ...suggestedServices.value,
     ];
+
+    return allData.reduce((acc, curr) => {
+      if (curr.pivot.status === 1) {
+        return acc + Number(curr.pivot.price);
+      }
+      return acc;
+    }, 0);
+  });
+
+  const appealTotalDrugConsumption = computed(() => {
+    const allData = [...selectedDrugs.value, ...suggestedDrugs.value];
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
@@ -253,6 +264,8 @@ export const useAppealStore = defineStore("appeal", () => {
       ...drug,
       pivot: {
         ...drug?.pivot,
+        quantity: drug.quantity,
+        price: drug.price,
         status: 0,
         progress: 0,
       },
@@ -274,8 +287,11 @@ export const useAppealStore = defineStore("appeal", () => {
     drugAppealImage.value = {};
   };
   const clearClinicData = () => {
-    selectedClinic.value = [];
+    selectedClinic.value = null;
   };
+  const clearDrugStoreData = () => {
+    selectedDrugstore.value = null; 
+  }
 
   const fetchClinics = async () => {
     loading.value = true;
@@ -373,7 +389,10 @@ export const useAppealStore = defineStore("appeal", () => {
     };
 
     appendFormData(formData, payload);
-    formData.append("file", drugAppealImage.value.file);
+
+    if (drugAppealImage.value?.file) {
+      formData.append("file", drugAppealImage.value.file);
+    }
 
     try {
       const response = await AppealService.saveDrugAppeal(formData);
@@ -423,7 +442,6 @@ export const useAppealStore = defineStore("appeal", () => {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
       }
-
     } catch (e) {
       console.error(e);
     } finally {
@@ -562,17 +580,25 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedDrugs.value = selectedDrugs.value.map((drug) => {
         return {
           ...drug,
-          price: Number(drug.pivot.price.match(/\d+/)[0]),
+          pivot: {
+            ...drug.pivot,
+            price: Number(drug.pivot.price.match(/\d+/)[0]),
+          },
         };
       });
       suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
         return {
           ...drug,
-          price: Number(drug.pivot.price.match(/\d+/)[0]),
+          pivot: {
+            ...drug.pivot,
+            price: Number(drug.pivot.price.match(/\d+/)[0]),
+          },
         };
       });
 
-      drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
+      if(data.file) {
+        drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
+      }
       console.log(drugAppealImage.value);
       console.log(`Suggested by other`, suggestedDrugs.value);
       console.log(`Selected by owner`, selectedDrugs.value);
@@ -735,5 +761,7 @@ export const useAppealStore = defineStore("appeal", () => {
     setDrugAppealImage,
     fetchApplicantDrugData,
     changeStatusDrugs,
+    appealTotalDrugConsumption,
+    clearDrugStoreData,
   };
 });

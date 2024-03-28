@@ -14,15 +14,15 @@
       @drop="handleDrop"
     >
       <p v-if="!image" class="drop-area-text">
-        <span>{{ $t("upload-image-drag") }}</span>
+        <span>Перетащите фото сюда</span>
         <label class="file-upload-link" for="fileInput">{{
-          $t("upload-image-file")
+          'Или загрузите файл'
         }}</label>
       </p>
       <div v-else class="drop-area-image">
         <img :src="image" alt="Dropped Image" class="dropped-image" />
         <label class="file-upload-link" for="fileInput">{{
-          $t("upload-image-change")
+          "Изменить фото"
         }}</label>
       </div>
       <input
@@ -37,7 +37,7 @@
     <p v-if="error && isMobile" class="drop-error">{{ error }}</p>
     <div v-if="isMobile">
       <button @click="openCamera" class="make-photo-btn">
-        {{ $t("upload-image-make-photo") }}
+        {{ "сделать фото" }}
       </button>
       <input
         type="file"
@@ -174,6 +174,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  row-gap: 8px;
+  margin-bottom: 0;
 }
 .drop-area-image {
   display: flex;
