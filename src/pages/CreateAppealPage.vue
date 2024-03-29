@@ -105,13 +105,6 @@
                         :ripple="false"
                         class="tab--no-hover"
                       />
-                      <!-- <q-tab
-                        name="drugstore"
-                        :label="`${$t('create_appeal.tabs.drugstore')} (скоро)`"
-                        :ripple="false"
-                        class="tab--no-hover"
-                        disable
-                      /> -->
                     </q-tabs>
                   </div>
                   <div class="tabs-content appeal-content">
@@ -119,7 +112,6 @@
                       <q-tab-panels
                         v-model="tab"
                         animated
-                        swipeable
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
@@ -460,77 +452,6 @@
                             </div>
                           </div>
                         </q-tab-panel>
-
-                        <!-- <q-tab-panel name="drugstore" key="drugstore">
-                          <div class="tab-header drugstore-header">
-                            <DragNdrop></DragNdrop>
-                          </div>
-                          <div class="tab-body">
-                            <div class="drugstore-form">
-                              <SimpleInput
-                                label="Лекарство"
-                                placeholder="Название лекарства"
-                                class="drugstore-form-drugname"
-                                @update:model-value="appealStore.setDrugName"
-                                :modelValue="drugData.drugName"
-                              ></SimpleInput>
-                              <SimpleInput
-                                label="Кол-во"
-                                placeholder="0"
-                                class="drugstore-form-amount"
-                                @update:model-value="appealStore.setDrugAmount"
-                                :modelValue="drugData.drugAmount"
-                              ></SimpleInput>
-                              <DropdownSelectLocal
-                                class="drugstore-form-type"
-                                label="Ед. изм"
-                                placeholder="Шт"
-                                id-key="drugType"
-                                :search="false"
-                                :multiple="false"
-                                :initialOptions="[
-                                  { id: 1, drugType: 'Шт' },
-                                  { id: 2, drugType: 'Мл' },
-                                ]"
-                                @update:selectedOptions="
-                                  appealStore.setDrugType
-                                "
-                              >
-                                <template #option-content="{ option }">
-                                  <div class="option-content">
-                                    <span>
-                                      {{ option.drugType }}
-                                    </span>
-                                  </div>
-                                </template>
-                              </DropdownSelectLocal>
-                              <SimpleInput
-                                class="drugstore-form-price"
-                                label="Цена"
-                                placeholder="0"
-                                @update:model-value="appealStore.setDrugPrice"
-                                :model-value="drugData.drugAmount"
-                              ></SimpleInput>
-                              <SimpleButton
-                                label="Добавить"
-                                type="button"
-                                customClass="btn-add"
-                                class="drugstore-form-btn-wrapper"
-                                @click="handleAddDrug"
-                              ></SimpleButton>
-                            </div>
-                            <SelectedItem
-                              v-for="(item, index) in drugsData"
-                              :item="item"
-                              :key="index"
-                              @update:select="handleRemoveDrug"
-                            >
-                              <template #label>
-                                {{ item.drugName }}
-                              </template>
-                            </SelectedItem>
-                          </div>
-                        </q-tab-panel> -->
                       </q-tab-panels>
                     </keep-alive>
                   </div>
@@ -583,7 +504,45 @@
               </div>
             </div>
             <div class="create-appeal-right">
-              <div class="create-appeal-interaction"></div>
+              <div class="create-appeal-interaction">
+                <div class="tabs-container tabs-container-gap">
+                  <div class="tabs-header">
+                    <q-tabs dense active-class="tab-active" v-model="tabRight">
+                      <q-tab
+                        name="chat"
+                        label="Чат"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                      <q-tab
+                        name="history"
+                        label="История"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                    </q-tabs>
+                  </div>
+                  <div class="tabs-content appeal-content">
+                    <keep-alive>
+                      <q-tab-panels
+                        v-model="tabRight"
+                        animated
+                        swipeable
+                        transition-next="jump-right"
+                        transition-prev="jump-left"
+                      >
+                        <q-tab-panel name="chat" key="chat">
+                          <!-- <AppealChat /> -->
+                          
+                        </q-tab-panel>
+                        <q-tab-panel name="history" key="history">
+                          <!-- <div class="tab-header">HISTORY</div> -->
+                        </q-tab-panel>
+                      </q-tab-panels>
+                    </keep-alive>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -630,6 +589,7 @@ import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
+import AppealChat from "src/components/AppealChat.vue";
 import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -648,6 +608,7 @@ const router = useRouter();
 const route = useRoute();
 
 const tab = ref("clinics");
+const tabRight = ref("chat");
 const createAppealModalRef = ref(null);
 
 const handleCreateAppeal = () => {
@@ -729,11 +690,12 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-row {
   display: flex;
   flex-grow: 1;
+  column-gap: 16px;
 }
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-basis: 70%;
+  flex-grow: 1;
 }
 .create-appeal-client-info {
   background-color: #fff;
@@ -789,6 +751,10 @@ const handleStatusService = (item, isSuggested) => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
+  &-gap {
+    row-gap: 24px;
+  }
 }
 .q-tab {
   height: 44px;
@@ -831,6 +797,16 @@ const handleStatusService = (item, isSuggested) => {
 }
 .create-appeal-action-expences-total {
   font-weight: 700;
+}
+.create-appeal-right {
+  flex-basis: 416px;
+}
+.create-appeal-interaction {
+  background-color: #fff;
+  height: 100%;
+  border-radius: 16px;
+  padding: 16px;
+  padding-right: 8px;
 }
 
 .option-content-extra {

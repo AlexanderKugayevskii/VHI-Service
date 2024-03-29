@@ -456,7 +456,7 @@ const handleImage = (image) => {
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
-  appealStore.clearDrugStoreData();
+  appealStore.clearDrugstoreData();
   router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
 };
 

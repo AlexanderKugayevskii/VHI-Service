@@ -134,6 +134,8 @@ const hideModal = () => {
 };
 
 const goToAppeal = async () => {
+  appealTypeModalRef.value.hide();
+
   if (type.value === 0) {
     await appealStore.setClinic();
     appealStore.setTypeOfAppeal("NEW");
@@ -146,6 +148,8 @@ const goToAppeal = async () => {
       })
     );
   } else if (type.value === 1) {
+    appealStore.setTypeOfAppeal("NEW");
+
     router.replace(
       Trans.i18nRoute({
         name: "createDrugsAppeal",
@@ -155,8 +159,6 @@ const goToAppeal = async () => {
       })
     );
   }
-
-  hideModal();
 };
 </script>
 <style lang="scss" scoped>

@@ -58,7 +58,7 @@
         v-click-out-side="closeModal"
         key="dropdown-select"
         class="dropdown-select"
-        ref="dropdownSelect"
+        ref="dropdownSelectRef"
         v-if="showDropdown"
         :style="dropDownStyle"
       >

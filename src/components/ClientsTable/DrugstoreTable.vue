@@ -59,7 +59,11 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props" @click="openAppealPage(props.row)">
+        <q-tr
+          :props="props"
+          @mouseup="cancelOpenWhenSelect(props.row)"
+          class="clickable"
+        >
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
@@ -219,13 +223,23 @@ const selectOption = (option) => {
   });
 };
 
+const cancelOpenWhenSelect = (client) => {
+  const selection = window.getSelection().toString();
+  console.log(selection);
+  if (!selection) {
+    openAppealPage(client);
+  } else {
+    return;
+  }
+};
+
 const openAppealPage = async (client) => {
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
     delay: 500,
   });
-  
+
   await appealStore.fetchApplicantDrugData();
 
   $q.loading.hide();
@@ -272,14 +286,8 @@ onMounted(() => {
 .appeals-th:nth-of-type(2) {
   width: 250px;
 }
-.appeals-th:nth-of-type(3) {
-  width: 155px;
-}
 .appeals-th:nth-of-type(4) {
   width: 120px;
-}
-.appeals-th:nth-of-type(5) {
-  width: 200px;
 }
 
 .appeals-td {
@@ -292,6 +300,15 @@ thead tr th {
   z-index: 1;
   background-color: #fff;
   text-transform: uppercase;
+}
+thead tr th:first-child {
+  border-radius: 12px 0 0 0;
+}
+thead tr th:last-child {
+  border-radius: 0 12px 0 0;
+}
+tbody tr:last-child td:last-child {
+  border-radius: 0 0 12px 0;
 }
 thead tr:first-child th {
   top: 0;
@@ -342,5 +359,8 @@ button[type="button"]:disabled {
   background: none;
   cursor: pointer;
   padding: 0;
+}
+tr.clickable {
+  cursor: pointer;
 }
 </style>

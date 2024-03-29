@@ -3,7 +3,7 @@
     flat
     class="btn--no-hover user-settings-btn"
     :ripple="false"
-    @click="handleClickBtn"
+    @mouseup.prevent.stop
   >
     <slot name="icon"></slot>
 
@@ -17,10 +17,6 @@
 
 <script setup>
 import { ref } from "vue";
-
-const handleClickBtn = (e) => {
-  e.stopPropagation();
-};
 </script>
 
 <style lang="scss"></style>

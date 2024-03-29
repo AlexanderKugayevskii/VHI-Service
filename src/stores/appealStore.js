@@ -289,7 +289,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const clearClinicData = () => {
     selectedClinic.value = null;
   };
-  const clearDrugStoreData = () => {
+  const clearDrugstoreData = () => {
     selectedDrugstore.value = null;
   };
 
@@ -763,6 +763,6 @@ export const useAppealStore = defineStore("appeal", () => {
     fetchApplicantDrugData,
     changeStatusDrugs,
     appealTotalDrugConsumption,
-    clearDrugStoreData,
+    clearDrugstoreData,
   };
 });

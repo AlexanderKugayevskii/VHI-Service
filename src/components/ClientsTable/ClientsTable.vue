@@ -184,7 +184,6 @@ import { useQuasar } from "quasar";
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
-import StatusBar from "../Shared/StatusBar.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref, watch } from "vue";
