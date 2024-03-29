@@ -533,10 +533,10 @@
                       >
                         <q-tab-panel name="chat" key="chat">
                           <!-- <AppealChat /> -->
-                          
+                          <div class="temp-text">Скоро будет</div>
                         </q-tab-panel>
                         <q-tab-panel name="history" key="history">
-                          <!-- <div class="tab-header">HISTORY</div> -->
+                          <div class="temp-text">Скоро будет</div>
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>
@@ -856,5 +856,15 @@ const handleStatusService = (item, isSuggested) => {
 }
 .disabled-option {
   opacity: 0.7;
+}
+
+.temp-text {
+  height: calc(100vh - 252px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: hsla(221, 27%, 34%, 0.158);
+  user-select: none;
 }
 </style>
