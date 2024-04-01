@@ -52,6 +52,7 @@ body {
 }
 
 .q-table {
+  table-layout: fixed;
   border-radius: 12px;
   background-color: #fff;
   border-collapse: collapse;
@@ -79,14 +80,20 @@ body {
 }
 .q-table th {
   line-height: 13px;
+  border-color: #f2f5fa;
 }
 .q-table td {
   padding: 0 16px;
+  border-color: #f2f5fa;
+  text-overflow: ellipsis;
 }
 .q-table tr {
   height: 44px;
 }
-
+.q-table tbody tr:hover,
+.q-table tbody tr:hover td:last-child {
+  background-color: #f7f9fc;
+}
 .q-btn.btn--no-hover .q-focus-helper {
   display: none;
 }

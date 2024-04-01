@@ -80,15 +80,27 @@
           </q-td>
           <q-td key="clinicName" :props="props" class="appeals-td">
             {{ props.row.clinicName }}
+            <TableTooltip v-if="props.row.clinicName">
+              {{ props.row.clinicName }}
+            </TableTooltip>
           </q-td>
           <q-td key="doctorName" :props="props" class="appeals-td">
             {{ props.row.doctorName }}
+            <TableTooltip v-if="props.row.doctorName">
+              {{ props.row.doctorName }}
+            </TableTooltip>
           </q-td>
           <q-td key="serviceName" :props="props" class="appeals-td">
             {{ props.row.serviceName }}
+            <TableTooltip v-if="props.row.serviceName">
+              {{ props.row.serviceName }}
+            </TableTooltip>
           </q-td>
           <q-td key="diagnosisName" :props="props" class="appeals-td">
             {{ props.row.diagnosisName }}
+            <TableTooltip v-if="props.row.diagnosisName">
+              {{ props.row.diagnosisName }}
+            </TableTooltip>
           </q-td>
           <q-td key="expenseAmount" :props="props" class="appeals-td">
             {{ props.row.expenseAmount }}
@@ -186,6 +198,7 @@ import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
+import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import { onMounted, computed, ref, watch } from "vue";
 
 import { useClientTableStore } from "src/stores/clientTableStore";
@@ -245,8 +258,6 @@ const openAppealPage = async (client) => {
   $q.loading.show({
     delay: 500,
   });
-
-
 
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
@@ -318,17 +329,26 @@ onMounted(() => {
 .appeals-th:nth-of-type(1) {
   width: 48px;
 }
-.appeals-th:nth-of-type(2) {
-  width: 250px;
-}
+// .appeals-th:nth-of-type(2) {
+//   width: 220px;
+// }
+// .appeals-th:nth-of-type(3) {
+//   width: 150px;
+// }
 .appeals-th:nth-of-type(4) {
-  width: 120px;
+  width: 150px;
 }
-
+.q-table thead th:last-of-type {
+  width: 52px;
+}
 .appeals-td {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   color: $primary;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 thead tr th {
   position: sticky;
