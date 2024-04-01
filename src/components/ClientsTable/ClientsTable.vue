@@ -246,6 +246,8 @@ const openAppealPage = async (client) => {
     delay: 500,
   });
 
+
+
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
 

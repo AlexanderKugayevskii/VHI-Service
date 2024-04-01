@@ -4,6 +4,7 @@ import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
+import { SessionStorage } from "quasar";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -50,9 +51,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value.role.id === 8);
   const isDrugstore = computed(() => user.value.role.id === 8);
-  const isAgent = computed(
-    () => user.value.role.id !== 8
-  ); //temp
+  const isAgent = computed(() => user.value.role.id !== 8); //temp
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -68,6 +67,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setClient = (item) => {
     client.value = item;
+    SessionStorage.set("client", item);
   };
 
   const diagnosis = ref("");
@@ -516,9 +516,14 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const fetchApplicantData = async () => {
     loading.value = true;
+    const localClient = SessionStorage.getItem("client"); 
+    client.value = localClient;
+    console.log(localClient);
+    const currentClient = localClient ? localClient : client.value;
+
     try {
       const response = await ClientService.getClientByAppealId(
-        client.value.appealId
+        currentClient.appealId
       );
       const data = response.data.data;
 
@@ -551,7 +556,7 @@ export const useAppealStore = defineStore("appeal", () => {
       console.log(`Suggested by other`, suggestedServices.value);
       console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
-      console.error("ERROR");
+      console.error(e);
     } finally {
       loading.value = false;
     }

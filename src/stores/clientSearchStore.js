@@ -4,6 +4,7 @@ import ClientService from "src/services/ClientService";
 export const useSearchClientsStore = defineStore("clients", () => {
   const clients = ref([]);
   const searchClients = ref([]);
+  const loading = ref(false); 
 
   const getClients = async (page, perPage) => {
     clients.value = [];
@@ -14,6 +15,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
   const getClientByCode = async (code) => {
     searchClients.value = [];
     clients.value = [];
+    loading.value = true; 
     const response = await ClientService.getClientsByCode(code);
     clients.value = response.data.data;
 
@@ -31,10 +33,14 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
+
+    loading.value = false; 
   };
   const getClientByName = async (name) => {
     searchClients.value = [];
     clients.value = [];
+    loading.value = true; 
+
     const response = await ClientService.getClientsByName(name);
     clients.value = response.data.data;
     searchClients.value = clients.value.map((item) => {
@@ -50,11 +56,15 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
+    loading.value = false; 
+
   };
 
   const getClientByPassport = async (passport) => {
     searchClients.value = [];
     clients.value = [];
+    loading.value = true; 
+
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
 
@@ -71,6 +81,8 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
+    loading.value = false; 
+
   };
 
   function $resetSearchClients() {
@@ -80,6 +92,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
   return {
     clients,
     searchClients,
+    loading,
     getClients,
     $resetSearchClients,
     getClientByCode,

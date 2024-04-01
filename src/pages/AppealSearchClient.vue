@@ -72,7 +72,10 @@
                 ></SimpleInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
+
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -94,7 +97,10 @@
                 </SimpleInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
+
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -116,7 +122,9 @@
                 </PassportInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -142,7 +150,19 @@
           ]"
           :disabled="selectedClient === null"
           @click="openTypeModal"
+          v-if="appealStore.isAgent"
         ></SimpleButton>
+        <SimpleButton
+          label="Создать обращение"
+          :custom-class="[
+            'btn-action',
+            selectedClient === null ? 'btn--disabled' : '',
+          ]"
+          :disabled="selectedClient === null"
+          v-else
+          @click="goToAppeal"
+        >
+        </SimpleButton>
       </div>
     </div>
   </q-dialog>
@@ -153,6 +173,7 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import PassportInput from "src/components/Shared/PassportInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
+import LoadingSpinnerCircle from "src/components/Shared/LoadingSpinnerCircle.vue";
 
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
