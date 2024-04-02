@@ -95,10 +95,19 @@ jobs:
           repository: 'neoinsurance/deployment'
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
 
+      - name: Import Secrets
+        id: import-secrets
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://vault.megahertz.uz
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+              neoinsurance/data/ssh private_key | SSH_PRIVATE_KEY ;
+
       - name: Deploy to datacenter
         uses: ./.github/actions/compose-deploy
         with:
-          ssh_private_key: ${{ secrets.MASTER_SSH_PRIVATE_KEY }}
+          ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
           server_host: ${{ env.SERVER_1_HOST }}
           ssh_port: ${{ env.SERVER_1_SSH_PORT }}
           registry_url: ${{ env.REGISTRY_URL }}
@@ -110,7 +119,7 @@ jobs:
       - name: Deploy to office
         uses: ./.github/actions/compose-deploy
         with:
-          ssh_private_key: ${{ secrets.MASTER_SSH_PRIVATE_KEY }}
+          ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
           server_host: ${{ env.SERVER_2_HOST }}
           ssh_port: ${{ env.SERVER_2_SSH_PORT }}
           registry_url: ${{ env.REGISTRY_URL }}
