@@ -44,6 +44,7 @@
               :label="$t('appeal_search.fio')"
               :ripple="false"
               class="tab--no-hover"
+              v-if="appealStore.isAgent"
             />
             <q-tab
               name="byPassport"
@@ -57,7 +58,6 @@
           <q-tab-panels
             v-model="tab"
             animated
-            swipeable
             transition-next="fade"
             transition-prev="fade"
           >
@@ -85,7 +85,7 @@
               </div>
             </q-tab-panel>
 
-            <q-tab-panel name="byName">
+            <q-tab-panel name="byName" v-if="appealStore.isAgent">
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.fio_label')"
@@ -194,7 +194,19 @@ const appealStore = useAppealStore();
 
 const router = useRouter();
 const handleInput = (val) => {
-  searchPassport.value = val;
+  if (!val) return;
+
+  if (!appealStore.isAgent && val.length === 10) {
+    searchPassport.value = val;
+  }
+
+  if (!appealStore.isAgent && val.length < 10) {
+    clientStore.clearClients();
+  }
+
+  if (appealStore.isAgent && val.length >= 2) {
+    searchPassport.value = val;
+  }
 };
 
 const clearFields = () => {

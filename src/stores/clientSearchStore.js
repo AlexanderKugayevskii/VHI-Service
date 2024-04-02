@@ -4,7 +4,7 @@ import ClientService from "src/services/ClientService";
 export const useSearchClientsStore = defineStore("clients", () => {
   const clients = ref([]);
   const searchClients = ref([]);
-  const loading = ref(false); 
+  const loading = ref(false);
 
   const getClients = async (page, perPage) => {
     clients.value = [];
@@ -12,10 +12,13 @@ export const useSearchClientsStore = defineStore("clients", () => {
     clients.value = response.data;
   };
 
+  const clearClients = () => {
+    searchClients.value = [];
+  };
   const getClientByCode = async (code) => {
     searchClients.value = [];
     clients.value = [];
-    loading.value = true; 
+    loading.value = true;
     const response = await ClientService.getClientsByCode(code);
     clients.value = response.data.data;
 
@@ -34,12 +37,12 @@ export const useSearchClientsStore = defineStore("clients", () => {
       };
     });
 
-    loading.value = false; 
+    loading.value = false;
   };
   const getClientByName = async (name) => {
     searchClients.value = [];
     clients.value = [];
-    loading.value = true; 
+    loading.value = true;
 
     const response = await ClientService.getClientsByName(name);
     clients.value = response.data.data;
@@ -56,14 +59,13 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    loading.value = false; 
-
+    loading.value = false;
   };
 
   const getClientByPassport = async (passport) => {
     searchClients.value = [];
     clients.value = [];
-    loading.value = true; 
+    loading.value = true;
 
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
@@ -81,8 +83,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         type: "Клиент",
       };
     });
-    loading.value = false; 
-
+    loading.value = false;
   };
 
   function $resetSearchClients() {
@@ -98,5 +99,6 @@ export const useSearchClientsStore = defineStore("clients", () => {
     getClientByCode,
     getClientByName,
     getClientByPassport,
+    clearClients,
   };
 });

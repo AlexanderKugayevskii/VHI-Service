@@ -203,10 +203,7 @@
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span
-                                    class="price"
-                                    v-if="!appealStore.isClinic"
-                                  >
+                                  <span class="price">
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -267,7 +264,7 @@
                               <template #label>
                                 {{ doctor.name }}
                               </template>
-                              <template #price v-if="!appealStore.isClinic">
+                              <template #price>
                                 {{ formatPrice(Number(doctor.pivot.price)) }}
                               </template>
                             </SelectListItem>
@@ -299,7 +296,7 @@
                                 <template #label>
                                   {{ doctor.name }}
                                 </template>
-                                <template #price v-if="!appealStore.isClinic">
+                                <template #price>
                                   {{ formatPrice(Number(doctor.pivot.price)) }}
                                 </template>
                               </SelectListItem>
@@ -348,10 +345,7 @@
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span
-                                    class="price"
-                                    v-if="!appealStore.isClinic"
-                                  >
+                                  <span class="price">
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -412,7 +406,7 @@
                               <template #label>
                                 {{ service.name }}
                               </template>
-                              <template #price v-if="!appealStore.isClinic">
+                              <template #price>
                                 {{ formatPrice(Number(service.pivot.price)) }}
                               </template>
                             </SelectListItem>
@@ -445,7 +439,7 @@
                                 <template #label>
                                   {{ service.name }}
                                 </template>
-                                <template #price v-if="!appealStore.isClinic">
+                                <template #price>
                                   {{ formatPrice(Number(service.pivot.price)) }}
                                 </template>
                               </SelectListItem>

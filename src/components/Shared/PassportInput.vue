@@ -59,6 +59,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import debounce from "lodash/debounce";
+import { concat } from "lodash";
 
 const props = defineProps({
   label: {
@@ -103,6 +104,7 @@ const debounceEmit = debounce((value) => {
 const onSeriaInput = (e) => {
   e.target.value = e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase();
   passportSeria.value = e.target.value;
+
   if (props.debounceTime > 0) {
     debounceEmit(concatPassport.value);
   } else {
