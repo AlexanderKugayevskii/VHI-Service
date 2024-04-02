@@ -6,17 +6,30 @@
       </div>
     </div>
     <div class="selected-item-right">
-      <div class="selected-item-price"><slot name="price"></slot></div>
+      <StatusSwitcher
+        :isAgent="isAgent"
+        :progress="item.pivot.progress"
+        v-if="item.pivot.status === 1"
+        @update:change="handleProgress"
+      />
+      <div class="selected-item-quantity" v-if="$slots.quantity">
+        <slot name="quantity"></slot>
+      </div>
+      <div class="selected-item-price" v-if="$slots.price">
+        <slot name="price"></slot>
+      </div>
       <div class="selected-item-actions">
         <ResolveIcon
           :variant="true"
           @change="handleStatus"
           :checked="item.pivot.status === 1"
+          :disabled="disabledRule"
         />
         <ResolveIcon
           :variant="false"
           @change="handleStatus"
           :checked="item.pivot.status === 2"
+          :disabled="disabledRule"
         />
       </div>
     </div>
@@ -24,18 +37,46 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import ResolveIcon from "./ResolveIcon.vue";
+import StatusSwitcher from "./StatusSwitcher.vue";
 
 const props = defineProps({
   item: {
     type: Object,
   },
+  isAgent: {
+    type: Boolean,
+  },
 });
 
-const emit = defineEmits(["update:status"]);
+const emit = defineEmits(["update:status", "update:progress"]);
+
+const disabledRule = computed(() => {
+  const createdByOther =
+    props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
+ 
+  return (
+    props.item.isNew ||
+    props.item.pivot.progress >= 1 ||
+    (!props.isAgent &&
+      props.item.pivot.status !== 0 &&
+      props.item.pivot.progress >= 1 &&
+      props.item.pivot.created_by_clinic === 0) ||
+    (props.isAgent &&
+      props.item.pivot.created_by_clinic === 0 &&
+      props.item.pivot.status === 0) ||
+    (!props.isAgent &&
+      props.item.pivot.created_by_clinic === 1 &&
+      props.item.pivot.status >= 0)
+  );
+});
 
 const handleStatus = (status) => {
   emit("update:status", { status, item: props.item });
+};
+const handleProgress = (progress) => {
+  emit("update:progress", { progress, item: props.item });
 };
 </script>
 
@@ -45,6 +86,7 @@ const handleStatus = (status) => {
   padding: 10px 16px;
   border-radius: 16px;
   display: flex;
+  align-items: center;
   column-gap: 16px;
   margin-bottom: 8px;
 }
@@ -60,6 +102,7 @@ const handleStatus = (status) => {
 }
 .selected-item-right {
   display: flex;
+  align-items: center;
   column-gap: 16px;
 }
 .selected-item-price {

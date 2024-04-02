@@ -15,10 +15,10 @@ body {
 }
 .q-table__middle::-webkit-scrollbar-track {
   background-color: #e3e8f0;
-  border-radius: 0 12px 12px 0;
+  border-radius: 50px;
 }
 .q-table__middle::-webkit-scrollbar-thumb {
-  border-radius: 0 12px 12px 0;
+  border-radius: 50px;
   background-color: #d0d8e5;
 }
 
@@ -50,19 +50,27 @@ body {
   background: none;
   border-radius: 0;
 }
+
 .q-table {
-  table-layout: auto;
+  table-layout: fixed;
+  border-radius: 12px;
+  background-color: #fff;
+  border-collapse: collapse;
 }
 
 .q-table__middle {
-  scrollbar-gutter: stable;
-  overflow-y: scroll;
-  overflow-x: auto;
-  background-color: #ffffff;
-  border-radius: 12px !important;
+  background: none;
+  padding-bottom: 8px;
+}
+.q-table tr th:last-child,
+.q-table tr td:last-child {
+  position: sticky;
+  right: 0;
 }
 .q-table-inner-element {
-  border-radius: 12px !important;
+}
+.q-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 12px;
 }
 .q-table th,
 .q-table td,
@@ -72,14 +80,20 @@ body {
 }
 .q-table th {
   line-height: 13px;
+  border-color: #f2f5fa;
 }
 .q-table td {
   padding: 0 16px;
+  border-color: #f2f5fa;
+  text-overflow: ellipsis;
 }
 .q-table tr {
   height: 44px;
 }
-
+.q-table tbody tr:hover,
+.q-table tbody tr:hover td:last-child {
+  background-color: #f7f9fc;
+}
 .q-btn.btn--no-hover .q-focus-helper {
   display: none;
 }
@@ -266,13 +280,20 @@ button[class^="btn"] {
   }
 }
 
-.tabs-content {
+.appeal-content {
   .q-panel {
     height: calc(100vh - 380px);
   }
   .q-tab-panel {
     padding-right: 8px;
   }
+}
+.create-appeal-interaction {
+  .q-panel {
+    height: calc(100vh - 252px);
+  }
+}
+.tabs-content {
   .scroll {
     overflow: auto;
 

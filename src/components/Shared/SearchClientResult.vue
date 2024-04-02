@@ -1,9 +1,8 @@
 <template>
-  <div class="client-results__item">
+  <div class="client-results__item" @click="selectItem">
     <div class="client-results__item-check">
       <SimpleCheckbox
         :item="item"
-        @change="handleCheckboxChange"
         name="search-client"
         :checked="checked"
       ></SimpleCheckbox>
@@ -48,9 +47,10 @@ const props = defineProps({
 
 const emit = defineEmits(["update:selectValue"]);
 
-const handleCheckboxChange = (item) => {
-  emit("update:selectValue", item);
+const selectItem = () => {
+  emit("update:selectValue", props.item);
 };
+// const handleCheckboxChange = (item) => {};
 </script>
 
 <style lang="scss" scoped>
@@ -62,6 +62,7 @@ const handleCheckboxChange = (item) => {
   background-color: #f7f9fc;
   border-radius: 16px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .client-results__item-check {
 }

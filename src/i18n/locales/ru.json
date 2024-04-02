@@ -58,6 +58,7 @@
     "doctor": "Врач",
     "service": "Сервис",
     "diagnosis": "Диагноз",
+    "drugstore": "Аптека", 
     "expense": "Расход / {currency}"
   },
   "pagination": {

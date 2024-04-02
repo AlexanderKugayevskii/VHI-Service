@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
-import ClientService from "src/services/ClientService";
+import DrugsService from "src/services/DrugsService";
 import formatDate from "src/helpers/formatDate";
 
 import { useI18n } from "vue-i18n";
-export const useClientTableStore = defineStore("clientTable", () => {
+export const useDrugTableStore = defineStore("drugTable", () => {
   const { t } = useI18n();
 
   const columns = computed(() => [
@@ -33,28 +33,16 @@ export const useClientTableStore = defineStore("clientTable", () => {
       field: "appealStatus",
     },
     {
-      name: "clinicName",
+      name: "drugstore",
       align: "left",
-      label: t("client_table.clinic"),
-      field: "clinicName",
+      label: t("client_table.drugstore"),
+      field: "drugstore",
     },
     {
-      name: "doctorName",
+      name: "medicines",
       align: "left",
-      label: t("client_table.doctor"),
-      field: "doctorName",
-    },
-    {
-      name: "serviceName",
-      align: "left",
-      label: t("client_table.service"),
-      field: "serviceName",
-    },
-    {
-      name: "diagnosisName",
-      align: "left",
-      label: t("client_table.diagnosis"),
-      field: "diagnosisName",
+      label: "Лекарства",
+      field: "medicines",
     },
     {
       name: "expenseAmount",
@@ -81,7 +69,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
-    ClientService.getClients(page, limit, search)
+    DrugsService.getClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
         // router.push({
@@ -112,8 +100,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   const rows = computed(() => {
     return users.value.map((row, index) => {
-      const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
-      const services = row.services.map((service) => service.name).join(", ");
+      const medicines = row.drugs.map((drug) => drug.name).join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -121,22 +109,20 @@ export const useClientTableStore = defineStore("clientTable", () => {
         clientLastname: row.client.lastname,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
-        clinicName: row.hospital.name,
-        doctorName: doctors,
-        serviceName: services,
-        diagnosisName: row.diagnosis ?? "",
+        drugstore: row.drugstore.name ?? "",
+        medicines: medicines,
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
         userSettings: "",
-        // index:
-        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
-        //   index +
-        //   1,
         index: row.id,
       };
     });
   });
+  // index:
+  //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
+  //   index +
+  //   1,
 
   return { pagination, loading, rows, columns, handleRequest };
 });

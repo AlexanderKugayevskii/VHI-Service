@@ -1,7 +1,7 @@
 import { api } from "../boot/axios";
 
 function getClients(page, limit, search, filterQueries) {
-  return api.get(`/clinics/applications`, {
+  return api.get(`/clinics/application-hospitals`, {
     params: {
       _limit: limit,
       page: page,

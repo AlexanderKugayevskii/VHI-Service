@@ -44,6 +44,7 @@
               :label="$t('appeal_search.fio')"
               :ripple="false"
               class="tab--no-hover"
+              v-if="appealStore.isAgent"
             />
             <q-tab
               name="byPassport"
@@ -57,7 +58,6 @@
           <q-tab-panels
             v-model="tab"
             animated
-            swipeable
             transition-next="fade"
             transition-prev="fade"
           >
@@ -72,7 +72,10 @@
                 ></SimpleInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
+
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -82,7 +85,7 @@
               </div>
             </q-tab-panel>
 
-            <q-tab-panel name="byName">
+            <q-tab-panel name="byName" v-if="appealStore.isAgent">
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.fio_label')"
@@ -94,7 +97,10 @@
                 </SimpleInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
+
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -106,17 +112,19 @@
 
             <q-tab-panel name="byPassport">
               <div class="tab-header">
-                <SimpleInput
+                <PassportInput
                   :label="$t('appeal_search.passport_label')"
                   debounce-time="300"
                   :placeholder="$t('appeal_search.passport_input')"
                   :show-icon="true"
-                  v-model:model-value="searchPassport"
+                  @update:model-value="handleInput"
                 >
-                </SimpleInput>
+                </PassportInput>
               </div>
               <div class="client-results">
+                <LoadingSpinnerCircle v-if="clientStore.loading" />
                 <SearchClientResult
+                  v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
                   :key="client.clientID"
@@ -135,14 +143,26 @@
           @click="hideModal"
         />
         <SimpleButton
-          :label="$t('create_appeal.buttons.create_appeal')"
+          label="Продолжить"
           :custom-class="[
             'btn-action',
             selectedClient === null ? 'btn--disabled' : '',
           ]"
           :disabled="selectedClient === null"
-          @click="goToAppeal"
+          @click="openTypeModal"
+          v-if="appealStore.isAgent"
         ></SimpleButton>
+        <SimpleButton
+          label="Создать обращение"
+          :custom-class="[
+            'btn-action',
+            selectedClient === null ? 'btn--disabled' : '',
+          ]"
+          :disabled="selectedClient === null"
+          v-else
+          @click="goToAppeal"
+        >
+        </SimpleButton>
       </div>
     </div>
   </q-dialog>
@@ -151,13 +171,17 @@
 <script setup>
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
+import PassportInput from "src/components/Shared/PassportInput.vue";
 import SearchClientResult from "src/components/Shared/SearchClientResult.vue";
+import LoadingSpinnerCircle from "src/components/Shared/LoadingSpinnerCircle.vue";
+
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore";
 import { useSearchClientsStore } from "src/stores/clientSearchStore";
 import Trans from "src/i18n/translation";
 
+const emit = defineEmits(["openTypeModal"]);
 const searchId = ref("");
 const searchName = ref("");
 const searchPassport = ref("");
@@ -169,6 +193,21 @@ const clientStore = useSearchClientsStore();
 const appealStore = useAppealStore();
 
 const router = useRouter();
+const handleInput = (val) => {
+  if (!val) return;
+
+  if (!appealStore.isAgent && val.length === 10) {
+    searchPassport.value = val;
+  }
+
+  if (!appealStore.isAgent && val.length < 10) {
+    clientStore.clearClients();
+  }
+
+  if (appealStore.isAgent && val.length >= 2) {
+    searchPassport.value = val;
+  }
+};
 
 const clearFields = () => {
   searchId.value = "";
@@ -186,6 +225,12 @@ const hideModal = () => {
 const handleSelectItem = (item) => {
   selectedClient.value = item;
   appealStore.setClient(selectedClient.value);
+};
+
+const openTypeModal = () => {
+  appealSearchClientRef.value.hide();
+  searchId.value = "";
+  emit("openTypeModal", true);
 };
 
 const goToAppeal = async () => {

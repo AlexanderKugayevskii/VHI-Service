@@ -1,7 +1,7 @@
 <template>
   <div class="input-field">
     <label class="input-label">
-      <div class="input-label__wrapper">
+      <div class="input-label__wrapper" v-if="label">
         <span class="input-label__text">{{ label }}</span>
       </div>
       <div class="input-field__wrapper">
@@ -12,6 +12,7 @@
           :value="modelValue"
           @input="onInput"
         />
+        <slot name="action-button"></slot>
         <q-icon size="20px" v-if="showIcon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +49,7 @@ import debounce from "lodash/debounce";
 const props = defineProps({
   label: {
     type: String,
-    default: "Label",
+    default: "",
   },
   placeholder: {
     type: String,
@@ -70,6 +71,10 @@ const props = defineProps({
     type: String,
     default: "text",
   },
+  number: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -81,6 +86,9 @@ const debounceEmit = debounce((value) => {
 }, props.debounceTime);
 
 const onInput = (e) => {
+  if (props.number) {
+    e.target.value = e.target.value.replace(/\D/g, "");
+  }
   debounceInput.value = e.target.value;
   if (props.debounceTime > 0) {
     debounceEmit(debounceInput.value);

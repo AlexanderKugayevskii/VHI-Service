@@ -12,7 +12,7 @@
       v-model:pagination="pagination"
       no-data-label="I didn't find anything for you"
       no-results-label="The filter didn't uncover any results"
-      @request="clientTableStore.handleRequest"
+      @request="drugTableStore.handleRequest"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -71,9 +71,6 @@
             <a class="appeal-link">
               {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
             </a>
-            <TableTooltip>
-              {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
-            </TableTooltip>
           </q-td>
           <q-td key="appealDate" :props="props" class="appeals-td">
             {{ props.row.appealDate }}
@@ -81,29 +78,11 @@
           <q-td key="appealStatus" :props="props" class="appeals-td">
             <AppealStatus :status="props.row.appealStatus" />
           </q-td>
-          <q-td key="clinicName" :props="props" class="appeals-td">
-            {{ props.row.clinicName }}
-            <TableTooltip>
-              {{ props.row.clinicName }}
-            </TableTooltip>
+          <q-td key="drugstore" :props="props" class="appeals-td">
+            {{ props.row.drugstore }}
           </q-td>
-          <q-td key="doctorName" :props="props" class="appeals-td">
-            {{ props.row.doctorName }}
-            <TableTooltip>
-              {{ props.row.doctorName }}
-            </TableTooltip>
-          </q-td>
-          <q-td key="serviceName" :props="props" class="appeals-td">
-            {{ props.row.serviceName }}
-            <TableTooltip>
-              {{ props.row.serviceName }}
-            </TableTooltip>
-          </q-td>
-          <q-td key="diagnosisName" :props="props" class="appeals-td">
-            {{ props.row.diagnosisName }}
-            <TableTooltip>
-              {{ props.row.diagnosisName }}
-            </TableTooltip>
+          <q-td key="medicines" :props="props" class="appeals-td">
+            {{ props.row.medicines }}
           </q-td>
           <q-td key="expenseAmount" :props="props" class="appeals-td">
             {{ props.row.expenseAmount }}
@@ -201,10 +180,9 @@ import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
-import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import { onMounted, computed, ref, watch } from "vue";
 
-import { useClientTableStore } from "src/stores/clientTableStore";
+import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import usePaginate from "src/composables/usePaginate";
@@ -218,19 +196,9 @@ const search = computed(() => searchProp.search);
 const tableRef = ref(null);
 
 const appealStore = useAppealStore();
-const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+const drugTableStore = useDrugTableStore();
+const { pagination, rows, columns, loading } = storeToRefs(drugTableStore);
 const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
-
-const cancelOpenWhenSelect = (client) => {
-  const selection = window.getSelection().toString();
-  console.log(selection);
-  if (!selection) {
-    openAppealPage(client);
-  } else {
-    return;
-  }
-};
 
 //incremenet decrement and change page events
 const incrementPage = () => {
@@ -255,6 +223,16 @@ const selectOption = (option) => {
   });
 };
 
+const cancelOpenWhenSelect = (client) => {
+  const selection = window.getSelection().toString();
+  console.log(selection);
+  if (!selection) {
+    openAppealPage(client);
+  } else {
+    return;
+  }
+};
+
 const openAppealPage = async (client) => {
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
@@ -262,34 +240,17 @@ const openAppealPage = async (client) => {
     delay: 500,
   });
 
-  await appealStore.fetchApplicantData();
-  await appealStore.fetchHospitalData();
+  await appealStore.fetchApplicantDrugData();
 
   $q.loading.hide();
   router.replace(
     Trans.i18nRoute({
-      name: "createAppeal",
-
+      name: "createDrugsAppeal",
       params: { id: appealStore.client.contractClientId },
     })
   );
 };
 
-//only router if needs
-//if query page or limit will changes, pagination will changes
-// watch(
-//   () => route.query,
-//   (newVal) => {
-//     tableRef.value.setPagination({
-//       page: parseInt(newVal.page) || 1,
-//       rowsPerPage: parseInt(newVal.limit) || 10,
-//     });
-//   }
-// );
-
-//add numerable table
-
-//first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
   watch(
@@ -303,16 +264,6 @@ onMounted(() => {
 });
 
 //calculate table height for showing only 10 rows
-onMounted(() => {
-  const qTableMiddleElement = document.querySelector(".q-table__middle");
-  // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
-
-  const qTableElement = document.querySelector(".q-table");
-  const qTableInnerElement = document.createElement("div");
-  qTableInnerElement.className = "q-table-inner-element";
-  qTableInnerElement.appendChild(qTableElement);
-  qTableMiddleElement.appendChild(qTableInnerElement);
-});
 </script>
 
 <style lang="scss" scoped>
@@ -332,26 +283,17 @@ onMounted(() => {
 .appeals-th:nth-of-type(1) {
   width: 48px;
 }
-// .appeals-th:nth-of-type(2) {
-//   width: 220px;
-// }
-// .appeals-th:nth-of-type(3) {
-//   width: 150px;
-// }
+.appeals-th:nth-of-type(2) {
+  width: 250px;
+}
 .appeals-th:nth-of-type(4) {
-  width: 150px;
+  width: 120px;
 }
-.q-table thead th:last-of-type {
-  width: 52px;
-}
+
 .appeals-td {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   color: $primary;
-
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 thead tr th {
   position: sticky;

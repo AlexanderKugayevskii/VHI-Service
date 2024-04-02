@@ -14,8 +14,12 @@
         <div class="modal-header">
           <h4 class="page-title q-my-none q-mb-md">
             {{ $t("create_appeal.title") }}
+            {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
-          <StatusBar :status="0" :label="true"></StatusBar>
+          <StatusBar
+            :status="clientData.appealStatus"
+            :label="true"
+          ></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -38,6 +42,7 @@
                   <span
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
+
                   <!-- <span
                     >Родственник: <b>{{ clientData.clientName }} </b></span
                   > -->
@@ -100,21 +105,13 @@
                         :ripple="false"
                         class="tab--no-hover"
                       />
-                      <q-tab
-                        name="drugstore"
-                        :label="`${$t('create_appeal.tabs.drugstore')} (скоро)`"
-                        :ripple="false"
-                        class="tab--no-hover"
-                        disable
-                      />
                     </q-tabs>
                   </div>
-                  <div class="tabs-content">
+                  <div class="tabs-content appeal-content">
                     <keep-alive>
                       <q-tab-panels
                         v-model="tab"
                         animated
-                        swipeable
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
@@ -197,16 +194,16 @@
                                     'disabled-option':
                                       appealStore.checkSuggestedDoctors(
                                         props.option
+                                      ) ||
+                                      appealStore.cantRemoveFromSelectedDoctors(
+                                        props.option
                                       ),
                                   }"
                                 >
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span
-                                    class="price"
-                                    v-if="!appealStore.isClinic"
-                                  >
+                                  <span class="price">
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -224,10 +221,26 @@
                                         : "клиникой"
                                     }})
                                   </span>
+                                  <span
+                                    v-if="
+                                      appealStore.cantRemoveFromSelectedDoctors(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      appealStore.isAgent
+                                        ? " (завершено клиникой)"
+                                        : " (решение компании)"
+                                    }}
+                                  </span>
                                 </div>
                                 <CheckIcon
                                   v-if="
                                     appealStore.checkSelectedDoctors(
+                                      props.option
+                                    ) &&
+                                    !appealStore.cantRemoveFromSelectedDoctors(
                                       props.option
                                     )
                                   "
@@ -236,19 +249,25 @@
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
-                            <SelectedItem
+                            <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
                               :item="doctor"
                               :key="doctor.id"
-                              @update:remove="handleRemoveDoctor"
+                              :isAgent="appealStore.isAgent"
+                              @update:status="
+                                (item) => handleStatusDoctor(item, false)
+                              "
+                              @update:progress="
+                                (item) => handleStatusDoctor(item, false)
+                              "
                             >
                               <template #label>
                                 {{ doctor.name }}
                               </template>
-                              <template #price v-if="!appealStore.isClinic">
+                              <template #price>
                                 {{ formatPrice(Number(doctor.pivot.price)) }}
                               </template>
-                            </SelectedItem>
+                            </SelectListItem>
                             <div
                               class=""
                               v-if="appealStore.suggestedDoctors.length > 0"
@@ -266,12 +285,18 @@
                                 v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
                                 :key="doctor.id"
-                                @update:status="handleStatusDoctor"
+                                :isAgent="appealStore.isAgent"
+                                @update:status="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
+                                @update:progress="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
                               >
                                 <template #label>
                                   {{ doctor.name }}
                                 </template>
-                                <template #price v-if="!appealStore.isClinic">
+                                <template #price>
                                   {{ formatPrice(Number(doctor.pivot.price)) }}
                                 </template>
                               </SelectListItem>
@@ -311,16 +336,16 @@
                                     'disabled-option':
                                       appealStore.checkSuggestedServices(
                                         props.option
+                                      ) ||
+                                      appealStore.cantRemoveFromSelectedServices(
+                                        props.option
                                       ),
                                   }"
                                 >
                                   <span>
                                     {{ props.option.name }}
                                   </span>
-                                  <span
-                                    class="price"
-                                    v-if="!appealStore.isClinic"
-                                  >
+                                  <span class="price">
                                     -
                                     {{ formatPrice(props.option.pivot.price) }}
                                   </span>
@@ -338,10 +363,26 @@
                                         : "клиникой"
                                     }})
                                   </span>
+                                  <span
+                                    v-if="
+                                      appealStore.cantRemoveFromSelectedServices(
+                                        props.option
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      appealStore.isAgent
+                                        ? " (завершено клиникой)"
+                                        : " (решение компании)"
+                                    }}
+                                  </span>
                                 </div>
                                 <CheckIcon
                                   v-if="
                                     appealStore.checkSelectedServices(
+                                      props.option
+                                    ) &&
+                                    !appealStore.cantRemoveFromSelectedServices(
                                       props.option
                                     )
                                   "
@@ -350,19 +391,25 @@
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
-                            <SelectedItem
+                            <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
                               :key="service.id"
-                              @update:remove="handleRemoveService"
+                              :isAgent="appealStore.isAgent"
+                              @update:status="
+                                (item) => handleStatusService(item, false)
+                              "
+                              @update:progress="
+                                (item) => handleStatusService(item, false)
+                              "
                             >
                               <template #label>
                                 {{ service.name }}
                               </template>
-                              <template #price v-if="!appealStore.isClinic">
+                              <template #price>
                                 {{ formatPrice(Number(service.pivot.price)) }}
                               </template>
-                            </SelectedItem>
+                            </SelectListItem>
 
                             <div
                               class=""
@@ -381,87 +428,22 @@
                                 v-for="service in appealStore.suggestedServices"
                                 :item="service"
                                 :key="service.id"
-                                @update:status="handleStatusService"
+                                :isAgent="appealStore.isAgent"
+                                @update:status="
+                                  (item) => handleStatusService(item, true)
+                                "
+                                @update:progress="
+                                  (item) => handleStatusService(item, true)
+                                "
                               >
                                 <template #label>
                                   {{ service.name }}
                                 </template>
-                                <template #price v-if="!appealStore.isClinic">
+                                <template #price>
                                   {{ formatPrice(Number(service.pivot.price)) }}
                                 </template>
                               </SelectListItem>
                             </div>
-                          </div>
-                        </q-tab-panel>
-
-                        <q-tab-panel name="drugstore" key="drugstore">
-                          <div class="tab-header drugstore-header">
-                            <DragNdrop></DragNdrop>
-                          </div>
-                          <div class="tab-body">
-                            <div class="drugstore-form">
-                              <SimpleInput
-                                label="Лекарство"
-                                placeholder="Название лекарства"
-                                class="drugstore-form-drugname"
-                                @update:model-value="appealStore.setDrugName"
-                                :modelValue="drugData.drugName"
-                              ></SimpleInput>
-                              <SimpleInput
-                                label="Кол-во"
-                                placeholder="0"
-                                class="drugstore-form-amount"
-                                @update:model-value="appealStore.setDrugAmount"
-                                :modelValue="drugData.drugAmount"
-                              ></SimpleInput>
-                              <DropdownSelectLocal
-                                class="drugstore-form-type"
-                                label="Ед. изм"
-                                placeholder="Шт"
-                                id-key="drugType"
-                                :search="false"
-                                :multiple="false"
-                                :initialOptions="[
-                                  { id: 1, drugType: 'Шт' },
-                                  { id: 2, drugType: 'Мл' },
-                                ]"
-                                @update:selectedOptions="
-                                  appealStore.setDrugType
-                                "
-                              >
-                                <template #option-content="{ option }">
-                                  <div class="option-content">
-                                    <span>
-                                      {{ option.drugType }}
-                                    </span>
-                                  </div>
-                                </template>
-                              </DropdownSelectLocal>
-                              <SimpleInput
-                                class="drugstore-form-price"
-                                label="Цена"
-                                placeholder="0"
-                                @update:model-value="appealStore.setDrugPrice"
-                                :model-value="drugData.drugAmount"
-                              ></SimpleInput>
-                              <SimpleButton
-                                label="Добавить"
-                                type="button"
-                                customClass="btn-add"
-                                class="drugstore-form-btn-wrapper"
-                                @click="handleAddDrug"
-                              ></SimpleButton>
-                            </div>
-                            <SelectedItem
-                              v-for="(item, index) in drugsData"
-                              :item="item"
-                              :key="index"
-                              @update:select="handleRemoveDrug"
-                            >
-                              <template #label>
-                                {{ item.drugName }}
-                              </template>
-                            </SelectedItem>
                           </div>
                         </q-tab-panel>
                       </q-tab-panels>
@@ -476,14 +458,22 @@
                       :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
+                      :loading="appealStore.loading"
                       @click="handleCreateAppeal"
-                    ></SimpleButton>
+                    >
+                      <template #loading-spinner>
+                        <LoadingSpinner />
+                      </template>
+                    </SimpleButton>
                     <SimpleButton
                       v-else
-                      label="Изменить обращение"
+                      :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
+                      :loading="appealStore.loading"
                       @click="handleChangeAppeal"
+                    >
+                      <template #loading-spinner> <LoadingSpinner /> </template
                     ></SimpleButton>
                     <SimpleButton
                       :label="$t('create_appeal.buttons.exit_appeal')"
@@ -508,7 +498,45 @@
               </div>
             </div>
             <div class="create-appeal-right">
-              <div class="create-appeal-interaction"></div>
+              <div class="create-appeal-interaction">
+                <div class="tabs-container tabs-container-gap">
+                  <div class="tabs-header">
+                    <q-tabs dense active-class="tab-active" v-model="tabRight">
+                      <q-tab
+                        name="chat"
+                        label="Чат"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                      <q-tab
+                        name="history"
+                        label="История"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                    </q-tabs>
+                  </div>
+                  <div class="tabs-content appeal-content">
+                    <keep-alive>
+                      <q-tab-panels
+                        v-model="tabRight"
+                        animated
+                        swipeable
+                        transition-next="jump-right"
+                        transition-prev="jump-left"
+                      >
+                        <q-tab-panel name="chat" key="chat">
+                          <!-- <AppealChat /> -->
+                          <div class="temp-text">Скоро будет</div>
+                        </q-tab-panel>
+                        <q-tab-panel name="history" key="history">
+                          <div class="temp-text">Скоро будет</div>
+                        </q-tab-panel>
+                      </q-tab-panels>
+                    </keep-alive>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -553,8 +581,9 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
 import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
-import DragNdrop from "src/components/DragNdrop.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
+import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
+import AppealChat from "src/components/AppealChat.vue";
 import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -567,16 +596,18 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData, drug: drugData } = storeToRefs(appealStore);
+const { client: clientData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
 
 const tab = ref("clinics");
+const tabRight = ref("chat");
 const createAppealModalRef = ref(null);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
+  appealStore.setTypeOfAppeal("CHANGE");
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();
@@ -586,11 +617,11 @@ watch(
   (newVal) => {
     if (newVal) {
       appealStore.setSuccessAppeal(false);
-      createAppealModalRef.value.hide();
-      appealStore.clearAppealData();
-      appealStore.clearClinicData();
+      // createAppealModalRef.value.hide();
+      // appealStore.clearAppealData();
+      // appealStore.clearClinicData();
 
-      router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+      // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }
 );
@@ -608,13 +639,11 @@ const handleRemoveDoctor = (item) => {
 const handleRemoveService = (item) => {
   appealStore.clearServices(item);
 };
-const handleStatusDoctor = (item) => {
-  console.log(item);
-  appealStore.changeStatusDoctor(item);
+const handleStatusDoctor = (item, isSuggested) => {
+  appealStore.changeStatusDoctor(item, isSuggested);
 };
-const handleStatusService = (item) => {
-  console.log(item);
-  appealStore.changeStatusService(item);
+const handleStatusService = (item, isSuggested) => {
+  appealStore.changeStatusService(item, isSuggested);
 };
 
 // const handleRemoveDrug = (item) => {
@@ -655,11 +684,12 @@ const handleStatusService = (item) => {
 .create-appeal-row {
   display: flex;
   flex-grow: 1;
+  column-gap: 16px;
 }
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-basis: 70%;
+  flex-grow: 1;
 }
 .create-appeal-client-info {
   background-color: #fff;
@@ -715,6 +745,10 @@ const handleStatusService = (item) => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
+  &-gap {
+    row-gap: 24px;
+  }
 }
 .q-tab {
   height: 44px;
@@ -757,6 +791,16 @@ const handleStatusService = (item) => {
 }
 .create-appeal-action-expences-total {
   font-weight: 700;
+}
+.create-appeal-right {
+  flex-basis: 416px;
+}
+.create-appeal-interaction {
+  background-color: #fff;
+  height: 100%;
+  border-radius: 16px;
+  padding: 16px;
+  padding-right: 8px;
 }
 
 .option-content-extra {
@@ -806,5 +850,15 @@ const handleStatusService = (item) => {
 }
 .disabled-option {
   opacity: 0.7;
+}
+
+.temp-text {
+  height: calc(100vh - 252px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: hsla(221, 27%, 34%, 0.158);
+  user-select: none;
 }
 </style>

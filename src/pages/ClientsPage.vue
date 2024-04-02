@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center column body-bg">
-    <StatusBar :label="true"></StatusBar>
+    <!-- <StatusBar :label="true"></StatusBar>
     <div class="test-width">
       <DropdownSelectNew
         label="выберите клинику"
@@ -20,8 +20,24 @@
           <CheckIcon v-if="appealStore.checkSelectedClinic(props.option)" />
         </template>
       </DropdownSelectNew>
-    </div>
+    </div> -->
 
+    <div class="q-mb-md">
+      <StatusSwitcher />
+    </div>
+    <div class="q-mb-md">
+      <StatusSwitcher :not-agent="true" />
+    </div>
+    <div class="q-mb-md">
+      <StatusSwitcher :not-agent="true" :progress="1" />
+    </div>
+    <div class="q-mb-md">
+      <StatusSwitcher :not-agent="false" :progress="1" />
+    </div>
+    <div class="q-mb-md">
+      <StatusSwitcher :progress="2" />
+    </div>
+    <!-- 
     <div class="test-width">
       <DropdownSelectNew
         label="выберите клинику"
@@ -41,7 +57,7 @@
           <CheckIcon v-if="appealStore.checkSelectedClinic(props.option)" />
         </template>
       </DropdownSelectNew>
-    </div>
+    </div> -->
 
     <h1>Клиенты</h1>
     <div class="full-width q-mb-md">
@@ -146,8 +162,10 @@ import TestComponent from "src/components/Shared/TestComponent.vue";
 import DragNdrop from "src/components/DragNdrop.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
+import StatusSwitcher from "src/components/Shared/StatusSwitcher.vue";
 import { useCounterStore } from "src/stores/example-store";
 import { useAppealStore } from "src/stores/appealStore";
+
 const inputValue = ref("");
 const handleTest = (options) => {
   console.log(options);
