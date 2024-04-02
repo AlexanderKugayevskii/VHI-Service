@@ -24,7 +24,7 @@
           </button>
         </template>
       </SimpleInput>
-      <button class="btn-reset pointer btn-send">
+      <button class="btn-reset pointer btn-send" @click="sendMessage">
         <q-icon size="20px">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,9 +50,10 @@
           </svg>
         </q-icon>
       </button>
+      {{ appealId }}
     </div>
     <div class="chat-body">
-      <div class="chat-item">
+      <!-- <div class="chat-item">
         <div class="chat-avatar">
           <img src="../assets/test-chat-avatar.png" />
         </div>
@@ -117,179 +118,56 @@
           </div>
           <div class="chat-message-body">И завтра на МРТ есть окно?</div>
         </div>
-      </div>
-      <div class="chat-item">
-        <div class="chat-avatar">
-          <img src="../assets/test-chat-avatar.png" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">Ходжаев Сергей</div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">11:45</div>
-              <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div>
-            </div>
-          </div>
-          <div class="chat-message-body">И завтра на МРТ есть окно?</div>
-        </div>
-      </div>
-      <div class="chat-item partner">
-        <div class="chat-avatar">
-          <img src="../assets/test-chat-avatar.png" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">Ходжаев Сергей</div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">11:45</div>
-              <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div>
-            </div>
-          </div>
-          <div class="chat-message-body">И завтра на МРТ есть окно?</div>
-        </div>
-      </div>
-      <div class="chat-item partner">
-        <div class="chat-avatar">
-          <img src="../assets/test-chat-avatar.png" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">Ходжаев Сергей</div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">11:45</div>
-              <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div>
-            </div>
-          </div>
-          <div class="chat-message-body">И завтра на МРТ есть окно?</div>
-        </div>
-      </div>
-      <div class="chat-item">
-        <div class="chat-avatar">
-          <img src="../assets/test-chat-avatar.png" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">Ходжаев Сергей</div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">11:45</div>
-              <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div>
-            </div>
-          </div>
-          <div class="chat-message-body">И завтра на МРТ есть окно?</div>
-        </div>
-      </div>
-      <div class="chat-item">
-        <div class="chat-avatar">
-          <img src="../assets/test-chat-avatar.png" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">Ходжаев Сергей</div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">11:45</div>
-              <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div>
-            </div>
-          </div>
-          <div class="chat-message-body">И завтра на МРТ есть окно?</div>
-        </div>
-      </div>
-      
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import SimpleInput from "./Shared/SimpleInput.vue";
+import echo from "src/boot/chat";
+import { ref, onMounted } from "vue";
+import ChatService from "src/services/ChatService";
+
+const message = ref("hello");
+const messages = [];
+const loading = ref(false);
+
+const props = defineProps({
+  appealId: {
+    type: Number,
+  },
+});
+
+const sendMessage = async () => {
+  const formData = new FormData();
+
+  const payload = {
+    message: message.value,
+    application_id: props.appealId,
+  };
+
+  console.log(payload);
+  formData.append("text", payload.message);
+  formData.append("application_id", payload.application_id);
+
+  try {
+    const response = await ChatService.postMessage(formData);
+
+    console.log(response);
+  } catch (e) {
+    console.error(e);
+  } finally {
+  }
+};
+
+onMounted(() => {
+  echo
+    .channel(`dms_chat-${props.appealId}`)
+    .listen("NotificationEvent", (e) => {
+      console.log(e);
+    });
+});
 </script>
 
 <style scoped lang="scss">

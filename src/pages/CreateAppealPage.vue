@@ -526,8 +526,7 @@
                         transition-prev="jump-left"
                       >
                         <q-tab-panel name="chat" key="chat">
-                          <!-- <AppealChat /> -->
-                          <div class="temp-text">Скоро будет</div>
+                          <AppealChat :appealId="clientData.appealId" />
                         </q-tab-panel>
                         <q-tab-panel name="history" key="history">
                           <div class="temp-text">Скоро будет</div>
@@ -574,6 +573,7 @@
 </template>
 
 <script setup>
+import echo from "src/boot/chat.js";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
@@ -584,7 +584,7 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";

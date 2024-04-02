@@ -4,15 +4,11 @@ import Pusher from "pusher-js";
 
 window.Pusher = Pusher;
 
-export default function boot({ app }) {
-  const echo = new Echo({
-    broadcaster: "pusher",
-    key: "f1cfa5a35507dfae21ca",
-    cluster: "ap2",
-    encrypted: true,
-  });
+const echo = new Echo({
+  broadcaster: "pusher",
+  key: "f1cfa5a35507dfae21ca",
+  cluster: "ap2",
+  encrypted: true,
+});
 
-  app.globalProperties.$echo = echo;
-}
-
-
+export default echo;

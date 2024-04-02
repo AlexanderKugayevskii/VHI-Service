@@ -333,13 +333,13 @@ onMounted(() => {
   width: 48px;
 }
 // .appeals-th:nth-of-type(2) {
-//   width: 220px;
+//   width: 200px;
 // }
 // .appeals-th:nth-of-type(3) {
 //   width: 150px;
 // }
 .appeals-th:nth-of-type(4) {
-  width: 150px;
+  width: 120px;
 }
 .q-table thead th:last-of-type {
   width: 52px;
