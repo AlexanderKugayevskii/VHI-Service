@@ -139,6 +139,16 @@ const props = defineProps({
   },
 });
 
+const getMessages = async () => {
+  try {
+    const response = await ChatService.getMessages(props.appealId);
+    console.log(response);
+  } catch (e) {
+    console.error(e);
+  } finally {
+  }
+};
+
 const sendMessage = async () => {
   const formData = new FormData();
 
@@ -162,6 +172,7 @@ const sendMessage = async () => {
 };
 
 onMounted(() => {
+  getMessages();
   echo
     .channel(`dms_chat-${props.appealId}`)
     .listen("NotificationEvent", (e) => {
