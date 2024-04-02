@@ -54,6 +54,7 @@
 <script setup>
 import { ref } from "vue";
 const showTooltip = ref(false);
+
 const checkShow = (e) => {
   const show = e.target;
   if (show.scrollWidth <= show.offsetWidth) {

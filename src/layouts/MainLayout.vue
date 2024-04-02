@@ -103,12 +103,12 @@
             </Collapse>
           </div>
           <RouteLink
-            :disableLink="true"
+          :disableLink="true"
             class="q-px-sm"
             :caption="$t('nav.clients')"
             v-if="appealStore.isAgent"
+            :routeTo="Trans.i18nRoute({ name: 'clients' })"
           >
-            <!-- :routeTo="Trans.i18nRoute({ name: 'clients' })" -->
           </RouteLink>
           <RouteLink
             v-if="appealStore.isClinic"
@@ -426,6 +426,9 @@ export default defineComponent({
     width: 1px;
     background-color: #e3e8f0;
   }
+}
+.menu-expand-item:has(.router-link-active) .nav-item-btn {
+  background-color: $hover;
 }
 .v-collapse {
   transition: height 300ms cubic-bezier(0.33, 1, 0.68, 1);

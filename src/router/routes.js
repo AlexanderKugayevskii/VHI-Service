@@ -2,7 +2,6 @@ import Trans from "src/i18n/translation";
 import { RouterView } from "vue-router";
 import { useAuthStore } from "src/stores/authStore";
 import { useAppealStore } from "src/stores/appealStore";
-import { SessionStorage } from "quasar";
 
 const routes = [
   {

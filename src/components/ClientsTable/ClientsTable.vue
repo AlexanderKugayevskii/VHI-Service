@@ -71,6 +71,9 @@
             <a class="appeal-link">
               {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
             </a>
+            <TableTooltip>
+              {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+            </TableTooltip>
           </q-td>
           <q-td key="appealDate" :props="props" class="appeals-td">
             {{ props.row.appealDate }}
@@ -80,25 +83,25 @@
           </q-td>
           <q-td key="clinicName" :props="props" class="appeals-td">
             {{ props.row.clinicName }}
-            <TableTooltip v-if="props.row.clinicName">
+            <TableTooltip>
               {{ props.row.clinicName }}
             </TableTooltip>
           </q-td>
           <q-td key="doctorName" :props="props" class="appeals-td">
             {{ props.row.doctorName }}
-            <TableTooltip v-if="props.row.doctorName">
+            <TableTooltip>
               {{ props.row.doctorName }}
             </TableTooltip>
           </q-td>
           <q-td key="serviceName" :props="props" class="appeals-td">
             {{ props.row.serviceName }}
-            <TableTooltip v-if="props.row.serviceName">
+            <TableTooltip>
               {{ props.row.serviceName }}
             </TableTooltip>
           </q-td>
           <q-td key="diagnosisName" :props="props" class="appeals-td">
             {{ props.row.diagnosisName }}
-            <TableTooltip v-if="props.row.diagnosisName">
+            <TableTooltip>
               {{ props.row.diagnosisName }}
             </TableTooltip>
           </q-td>

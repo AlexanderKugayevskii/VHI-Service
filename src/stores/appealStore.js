@@ -518,7 +518,7 @@ export const useAppealStore = defineStore("appeal", () => {
     loading.value = true;
     const localClient = SessionStorage.getItem("client"); 
     client.value = localClient;
-    console.log(localClient);
+  
     const currentClient = localClient ? localClient : client.value;
 
     try {
