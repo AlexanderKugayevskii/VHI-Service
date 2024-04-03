@@ -1,5 +1,4 @@
 import Echo from "laravel-echo";
-
 import Pusher from "pusher-js";
 
 window.Pusher = Pusher;
@@ -11,4 +10,19 @@ const echo = new Echo({
   encrypted: true,
 });
 
+echo.connector.pusher.connection.bind("error", (error) => {
+  console.error("Socket error:", error);
+});
+
+echo.connector.pusher.connection.bind("connecting", () => {
+  console.log("Connecting to Pusher...");
+});
+
+echo.connector.pusher.connection.bind("connected", () => {
+  console.log("Connected to Pusher!");
+});
+
+echo.connector.pusher.connection.bind("disconnected", () => {
+  console.warn("Disconnected from Pusher.");
+});
 export default echo;

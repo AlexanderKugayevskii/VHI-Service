@@ -515,6 +515,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchApplicantData = async () => {
+    setTypeOfAppeal('CHANGE')
     loading.value = true;
     const localClient = SessionStorage.getItem("client"); 
     client.value = localClient;

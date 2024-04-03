@@ -109,6 +109,8 @@ import LoadingSpinner from "./Shared/LoadingSpinner.vue";
 import formatDate from "src/helpers/formatDate";
 import echo from "src/boot/chat";
 import ChatService from "src/services/ChatService";
+import { onUnmounted } from "vue";
+import { nextTick } from "vue";
 
 const authStore = useAuthStore();
 
@@ -122,6 +124,9 @@ const loading = ref(false);
 
 const props = defineProps({
   appealId: {
+    type: Number,
+  },
+  appealType: {
     type: Number,
   },
 });
@@ -155,7 +160,6 @@ const sendMessage = async () => {
   try {
     const response = await ChatService.postMessage(formData);
     const data = response.data.data;
-    console.log(data);
     messages.value.unshift({
       ...data,
       sender: {
@@ -164,19 +168,36 @@ const sendMessage = async () => {
         lastname: authStore.user.lastname,
       },
     });
+
+    listenMessages();
   } catch (e) {
     console.error(e);
   } finally {
   }
 };
 
-onMounted(() => {
-  getMessages();
+const listenMessages = async () => {
   echo
     .channel(`dms_chat-${props.appealId}`)
     .listen("NotificationEvent", (e) => {
+      console.log("TRIGGER");
       console.log(e);
     });
+};
+
+onMounted(async () => {
+  if (props.appealType === 1) {
+    await listenMessages();
+    await getMessages();
+  }
+});
+
+onUnmounted(() => {
+  if (props.appealType === 1) {
+    echo.leave(`dms_chat-${props.appealId}`);
+    messages.value = null;
+  }
+  console.log("leave");
 });
 </script>
 
