@@ -25,7 +25,7 @@
             </button>
           </template>
         </SimpleInput>
-        <button class="btn-reset pointer btn-send">
+        <button class="btn-reset pointer btn-send" :disabled="isInputEmpty">
           <q-icon size="20px">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,10 +56,7 @@
     <div class="chat-body">
       <LoadingSpinner v-if="loading" />
       <div
-        :class="[
-          'chat-item',
-          { partner: userRole !== Number(msg.sender.role_id) },
-        ]"
+        :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
         v-else
         v-for="msg in messages"
         :key="msg.id"
@@ -115,10 +112,11 @@ import ChatService from "src/services/ChatService";
 
 const authStore = useAuthStore();
 
-const userRole = computed(() => Number(authStore.user.role.id));
+const userRole = computed(() => Number(authStore.user.id));
 
 const inputText = ref("");
-const message = ref("hello");
+const isInputEmpty = computed(() => inputText.value.length === 0);
+
 const messages = ref(null);
 const loading = ref(false);
 
@@ -143,21 +141,29 @@ const getMessages = async () => {
 };
 
 const sendMessage = async () => {
-  const isInputEmpty = inputText.value.length === 0;
-  if (isInputEmpty) return;
+  if (isInputEmpty.value) return;
 
   const formData = new FormData();
   const payload = {
-    message: message.value,
+    message: inputText.value,
     application_id: props.appealId,
   };
+  inputText.value = "";
 
   formData.append("text", payload.message);
   formData.append("application_id", payload.application_id);
-
   try {
     const response = await ChatService.postMessage(formData);
-    console.log(response);
+    const data = response.data.data;
+    console.log(data);
+    messages.value.unshift({
+      ...data,
+      sender: {
+        avatar: authStore.user.avatar,
+        name: authStore.user.name,
+        lastname: authStore.user.lastname,
+      },
+    });
   } catch (e) {
     console.error(e);
   } finally {

@@ -1,5 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
+import echo from "./chat";
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -35,6 +36,7 @@ export default boot(({ app, router }) => {
         router.replace({ name: "Login" });
       } else {
         config.headers["Authorization"] = `Bearer ${token}`;
+        config.headers["X-Socket-ID"] = echo.socketId();
       }
     }
     config.headers["Access-Control-Allow-Origin"] = "*";
