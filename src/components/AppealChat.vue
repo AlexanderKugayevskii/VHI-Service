@@ -180,8 +180,10 @@ const listenMessages = async () => {
   echo
     .channel(`dms_chat-${props.appealId}`)
     .listen("NotificationEvent", (e) => {
+      console.log("------------------");
       console.log("TRIGGER");
       console.log(e);
+      console.log("------------------");
     });
 };
 

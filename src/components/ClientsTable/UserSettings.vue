@@ -91,32 +91,11 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-
-import { watch } from "vue";
 import DropdownSettings from "../Shared/DropdownSettings.vue";
-import { useRouter } from "vue-router";
-import { useAppealStore } from "src/stores/appealStore";
-import Trans from "src/i18n/translation";
-const props = defineProps(["client"]);
-const $q = useQuasar();
-
-const router = useRouter();
-const appealStore = useAppealStore();
+const emit = defineEmits(["openModal"]);
 
 const openAppealPage = async () => {
-  appealStore.setClient(props.client);
-  appealStore.setTypeOfAppeal("CHANGE");
-
-  await appealStore.fetchApplicantData();
-  await appealStore.fetchHospitalData();
-
-  router.replace(
-    Trans.i18nRoute({
-      name: "createAppeal",
-      params: { id: appealStore.client.contractClientId },
-    })
-  );
+  emit("openModal");
 };
 </script>
 

@@ -1,16 +1,12 @@
-import { ref, computed } from "vue";
+import { computed, watchEffect } from "vue";
 
 export default function usePaginate(pagination) {
   //pagination logic
   const totalPages = computed(() => {
-    return Math.ceil(
-      pagination.value.rowsNumber / pagination.value.rowsPerPage
-    );
+    return Math.ceil(pagination.value.rowsNumber / pagination.value.rowsPerPage);
   });
 
-  const hasNextPage = computed(
-    () => totalPages.value === pagination.value.page
-  );
+  const hasNextPage = computed(() => totalPages.value === pagination.value.page);
   const hasPrevPage = computed(() => pagination.value.page === 1);
   const paginationRange = computed(() => {
     const sidePages = 1;
@@ -38,6 +34,6 @@ export default function usePaginate(pagination) {
 
     return range;
   });
-
+ 
   return { hasNextPage, hasPrevPage, paginationRange, totalPages };
 }
