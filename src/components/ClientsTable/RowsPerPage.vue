@@ -6,7 +6,7 @@
     <div class="rows-options-variants">
       <button
         type="button"
-        v-for="(option, index) in optionsRowsPerPage"
+        v-for="(option, index) in options"
         @click="handleChoice(option)"
         :key="index"
         class="option-button"
@@ -19,12 +19,22 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from "vue";
+import { ref, defineEmits, computed } from "vue";
 import { useRoute } from "vue-router";
 const emit = defineEmits(["choiceOption"]);
-defineProps(["options"]);
+const props = defineProps(["pagination"]);
 
 // const route = useRoute();
+const options = computed(() => {
+  const rowsNumber = props.pagination.rowsNumber;
+  if (rowsNumber >= 25) {
+    return [10, 25, 50];
+  } else if (rowsNumber >= 10) {
+    return [10, 25];
+  } else {
+    return [10];
+  }
+});
 
 const optionsRowsPerPage = ref([10, 25, 50]);
 const selectedOption = ref(10);

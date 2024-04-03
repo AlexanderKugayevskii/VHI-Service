@@ -109,6 +109,7 @@
   <div class="flex q-my-lg">
     <!-- <PaginationTable :pagination="pagination" @change-page="updatePage" /> -->
     <PaginationTable
+    v-if="pagination.rowsNumber >= 10"
       :pagination="pagination"
       @onIncrementPage="incrementPage"
       @onDecrementPage="decrementPage"
@@ -116,7 +117,7 @@
     />
 
     <q-space></q-space>
-    <RowsPerPage @choiceOption="selectOption" />
+    <RowsPerPage @choiceOption="selectOption" :pagination="pagination"/>
   </div>
 </template>
 
@@ -128,7 +129,7 @@ import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
-
+import PaginationTable from "./PaginationTable.vue";
 import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref, watch } from "vue";
 
