@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_URL: registry.megahertz.uz
-  IMAGE_PREFIX: dms-service/frontend
+  REGISTRY_URL: registry.onmhz.uz
+  IMAGE_PREFIX: neo_insurance/dms-service/frontend
   ENVIRONMENT: dev
   SERVER_1_HOST: 82.148.2.170
   SERVER_1_SSH_PORT: 22022 
@@ -73,6 +73,7 @@ jobs:
           push: true
           build-args: |
             REGISTRY_URL=${{ env.REGISTRY_URL }}
+            IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
           tags: |
             ${{ env.REGISTRY_URL }}/${{ env.IMAGE_PREFIX }}:development
 
