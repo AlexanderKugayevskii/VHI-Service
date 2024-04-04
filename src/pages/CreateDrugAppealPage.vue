@@ -390,6 +390,7 @@ import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { format } from "quasar";
+import { onMounted } from "vue";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -477,6 +478,8 @@ watch(
     }
   }
 );
+
+
 </script>
 
 <style lang="scss" scoped>

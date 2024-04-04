@@ -35,13 +35,13 @@ function saveAppealByClinic(payload) {
   return api.post("/clinics/application-clinic", payload);
 }
 
-function saveDrugAppeal(payload) {
-  return api.post("/clinics/applications", payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-}
+  function saveDrugAppeal(payload) {
+    return api.post("/clinics/applications", payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 
 function changeAppealData(appealId, payload) {
   return api.post(`/clinics/applications/${appealId}`, payload);

@@ -1,18 +1,28 @@
 import Echo from "laravel-echo";
-
 import Pusher from "pusher-js";
 
 window.Pusher = Pusher;
 
-export default function boot({ app }) {
-  const echo = new Echo({
-    broadcaster: "pusher",
-    key: "f1cfa5a35507dfae21ca",
-    cluster: "ap2",
-    encrypted: true,
-  });
+const echo = new Echo({
+  broadcaster: "pusher",
+  key: "f1cfa5a35507dfae21ca",
+  cluster: "ap2",
+  encrypted: true,
+});
 
-  app.globalProperties.$echo = echo;
-}
+echo.connector.pusher.connection.bind("error", (error) => {
+  console.error("Socket error:", error);
+});
 
+echo.connector.pusher.connection.bind("connecting", () => {
+  console.log("Connecting to Pusher...");
+});
 
+echo.connector.pusher.connection.bind("connected", () => {
+  console.log("Connected to Pusher!");
+});
+
+echo.connector.pusher.connection.bind("disconnected", () => {
+  console.warn("Disconnected from Pusher.");
+});
+export default echo;

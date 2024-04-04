@@ -109,87 +109,26 @@
             {{ props.row.expenseAmount }}
           </q-td>
           <q-td key="userSettings" :props="props" class="appeals-td text-right">
-            <UserSettings :client="props.row"></UserSettings>
+            <UserSettings
+              :client="props.row"
+              @open-modal="openAppealPage(props.row)"
+            ></UserSettings>
           </q-td>
         </q-tr>
       </template>
     </q-table>
   </div>
   <div class="flex q-my-lg">
-    <!-- <PaginationTable :pagination="pagination" @change-page="updatePage" /> -->
-    <div class="flex">
-      <div class="pagination flex items-center">
-        <!-- prev -->
-        <button
-          type="button"
-          :disabled="hasPrevPage"
-          @click="decrementPage"
-          class="pagination-btn-control"
-        >
-          <q-icon size="20px">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.6667 15L6.66675 10L11.6667 5"
-                stroke="#B8C2D1"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </q-icon>
-          <span>{{ $t("pagination.prev") }}</span>
-        </button>
-
-        <button
-          type="button"
-          class="pagination-btn-num"
-          :class="{
-            'pagination-btn-num--active': pageNum === pagination.page,
-            'pagination-btn-num--cursor-default': pageNum === '...',
-          }"
-          v-for="pageNum in paginationRange"
-          :key="pageNum"
-          @click="changePage(pageNum)"
-        >
-          {{ pageNum }}
-        </button>
-        <!-- next -->
-        <button
-          type="button"
-          :disabled="hasNextPage"
-          @click="incrementPage"
-          class="pagination-btn-control"
-        >
-          <span>{{ $t("pagination.next") }}</span>
-          <q-icon size="20px"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.33337 15L13.3334 10L8.33337 5"
-                stroke="#7A88A6"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </q-icon>
-        </button>
-      </div>
-    </div>
+    <PaginationTable
+      v-if="pagination.rowsNumber >= 10"
+      :pagination="pagination"
+      @onIncrementPage="incrementPage"
+      @onDecrementPage="decrementPage"
+      @onChangePage="changePage"
+    />
 
     <q-space></q-space>
-    <RowsPerPage @choiceOption="selectOption" />
+    <RowsPerPage @choiceOption="selectOption" :pagination="pagination"/>
   </div>
 </template>
 
@@ -202,12 +141,11 @@ import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
+import PaginationTable from "./PaginationTable.vue";
 import { onMounted, computed, ref, watch } from "vue";
-
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
-import usePaginate from "src/composables/usePaginate";
 
 const $q = useQuasar();
 
@@ -220,9 +158,9 @@ const tableRef = ref(null);
 const appealStore = useAppealStore();
 const clientTableStore = useClientTableStore();
 const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
-const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
 
 const cancelOpenWhenSelect = (client) => {
+  console.log(client);
   const selection = window.getSelection().toString();
   console.log(selection);
   if (!selection) {
@@ -248,6 +186,7 @@ const changePage = (pageNum) => {
     });
   }
 };
+
 //10-25-30
 const selectOption = (option) => {
   tableRef.value.setPagination({
@@ -269,7 +208,6 @@ const openAppealPage = async (client) => {
   router.replace(
     Trans.i18nRoute({
       name: "createAppeal",
-
       params: { id: appealStore.client.contractClientId },
     })
   );
@@ -303,16 +241,16 @@ onMounted(() => {
 });
 
 //calculate table height for showing only 10 rows
-onMounted(() => {
-  const qTableMiddleElement = document.querySelector(".q-table__middle");
-  // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
+// onMounted(() => {
+//   const qTableMiddleElement = document.querySelector(".q-table__middle");
+//   // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
 
-  const qTableElement = document.querySelector(".q-table");
-  const qTableInnerElement = document.createElement("div");
-  qTableInnerElement.className = "q-table-inner-element";
-  qTableInnerElement.appendChild(qTableElement);
-  qTableMiddleElement.appendChild(qTableInnerElement);
-});
+//   const qTableElement = document.querySelector(".q-table");
+//   const qTableInnerElement = document.createElement("div");
+//   qTableInnerElement.className = "q-table-inner-element";
+//   qTableInnerElement.appendChild(qTableElement);
+//   qTableMiddleElement.appendChild(qTableInnerElement);
+// });
 </script>
 
 <style lang="scss" scoped>
@@ -333,13 +271,13 @@ onMounted(() => {
   width: 48px;
 }
 // .appeals-th:nth-of-type(2) {
-//   width: 220px;
+//   width: 200px;
 // }
 // .appeals-th:nth-of-type(3) {
 //   width: 150px;
 // }
 .appeals-th:nth-of-type(4) {
-  width: 150px;
+  width: 120px;
 }
 .q-table thead th:last-of-type {
   width: 52px;
@@ -382,37 +320,6 @@ tbody tr td:last-child {
   background-color: #fff;
 }
 
-button[type="button"] {
-  border: none;
-  font-size: 15px;
-}
-button[type="button"]:disabled {
-  color: #a0aabc;
-}
-
-.pagination-btn-control {
-  color: #404f6f;
-  padding: 4px 12px;
-  display: flex;
-  align-items: center;
-  background: none;
-  cursor: pointer;
-}
-.pagination-btn-num {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 4px 8px;
-  border-radius: 8px;
-  color: #404f6f;
-  transition: 0.3s;
-}
-.pagination-btn-num--active {
-  background: #e3e8f0;
-}
-.pagination-btn-num--cursor-default {
-  cursor: default;
-}
 .user-settings-btn {
   background: none;
   cursor: pointer;
