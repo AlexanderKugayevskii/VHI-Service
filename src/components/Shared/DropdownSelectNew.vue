@@ -318,7 +318,7 @@ export default {
   box-shadow: 0px 0px 8px 0px #cfd9ea;
 }
 .dropdown-select-scroll {
-  padding: 0 4px 0 4px;
+  padding: 0 4px 0 0;
   overflow-y: scroll;
 }
 .dropdown-select-scroll::-webkit-scrollbar {

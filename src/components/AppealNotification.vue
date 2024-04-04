@@ -50,21 +50,32 @@
             />
           </svg>
         </span>
+        <h3 class="notification-title">Уведомления</h3>
         <div class="dropdown-select-scroll" id="virtual-scroll-target">
           <!-- loading -->
-          <div class="dropdown-loading flex flex-center">
+          <!-- <div class="dropdown-loading flex flex-center">
             <q-spinner-tail color="teal" size="20px" />
-          </div>
+          </div> -->
 
           <!-- nothing notification -->
-          <div
+          <!-- <div
             class="dropdown-select-error-message flex column items-stretch"
-          ></div>
+          ></div> -->
 
           <!-- has notifications -->
-          <!-- <q-virtual-scroll
-            scroll-target="#virtual-scroll-target"
-          ></q-virtual-scroll> -->
+          <!-- <q-virtual-scroll -->
+          <!-- class="dropdown-select-list-virtual-scroll"
+          scroll-target="#virtual-scroll-target" > -->
+          <!-- </q-virtual-scroll> -->
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
+          <NotificationItem />
         </div>
       </div>
     </Transition>
@@ -74,11 +85,15 @@
 <script>
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
 import { ref, onMounted } from "vue";
+import NotificationItem from "./Shared/NotificationItem.vue";
 
 export default {
   name: "appealNotification",
   directives: {
     clickOutSide,
+  },
+  components: {
+    NotificationItem,
   },
 
   data() {
@@ -131,12 +146,21 @@ export default {
   background: #13b8ba;
   border: 1px solid #fff;
 }
+.notification-title {
+  padding: 0px var(--spacing-3, 12px);
+  color: $primary;
+  font-size: 20px;
+  line-height: 120%;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 8px;
+}
 
 .dropdown-select {
   position: absolute;
-  top: calc(100%);
-  right: 20px;
-  width: 400px;
+  top: 100%;
+  right: 14px;
+  width: 430px;
   z-index: 10;
   border-radius: 16px;
   padding: var(--spacing-5, 20px) var(--spacing-2, 8px) var(--spacing-5, 20px)
@@ -147,9 +171,8 @@ export default {
 
   &-tongue {
     position: absolute;
-    bottom: calc(100% - 2px);
-    right: 0;
-    transform: translateX(-50%);
+    bottom: calc(100% - 3px);
+    right: 16px;
   }
 }
 .dropdown-select-scroll {
