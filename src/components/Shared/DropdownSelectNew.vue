@@ -159,9 +159,9 @@
 </template>
 
 <script>
-import { onMounted, watch } from "vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
+
 import { debounce } from "lodash";
 
 export default {
