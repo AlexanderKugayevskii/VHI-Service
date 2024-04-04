@@ -1,5 +1,6 @@
 ARG REGISTRY_URL
-FROM ${REGISTRY_URL}/dms-service/frontend:base as BUILD
+ARG IMAGE_PREFIX
+FROM ${REGISTRY_URL}/${IMAGE_PREFIX}:base as BUILD
 RUN mkdir -p /var/www/
 WORKDIR /var/www
 COPY . .

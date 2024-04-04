@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_URL: registry.megahertz.uz
-  IMAGE_PREFIX: dms-service/frontend
+  REGISTRY_URL: registry.onmhz.uz
+  IMAGE_PREFIX: neo_insurance/dms-service/frontend
   ENVIRONMENT: prd
   SERVER_1_HOST: 82.148.2.170
   SERVER_1_SSH_PORT: 22022 
