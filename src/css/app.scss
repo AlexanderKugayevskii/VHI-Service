@@ -290,7 +290,7 @@ button[class^="btn"] {
 }
 .create-appeal-interaction {
   .q-panel {
-    height: calc(100vh - 252px);
+    height: calc(100vh - 252px - 16px);
   }
 }
 .tabs-content {

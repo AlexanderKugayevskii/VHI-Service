@@ -32,9 +32,6 @@
           <span class="notification-item-time__right"> 3 мин назад </span>
         </div>
       </div>
-      <div class="notification-item-footer">
-        <a class="notification-item-appeal-btn"> Открыть обращение </a>
-      </div>
     </div>
   </div>
 </template>
@@ -47,7 +44,7 @@
   position: relative;
   column-gap: 8px;
   color: #404f6f;
-  padding: var(--spacing-2, 8px) var(--spacing-3, 12px) var(--spacing-3, 12px)
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px) var(--spacing-3, 8px)
     var(--spacing-3, 12px);
   border-collapse: collapse;
   border-bottom: 1px solid var(--color-light-gray-200, #f2f5fa);

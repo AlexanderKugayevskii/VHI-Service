@@ -226,10 +226,15 @@ onUnmounted(() => {
   row-gap: 20px;
 }
 .chat {
+  position: relative;
   &-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: sticky;
+    background-color: #fff;
+    top: 0;
+    z-index: 99900;
   }
   &-form {
     width: 100%;

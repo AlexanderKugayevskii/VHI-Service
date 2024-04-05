@@ -691,7 +691,7 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-basis: 65%;
 }
 .create-appeal-client-info {
   background-color: #fff;
@@ -716,8 +716,8 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-form {
   flex: 1;
   background-color: #fff;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
@@ -795,14 +795,13 @@ const handleStatusService = (item, isSuggested) => {
   font-weight: 700;
 }
 .create-appeal-right {
-  flex-basis: 416px;
+  flex-basis: 35%;
 }
 .create-appeal-interaction {
   background-color: #fff;
   height: 100%;
-  border-radius: 16px;
-  padding: 16px;
-  padding-right: 8px;
+  border-radius: 24px;
+  padding: 24px;
 }
 
 .option-content-extra {
