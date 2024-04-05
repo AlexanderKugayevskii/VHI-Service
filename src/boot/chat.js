@@ -16,7 +16,7 @@ const echo = new Echo({
   encrypted: true,
 });
 
-
+// 1a90f936db865826ebdc
 
 echo.connector.pusher.connection.bind("error", (error) => {
   console.error("Socket error:", error);
