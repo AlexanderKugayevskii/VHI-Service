@@ -8,6 +8,7 @@ const echo = new Echo({
   key: "bdeb05fa9627713cacd8",
   cluster: "ap1",
   encrypted: true,
+  forceTLS: true,
 });
 
 echo.connector.pusher.connection.bind("error", (error) => {
