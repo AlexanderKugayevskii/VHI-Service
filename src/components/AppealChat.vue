@@ -1,5 +1,5 @@
 <template>
-  <div class="chat">
+  <div class="chat" ref="chatRef">
     <div class="chat-header">
       <form @submit.prevent="sendMessage" class="chat-form">
         <SimpleInput placeholder="Написать сообщение..." v-model="inputText">
@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watchEffect } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 import SimpleInput from "./Shared/SimpleInput.vue";
 import LoadingSpinner from "./Shared/LoadingSpinner.vue";
@@ -110,7 +110,6 @@ import formatDate from "src/helpers/formatDate";
 import echo from "src/boot/chat";
 import ChatService from "src/services/ChatService";
 import { onUnmounted } from "vue";
-import { nextTick } from "vue";
 
 const authStore = useAuthStore();
 
@@ -119,8 +118,12 @@ const userRole = computed(() => Number(authStore.user.id));
 const inputText = ref("");
 const isInputEmpty = computed(() => inputText.value.length === 0);
 
-const messages = ref(null);
+const messages = ref([]);
+
 const loading = ref(false);
+
+const longPoolIntervalId = ref(null);
+const chatRef = ref(null);
 
 const props = defineProps({
   appealId: {
@@ -132,19 +135,37 @@ const props = defineProps({
 });
 
 const getMessages = async () => {
-  loading.value = true;
   try {
     const response = await ChatService.getMessages(props.appealId);
     const data = response.data.data;
-    messages.value = data;
-    console.log(messages.value);
+    console.log(data);
+    updateMessages(data);
   } catch (e) {
     console.error(e);
   } finally {
-    loading.value = false;
   }
 };
 
+const updateMessages = (newMessages) => {
+  const existingIds = messages.value.map((message) => message.id);
+  // const newMessagesIds = newMessages.map((message) => message.id);
+
+  if (newMessages.length === existingIds.length) {
+    messages.value = newMessages;
+  } else {
+    newMessages.forEach((message) => {
+      if (!existingIds.includes(message.id)) {
+        messages.value.push(message);
+      }
+    });
+  }
+
+  console.log(messages.value.length);
+
+  // messages.value = messages.value.filter((message) =>
+  //   newMessagesIds.includes(message.id)
+  // );
+};
 const sendMessage = async () => {
   if (isInputEmpty.value) return;
 
@@ -169,7 +190,7 @@ const sendMessage = async () => {
       },
     });
 
-    listenMessages();
+    // listenMessages();
   } catch (e) {
     console.error(e);
   } finally {
@@ -189,17 +210,21 @@ const listenMessages = async () => {
 
 onMounted(async () => {
   if (props.appealType === 1) {
-    await listenMessages();
+    // await listenMessages(); //temporary
     await getMessages();
+
+    longPoolIntervalId.value = setInterval(async () => {
+      await getMessages();
+    }, 5000);
   }
 });
 
 onUnmounted(() => {
   if (props.appealType === 1) {
-    echo.leave(`dms_chat-${props.appealId}`);
-    messages.value = null;
+    // echo.leave(`dms_chat-${props.appealId}`);
+    messages.value = [];
   }
-  console.log("leave");
+  clearInterval(longPoolIntervalId.value);
 });
 </script>
 
@@ -219,6 +244,9 @@ onUnmounted(() => {
   border-radius: 16px;
   background: #13b8ba;
   padding: 12px;
+}
+.btn-send[disabled] {
+  opacity: 1 !important;
 }
 .chat-body {
   display: flex;

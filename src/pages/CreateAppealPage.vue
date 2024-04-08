@@ -586,7 +586,7 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
@@ -757,7 +757,7 @@ const handleStatusService = (item, isSuggested) => {
   flex: 1;
 }
 .q-tab-panel {
-  overflow: hidden;
+  //  overflow: hidden;
 }
 .tabs-content {
   height: 100%;

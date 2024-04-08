@@ -338,7 +338,47 @@
               </div>
             </div>
             <div class="create-appeal-right">
-              <div class="create-appeal-interaction"></div>
+              <div class="create-appeal-interaction">
+                <div class="tabs-container tabs-container-gap">
+                  <div class="tabs-header">
+                    <q-tabs dense active-class="tab-active" v-model="tabRight">
+                      <q-tab
+                        name="chat"
+                        label="Чат"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                      <q-tab
+                        name="history"
+                        label="История"
+                        :ripple="false"
+                        class="tab--no-hover"
+                      />
+                    </q-tabs>
+                  </div>
+                  <div class="tabs-content appeal-content">
+                    <keep-alive>
+                      <q-tab-panels
+                        v-model="tabRight"
+                        animated
+                        swipeable
+                        transition-next="jump-right"
+                        transition-prev="jump-left"
+                      >
+                        <q-tab-panel name="chat" key="chat">
+                          <AppealChat
+                            :appealId="clientData.appealId"
+                            :appealType="appealStore.typeOfAppeal"
+                          />
+                        </q-tab-panel>
+                        <q-tab-panel name="history" key="history">
+                          <div class="temp-text">Скоро будет</div>
+                        </q-tab-panel>
+                      </q-tab-panels>
+                    </keep-alive>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -385,6 +425,8 @@ import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
+import AppealChat from "src/components/AppealChat.vue";
+
 import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -405,6 +447,7 @@ const router = useRouter();
 const route = useRoute();
 
 const tab = ref("drugs");
+const tabRight = ref("chat");
 const drugstoreDropdownRef = ref(null);
 const createAppealModalRef = ref(null);
 
@@ -512,11 +555,12 @@ watch(
 .create-appeal-row {
   display: flex;
   flex-grow: 1;
+  column-gap: 16px;
 }
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-basis: 70%;
+  flex-basis: 65%;
 }
 .create-appeal-client-info {
   background-color: #fff;
@@ -541,8 +585,8 @@ watch(
 .create-appeal-form {
   flex: 1;
   background-color: #fff;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
@@ -572,13 +616,17 @@ watch(
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
+  &-gap {
+    row-gap: 24px;
+  }
 }
 .q-tab {
   height: 44px;
   flex: 1;
 }
 .q-tab-panel {
-  overflow: hidden;
+  // overflow: hidden;
 }
 .tabs-content {
   height: 100%;
@@ -615,6 +663,15 @@ watch(
 .create-appeal-action-expences-total {
   font-weight: 700;
 }
+.create-appeal-right {
+  flex-basis: 35%;
+}
+.create-appeal-interaction {
+  background-color: #fff;
+  height: 100%;
+  border-radius: 24px;
+  padding: 24px;
+}
 
 .option-content-extra {
   color: #1a2133;
@@ -626,23 +683,24 @@ watch(
 .drugstore-form {
   display: flex;
   column-gap: 8px;
-  align-items: flex-end;
+
   > div {
     width: auto;
   }
   &-drugname {
-    flex-grow: 1;
+    flex-basis: 245px;
   }
   &-amount {
-    flex-basis: 15%;
+    flex-basis: 100px;
   }
   &-type {
-    flex-basis: 25%;
+    flex-basis: 85px;
   }
   &-price {
-    flex-basis: 25%;
+    flex-basis: 140px;
   }
   &-btn-wrapper {
+    align-self: flex-end;
   }
 }
 .drugstore-header {
@@ -662,5 +720,15 @@ watch(
 }
 .disabled-option {
   opacity: 0.7;
+}
+
+.temp-text {
+  height: calc(100vh - 252px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: hsla(221, 27%, 34%, 0.158);
+  user-select: none;
 }
 </style>
