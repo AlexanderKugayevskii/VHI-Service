@@ -273,6 +273,11 @@ export const useAppealStore = defineStore("appeal", () => {
     });
   };
 
+  const removeDrug = (drug) => {
+    selectedDrugs.value = selectedDrugs.value.filter(
+      (item) => item.id !== drug.id
+    );
+  };
   const clearAppealData = () => {
     diagnosis.value = "";
     doctors.value = [];
@@ -515,11 +520,11 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchApplicantData = async () => {
-    setTypeOfAppeal('CHANGE')
+    setTypeOfAppeal("CHANGE");
     loading.value = true;
-    const localClient = SessionStorage.getItem("client"); 
+    const localClient = SessionStorage.getItem("client");
     client.value = localClient;
-  
+
     const currentClient = localClient ? localClient : client.value;
 
     try {
@@ -770,5 +775,6 @@ export const useAppealStore = defineStore("appeal", () => {
     changeStatusDrugs,
     appealTotalDrugConsumption,
     clearDrugstoreData,
+    removeDrug
   };
 });

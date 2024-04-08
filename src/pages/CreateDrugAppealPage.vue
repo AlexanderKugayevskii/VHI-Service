@@ -189,6 +189,8 @@
                               @update:progress="
                                 (item) => handleStatusDrugs(item, false)
                               "
+                              @remove:item="(item) => handleRemoveItem(item)"
+                              :removable="false"
                             >
                               <template #label>
                                 {{ drug.name }}
@@ -224,6 +226,7 @@
                                 @update:progress="
                                   (item) => handleStatusDrugs(item, true)
                                 "
+                                :removable="true"
                               >
                                 <template #label>
                                   {{ drug.name }}
@@ -422,7 +425,6 @@ const handleCreateAppeal = () => {
 const handleChangeAppeal = () => {
   appealStore.changeAppealDrugData();
 };
-
 const handleSearchDrugs = async (name) => {
   await appealStore.fetchDrugs(name);
 };
@@ -453,18 +455,18 @@ const handleImage = (image) => {
   console.log(image);
   appealStore.setDrugAppealImage(image);
 };
-
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearDrugstoreData();
   router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
 };
-
 const handleStatusDrugs = (item, isSuggested) => {
   appealStore.changeStatusDrugs(item, isSuggested);
 };
-
+const handleRemoveItem = (item) => {
+  appealStore.removeDrug(item);
+};
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -478,8 +480,6 @@ watch(
     }
   }
 );
-
-
 </script>
 
 <style lang="scss" scoped>

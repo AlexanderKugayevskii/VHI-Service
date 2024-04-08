@@ -108,7 +108,6 @@
         />
       </div>
       <DrugstoreTable />
-      <!-- <ClientsTable :search="search" /> -->
     </div>
 
     <AppealSearchClient
@@ -127,7 +126,6 @@
 
 <script setup>
 import { reactive, computed, ref, onMounted } from "vue";
-import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
 import DrugstoreTable from "src/components/ClientsTable/DrugstoreTable.vue";
 import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";

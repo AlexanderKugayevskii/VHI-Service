@@ -128,7 +128,7 @@
     />
 
     <q-space></q-space>
-    <RowsPerPage @choiceOption="selectOption" :pagination="pagination" />
+    <RowsPerPage @choiceOption="selectOption" :pagination="pagination"/>
   </div>
 </template>
 
@@ -213,13 +213,44 @@ const openAppealPage = async (client) => {
   );
 };
 
+//only router if needs
+//if query page or limit will changes, pagination will changes
+// watch(
+//   () => route.query,
+//   (newVal) => {
+//     tableRef.value.setPagination({
+//       page: parseInt(newVal.page) || 1,
+//       rowsPerPage: parseInt(newVal.limit) || 10,
+//     });
+//   }
+// );
 
 //add numerable table
 
 //first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
+  watch(
+    () => appealStore.successAppeal,
+    (newSuccessAppeal) => {
+      if (newSuccessAppeal) {
+        tableRef.value.requestServerInteraction();
+      }
+    }
+  );
 });
+
+//calculate table height for showing only 10 rows
+// onMounted(() => {
+//   const qTableMiddleElement = document.querySelector(".q-table__middle");
+//   // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
+
+//   const qTableElement = document.querySelector(".q-table");
+//   const qTableInnerElement = document.createElement("div");
+//   qTableInnerElement.className = "q-table-inner-element";
+//   qTableInnerElement.appendChild(qTableElement);
+//   qTableMiddleElement.appendChild(qTableInnerElement);
+// });
 </script>
 
 <style lang="scss" scoped>

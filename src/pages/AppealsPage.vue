@@ -107,7 +107,7 @@
           @click="searchFilterFixed = true"
         />
       </div>
-      <ClientsTable :search="search" />
+      <AppealsTable :search="search" />
     </div>
 
     <AppealSearchClient
@@ -126,10 +126,10 @@
 
 <script setup>
 import { reactive, computed, ref, onMounted } from "vue";
-import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
+import AppealsTable from "src/components/ClientsTable/AppealsTable.vue";
+import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
-import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import AppealType from "./AppealType.vue";
 import CreateAppeal from "./CreateAppealPage.vue";
