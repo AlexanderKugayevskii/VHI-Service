@@ -1,7 +1,20 @@
 import { api } from "../boot/axios";
 
+//appeals clients
 function getClients(page, limit, search, filterQueries) {
   return api.get(`/clinics/application-hospitals`, {
+    params: {
+      _limit: limit,
+      page: page,
+      q: search,
+      ...filterQueries,
+    },
+  });
+}
+
+//full clients
+function getFullClients(page, limit, search, filterQueries) {
+  return api.get("/clinics/clients", {
     params: {
       _limit: limit,
       page: page,
@@ -41,6 +54,8 @@ function getClientsByPassport(passport) {
 
 export default {
   getClients,
+  getFullClients,
+
   getClientByAppealId,
 
   getClientsByCode,

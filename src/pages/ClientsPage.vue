@@ -3,13 +3,13 @@
     <div class="col page-container">
       <h2 class="page-title q-my-none q-mb-md">Клиенты</h2>
 
-      <ClientsTable/>
+      <FullClientsTable />
     </div>
   </q-page>
 </template>
 
 <script setup>
-import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
+import FullClientsTable from "src/components/ClientsTable/FullClientsTable.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 </script>
 
