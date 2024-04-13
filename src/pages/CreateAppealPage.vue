@@ -251,6 +251,7 @@
                           <div class="tab-body">
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
+                              :removable="false"
                               :item="doctor"
                               :key="doctor.id"
                               :isAgent="appealStore.isAgent"
@@ -284,6 +285,7 @@
                               <SelectListItem
                                 v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
+                                :removable="false"
                                 :key="doctor.id"
                                 :isAgent="appealStore.isAgent"
                                 @update:status="
@@ -394,6 +396,7 @@
                             <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
+                              :removable="false"
                               :key="service.id"
                               :isAgent="appealStore.isAgent"
                               @update:status="
@@ -427,6 +430,7 @@
                               <SelectListItem
                                 v-for="service in appealStore.suggestedServices"
                                 :item="service"
+                                :removable="false"
                                 :key="service.id"
                                 :isAgent="appealStore.isAgent"
                                 @update:status="

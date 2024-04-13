@@ -182,6 +182,7 @@
                               v-for="drug in appealStore.selectedDrugs"
                               :item="drug"
                               :key="drug.id"
+                              :removable="true"
                               :is-agent="appealStore.isAgent"
                               @update:status="
                                 (item) => handleStatusDrugs(item, false)
@@ -190,7 +191,6 @@
                                 (item) => handleStatusDrugs(item, false)
                               "
                               @remove:item="(item) => handleRemoveItem(item)"
-                              :removable="false"
                             >
                               <template #label>
                                 {{ drug.name }}
@@ -218,6 +218,7 @@
                               <SelectListItem
                                 v-for="drug in appealStore.suggestedDrugs"
                                 :item="drug"
+                                :removable="true"
                                 :key="drug.id"
                                 :isAgent="appealStore.isAgent"
                                 @update:status="
@@ -226,7 +227,6 @@
                                 @update:progress="
                                   (item) => handleStatusDrugs(item, true)
                                 "
-                                :removable="true"
                               >
                                 <template #label>
                                   {{ drug.name }}
@@ -495,7 +495,6 @@ const handleAddDrugData = () => {
 };
 
 const handleImage = (image) => {
-  console.log(image);
   appealStore.setDrugAppealImage(image);
 };
 const hideModal = () => {
@@ -688,7 +687,9 @@ watch(
     width: auto;
   }
   &-drugname {
-    flex-basis: 245px;
+    display: flex;
+    align-items: flex-end;
+    flex-grow: 1;
   }
   &-amount {
     flex-basis: 100px;
@@ -731,4 +732,5 @@ watch(
   color: hsla(221, 27%, 34%, 0.158);
   user-select: none;
 }
+
 </style>

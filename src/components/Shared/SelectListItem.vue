@@ -36,7 +36,7 @@
       </div>
     </div>
     <button
-      v-if="!removable"
+      v-if="removable"
       type="button"
       class="selected-item-remove-btn"
       @click="removeItem"

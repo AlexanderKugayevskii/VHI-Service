@@ -569,10 +569,15 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchApplicantDrugData = async () => {
+    setTypeOfAppeal("CHANGE");
     loading.value = true;
+    const localClient = SessionStorage.getItem("client");
+    client.value = localClient;
+    const currentClient = localClient ? localClient : client.value;
+
     try {
       const response = await ClientService.getClientByAppealId(
-        client.value.appealId
+        currentClient.appealId
       );
       const data = response.data.data;
 
@@ -775,6 +780,6 @@ export const useAppealStore = defineStore("appeal", () => {
     changeStatusDrugs,
     appealTotalDrugConsumption,
     clearDrugstoreData,
-    removeDrug
+    removeDrug,
   };
 });

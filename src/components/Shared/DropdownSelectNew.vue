@@ -334,6 +334,7 @@ export default {
   background-color: #e3e8f0;
 }
 .dropdown-label {
+  width: 100%;
 }
 .dropdown-button {
   padding: 12px 16px;
