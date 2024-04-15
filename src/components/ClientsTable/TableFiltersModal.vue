@@ -30,7 +30,6 @@
           </q-icon>
         </button>
       </div>
-
       <div class="modal-body">
         <div class="filter-item">
           <SimpleInput
@@ -84,7 +83,6 @@
           ></DropdownSelect>
         </div>
       </div>
-
       <div class="modal-footer">
         <SimpleButton
           label="Отмена"
