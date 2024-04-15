@@ -159,12 +159,12 @@ import UserSettings from "./UserSettings.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
 import TableActions from "./TableActions.vue";
+import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import { onMounted, computed, ref, reactive, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 
-import SimpleButton from "src/components/Shared/SimpleButton.vue";
 
 const $q = useQuasar();
 
