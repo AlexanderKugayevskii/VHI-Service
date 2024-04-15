@@ -1,19 +1,10 @@
 <template>
-  <div class="details__card details__card_big">
-    <h5 class="details__card-title">Аптека и стоматология</h5>
-    <div class="details__card-info">
-      <div class="details__card-text">
-        <p>
-          <span>Потрачено: </span>
-          <span class="text-negative">-1 069 000 UZS</span>
-        </p>
-        <p>
-          <span>Осталось: </span>
-          <span>931 000 UZS</span>
-        </p>
-      </div>
-      <div class="details__card-icons" v-if="$slots.icons">
-        <slot name="icons">
+  <div class="details">
+    <h2 class="page-title q-my-none">Информация полиса</h2>
+    <PolisInfo />
+    <div class="details-main">
+      <DetailCard>
+        <template #icons>
           <q-icon size="48px">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,52 +47,124 @@
               />
             </svg>
           </q-icon>
-        </slot>
+        </template>
+      </DetailCard>
+      <DetailCard>
+        <template #icons>
+          <q-icon size="48px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M24.0002 2.5C22.268 2.5 20.7196 3.05376 19.0479 3.99188C17.428 4.90086 15.572 6.2429 13.238 7.93048L10.2199 10.1126C8.34685 11.4669 6.85081 12.5486 5.72243 13.5497C4.55735 14.5835 3.68573 15.614 3.13285 16.9103C2.57875 18.2094 2.44475 19.5409 2.51907 21.0762C2.59081 22.5578 2.86553 24.3454 3.20811 26.5744L3.83861 30.6774C4.32537 33.845 4.71295 36.3672 5.28235 38.3324C5.87113 40.3642 6.70057 41.9774 8.18305 43.2104C9.65939 44.4384 11.418 44.9852 13.5664 45.2462C15.6562 45.5 18.2925 45.5 21.6224 45.5H26.378C29.708 45.5 32.3442 45.5 34.434 45.2462C36.5824 44.9852 38.341 44.4384 39.8174 43.2104C41.3 41.9774 42.1294 40.3642 42.7182 38.3324C43.2876 36.3674 43.675 33.845 44.1618 30.6774L44.7924 26.5742C45.135 24.3452 45.4096 22.5578 45.4814 21.0762C45.5559 19.5409 45.4218 18.2094 44.8676 16.9103C44.3148 15.614 43.4432 14.5835 42.278 13.5497C41.1497 12.5486 39.6536 11.4669 37.7806 10.1127L34.7624 7.9305C32.4284 6.24294 30.5724 4.90086 28.9526 3.99188C27.2808 3.05376 25.7324 2.5 24.0002 2.5ZM26.0002 20C26.0002 18.8954 25.1048 18 24.0002 18C22.8956 18 22.0002 18.8954 22.0002 20V24H18.0002C16.8957 24 16.0002 24.8954 16.0002 26C16.0002 27.1046 16.8957 28 18.0002 28H22.0002V32C22.0002 33.1046 22.8956 34 24.0002 34C25.1048 34 26.0002 33.1046 26.0002 32V28H30.0002C31.1048 28 32.0002 27.1046 32.0002 26C32.0002 24.8954 31.1048 24 30.0002 24H26.0002V20Z"
+                fill="#E3E8F0"
+              />
+            </svg>
+          </q-icon>
+        </template>
+      </DetailCard>
+    </div>
+    <ExpandBtn
+      text="Показать еще (5)"
+      @btn-click="handleShowDetailsExtra"
+      v-if="!showDetailsExtra"
+      :expand="showDetailsExtra"
+    />
+    <div class="details-extra" v-show="showDetailsExtra">
+      <DetailCard class="details-extra-card" />
+      <DetailCard class="details-extra-card" />
+      <DetailCard class="details-extra-card" />
+      <DetailCard class="details-extra-card" />
+      <DetailCard class="details-extra-card" />
+    </div>
+    <ExpandBtn
+      v-if="showDetailsExtra"
+      @btn-click="handleShowDetailsExtra"
+      :expand="showDetailsExtra"
+    />
+    <div class="details-clients">
+      <ClientCard />
+      <ClientCard />
+      <ClientCard />
+    </div>
+    <div class="details-tabs">
+      <p class="details-tabs__title">Обращения</p>
+      <div class="details-tabs__items">
+        <ClientTab :isSelected="true" />
+        <ClientTab />
+        <ClientTab />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
+import { ref } from "vue";
+import ExpandBtn from "src/components/ClientInfo/ExpandBtn.vue";
+import PolisInfo from "src/components/ClientInfo/PolisInfo.vue";
+import DetailCard from "src/components/ClientInfo/DetailCard.vue";
+import ClientCard from "src/components/ClientInfo/ClientCard.vue";
+import ClientTab from "src/components/ClientInfo/ClientTab.vue";
+const showDetailsExtra = ref(false);
+const handleShowDetailsExtra = () => {
+  showDetailsExtra.value = !showDetailsExtra.value;
+};
 </script>
 
 <style lang="scss" scoped>
-.details__card {
-  background-color: #fff;
-  padding: 16px 20px;
+.details {
   display: flex;
   flex-direction: column;
-  row-gap: 12px;
-  border-radius: 24px;
+  row-gap: 16px;
 
-  &-title {
-    margin: 0;
-    font-size: 18px;
-    line-height: 22px;
-    font-weight: 600;
+  &-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
-
-  &-text {
+  &-extra {
     display: flex;
-    flex-direction: column;
-    row-gap: 8px;
-    p {
-      margin: 0;
-      display: flex;
-      column-gap: 4px;
-      font-size: 15px;
-      line-height: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
 
-      span + span {
-        font-weight: 500;
-      }
+    &-card {
+      flex-basis: calc(25% - (16px / 4 * 3));
     }
   }
 
-  &-info {
-    display: flex;
-    justify-content: space-between;
+  &-clients {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
+
+  &-tabs {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    &__title {
+      margin: 0;
+      color: #2c3955;
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 28px;
+    }
+    &__items {
+      display: flex;
+      align-items: center;
+      column-gap: 12px;
+    }
+  }
+}
+
+.v-collapse {
+  transition: opacity 300ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 </style>

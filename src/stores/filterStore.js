@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 
-export const useClientsStore = defineStore("clients", () => {
+export const useClientsStore = defineStore("filter", () => {
   const filterData = reactive({
     clientName: {
       label: "Клиент",
