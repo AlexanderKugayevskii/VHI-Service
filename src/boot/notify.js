@@ -6,7 +6,7 @@ export default boot(() => {
     classes: "notify notify-success",
     timeout: 1000,
     position: "bottom-left",
-    icon: "img:/public/icons/success-icon.svg",
+    icon: "img:/icons/success-icon.svg",
     group: false,
   });
 
@@ -14,7 +14,7 @@ export default boot(() => {
     classes: "notify notify-error",
     timeout: 1000,
     position: "bottom-left",
-    icon: "img:/public/icons/reject-icon.svg",
+    icon: "img:/icons/reject-icon.svg",
     group: false,
   });
 });
