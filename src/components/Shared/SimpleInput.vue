@@ -4,7 +4,7 @@
       <div class="input-label__wrapper" v-if="label">
         <span class="input-label__text">{{ label }}</span>
       </div>
-      <div class="input-field__wrapper">
+      <div :class="['input-field__wrapper', { error: isError }]">
         <input
           :type="type"
           :placeholder="placeholder"
@@ -75,6 +75,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isError: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -127,11 +131,16 @@ watch(
   &__wrapper {
     background-color: #f2f5fa;
     border-radius: 16px;
+    border: 1px solid transparent;
     padding: 12px 16px;
     line-height: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    &.error {
+      border-color: #cb3333;
+    }
   }
   &__text-input {
     width: 100%;

@@ -311,6 +311,7 @@ button[class^="btn"] {
     }
   }
 }
+
 // .tabs-content .scroll {
 //   overflow: hidden;
 // }
@@ -333,3 +334,17 @@ button[class^="btn"] {
 //   border-radius: 50px;
 //   background-color: #e3e8f0;
 // }
+
+.notify {
+  background-color: #fff;
+  color: #2c3955 !important;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0px 0px 22px 0px #dae0eb;
+
+  .q-icon {
+    margin-right: 8px;
+  }
+}

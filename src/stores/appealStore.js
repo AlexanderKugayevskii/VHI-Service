@@ -4,7 +4,7 @@ import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
-import { SessionStorage } from "quasar";
+import { SessionStorage, Notify } from "quasar";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -49,9 +49,9 @@ function filterItems(data, suggestedArr, selectedArr, isOther) {
 export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
-  const isClinic = computed(() => user.value.role.id === 8);
-  const isDrugstore = computed(() => user.value.role.id === 8);
-  const isAgent = computed(() => user.value.role.id !== 8); //temp
+  const isClinic = computed(() => user.value?.role.id === 8);
+  const isDrugstore = computed(() => user.value?.role.id === 8);
+  const isAgent = computed(() => user.value?.role.id !== 8); //temp
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -478,6 +478,11 @@ export const useAppealStore = defineStore("appeal", () => {
         client.value.appealId = data.id;
         client.value.appealStatus = data.status;
         setSuccessAppeal(true);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно создано!",
+          position: "bottom-left",
+        });
         // clearAppealData();
       }
     } catch (e) {
@@ -511,6 +516,10 @@ export const useAppealStore = defineStore("appeal", () => {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
         // clearAppealData();
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно изменено!",
+        });
       }
     } catch (e) {
       console.error(e);

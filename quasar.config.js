@@ -28,7 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios", "auth", "router-auth"],
+    boot: ["i18n", "axios", "auth", "router-auth", 'chat', 'notify'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -130,7 +130,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Loading", "SessionStorage"],
+      plugins: ["Loading", "SessionStorage", "Notify"],
     },
 
     // animations: 'all', // --- includes all animations

@@ -6,7 +6,7 @@
           type="button"
           customClass="appeals-btn"
           :label="$t('create_appeal.buttons.create_appeal')"
-          @click = "handleClickCreateAppealBtn"
+          @click="handleClickCreateAppealBtn"
         />
       </template>
     </TableActions>
@@ -88,6 +88,9 @@
             </q-td>
             <q-td key="appealDate" :props="props" class="appeals-td">
               {{ props.row.appealDate }}
+              <TableTooltip>
+                {{ props.row.appealDate }}
+              </TableTooltip>
             </q-td>
             <q-td key="appealStatus" :props="props" class="appeals-td">
               <AppealStatus :status="props.row.appealStatus" />
@@ -165,14 +168,13 @@ import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 
-
 const $q = useQuasar();
 
 // table modal
 
 const router = useRouter();
 const searchProp = defineProps(["search"]);
-const emit = defineEmits(['createAppeal'])
+const emit = defineEmits(["createAppeal"]);
 
 const search = computed(() => searchProp.search);
 
@@ -194,9 +196,8 @@ const cancelOpenWhenSelect = (client) => {
 };
 //handle click create appeal
 const handleClickCreateAppealBtn = () => {
-  emit('createAppeal')
-}
-
+  emit("createAppeal");
+};
 
 //incremenet decrement and change page events
 const incrementPage = () => {
