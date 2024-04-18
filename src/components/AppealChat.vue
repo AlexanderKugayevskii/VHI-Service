@@ -211,11 +211,11 @@ const listenMessages = async () => {
 onMounted(async () => {
   if (props.appealType === 1) {
     await getMessages();
-    await listenMessages(); //temporary
+    // await listenMessages(); //temporary
 
-    // longPoolIntervalId.value = setInterval(async () => {
-    //   await getMessages();
-    // }, 5000);
+    longPoolIntervalId.value = setInterval(async () => {
+      await getMessages();
+    }, 5000);
   }
 });
 
