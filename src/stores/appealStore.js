@@ -477,6 +477,7 @@ export const useAppealStore = defineStore("appeal", () => {
       ) {
         client.value.appealId = data.id;
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
         setSuccessAppeal(true);
         Notify.create({
           type: "success",
@@ -515,6 +516,8 @@ export const useAppealStore = defineStore("appeal", () => {
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+
         // clearAppealData();
         Notify.create({
           type: "success",
@@ -541,10 +544,11 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
+      console.log(data);
 
-      client.value.id = data.contract_client.id;
-      client.value.clientId = data.contract_client.client_id;
-
+      // client.value.id = data.contract_client.id;
+      // client.value.clientId = data.contract_client.client_id;
+      // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
 
@@ -592,6 +596,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
+      client.value.appealStatus = data.status;
 
       selectedDrugstore.value = data.drugstore;
 
