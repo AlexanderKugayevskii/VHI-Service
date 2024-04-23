@@ -138,7 +138,7 @@ const getMessages = async () => {
   try {
     const response = await ChatService.getMessages(props.appealId);
     const data = response.data.data;
-
+    console.log(data[0])
     updateMessages(data);
   } catch (e) {
     console.error(e);

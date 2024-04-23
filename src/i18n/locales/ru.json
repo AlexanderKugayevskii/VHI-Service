@@ -58,12 +58,16 @@
     "doctor": "Врач",
     "service": "Сервис",
     "diagnosis": "Диагноз",
-    "drugstore": "Аптека", 
+    "drugstore": "Аптека",
     "expense": "Расход / {currency}"
   },
   "pagination": {
     "next": "Следующая",
     "prev": "Предыдущая",
     "rows_per_page": "Строк в таблице"
+  },
+  "days": {
+    "today": "Сегодня",
+    "yesterday": "Вчера"
   }
 }

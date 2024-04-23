@@ -544,7 +544,6 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      console.log(data);
 
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;

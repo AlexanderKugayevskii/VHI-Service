@@ -108,6 +108,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       props.pagination.rowsPerPage,
       props.filter
     );
+    console.log(props);
   };
 
   const rows = computed(() => {

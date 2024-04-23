@@ -64,5 +64,9 @@
     "next": "Keyingisi",
     "prev": "Oldingi",
     "rows_per_page": "Jadvaldagi qatorlar"
+  },
+  "days": {
+    "today": "Bugun",
+    "yesterday": "Kecha"
   }
 }

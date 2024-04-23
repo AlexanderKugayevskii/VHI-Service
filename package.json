@@ -20,6 +20,7 @@
     "@vueuse/core": "^10.9.0",
     "axios": "^1.2.1",
     "compressorjs": "^1.2.1",
+    "dayjs": "^1.11.10",
     "heic2any": "^0.0.4",
     "lodash": "^4.17.21",
     "pinia": "^2.0.11",
