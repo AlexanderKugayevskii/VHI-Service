@@ -102,17 +102,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watchEffect } from "vue";
+import { ref, onMounted, onUnmounted, computed, watchEffect } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 import SimpleInput from "./Shared/SimpleInput.vue";
 import LoadingSpinner from "./Shared/LoadingSpinner.vue";
 import formatDate from "src/helpers/formatDate";
 import echo from "src/boot/chat";
 import ChatService from "src/services/ChatService";
-import { onUnmounted } from "vue";
+import dayjs from "dayjs";
+import Trans from "src/i18n/translation";
+import useDay from "src/composables/useDay";
+
+import "dayjs/locale/ru"; // Импортируем локаль для русского языка
+import "dayjs/locale/uz-latn"; // Импортируем локаль для узбекского языка
 
 const authStore = useAuthStore();
-
+const day = useDay();
 const userRole = computed(() => Number(authStore.user.id));
 
 const inputText = ref("");
@@ -138,7 +143,7 @@ const getMessages = async () => {
   try {
     const response = await ChatService.getMessages(props.appealId);
     const data = response.data.data;
-    console.log(data[0])
+
     updateMessages(data);
   } catch (e) {
     console.error(e);
@@ -159,13 +164,31 @@ const updateMessages = (newMessages) => {
       }
     });
   }
-
-  console.log(messages.value.length);
-
-  // messages.value = messages.value.filter((message) =>
-  //   newMessagesIds.includes(message.id)
-  // );
 };
+
+const mappedMassages = computed(() => {
+  const groupedMessages = {};
+  const temp = messages.value.map((message) => {
+    return {
+      ...message,
+      created_at: dayjs(message.created_at)
+        .locale(day.currentLocale.value)
+        .format(`D MMMM, YYYY`),
+    };
+  });
+
+  temp.forEach((message) => {
+    const date = message.created_at;
+    if (!groupedMessages[date]) {
+      groupedMessages[date] = [];
+    }
+
+    groupedMessages[date].push(message);
+  });
+
+  return groupedMessages;
+});
+
 const sendMessage = async () => {
   if (isInputEmpty.value) return;
 
@@ -178,6 +201,7 @@ const sendMessage = async () => {
 
   formData.append("text", payload.message);
   formData.append("application_id", payload.application_id);
+
   try {
     const response = await ChatService.postMessage(formData);
     const data = response.data.data;
@@ -212,13 +236,13 @@ onMounted(async () => {
   if (props.appealType === 1) {
     await getMessages();
     // await listenMessages(); //temporary
+    console.log(mappedMassages.value);
 
     longPoolIntervalId.value = setInterval(async () => {
       await getMessages();
     }, 5000);
   }
 });
-
 onUnmounted(() => {
   if (props.appealType === 1) {
     // echo.leave(`dms_chat-${props.appealId}`);

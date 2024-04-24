@@ -31,5 +31,7 @@ export default function useDay() {
     );
   });
 
-  return { today, yesterday };
+  const isToday = () => {};
+
+  return { today, yesterday, currentLocale };
 }
