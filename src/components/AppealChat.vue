@@ -53,52 +53,65 @@
         </button>
       </form>
     </div>
-    <div class="chat-body">
+    <div class="chat-body" id="chatBody">
       <LoadingSpinner v-if="loading" />
       <div
-        :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
         v-else
-        v-for="msg in messages"
-        :key="msg.id"
+        v-for="message in mappedMessages"
+        :key="message[0]"
+        class="chat-group"
       >
-        <div class="chat-avatar">
-          <img :src="`https://api.neoinsurance.uz/${msg.sender.avatar}`" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">
-              {{ msg.sender.lastname }} {{ msg.sender.name }}
-            </div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">
-                {{ formatDate(msg.created_at, false) }}
-              </div>
-              <!-- <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div> -->
-            </div>
+        <div
+          :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
+          v-for="msg in message[1]"
+          :key="msg.id"
+        >
+          <div class="chat-avatar">
+            <img :src="`https://api.neoinsurance.uz/${msg.sender.avatar}`" />
           </div>
-          <div class="chat-message-body">{{ msg.text }}</div>
+          <div class="chat-message">
+            <div class="chat-message-header">
+              <div class="chat-message-title">
+                {{ msg.sender.lastname }} {{ msg.sender.name }}
+              </div>
+              <div class="chat-message-extra">
+                <div class="chat-message-time">
+                  {{ formatDate(msg.created_at, false) }}
+                </div>
+              </div>
+            </div>
+            <div class="chat-message-body">{{ msg.text }}</div>
+          </div>
+        </div>
+
+        <div class="chat-group-time">
+          <span class="chat-group-time__label">
+            {{ message[0] }}
+          </span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- <div class="chat-message-viewed">
+                  <q-icon size="12px"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="13"
+                      height="10"
+                      viewBox="0 0 13 10"
+                      fill="none"
+                    >
+                      <path
+                        d="M0.75 5L4.5 8.75L12 1.25"
+                        stroke="#A0AABC"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </q-icon>
+                </div> -->
 </template>
 
 <script setup>
@@ -144,7 +157,8 @@ const getMessages = async () => {
     const response = await ChatService.getMessages(props.appealId);
     const data = response.data.data;
 
-    updateMessages(data);
+    messages.value = data;
+    // updateMessages(data);
   } catch (e) {
     console.error(e);
   } finally {
@@ -166,19 +180,35 @@ const updateMessages = (newMessages) => {
   }
 };
 
-const mappedMassages = computed(() => {
+const mappedMessages = computed(() => {
   const groupedMessages = {};
   const temp = messages.value.map((message) => {
+    let dateMessage = "";
+
+    if (day.isToday(message.created_at)) {
+      dateMessage = day.today.value;
+    } else if (day.isYesterday(message.created_at)) {
+      dateMessage = day.yesterday.value;
+    } else {
+      dateMessage = dayjs(message.created_at)
+        .locale(day.currentLocale.value)
+        .format(`D MMMM, YYYY`);
+    }
+
     return {
       ...message,
-      created_at: dayjs(message.created_at)
-        .locale(day.currentLocale.value)
-        .format(`D MMMM, YYYY`),
+      dateMessage,
     };
+    // return {
+    //   ...message,
+    //   created_at: dayjs(message.created_at)
+    //     .locale(day.currentLocale.value)
+    //     .format(`D MMMM, YYYY`),
+    // };
   });
 
   temp.forEach((message) => {
-    const date = message.created_at;
+    const date = message.dateMessage;
     if (!groupedMessages[date]) {
       groupedMessages[date] = [];
     }
@@ -186,7 +216,7 @@ const mappedMassages = computed(() => {
     groupedMessages[date].push(message);
   });
 
-  return groupedMessages;
+  return Object.entries(groupedMessages);
 });
 
 const sendMessage = async () => {
@@ -236,7 +266,7 @@ onMounted(async () => {
   if (props.appealType === 1) {
     await getMessages();
     // await listenMessages(); //temporary
-    console.log(mappedMassages.value);
+    console.log(mappedMessages.value);
 
     longPoolIntervalId.value = setInterval(async () => {
       await getMessages();
@@ -275,7 +305,7 @@ onUnmounted(() => {
 .chat-body {
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
+  row-gap: 24px;
 }
 .chat {
   position: relative;
@@ -365,6 +395,26 @@ onUnmounted(() => {
           background-color: #f2f5fa;
           border-radius: 12px 0 12px 12px;
         }
+      }
+    }
+  }
+  &-group {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    &-time {
+      padding-top: 4px;
+      display: flex;
+      justify-content: center;
+
+      &__label {
+        display: inline-flex;
+        border-radius: 50px;
+        background-color: #f7f9fc;
+        padding: 16px;
+        color: #404f6f;
+        font-size: 15px;
+        font-weight: 600;
       }
     }
   }
