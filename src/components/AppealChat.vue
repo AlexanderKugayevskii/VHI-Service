@@ -57,13 +57,13 @@
       <LoadingSpinner v-if="loading" />
       <div
         v-else
-        v-for="message in mappedMessages"
-        :key="message[0]"
+        v-for="[dateLabel, messages] in mappedMessages"
+        :key="dateLabel"
         class="chat-group"
       >
         <div
           :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
-          v-for="msg in message[1]"
+          v-for="msg in messages"
           :key="msg.id"
         >
           <div class="chat-avatar">
@@ -86,7 +86,7 @@
 
         <div class="chat-group-time">
           <span class="chat-group-time__label">
-            {{ message[0] }}
+            {{ dateLabel }}
           </span>
         </div>
       </div>
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watchEffect } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 import SimpleInput from "./Shared/SimpleInput.vue";
 import LoadingSpinner from "./Shared/LoadingSpinner.vue";
@@ -123,7 +123,6 @@ import formatDate from "src/helpers/formatDate";
 import echo from "src/boot/chat";
 import ChatService from "src/services/ChatService";
 import dayjs from "dayjs";
-import Trans from "src/i18n/translation";
 import useDay from "src/composables/useDay";
 
 import "dayjs/locale/ru"; // Импортируем локаль для русского языка
@@ -199,12 +198,7 @@ const mappedMessages = computed(() => {
       ...message,
       dateMessage,
     };
-    // return {
-    //   ...message,
-    //   created_at: dayjs(message.created_at)
-    //     .locale(day.currentLocale.value)
-    //     .format(`D MMMM, YYYY`),
-    // };
+
   });
 
   temp.forEach((message) => {

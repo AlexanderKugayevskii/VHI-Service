@@ -13,8 +13,8 @@ export default function useDay() {
     Trans.currentLocale === "uz" ? "uz-latn" : Trans.currentLocale
   );
 
+
   const today = computed(() => {
-    console.log("today", currentLocale.value);
     return (
       i18n.t("days.today") +
       ", " +
@@ -23,7 +23,6 @@ export default function useDay() {
   });
 
   const yesterday = computed(() => {
-    console.log("yesterday", currentLocale.value);
     return (
       i18n.t("days.yesterday") +
       ", " +
