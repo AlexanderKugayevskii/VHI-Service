@@ -49,6 +49,18 @@ const routes = [
                   }
                 },
               },
+              {
+                path: 'create-appeal-limit/:id', 
+                name: 'createAppealLimit', 
+                props: (route) => {
+                  return {
+                    id: route.params.id, 
+                    key: route.params.id, 
+                  };
+                }, 
+                component: () => import('pages/CreateAppealLimit.vue'),
+                
+              }
             ],
           },
           {

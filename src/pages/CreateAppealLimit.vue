@@ -18,7 +18,7 @@
           </h4>
           <div class="label-row">
             <span class="title-label green">Клиника</span>
-            <span class="title-label violet">Обращения</span>
+            <span class="title-label violet">Лимиты</span>
           </div>
         </div>
         <div class="create-appeal-body">
@@ -42,10 +42,6 @@
                   <span
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
-
-                  <!-- <span
-                    >Родственник: <b>{{ clientData.clientName }} </b></span
-                  > -->
                 </div>
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
@@ -88,12 +84,6 @@
                   <div class="tabs-header q-mb-md">
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
-                        name="clinics"
-                        :label="$t('create_appeal.tabs.clinic')"
-                        :ripple="false"
-                        class="tab--no-hover"
-                      />
-                      <q-tab
                         name="doctors"
                         :label="$t('create_appeal.tabs.doctors')"
                         :ripple="false"
@@ -115,139 +105,8 @@
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
-                        <q-tab-panel name="clinics" key="clinics">
-                          <div class="tab-header">
-                            <DropdownSelectNew
-                              class="dropdown-space"
-                              :label="
-                                appealStore.isClinic
-                                  ? 'Ваша клиника'
-                                  : $t('create_appeal.dropdowns.clinic')
-                              "
-                              :multiple="false"
-                              :loading="appealStore.loading"
-                              :options="appealStore.clinics"
-                              :disable-choise="
-                                appealStore.isClinic ||
-                                appealStore.typeOfAppeal === 1
-                              "
-                              :selected-options="appealStore.selectedClinic"
-                              @select-option="appealStore.selectClinic"
-                              @request="appealStore.fetchClinics"
-                              @requestBySelect="appealStore.fetchHospitalData"
-                            >
-                              <template #placeholder v-if="user.role.id !== 8">
-                                {{ $t("create_appeal.dropdowns.clinic") }}
-                              </template>
-                              <template v-slot:selected-options-once="props">
-                                <div>{{ props.option.name }}</div>
-                              </template>
-                              <template v-slot:option-content="props">
-                                <div>{{ props.option.name }}</div>
-                                <CheckIcon
-                                  v-if="
-                                    appealStore.checkSelectedClinic(
-                                      props.option
-                                    )
-                                  "
-                                />
-                              </template>
-                            </DropdownSelectNew>
-                            <SimpleInput
-                              label="Диагноз"
-                              placeholder="Введите диагноз"
-                              @update:model-value="appealStore.setDiagnosis"
-                              :modelValue="appealStore.diagnosis"
-                            ></SimpleInput>
-                          </div>
-                        </q-tab-panel>
-
                         <q-tab-panel name="doctors" key="doctors">
-                          <div class="tab-header">
-                            <DropdownSelectNew
-                              class="dropdown-space"
-                              :multiple="true"
-                              :loading="appealStore.loading"
-                              :options="appealStore.doctors"
-                              :selected-options="appealStore.selectedDoctors"
-                              @select-option="appealStore.selectDoctors"
-                            >
-                              <template #placeholder>
-                                {{ $t("create_appeal.dropdowns.doctors") }}
-                              </template>
-                              <template v-slot:selected-options-once="props">
-                                <div>{{ props.option.name }}</div>
-                              </template>
-                              <template
-                                v-slot:selected-options-length="{ length }"
-                              >
-                                {{
-                                  $t(
-                                    "create_appeal.dropdowns.doctors_choise",
-                                    length
-                                  )
-                                }}
-                              </template>
-                              <template v-slot:option-content="props">
-                                <div
-                                  :class="{
-                                    'disabled-option':
-                                      appealStore.checkSuggestedDoctors(
-                                        props.option
-                                      ) ||
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      ),
-                                  }"
-                                >
-                                  <span>
-                                    {{ props.option.name }}
-                                  </span>
-                                  <span class="price">
-                                    -
-                                    {{ formatPrice(props.option.pivot.price) }}
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.checkSuggestedDoctors(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    (добавлено
-                                    {{
-                                      appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
-                                    }})
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
-                                    }}
-                                  </span>
-                                </div>
-                                <CheckIcon
-                                  v-if="
-                                    appealStore.checkSelectedDoctors(
-                                      props.option
-                                    ) &&
-                                    !appealStore.cantRemoveFromSelectedDoctors(
-                                      props.option
-                                    )
-                                  "
-                                />
-                              </template>
-                            </DropdownSelectNew>
-                          </div>
+                          <div class="tab-header"></div>
                           <div class="tab-body">
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
@@ -255,12 +114,8 @@
                               :item="doctor"
                               :key="doctor.id"
                               :isAgent="appealStore.isAgent"
-                              @update:status="
-                                (item) => handleStatusDoctor(item, false)
-                              "
-                              @update:progress="
-                                (item) => handleStatusDoctor(item, false)
-                              "
+                              :showProgressSwitcher="false"
+                              :allow-handle-status="false"
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -307,91 +162,7 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="services" key="services">
-                          <div class="tab-header">
-                            <DropdownSelectNew
-                              class="dropdown-space"
-                              :multiple="true"
-                              :loading="appealStore.loading"
-                              :options="appealStore.services"
-                              :selected-options="appealStore.selectedServices"
-                              @select-option="appealStore.selectServices"
-                            >
-                              <template #placeholder>
-                                {{ $t("create_appeal.dropdowns.services") }}
-                              </template>
-                              <template v-slot:selected-options-once="props">
-                                <div>{{ props.option.name }}</div>
-                              </template>
-                              <template
-                                v-slot:selected-options-length="{ length }"
-                              >
-                                {{
-                                  $t(
-                                    "create_appeal.dropdowns.services_choise",
-                                    length
-                                  )
-                                }}
-                              </template>
-                              <template v-slot:option-content="props">
-                                <div
-                                  :class="{
-                                    'disabled-option':
-                                      appealStore.checkSuggestedServices(
-                                        props.option
-                                      ) ||
-                                      appealStore.cantRemoveFromSelectedServices(
-                                        props.option
-                                      ),
-                                  }"
-                                >
-                                  <span>
-                                    {{ props.option.name }}
-                                  </span>
-                                  <span class="price">
-                                    -
-                                    {{ formatPrice(props.option.pivot.price) }}
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.checkSuggestedServices(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    (добавлено
-                                    {{
-                                      appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
-                                    }})
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.cantRemoveFromSelectedServices(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
-                                    }}
-                                  </span>
-                                </div>
-                                <CheckIcon
-                                  v-if="
-                                    appealStore.checkSelectedServices(
-                                      props.option
-                                    ) &&
-                                    !appealStore.cantRemoveFromSelectedServices(
-                                      props.option
-                                    )
-                                  "
-                                />
-                              </template>
-                            </DropdownSelectNew>
-                          </div>
+                          <div class="tab-header"></div>
                           <div class="tab-body">
                             <SelectListItem
                               v-for="service in appealStore.selectedServices"
@@ -501,49 +272,6 @@
                 </div>
               </div>
             </div>
-            <div class="create-appeal-right">
-              <div class="create-appeal-interaction">
-                <div class="tabs-container tabs-container-gap">
-                  <div class="tabs-header">
-                    <q-tabs dense active-class="tab-active" v-model="tabRight">
-                      <q-tab
-                        name="chat"
-                        label="Чат"
-                        :ripple="false"
-                        class="tab--no-hover"
-                      />
-                      <q-tab
-                        name="history"
-                        label="История"
-                        :ripple="false"
-                        class="tab--no-hover"
-                      />
-                    </q-tabs>
-                  </div>
-                  <div class="tabs-content appeal-content">
-                    <keep-alive>
-                      <q-tab-panels
-                        v-model="tabRight"
-                        animated
-                        swipeable
-                        transition-next="jump-right"
-                        transition-prev="jump-left"
-                      >
-                        <q-tab-panel name="chat" key="chat">
-                          <AppealChat
-                            :appealId="clientData.appealId"
-                            :appealType="appealStore.typeOfAppeal"
-                          />
-                        </q-tab-panel>
-                        <q-tab-panel name="history" key="history">
-                          <div class="temp-text">Скоро будет</div>
-                        </q-tab-panel>
-                      </q-tab-panels>
-                    </keep-alive>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div class="create-appeal-close">
@@ -582,14 +310,10 @@
 <script setup>
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
-import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
-import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import SelectedItem from "src/components/Shared/SelectedItem.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
-import AppealChat from "src/components/AppealChat.vue";
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
@@ -607,8 +331,8 @@ const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
 
-const tab = ref("clinics");
-const tabRight = ref("chat");
+const tab = ref("doctors");
+
 const createAppealModalRef = ref(null);
 
 const handleCreateAppeal = () => {
@@ -651,13 +375,6 @@ const handleStatusDoctor = (item, isSuggested) => {
 const handleStatusService = (item, isSuggested) => {
   appealStore.changeStatusService(item, isSuggested);
 };
-
-// const handleRemoveDrug = (item) => {
-//   appealStore.clearDrugs(item);
-// };
-// const handleAddDrug = () => {
-//   appealStore.setDrugs(drugData);
-// };
 </script>
 
 <style lang="scss" scoped>
@@ -698,7 +415,7 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-basis: 65%;
+  flex-basis: 100%;
 }
 .create-appeal-client-info {
   background-color: #fff;

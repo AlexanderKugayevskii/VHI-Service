@@ -130,6 +130,7 @@
               <UserSettings
                 :client="props.row"
                 @open-modal="openAppealPage(props.row)"
+                @open-modal-limit="openAppealLimit(props.row)"
               ></UserSettings>
             </q-td>
           </q-tr>
@@ -237,6 +238,25 @@ const openAppealPage = async (client) => {
   router.replace(
     Trans.i18nRoute({
       name: "createAppeal",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
+};
+
+const openAppealLimit = async (client) => {
+  appealStore.setClient(client);
+  appealStore.setTypeOfAppeal("CHANGE");
+  $q.loading.show({
+    delay: 500,
+  });
+
+  await appealStore.fetchApplicantData();
+  await appealStore.fetchHospitalData();
+
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppealLimit",
       params: { id: appealStore.client.contractClientId },
     })
   );

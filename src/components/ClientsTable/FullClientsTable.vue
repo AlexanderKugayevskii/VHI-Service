@@ -104,7 +104,6 @@
       @onDecrementPage="decrementPage"
       @onChangePage="changePage"
     />
-
     <q-space></q-space>
     <RowsPerPage @choiceOption="selectOption" :pagination="pagination" />
   </div>

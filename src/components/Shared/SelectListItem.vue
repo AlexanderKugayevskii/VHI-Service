@@ -10,7 +10,7 @@
         <StatusSwitcher
           :isAgent="isAgent"
           :progress="item.pivot.progress"
-          v-if="item.pivot.status === 1"
+          v-if="item.pivot.status === 1 && showProgressSwitcher"
           @update:change="handleProgress"
         />
         <div class="selected-item-quantity" v-if="$slots.quantity">
@@ -89,6 +89,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showProgressSwitcher: {
+    type: Boolean,
+    default: true,
+  },
+  allowHandleStatus: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits(["update:status", "update:progress", "remove:item"]);
@@ -98,6 +106,7 @@ const disabledRule = computed(() => {
     props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
 
   return (
+    !props.allowHandleStatus ||
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
     (!props.isAgent &&
@@ -105,8 +114,7 @@ const disabledRule = computed(() => {
       props.item.pivot.progress >= 1 &&
       createdByOther === 0) ||
     (props.isAgent && createdByOther === 0 && props.item.pivot.status === 0) ||
-    (!props.isAgent && createdByOther
-     === 1 && props.item.pivot.status >= 0)
+    (!props.isAgent && createdByOther === 1 && props.item.pivot.status >= 0)
   );
 });
 

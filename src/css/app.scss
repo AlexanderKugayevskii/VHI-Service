@@ -348,3 +348,27 @@ button[class^="btn"] {
     margin-right: 8px;
   }
 }
+
+.label-row {
+  display: flex;
+  column-gap: 8px;
+  align-items: center;
+}
+.title-label {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 15px;
+  &.red {
+    background-color: hsl(0, 100%, 96%);
+    color: hsl(0, 60%, 50%);
+  }
+  &.green {
+    background-color: hsl(182, 77%, 93%);
+    color: hsl(182, 69%, 33%);
+  }
+  &.violet {
+    background-color: hsl(294, 100%, 96%);
+    color: hsl(294, 60%, 50%);
+  }
+}
