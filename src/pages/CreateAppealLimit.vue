@@ -123,6 +123,31 @@
                               <template #price>
                                 {{ formatPrice(Number(doctor.pivot.price)) }}
                               </template>
+                              <template #dropdown>
+                                <DropdownSelectNew
+                                  :searchInput="false"
+                                  :options="[
+                                    { id: 1, name: 'first' },
+                                    { id: 2, name: 'second' },
+                                    { id: 3, name: 'thirds' },
+                                  ]"
+                                  :selected-options="{ id: 2, name: 'second' }"
+                                >
+                                  <template #placeholder> Лимит </template>
+                                  <template
+                                    v-slot:selected-options-once="props"
+                                  >
+                                    <div>{{ props.option.name }}</div>
+                                  </template>
+                                  <template v-slot:option-content="props">
+                                    <div>
+                                      <span>
+                                        {{ props.option.name }}
+                                      </span>
+                                    </div>
+                                  </template>
+                                </DropdownSelectNew>
+                              </template>
                             </SelectListItem>
                             <div
                               class=""
@@ -143,12 +168,8 @@
                                 :removable="false"
                                 :key="doctor.id"
                                 :isAgent="appealStore.isAgent"
-                                @update:status="
-                                  (item) => handleStatusDoctor(item, true)
-                                "
-                                @update:progress="
-                                  (item) => handleStatusDoctor(item, true)
-                                "
+                                :showProgressSwitcher="false"
+                                :allow-handle-status="false"
                               >
                                 <template #label>
                                   {{ doctor.name }}
@@ -170,12 +191,8 @@
                               :removable="false"
                               :key="service.id"
                               :isAgent="appealStore.isAgent"
-                              @update:status="
-                                (item) => handleStatusService(item, false)
-                              "
-                              @update:progress="
-                                (item) => handleStatusService(item, false)
-                              "
+                              :showProgressSwitcher="false"
+                              :allow-handle-status="false"
                             >
                               <template #label>
                                 {{ service.name }}
@@ -204,12 +221,8 @@
                                 :removable="false"
                                 :key="service.id"
                                 :isAgent="appealStore.isAgent"
-                                @update:status="
-                                  (item) => handleStatusService(item, true)
-                                "
-                                @update:progress="
-                                  (item) => handleStatusService(item, true)
-                                "
+                                :showProgressSwitcher="false"
+                                :allow-handle-status="false"
                               >
                                 <template #label>
                                   {{ service.name }}

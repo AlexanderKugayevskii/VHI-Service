@@ -222,6 +222,7 @@ export const useAppealStore = defineStore("appeal", () => {
     return suggestedServices.value.some((item) => service.id === item.id);
   };
 
+  // нельзя убрать выбранный сервис в дропдауне если прогресс больше 1 и это агент или если это клиника и статус не 0
   const cantRemoveFromSelectedServices = (service) => {
     return selectedServices.value.some((item) => {
       if (service.id === item.id) {

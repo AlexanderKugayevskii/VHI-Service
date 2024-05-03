@@ -7,6 +7,8 @@
         </div>
       </div>
       <div class="selected-item-right">
+        <slot name="dropdown"></slot>
+
         <StatusSwitcher
           :isAgent="isAgent"
           :progress="item.pivot.progress"
@@ -77,6 +79,7 @@
 import { computed } from "vue";
 import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
+import DropdownSelectNew from "./DropdownSelectNew.vue";
 
 const props = defineProps({
   item: {

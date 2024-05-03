@@ -67,7 +67,7 @@
           id="virtual-scroll-target"
           style="max-height: 324px"
         >
-          <div class="dropdown-select-search">
+          <div class="dropdown-select-search" v-if="searchInput">
             <label class="dropdown-select-search-label">
               <input
                 type="text"
@@ -172,6 +172,10 @@ export default {
     clickOutSide,
   },
   props: {
+    searchInput: {
+      type: Boolean,
+      default: true,
+    },
     disableChoise: Boolean,
     loading: Boolean,
     label: String,
