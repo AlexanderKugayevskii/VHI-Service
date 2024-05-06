@@ -125,13 +125,18 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
+                                  dense
+                                  style="min-width: 300px"
                                   :searchInput="false"
                                   :options="[
                                     { id: 1, name: 'first' },
                                     { id: 2, name: 'second' },
                                     { id: 3, name: 'thirds' },
                                   ]"
-                                  :selected-options="{ id: 2, name: 'second' }"
+                                  :selected-options="testRef"
+                                  @select-option="
+                                    (item) => selectTestRef(item, doctor)
+                                  "
                                 >
                                   <template #placeholder> Лимит </template>
                                   <template
@@ -281,6 +286,10 @@
                     <span class="create-appeal-action-expences-total">{{
                       formatPrice(appealStore.appealTotalConsumption)
                     }}</span>
+
+                    {{ testRef }}
+                    ---
+                    {{ testDoctor?.name }}
                   </div>
                 </div>
               </div>
@@ -321,11 +330,9 @@
 </template>
 
 <script setup>
-import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
-import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -334,6 +341,14 @@ import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
+
+const testRef = ref(null);
+const testDoctor = ref(null);
+
+const selectTestRef = (item, doctor) => {
+  testRef.value = item;
+  testDoctor.value = doctor;
+};
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);

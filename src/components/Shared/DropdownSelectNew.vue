@@ -1,9 +1,10 @@
 <template>
   <div class="dropdown" id="dropdown">
     <div class="dropdown-label">
-      <div class="dropdown-label-wrapper"><slot name="top-label"></slot></div>
-
-      <div class="dropdown-button" ref="button" role="button">
+      <div :class="{ 'dropdown-label-wrapper': !!label }">
+        <slot name="top-label"></slot>
+      </div>
+      <div :class="['dropdown-button', { dense }]" ref="button" role="button">
         <button
           class="dropdown-button-btn"
           :disabled="disableChoise"
@@ -146,7 +147,7 @@
               :key="index"
               @click="selectOption(item)"
             >
-              <div class="dropdown-select-list-item-text">
+              <div :class="['dropdown-select-list-item-text', { dense }]">
                 <slot name="option-content" :option="item"></slot>
               </div>
             </div>
@@ -178,7 +179,10 @@ export default {
     },
     disableChoise: Boolean,
     loading: Boolean,
-    label: String,
+    label: {
+      type: String,
+      default: "",
+    },
     options: Array,
     selectedOptions: {
       required: true,
@@ -194,6 +198,10 @@ export default {
     localSearch: {
       type: Boolean,
       default: true,
+    },
+    dense: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -323,7 +331,7 @@ export default {
 }
 .dropdown-select-scroll {
   padding: 0 4px 0 0;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .dropdown-select-scroll::-webkit-scrollbar {
   width: 8px;
@@ -346,6 +354,10 @@ export default {
   background-color: #f2f5fa;
   border-radius: 16px;
   cursor: pointer;
+
+  &.dense {
+    padding: 3px 4px;
+  }
 }
 .dropdown-button-btn {
   width: 100%;
@@ -404,8 +416,11 @@ export default {
   border-radius: 8px;
   color: #404f6f;
 
-  transition: 0.3s;
+  &.dense {
+    padding: 4px;
+  }
 
+  transition: 0.3s;
   &--active {
     background-color: #edf0f7;
   }
