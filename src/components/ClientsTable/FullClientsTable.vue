@@ -59,10 +59,7 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr
-          :props="props"
-          class="clickable"
-        >
+        <q-tr :props="props" class="clickable">
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
@@ -79,18 +76,42 @@
           </q-td>
           <q-td key="passport" :props="props" class="appeals-td">
             {{ props.row.passport }}
+            <TableTooltip>
+              {{ props.row.passport }}
+            </TableTooltip>
+          </q-td>
+          <q-td key="pinfl" :props="props" class="appeals-td">
+            {{ props.row.pinfl }}
+            <TableTooltip>
+              {{ props.row.pinfl }}
+            </TableTooltip>
+          </q-td>
+          <q-td key="phone" :props="props" class="appeals-td">
+            {{ props.row.phone }}
+            <TableTooltip>
+              {{ props.row.phone }}
+            </TableTooltip>
           </q-td>
           <q-td key="dmsId" :props="props" class="appeals-td">
             {{ props.row.dmsId }}
+            <TableTooltip>
+              {{ props.row.dmsId }}
+            </TableTooltip>
           </q-td>
           <q-td key="program" :props="props" class="appeals-td">
             {{ props.row.program }}
           </q-td>
           <q-td key="insurancePeriod" :props="props" class="appeals-td">
-            11.12.2023 - 11.12.2024
+            {{ props.row.insurancePeriod }}
+            <TableTooltip>
+              {{ props.row.insurancePeriod }}
+            </TableTooltip>
           </q-td>
           <q-td key="organizationName" :props="props" class="appeals-td">
-            Promed Service
+            {{ props.row.organizationName }}
+            <TableTooltip>
+              {{ props.row.organizationName }}
+            </TableTooltip>
           </q-td>
         </q-tr>
       </template>
@@ -199,6 +220,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.fullClientTable {
+  table-layout: auto;
+}
 .appeal-link {
   font-size: 14px;
   line-height: 20px;
@@ -213,20 +237,20 @@ onMounted(() => {
 }
 
 .appeals-th:nth-of-type(1) {
-  width: 48px;
+  width: 100px;
 }
 // .appeals-th:nth-of-type(2) {
-//   width: 200px;
-// }
-// .appeals-th:nth-of-type(3) {
 //   width: 150px;
 // }
-.appeals-th:nth-of-type(4) {
+.appeals-th:nth-of-type(3) {
   width: 120px;
 }
-.q-table thead th:last-of-type {
-  width: 52px;
+.appeals-th:nth-of-type(4) {
+  width: 140px;
 }
+// .q-table thead th:last-of-type {
+//   width: 52px;
+// }
 .appeals-td {
   font-family: "Roboto", sans-serif;
   font-size: 14px;

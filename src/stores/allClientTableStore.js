@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import formatDate from "src/helpers/formatDate";
-
+import formatNumber from "src/helpers/formatNumber";
 import { useI18n } from "vue-i18n";
+
 export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
 
@@ -31,6 +32,18 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       align: "left",
       label: "Паспорт",
       field: "passport",
+    },
+    {
+      name: "pinfl",
+      align: "left",
+      label: "ПИНФЛ",
+      field: "passport",
+    },
+    {
+      name: "phone",
+      align: "left",
+      label: "Телефон",
+      field: "phone",
     },
     {
       name: "dmsId",
@@ -74,6 +87,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     ClientService.getFullClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
+
         console.log(users.value);
 
         // router.push({
@@ -113,15 +127,17 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         row.contract.end_date.replace(/-/g, ".");
 
       return {
-        contractClientId: row.contract_client_id,
-        appealId: row.id,
-        clientFirstname: row.contract.contract_client[0].client.name,
-        clientLastname: row.contract.contract_client[0].client.lastname,
+        contractClientId: row.id,
+        clientFirstname: row.client.name,
+        clientLastname: row.client.lastname,
+        passport: `${row.client.seria} ${row.client.number}`,
+        pinfl: row.client.pinfl,
+        phone: formatNumber(row.client.phone),
         clientType: "Клиент",
-        passport: `${row.contract.contract_client[0].client.seria} ${row.contract.contract_client[0].client.number}`,
-        dmsId: row.contract.contract_client[0].dms_code,
-        program: row.contract.contract_client[0].program.name,
+        dmsId: row.dms_code,
+        program: row.program?.name ?? "",
         insurancePeriod: insurancePeriod,
+        organizationName: row.contract?.applicant ?? 'no applicant',
         index: row.id,
       };
     });

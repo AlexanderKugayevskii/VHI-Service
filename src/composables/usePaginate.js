@@ -9,7 +9,7 @@ export default function usePaginate(pagination) {
   const hasNextPage = computed(() => totalPages.value === pagination.value.page);
   const hasPrevPage = computed(() => pagination.value.page === 1);
   const paginationRange = computed(() => {
-    const sidePages = 1;
+    const sidePages = 2;
     const range = [];
     const start = Math.max(1, pagination.value.page - sidePages);
     const end = Math.min(pagination.value.page + sidePages, totalPages.value);
