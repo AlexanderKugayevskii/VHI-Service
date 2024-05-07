@@ -162,7 +162,11 @@ createQuasarApp(createApp, quasarUserOptions)
       
       import('boot/auth'),
       
-      import('boot/router-auth')
+      import('boot/router-auth'),
+      
+      import('boot/chat'),
+      
+      import('boot/notify')
       
     ]).then(bootFiles => {
       const boot = mapFn(bootFiles).filter(entry => typeof entry === 'function')

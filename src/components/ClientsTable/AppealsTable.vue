@@ -1,5 +1,15 @@
 <template>
   <div>
+    <TableActions>
+      <template #appealBtn>
+        <SimpleButton
+          type="button"
+          customClass="appeals-btn"
+          :label="$t('create_appeal.buttons.create_appeal')"
+          @click="handleClickCreateAppealBtn"
+        />
+      </template>
+    </TableActions>
     <div>
       <q-table
         flat
@@ -78,6 +88,9 @@
             </q-td>
             <q-td key="appealDate" :props="props" class="appeals-td">
               {{ props.row.appealDate }}
+              <TableTooltip>
+                {{ props.row.appealDate }}
+              </TableTooltip>
             </q-td>
             <q-td key="appealStatus" :props="props" class="appeals-td">
               <AppealStatus :status="props.row.appealStatus" />
@@ -116,9 +129,9 @@
             >
               <UserSettings
                 :client="props.row"
-                @openModalLimit="() => console.log('working emitter')"
+                @open-modal="openAppealPage(props.row)"
+                @open-modal-limit="openAppealLimit(props.row)"
               ></UserSettings>
-              <!-- @openModal="openAppealPage(props.row)" -->
             </q-td>
           </q-tr>
         </template>
@@ -132,6 +145,7 @@
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
       />
+
       <q-space></q-space>
       <RowsPerPage @choiceOption="selectOption" :pagination="pagination" />
     </div>
@@ -140,23 +154,29 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
 
 import Trans from "src/i18n/translation";
+import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import UserSettings from "./UserSettings.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
-import { onMounted, computed, ref, watch } from "vue";
+import TableActions from "./TableActions.vue";
+import SimpleButton from "src/components/Shared/SimpleButton.vue";
+import { onMounted, computed, ref, reactive, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 
 const $q = useQuasar();
 
+// table modal
+
 const router = useRouter();
 const searchProp = defineProps(["search"]);
+const emit = defineEmits(["createAppeal"]);
+
 const search = computed(() => searchProp.search);
 
 const tableRef = ref(null);
@@ -166,12 +186,18 @@ const clientTableStore = useClientTableStore();
 const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const cancelOpenWhenSelect = (client) => {
+  console.log(client);
   const selection = window.getSelection().toString();
+  console.log(selection);
   if (!selection) {
     openAppealPage(client);
   } else {
     return;
   }
+};
+//handle click create appeal
+const handleClickCreateAppealBtn = () => {
+  emit("createAppeal");
 };
 
 //incremenet decrement and change page events
@@ -236,10 +262,44 @@ const openAppealLimit = async (client) => {
   );
 };
 
+//only router if needs
+//if query page or limit will changes, pagination will changes
+// watch(
+//   () => route.query,
+//   (newVal) => {
+//     tableRef.value.setPagination({
+//       page: parseInt(newVal.page) || 1,
+//       rowsPerPage: parseInt(newVal.limit) || 10,
+//     });
+//   }
+// );
+
+//add numerable table
+
 //first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
+  watch(
+    () => appealStore.successAppeal,
+    (newSuccessAppeal) => {
+      if (newSuccessAppeal) {
+        tableRef.value.requestServerInteraction();
+      }
+    }
+  );
 });
+
+//calculate table height for showing only 10 rows
+// onMounted(() => {
+//   const qTableMiddleElement = document.querySelector(".q-table__middle");
+//   // qTableMiddleElement.style.height = `${48 + 8 + 44 * 10}px`;
+
+//   const qTableElement = document.querySelector(".q-table");
+//   const qTableInnerElement = document.createElement("div");
+//   qTableInnerElement.className = "q-table-inner-element";
+//   qTableInnerElement.appendChild(qTableElement);
+//   qTableMiddleElement.appendChild(qTableInnerElement);
+// });
 </script>
 
 <style lang="scss" scoped>

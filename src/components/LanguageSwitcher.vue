@@ -132,9 +132,10 @@
 import { ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+
+
 import Trans from "src/i18n/translation";
 const lang = ref(Trans.guessDefaultLocale());
-
 const router = useRouter();
 
 watchEffect(async () => {

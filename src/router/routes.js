@@ -49,6 +49,18 @@ const routes = [
                   }
                 },
               },
+              {
+                path: 'create-appeal-limit/:id', 
+                name: 'createAppealLimit', 
+                props: (route) => {
+                  return {
+                    id: route.params.id, 
+                    key: route.params.id, 
+                  };
+                }, 
+                component: () => import('pages/CreateAppealLimit.vue'),
+                
+              }
             ],
           },
           {
@@ -75,11 +87,14 @@ const routes = [
                   };
                 },
                 component: () => import("pages/CreateDrugAppealPage.vue"),
-                beforeEnter: (to, from, next) => {
+                beforeEnter: async (to, from, next) => {
+                  const appealStore = useAppealStore();
                   if (from.name) {
                     next();
                   } else {
-                    next("/");
+                    await appealStore.fetchApplicantDrugData();
+
+                    next();
                   }
                 },
               },
@@ -89,6 +104,11 @@ const routes = [
             path: "clients",
             name: "clients",
             component: () => import("pages/ClientsPage.vue"),
+          },
+          {
+            path: "test",
+            name: "test",
+            component: () => import("pages/TestPage.vue"),
           },
         ],
       },

@@ -2,9 +2,10 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import formatDate from "src/helpers/formatDate";
-
+import formatNumber from "src/helpers/formatNumber";
 import { useI18n } from "vue-i18n";
-export const useClientTableStore = defineStore("clientTable", () => {
+
+export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
 
   const columns = computed(() => [
@@ -15,56 +16,58 @@ export const useClientTableStore = defineStore("clientTable", () => {
       align: "left",
     },
     {
-      name: "client",
+      name: "clientName",
       align: "left",
       label: t("client_table.clients"),
       field: "clientName",
     },
     {
-      name: "appealDate",
+      name: "clientType",
       align: "left",
-      label: t("client_table.date_of_appeal"),
-      field: "appealDate",
+      label: "Тип",
+      field: "clientType",
     },
     {
-      name: "appealStatus",
+      name: "passport",
       align: "left",
-      label: t("client_table.appeal_status"),
-      field: "appealStatus",
+      label: "Паспорт",
+      field: "passport",
     },
     {
-      name: "clinicName",
+      name: "pinfl",
       align: "left",
-      label: t("client_table.clinic"),
-      field: "clinicName",
+      label: "ПИНФЛ",
+      field: "passport",
     },
     {
-      name: "doctorName",
+      name: "phone",
       align: "left",
-      label: t("client_table.doctor"),
-      field: "doctorName",
+      label: "Телефон",
+      field: "phone",
     },
     {
-      name: "serviceName",
+      name: "dmsId",
       align: "left",
-      label: t("client_table.service"),
-      field: "serviceName",
+      label: "ID",
+      field: "dmsId",
     },
     {
-      name: "diagnosisName",
+      name: "program",
       align: "left",
-      label: t("client_table.diagnosis"),
-      field: "diagnosisName",
+      label: "Программа",
+      field: "program",
     },
     {
-      name: "expenseAmount",
-      align: "right",
-      label: t("client_table.expense", { currency: "UZS" }),
-      field: "expenseAmount",
+      name: "insurancePeriod",
+      align: "left",
+      label: "Период страхования",
+      field: "insurancePeriod",
     },
     {
-      name: "userSettings",
+      name: "organizationName",
       align: "left",
+      label: "Организация",
+      field: "organizationName",
     },
   ]);
 
@@ -81,9 +84,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
-    ClientService.getClients(page, limit, search)
+    ClientService.getFullClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
+
+        console.log(users.value);
+
         // router.push({
         //   name: "appeals-page",
         //   query: {
@@ -108,32 +114,30 @@ export const useClientTableStore = defineStore("clientTable", () => {
       props.pagination.rowsPerPage,
       props.filter
     );
-    console.log(props);
   };
 
   const rows = computed(() => {
+    users.value.forEach((row) => {
+      console.log(row);
+    });
     return users.value.map((row, index) => {
-      const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
-      const services = row.services.map((service) => service.name).join(", ");
+      const insurancePeriod =
+        row.contract.start_date.replace(/-/g, ".") +
+        " - " +
+        row.contract.end_date.replace(/-/g, ".");
+
       return {
-        contractClientId: row.contract_client_id,
-        appealId: row.id,
+        contractClientId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
-        appealDate: formatDate(row.created_at),
-        appealStatus: row.status,
-        clinicName: row.hospital.name,
-        doctorName: doctors,
-        serviceName: services,
-        diagnosisName: row.diagnosis ?? "",
-        expenseAmount: row.total_amount ?? "",
-        dmsCode: row.contract_client?.dms_code ?? "",
-        program: row.contract_client?.program?.name ?? "",
-        userSettings: "",
-        // index:
-        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
-        //   index +
-        //   1,
+        passport: `${row.client.seria} ${row.client.number}`,
+        pinfl: row.client.pinfl,
+        phone: formatNumber(row.client.phone),
+        clientType: "Клиент",
+        dmsId: row.dms_code,
+        program: row.program?.name ?? "",
+        insurancePeriod: insurancePeriod,
+        organizationName: row.contract?.applicant ?? 'no applicant',
         index: row.id,
       };
     });

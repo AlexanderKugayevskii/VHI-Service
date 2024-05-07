@@ -58,14 +58,14 @@
               />
             </svg>
           </q-icon>
-          <span class="option-text">Редактировать</span>
+          <span class="option-text">Обращение</span>
         </q-item>
 
         <q-item
           clickable
           v-close-popup
           class="item--no-hover"
-          @click="openAppealPage"
+          @click.prevent.stop="openAppealLimit"
         >
           <q-icon>
             <svg
@@ -83,7 +83,7 @@
               />
             </svg>
           </q-icon>
-          <span class="option-text">Просмотр</span>
+          <span class="option-text">Лимиты</span>
         </q-item>
       </template>
     </DropdownSettings>
@@ -92,10 +92,15 @@
 
 <script setup>
 import DropdownSettings from "../Shared/DropdownSettings.vue";
-const emit = defineEmits(["openModal"]);
+const emit = defineEmits(["openModal", "openModalLimit"]);
 
 const openAppealPage = async () => {
-  emit("openModal");
+  emit("openModal"); 
+  console.log("open appeal work");
+};
+const openAppealLimit = async () => {
+  emit("openModalLimit");
+  console.log("open limit work");
 };
 </script>
 

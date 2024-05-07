@@ -9,7 +9,7 @@
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "quasar dev",
+    "dev": "quasar dev --port 8080",
     "build": "quasar build",
     "server": "npx json-server api/db.json"
   },
@@ -20,6 +20,7 @@
     "@vueuse/core": "^10.9.0",
     "axios": "^1.2.1",
     "compressorjs": "^1.2.1",
+    "dayjs": "^1.11.10",
     "heic2any": "^0.0.4",
     "lodash": "^4.17.21",
     "pinia": "^2.0.11",
@@ -44,7 +45,7 @@
     "pusher-js": "^8.4.0-rc2"
   },
   "engines": {
-    "node": "^18 || ^16 || ^14.19",
+    "node": "^20 || ^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }

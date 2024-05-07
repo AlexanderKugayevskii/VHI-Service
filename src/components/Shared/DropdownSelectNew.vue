@@ -1,9 +1,10 @@
 <template>
   <div class="dropdown" id="dropdown">
     <div class="dropdown-label">
-      <div class="dropdown-label-wrapper"><slot name="top-label"></slot></div>
-
-      <div class="dropdown-button" ref="button" role="button">
+      <div :class="{ 'dropdown-label-wrapper': !!label }">
+        <slot name="top-label"></slot>
+      </div>
+      <div :class="['dropdown-button', { dense }]" ref="button" role="button">
         <button
           class="dropdown-button-btn"
           :disabled="disableChoise"
@@ -67,7 +68,7 @@
           id="virtual-scroll-target"
           style="max-height: 324px"
         >
-          <div class="dropdown-select-search">
+          <div class="dropdown-select-search" v-if="searchInput">
             <label class="dropdown-select-search-label">
               <input
                 type="text"
@@ -146,7 +147,7 @@
               :key="index"
               @click="selectOption(item)"
             >
-              <div class="dropdown-select-list-item-text">
+              <div :class="['dropdown-select-list-item-text', { dense }]">
                 <slot name="option-content" :option="item"></slot>
               </div>
             </div>
@@ -159,9 +160,9 @@
 </template>
 
 <script>
-import { onMounted, watch } from "vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
+
 import { debounce } from "lodash";
 
 export default {
@@ -172,9 +173,16 @@ export default {
     clickOutSide,
   },
   props: {
+    searchInput: {
+      type: Boolean,
+      default: true,
+    },
     disableChoise: Boolean,
     loading: Boolean,
-    label: String,
+    label: {
+      type: String,
+      default: "",
+    },
     options: Array,
     selectedOptions: {
       required: true,
@@ -190,6 +198,10 @@ export default {
     localSearch: {
       type: Boolean,
       default: true,
+    },
+    dense: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -318,8 +330,8 @@ export default {
   box-shadow: 0px 0px 8px 0px #cfd9ea;
 }
 .dropdown-select-scroll {
-  padding: 0 4px 0 4px;
-  overflow-y: scroll;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
 }
 .dropdown-select-scroll::-webkit-scrollbar {
   width: 8px;
@@ -334,6 +346,7 @@ export default {
   background-color: #e3e8f0;
 }
 .dropdown-label {
+  width: 100%;
 }
 .dropdown-button {
   padding: 12px 16px;
@@ -341,6 +354,10 @@ export default {
   background-color: #f2f5fa;
   border-radius: 16px;
   cursor: pointer;
+
+  &.dense {
+    padding: 3px 4px;
+  }
 }
 .dropdown-button-btn {
   width: 100%;
@@ -399,8 +416,11 @@ export default {
   border-radius: 8px;
   color: #404f6f;
 
-  transition: 0.3s;
+  &.dense {
+    padding: 4px;
+  }
 
+  transition: 0.3s;
   &--active {
     background-color: #edf0f7;
   }

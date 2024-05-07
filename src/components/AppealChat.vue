@@ -1,5 +1,5 @@
 <template>
-  <div class="chat">
+  <div class="chat" ref="chatRef">
     <div class="chat-header">
       <form @submit.prevent="sendMessage" class="chat-form">
         <SimpleInput placeholder="Написать сообщение..." v-model="inputText">
@@ -53,74 +53,94 @@
         </button>
       </form>
     </div>
-    <div class="chat-body">
+    <div class="chat-body" id="chatBody">
       <LoadingSpinner v-if="loading" />
       <div
-        :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
         v-else
-        v-for="msg in messages"
-        :key="msg.id"
+        v-for="[dateLabel, messages] in mappedMessages"
+        :key="dateLabel"
+        class="chat-group"
       >
-        <div class="chat-avatar">
-          <img :src="`https://api.neoinsurance.uz/${msg.sender.avatar}`" />
-        </div>
-        <div class="chat-message">
-          <div class="chat-message-header">
-            <div class="chat-message-title">
-              {{ msg.sender.lastname }} {{ msg.sender.name }}
-            </div>
-            <div class="chat-message-extra">
-              <div class="chat-message-time">
-                {{ formatDate(msg.created_at, false) }}
-              </div>
-              <!-- <div class="chat-message-viewed">
-                <q-icon size="12px"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                  >
-                    <path
-                      d="M0.75 5L4.5 8.75L12 1.25"
-                      stroke="#A0AABC"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </q-icon>
-              </div> -->
-            </div>
+        <div
+          :class="['chat-item', { partner: userRole !== Number(msg.user_id) }]"
+          v-for="msg in messages"
+          :key="msg.id"
+        >
+          <div class="chat-avatar">
+            <img :src="`https://api.neoinsurance.uz/${msg.sender.avatar}`" />
           </div>
-          <div class="chat-message-body">{{ msg.text }}</div>
+          <div class="chat-message">
+            <div class="chat-message-header">
+              <div class="chat-message-title">
+                {{ msg.sender.lastname }} {{ msg.sender.name }}
+              </div>
+              <div class="chat-message-extra">
+                <div class="chat-message-time">
+                  {{ formatDate(msg.created_at, false) }}
+                </div>
+              </div>
+            </div>
+            <div class="chat-message-body">{{ msg.text }}</div>
+          </div>
+        </div>
+
+        <div class="chat-group-time">
+          <span class="chat-group-time__label">
+            {{ dateLabel }}
+          </span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- <div class="chat-message-viewed">
+                  <q-icon size="12px"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="13"
+                      height="10"
+                      viewBox="0 0 13 10"
+                      fill="none"
+                    >
+                      <path
+                        d="M0.75 5L4.5 8.75L12 1.25"
+                        stroke="#A0AABC"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </q-icon>
+                </div> -->
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useAuthStore } from "src/stores/authStore";
 import SimpleInput from "./Shared/SimpleInput.vue";
 import LoadingSpinner from "./Shared/LoadingSpinner.vue";
 import formatDate from "src/helpers/formatDate";
 import echo from "src/boot/chat";
 import ChatService from "src/services/ChatService";
-import { onUnmounted } from "vue";
-import { nextTick } from "vue";
+import dayjs from "dayjs";
+import useDay from "src/composables/useDay";
+
+import "dayjs/locale/ru"; // Импортируем локаль для русского языка
+import "dayjs/locale/uz-latn"; // Импортируем локаль для узбекского языка
 
 const authStore = useAuthStore();
-
+const day = useDay();
 const userRole = computed(() => Number(authStore.user.id));
 
 const inputText = ref("");
 const isInputEmpty = computed(() => inputText.value.length === 0);
 
-const messages = ref(null);
+const messages = ref([]);
+
 const loading = ref(false);
+
+const longPoolIntervalId = ref(null);
+const chatRef = ref(null);
 
 const props = defineProps({
   appealId: {
@@ -132,18 +152,66 @@ const props = defineProps({
 });
 
 const getMessages = async () => {
-  loading.value = true;
   try {
     const response = await ChatService.getMessages(props.appealId);
     const data = response.data.data;
+
     messages.value = data;
-    console.log(messages.value);
+    // updateMessages(data);
   } catch (e) {
     console.error(e);
   } finally {
-    loading.value = false;
   }
 };
+
+const updateMessages = (newMessages) => {
+  const existingIds = messages.value.map((message) => message.id);
+  // const newMessagesIds = newMessages.map((message) => message.id);
+
+  if (newMessages.length === existingIds.length) {
+    messages.value = newMessages;
+  } else {
+    newMessages.forEach((message) => {
+      if (!existingIds.includes(message.id)) {
+        messages.value.push(message);
+      }
+    });
+  }
+};
+
+const mappedMessages = computed(() => {
+  const groupedMessages = {};
+  const temp = messages.value.map((message) => {
+    let dateMessage = "";
+
+    if (day.isToday(message.created_at)) {
+      dateMessage = day.today.value;
+    } else if (day.isYesterday(message.created_at)) {
+      dateMessage = day.yesterday.value;
+    } else {
+      dateMessage = dayjs(message.created_at)
+        .locale(day.currentLocale.value)
+        .format(`D MMMM, YYYY`);
+    }
+
+    return {
+      ...message,
+      dateMessage,
+    };
+
+  });
+
+  temp.forEach((message) => {
+    const date = message.dateMessage;
+    if (!groupedMessages[date]) {
+      groupedMessages[date] = [];
+    }
+
+    groupedMessages[date].push(message);
+  });
+
+  return Object.entries(groupedMessages);
+});
 
 const sendMessage = async () => {
   if (isInputEmpty.value) return;
@@ -157,6 +225,7 @@ const sendMessage = async () => {
 
   formData.append("text", payload.message);
   formData.append("application_id", payload.application_id);
+
   try {
     const response = await ChatService.postMessage(formData);
     const data = response.data.data;
@@ -169,7 +238,7 @@ const sendMessage = async () => {
       },
     });
 
-    listenMessages();
+    // listenMessages();
   } catch (e) {
     console.error(e);
   } finally {
@@ -189,17 +258,21 @@ const listenMessages = async () => {
 
 onMounted(async () => {
   if (props.appealType === 1) {
-    await listenMessages();
     await getMessages();
+    // await listenMessages(); //temporary
+    console.log(mappedMessages.value);
+
+    longPoolIntervalId.value = setInterval(async () => {
+      await getMessages();
+    }, 5000);
   }
 });
-
 onUnmounted(() => {
   if (props.appealType === 1) {
-    echo.leave(`dms_chat-${props.appealId}`);
-    messages.value = null;
+    // echo.leave(`dms_chat-${props.appealId}`);
+    messages.value = [];
   }
-  console.log("leave");
+  clearInterval(longPoolIntervalId.value);
 });
 </script>
 
@@ -220,16 +293,24 @@ onUnmounted(() => {
   background: #13b8ba;
   padding: 12px;
 }
+.btn-send[disabled] {
+  opacity: 1 !important;
+}
 .chat-body {
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
+  row-gap: 24px;
 }
 .chat {
+  position: relative;
   &-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: sticky;
+    background-color: #fff;
+    top: 0;
+    z-index: 99900;
   }
   &-form {
     width: 100%;
@@ -308,6 +389,26 @@ onUnmounted(() => {
           background-color: #f2f5fa;
           border-radius: 12px 0 12px 12px;
         }
+      }
+    }
+  }
+  &-group {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    &-time {
+      padding-top: 4px;
+      display: flex;
+      justify-content: center;
+
+      &__label {
+        display: inline-flex;
+        border-radius: 50px;
+        background-color: #f7f9fc;
+        padding: 16px;
+        color: #404f6f;
+        font-size: 15px;
+        font-weight: 600;
       }
     }
   }

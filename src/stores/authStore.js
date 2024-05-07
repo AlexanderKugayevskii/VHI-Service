@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
+import { Notify } from "quasar";
 
 export const useAuthStore = defineStore("auth", () => {
   //state
@@ -37,6 +38,13 @@ export const useAuthStore = defineStore("auth", () => {
   };
   const logout = () => {
     clearUser();
+
+    Notify.create({
+      type: "success",
+      message: "Вы вышли из системы!",
+      position: "bottom",
+      timeout: 2000,
+    });
   };
 
   const login = async (credentials) => {
@@ -45,11 +53,23 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await LoginService.login(credentials);
       const data = response.data;
+      console.log(data);
       setUser({ user: data.user, token: data.token });
       setLoading(false);
+      Notify.create({
+        type: "success",
+        message: "Вы успешно вошли!",
+        position: "bottom",
+      });
       return true;
     } catch (error) {
-      setError("login_page.signin_error");
+      Notify.create({
+        type: "error",
+        message: "Не правильный логин или пароль!",
+        position: "bottom",
+        timeout: 250,
+      });
+      setError(error.response.data.error[0]);
       setLoading(false);
       return false;
     } finally {

@@ -4,7 +4,7 @@ import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
-import { SessionStorage } from "quasar";
+import { SessionStorage, Notify } from "quasar";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -49,9 +49,9 @@ function filterItems(data, suggestedArr, selectedArr, isOther) {
 export const useAppealStore = defineStore("appeal", () => {
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
-  const isClinic = computed(() => user.value.role.id === 8);
-  const isDrugstore = computed(() => user.value.role.id === 8);
-  const isAgent = computed(() => user.value.role.id !== 8); //temp
+  const isClinic = computed(() => user.value?.role.id === 8);
+  const isDrugstore = computed(() => user.value?.role.id === 8);
+  const isAgent = computed(() => user.value?.role.id !== 8); //temp
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -222,6 +222,7 @@ export const useAppealStore = defineStore("appeal", () => {
     return suggestedServices.value.some((item) => service.id === item.id);
   };
 
+  // нельзя убрать выбранный сервис в дропдауне если прогресс больше 1 и это агент или если это клиника и статус не 0
   const cantRemoveFromSelectedServices = (service) => {
     return selectedServices.value.some((item) => {
       if (service.id === item.id) {
@@ -273,6 +274,11 @@ export const useAppealStore = defineStore("appeal", () => {
     });
   };
 
+  const removeDrug = (drug) => {
+    selectedDrugs.value = selectedDrugs.value.filter(
+      (item) => item.id !== drug.id
+    );
+  };
   const clearAppealData = () => {
     diagnosis.value = "";
     doctors.value = [];
@@ -472,7 +478,13 @@ export const useAppealStore = defineStore("appeal", () => {
       ) {
         client.value.appealId = data.id;
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
         setSuccessAppeal(true);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно создано!",
+          position: "bottom-left",
+        });
         // clearAppealData();
       }
     } catch (e) {
@@ -505,7 +517,13 @@ export const useAppealStore = defineStore("appeal", () => {
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+
         // clearAppealData();
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно изменено!",
+        });
       }
     } catch (e) {
       console.error(e);
@@ -515,11 +533,11 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchApplicantData = async () => {
-    setTypeOfAppeal('CHANGE')
+    setTypeOfAppeal("CHANGE");
     loading.value = true;
-    const localClient = SessionStorage.getItem("client"); 
+    const localClient = SessionStorage.getItem("client");
     client.value = localClient;
-  
+
     const currentClient = localClient ? localClient : client.value;
 
     try {
@@ -528,9 +546,9 @@ export const useAppealStore = defineStore("appeal", () => {
       );
       const data = response.data.data;
 
-      client.value.id = data.contract_client.id;
-      client.value.clientId = data.contract_client.client_id;
-
+      // client.value.id = data.contract_client.id;
+      // client.value.clientId = data.contract_client.client_id;
+      // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
 
@@ -564,15 +582,21 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchApplicantDrugData = async () => {
+    setTypeOfAppeal("CHANGE");
     loading.value = true;
+    const localClient = SessionStorage.getItem("client");
+    client.value = localClient;
+    const currentClient = localClient ? localClient : client.value;
+
     try {
       const response = await ClientService.getClientByAppealId(
-        client.value.appealId
+        currentClient.appealId
       );
       const data = response.data.data;
 
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
+      client.value.appealStatus = data.status;
 
       selectedDrugstore.value = data.drugstore;
 
@@ -770,5 +794,6 @@ export const useAppealStore = defineStore("appeal", () => {
     changeStatusDrugs,
     appealTotalDrugConsumption,
     clearDrugstoreData,
+    removeDrug,
   };
 });

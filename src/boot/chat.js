@@ -1,12 +1,13 @@
+import { boot } from "quasar/wrappers";
+
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
 window.Pusher = Pusher;
-
 const echo = new Echo({
   broadcaster: "pusher",
-  key: "f1cfa5a35507dfae21ca",
-  cluster: "ap2",
+  key: "bdeb05fa9627713cacd8",
+  cluster: "ap1",
   encrypted: true,
 });
 
@@ -25,4 +26,13 @@ echo.connector.pusher.connection.bind("connected", () => {
 echo.connector.pusher.connection.bind("disconnected", () => {
   console.warn("Disconnected from Pusher.");
 });
+
 export default echo;
+// window.Echo = new Echo({
+//   broadcaster: "pusher",
+//   key: "bdeb05fa9627713cacd8",
+//   cluster: "ap2",
+//   encrypted: true,
+// });
+
+// 1a90f936db865826ebdc

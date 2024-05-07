@@ -12,14 +12,14 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="page-title q-my-none q-mb-md">
+          <h4 class="page-title q-my-none">
             {{ $t("create_appeal.title") }}
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
-          <StatusBar
-            :status="clientData.appealStatus"
-            :label="true"
-          ></StatusBar>
+          <div class="label-row">
+            <span class="title-label green">Клиника</span>
+            <span class="title-label violet">Обращения</span>
+          </div>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -251,6 +251,7 @@
                           <div class="tab-body">
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
+                              :removable="false"
                               :item="doctor"
                               :key="doctor.id"
                               :isAgent="appealStore.isAgent"
@@ -284,6 +285,7 @@
                               <SelectListItem
                                 v-for="doctor in appealStore.suggestedDoctors"
                                 :item="doctor"
+                                :removable="false"
                                 :key="doctor.id"
                                 :isAgent="appealStore.isAgent"
                                 @update:status="
@@ -394,6 +396,7 @@
                             <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
+                              :removable="false"
                               :key="service.id"
                               :isAgent="appealStore.isAgent"
                               @update:status="
@@ -427,6 +430,7 @@
                               <SelectListItem
                                 v-for="service in appealStore.suggestedServices"
                                 :item="service"
+                                :removable="false"
                                 :key="service.id"
                                 :isAgent="appealStore.isAgent"
                                 @update:status="
@@ -586,7 +590,7 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
@@ -664,7 +668,10 @@ const handleStatusService = (item, isSuggested) => {
   overflow: visible;
 }
 .create-appeal-modal .modal-header {
-  display: block;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 12px;
   border-top-left-radius: 16px;
   padding: 24px;
 }
@@ -691,7 +698,7 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-left {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-basis: 65%;
 }
 .create-appeal-client-info {
   background-color: #fff;
@@ -716,8 +723,8 @@ const handleStatusService = (item, isSuggested) => {
 .create-appeal-form {
   flex: 1;
   background-color: #fff;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
@@ -757,7 +764,7 @@ const handleStatusService = (item, isSuggested) => {
   flex: 1;
 }
 .q-tab-panel {
-  overflow: hidden;
+  //  overflow: hidden;
 }
 .tabs-content {
   height: 100%;
@@ -795,14 +802,13 @@ const handleStatusService = (item, isSuggested) => {
   font-weight: 700;
 }
 .create-appeal-right {
-  flex-basis: 416px;
+  flex-basis: 35%;
 }
 .create-appeal-interaction {
   background-color: #fff;
   height: 100%;
-  border-radius: 16px;
-  padding: 16px;
-  padding-right: 8px;
+  border-radius: 24px;
+  padding: 24px;
 }
 
 .option-content-extra {

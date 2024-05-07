@@ -9,17 +9,20 @@
         <div class="inputs-wrapper">
           <div class="user-box">
             <SimpleInput
+              type="text"
               :label="$t('login_page.login_label')"
               :placeholder="$t('login_page.login_placeholder')"
               v-model="credentials.email"
+              :isError="error"
             ></SimpleInput>
           </div>
           <div class="user-box">
             <SimpleInput
+              type="password"
               :label="$t('login_page.password_label')"
               :placeholder="$t('login_page.password_placeholder')"
               v-model="credentials.password"
-              type="password"
+              :isError="error"
             ></SimpleInput>
           </div>
         </div>
@@ -27,6 +30,7 @@
           type="submit"
           :label="$t('login_page.signin_label')"
           custom-class="btn-action full-width"
+          :disabled="disabledButton"
           :loading="loading"
         >
           <template #loading-spinner>
@@ -57,6 +61,13 @@ const authStore = useAuthStore();
 const credentials = ref({ email: "", password: "" });
 const loading = computed(() => authStore.loading);
 const error = computed(() => authStore.error);
+
+const disabledButton = computed(() => {
+  return (
+    credentials.value.email.length === 0 ||
+    credentials.value.password.length === 0
+  );
+});
 
 const handleLogin = async () => {
   const success = await authStore.login(credentials.value);
