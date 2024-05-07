@@ -87,7 +87,6 @@
             </Collapse>
           </div>
           <RouteLink
-            :disableLink="true"
             class="q-px-sm"
             :caption="$t('nav.clients')"
             v-if="appealStore.isAgent"

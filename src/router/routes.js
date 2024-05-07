@@ -50,17 +50,16 @@ const routes = [
                 },
               },
               {
-                path: 'create-appeal-limit/:id', 
-                name: 'createAppealLimit', 
+                path: "create-appeal-limit/:id",
+                name: "createAppealLimit",
                 props: (route) => {
                   return {
-                    id: route.params.id, 
-                    key: route.params.id, 
+                    id: route.params.id,
+                    key: route.params.id,
                   };
-                }, 
-                component: () => import('pages/CreateAppealLimit.vue'),
-                
-              }
+                },
+                component: () => import("pages/CreateAppealLimit.vue"),
+              },
             ],
           },
           {
@@ -104,6 +103,14 @@ const routes = [
             path: "clients",
             name: "clients",
             component: () => import("pages/ClientsPage.vue"),
+            beforeEnter: async (to, from, next) => {
+              const appealStore = useAppealStore();
+              if (appealStore.isAgent) {
+                next();
+              } else {
+                next({ name: "notFound" });
+              }
+            },
           },
           {
             path: "test",
@@ -119,6 +126,7 @@ const routes = [
       },
       {
         path: ":catchAll(.*)*",
+        name: "notFound",
         component: () => import("pages/ErrorNotFound.vue"),
       },
     ],
