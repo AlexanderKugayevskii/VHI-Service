@@ -1,18 +1,15 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div
+    class="fullscreen text-white text-center q-pa-md flex flex-center wrapper"
+  >
     <div>
-      <div style="font-size: 30vh">
-        404
-      </div>
+      <div style="font-size: 30vh">404</div>
 
-      <div class="text-h2" style="opacity:.4">
-        Ничего не найдено...
-      </div>
+      <div class="text-h2" style="opacity: 0.4">Ничего не найдено...</div>
 
       <q-btn
-        class="q-mt-xl"
+        class="q-mt-xl btn"
         color="white"
-        text-color="blue"
         unelevated
         to="/"
         label="Назад"
@@ -23,9 +20,15 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'ErrorNotFound'
-})
+  name: "ErrorNotFound",
+});
 </script>
+
+<style lang="scss" scoped>
+.wrapper {
+  background-color: $accent;
+}
+</style>
