@@ -91,7 +91,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         //     limit,
         //   },
         // });
-
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -110,32 +109,32 @@ export const useClientTableStore = defineStore("clientTable", () => {
     );
   };
 
-  const rows = computed(() => {
-    return users.value.map((row, index) => {
-      const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
-      const services = row.services.map((service) => service.name).join(", ");
-      return {
-        contractClientId: row.contract_client_id,
-        appealId: row.id,
-        clientFirstname: row.client.name,
-        clientLastname: row.client.lastname,
-        appealDate: formatDate(row.created_at),
-        appealStatus: row.status,
-        clinicName: row.hospital.name,
-        doctorName: doctors,
-        serviceName: services,
-        diagnosisName: row.diagnosis ?? "",
-        expenseAmount: row.total_amount ?? "",
-        dmsCode: row.contract_client?.dms_code ?? "",
-        program: row.contract_client?.program?.name ?? "",
-        userSettings: "",
-        // index:
-        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
-        //   index +
-        //   1,
-        index: row.id,
-      };
-    });
+const rows = computed(() => {
+  return users.value.map((row, index) => {
+    const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
+    const services = row.services.map((service) => service.name).join(", ");
+    return {
+      contractClientId: row.contract_client_id,
+      appealId: row.id,
+      clientFirstname: row.client.name,
+      clientLastname: row.client.lastname,
+      appealDate: formatDate(row.created_at),
+      appealStatus: row.status,
+      clinicName: row.hospital.name,
+      doctorName: doctors,
+      serviceName: services,
+      diagnosisName: row.diagnosis ?? "",
+      expenseAmount: row.total_amount ?? "",
+      dmsCode: row.contract_client?.dms_code ?? "",
+      program: row.contract_client?.program?.name ?? "",
+      userSettings: "",
+      // index:
+      //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
+      //   index +
+      //   1,
+      index: row.id,
+    };
+  });
   });
 
   return { pagination, loading, rows, columns, handleRequest };

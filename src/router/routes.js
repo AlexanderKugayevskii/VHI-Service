@@ -31,7 +31,7 @@ const routes = [
                 path: "create-appeal/:id",
                 name: "createAppeal",
                 props: (route) => {
-                  console.log(route);
+                  
                   return {
                     id: route.params.id,
                     key: route.params.id,
@@ -111,17 +111,19 @@ const routes = [
                 next({ name: "notFound" });
               }
             },
-          },
-          {
-            path: "clients/:id",
-            name: "clientInfo",
-            component: () => import("pages/ClientInfoPage.vue"),
-            props: (route) => {
-              return {
-                id: route.params.id,
-                key: route.params.id,
-              };
-            },
+            children: [
+              {
+                path: ":id",
+                name: "clientInfo",
+                component: () => import("pages/ClientInfoPage.vue"),
+                props: (route) => {
+                  return {
+                    id: route.params.id,
+                    key: route.params.id,
+                  };
+                },
+              },
+            ]
           },
         ],
       },

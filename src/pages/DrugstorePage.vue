@@ -49,17 +49,7 @@ const openAppealTypeModal = (type) => {
   font-size: 15px;
   color: #7a88a6;
 }
-:global(.appeals-btn) {
-  border-radius: 16px;
-  border: none;
-  background-color: #13b8ba;
-  color: #fff;
-  font-size: 15px;
-  height: 44px;
-  padding: 0 32px;
-  font-weight: 500;
-  cursor: pointer;
-}
+
 .appeals-actions {
   padding-top: 4px;
   padding-bottom: 4px;

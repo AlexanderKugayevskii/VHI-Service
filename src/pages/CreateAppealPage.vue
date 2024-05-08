@@ -597,6 +597,7 @@ import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
+import { onMounted } from "vue";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -632,6 +633,9 @@ watch(
   }
 );
 
+onMounted(() => {
+  console.log(route.redirectedFrom);
+});
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();

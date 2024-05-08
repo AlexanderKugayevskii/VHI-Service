@@ -2,9 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import formatNumber from "src/helpers/formatNumber";
+import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
-import { Loading } from "quasar";
-
 export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
 
@@ -22,12 +21,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       label: t("client_table.clients"),
       field: "clientName",
     },
-    {
-      name: "clientType",
-      align: "left",
-      label: "Тип",
-      field: "clientType",
-    },
+    // {
+    //   name: "clientType",
+    //   align: "left",
+    //   label: "Тип",
+    //   field: "clientType",
+    // },
     {
       name: "passport",
       align: "left",
@@ -89,7 +88,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       .then((response) => {
         users.value = response.data.data.data;
 
-
         // router.push({
         //   name: "appeals-page",
         //   query: {
@@ -130,7 +128,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         passport: `${row.client.seria} ${row.client.number}`,
         pinfl: row.client.pinfl,
         phone: formatNumber(row.client.phone),
-        clientType: "Клиент",
+        // clientType: "Клиент",
         dmsId: row.dms_code,
         program: row.program?.name ?? "",
         insurancePeriod: insurancePeriod,
@@ -151,12 +149,41 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
       setClientInfo(data);
+      console.log(data);
     } catch (e) {
       console.error(e);
     } finally {
       loading.value = false;
     }
   };
+
+  const applicationsRows = computed(() => {
+    return clientInfo.value.applications.map((row, index) => {
+      const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
+      const services = row.services.map((service) => service.name).join(", ");
+      return {
+        contractClientId: row.contract_client_id,
+        appealId: row.id,
+        clientFirstname: clientInfo.value.client.name,
+        clientLastname: clientInfo.value.client.lastname,
+        appealDate: formatDate(row.created_at),
+        appealStatus: row.status,
+        clinicName: row.hospital.name,
+        doctorName: doctors,
+        serviceName: services,
+        diagnosisName: row.diagnosis ?? "",
+        expenseAmount: row.total_amount ?? "",
+        dmsCode: clientInfo.value.dms_code,
+        program: clientInfo.value.program.name,
+        userSettings: "",
+        // index:
+        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
+        //   index +
+        //   1,
+        index: row.id,
+      };
+    });
+  });
 
   return {
     pagination,
@@ -166,5 +193,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     handleRequest,
     clientInfo,
     getClientInfo,
+    applicationsRows,
   };
 });

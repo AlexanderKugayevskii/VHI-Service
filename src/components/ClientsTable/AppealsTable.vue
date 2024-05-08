@@ -20,10 +20,10 @@
         hide-pagination
         ref="tableRef"
         row-key="index"
-        v-model:pagination="pagination"
+        v-model:pagination="reactivePagination"
         no-data-label="I didn't find anything for you"
         no-results-label="The filter didn't uncover any results"
-        @request="clientTableStore.handleRequest"
+        @request="requestData"
       >
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -139,15 +139,19 @@
     </div>
     <div class="flex q-my-lg">
       <PaginationTable
-        v-if="pagination.rowsNumber >= 10"
-        :pagination="pagination"
+        v-if="reactivePagination && reactivePagination.rowsNumber >= 10"
+        :pagination="reactiveProps.pagination"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
       />
 
       <q-space></q-space>
-      <RowsPerPage @choiceOption="selectOption" :pagination="pagination" />
+      <RowsPerPage
+        v-if="pagination"
+        @choiceOption="selectOption"
+        :pagination="reactivePagination"
+      />
     </div>
   </div>
 </template>
@@ -168,27 +172,36 @@ import { onMounted, computed, ref, reactive, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
+import { toRefs } from "vue";
+import { toRef } from "vue";
 
 const $q = useQuasar();
 
 // table modal
 
 const router = useRouter();
-const searchProp = defineProps(["search"]);
+const props = defineProps([
+  "search",
+  "pagination",
+  "rows",
+  "columns",
+  "loading",
+  "requestData",
+]);
 const emit = defineEmits(["createAppeal"]);
 
-const search = computed(() => searchProp.search);
-
+const search = computed(() => props.search);
 const tableRef = ref(null);
-
 const appealStore = useAppealStore();
-const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+
+const reactiveProps = toRefs(props);
+const reactivePagination = toRef(reactiveProps, "pagination");
+
+// const clientTableStore = useClientTableStore();
+// const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const cancelOpenWhenSelect = (client) => {
-  console.log(client);
   const selection = window.getSelection().toString();
-  console.log(selection);
   if (!selection) {
     openAppealPage(client);
   } else {
@@ -225,6 +238,7 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
+  console.log(`client`, client);
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
