@@ -67,7 +67,7 @@ const handleShowDetailsExtra = () => {
 const allClientTableStore = useFullClientTableStore();
 const clientInfo = computed(() => allClientTableStore.clientInfo);
 const program = computed(() => {
-  return clientInfo.value.program?.medical_program_items;
+  return clientInfo.value.program.medical_program_items;
 });
 const mainPrograms = computed(() => {
   return program.value?.slice(0, 2);

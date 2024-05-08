@@ -254,9 +254,7 @@ export default defineComponent({
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
     };
-    onMounted(() => {
-      console.log(authStore.user);
-    });
+
     return {
       Trans,
       authStore,

@@ -75,7 +75,7 @@ const props = defineProps({
 const rate = computed(() => props.rate);
 
 const limit = computed(() => {
-  return formatPrice(Number(props.rate?.limit));
+  return formatPrice(Number(props.rate.limit));
 });
 </script>
 

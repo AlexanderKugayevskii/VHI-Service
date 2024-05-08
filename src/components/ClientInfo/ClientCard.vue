@@ -44,10 +44,10 @@ const props = defineProps({
 const client = computed(() => props.client);
 const clientData = computed(() => {
   return {
-    clientName: client.value?.lastname + " " + client.value?.name,
-    birthDay: client.value?.birthday.slice(0, 4),
-    passport: client.value?.seria + " " + client.value?.number,
-    phone: client.value?.phone ? formatNumber(client.value?.phone) : null,
+    clientName: client.value.lastname + " " + client.value.name,
+    birthDay: client.value.birthday.slice(0, 4),
+    passport: client.value.seria + " " + client.value.number,
+    phone: client.value.phone ? formatNumber(client.value?.phone) : null,
   };
 });
 </script>

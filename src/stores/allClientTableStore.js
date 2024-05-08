@@ -118,9 +118,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const rows = computed(() => {
-    users.value.forEach((row) => {
-      console.log(row);
-    });
     return users.value.map((row, index) => {
       const insurancePeriod =
         row.contract.start_date.replace(/-/g, ".") +
@@ -144,8 +141,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     });
   });
 
-  const clientInfo = ref({});
-
+  const clientInfo = ref(null);
   const setClientInfo = (item) => {
     clientInfo.value = item;
   };
@@ -155,7 +151,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
-      console.log(data);
       setClientInfo(data);
     } catch (e) {
       console.error(e);

@@ -195,6 +195,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
+
   router.push(
     Trans.i18nRoute({
       name: "clientInfo",

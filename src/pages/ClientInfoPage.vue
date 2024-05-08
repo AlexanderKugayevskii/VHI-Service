@@ -11,10 +11,9 @@ import DetailInfoGroup from "src/components/ClientInfo/DetailInfoGroup.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useFullClientTableStore } from "src/stores/allClientTableStore";
-
+import { onBeforeMount } from "vue";
 const props = defineProps({
   id: {
     type: String,
@@ -25,12 +24,11 @@ const props = defineProps({
 const $q = useQuasar();
 const i18n = useI18n();
 const allClientTableStore = useFullClientTableStore();
-
-onMounted(async () => {
-  $q.loading.show({
-    delay: 500,
-  });
-  await allClientTableStore.getClientInfo(props.id);
+onBeforeMount(() => {
+  allClientTableStore.getClientInfo(props.id);
+});
+onMounted(() => {
+  $q.loading.show({ delay: 20 });
   $q.loading.hide();
 });
 </script>
