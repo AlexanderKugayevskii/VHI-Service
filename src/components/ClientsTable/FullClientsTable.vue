@@ -162,7 +162,6 @@ const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const cancelOpenWhenSelect = (client) => {
   const selection = window.getSelection().toString();
-  console.log(selection);
   if (!selection) {
     openClientInfo(client);
   } else {
@@ -195,7 +194,6 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
-
   router.push(
     Trans.i18nRoute({
       name: "clientInfo",
@@ -239,7 +237,19 @@ onMounted(() => {
   width: 120px;
 }
 .appeals-th:nth-of-type(4) {
+  width: 150px;
+}
+.appeals-th:nth-of-type(5) {
   width: 140px;
+}
+.appeals-th:nth-of-type(6) {
+  width: 120px;
+}
+.appeals-th:nth-of-type(7) {
+  width: 120px;
+}
+.appeals-th:nth-of-type(8) {
+  width: 195px;
 }
 // .q-table thead th:last-of-type {
 //   width: 52px;

@@ -124,18 +124,18 @@
             <q-item-section avatar class="q-pr-xs">
               <q-avatar size="47px">
                 <img
-                  :src="`https://api.neoinsurance.uz/${authStore?.user.avatar}`"
+                  :src="`https://api.neoinsurance.uz/${authStore.user?.avatar}`"
                 />
               </q-avatar>
             </q-item-section>
 
             <q-item-section>
               <q-item-label class="user-name">
-                {{ authStore?.user.lastname }}
-                {{ authStore?.user.name[0] }}.</q-item-label
+                {{ authStore.user?.lastname }}
+                {{ authStore.user?.name[0] }}.</q-item-label
               >
               <q-item-label class="user-id" lines="1"
-                >Agent ID: {{ authStore?.user.agent_id }}</q-item-label
+                >Agent ID: {{ authStore.user?.agent_id }}</q-item-label
               >
             </q-item-section>
             <q-item-section side>

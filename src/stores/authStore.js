@@ -53,7 +53,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await LoginService.login(credentials);
       const data = response.data;
-      console.log(data);
+
       setUser({ user: data.user, token: data.token });
       setLoading(false);
       Notify.create({

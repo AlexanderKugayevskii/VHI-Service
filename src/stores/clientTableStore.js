@@ -91,7 +91,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         //     limit,
         //   },
         // });
-
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -108,7 +107,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
       props.pagination.rowsPerPage,
       props.filter
     );
-    console.log(props);
   };
 
   const rows = computed(() => {
@@ -138,6 +136,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
       };
     });
   });
+
+  
 
   return { pagination, loading, rows, columns, handleRequest };
 });

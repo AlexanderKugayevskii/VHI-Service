@@ -44,27 +44,41 @@
         />
       </div>
     </div>
+    <AppealsTable
+      v-if="allClientTableStore.clientInfo.applications.length > 0"
+      :rows="allClientTableStore.applicationsRows"
+      :columns="columnsWithoutClientName"
+      :loading="allClientTableStore.loading"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 import ExpandBtn from "src/components/ClientInfo/ExpandBtn.vue";
 import PolisInfo from "src/components/ClientInfo/PolisInfo.vue";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 import ClientCard from "src/components/ClientInfo/ClientCard.vue";
 import ClientTab from "src/components/ClientInfo/ClientTab.vue";
-import { useFullClientTableStore } from "src/stores/allClientTableStore";
 import { storeToRefs } from "pinia";
-import formatPrice from "src/helpers/formatPrice";
-import { computed } from "vue";
+import { useFullClientTableStore } from "src/stores/allClientTableStore";
+import { useClientTableStore } from "src/stores/clientTableStore";
+import AppealsTable from "../ClientsTable/AppealsTable.vue";
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
 };
 
+const clientTableStore = useClientTableStore();
+const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+
 const allClientTableStore = useFullClientTableStore();
+
+const columnsWithoutClientName = computed(() => {
+  return columns.value.filter((column) => column.name !== "client");
+});
+
 const clientInfo = computed(() => allClientTableStore.clientInfo);
 const program = computed(() => {
   return clientInfo.value.program.medical_program_items;
