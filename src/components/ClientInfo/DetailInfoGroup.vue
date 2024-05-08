@@ -7,9 +7,9 @@
       <DetailCard v-for="item in mainPrograms" :key="item.id" :rate="item" />
     </div>
     <ExpandBtn
-      text="Показать еще (5)"
+      :text="`Показать еще (${extraPrograms.length})`"
       @btn-click="handleShowDetailsExtra"
-      v-if="!showDetailsExtra"
+      v-if="!showDetailsExtra && extraPrograms.length > 0"
       :expand="showDetailsExtra"
     />
     <div class="details-extra" v-show="showDetailsExtra">
