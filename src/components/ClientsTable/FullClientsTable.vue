@@ -162,7 +162,6 @@ const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const cancelOpenWhenSelect = (client) => {
   const selection = window.getSelection().toString();
-  console.log(selection);
   if (!selection) {
     openClientInfo(client);
   } else {
@@ -195,7 +194,6 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
-
   router.push(
     Trans.i18nRoute({
       name: "clientInfo",

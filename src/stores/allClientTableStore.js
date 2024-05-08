@@ -89,7 +89,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       .then((response) => {
         users.value = response.data.data.data;
 
-        console.log(users.value);
 
         // router.push({
         //   name: "appeals-page",
