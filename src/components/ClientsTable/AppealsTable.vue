@@ -148,7 +148,7 @@
 
       <q-space></q-space>
       <RowsPerPage
-        v-if="pagination"
+        v-if="reactivePagination"
         @choiceOption="selectOption"
         :pagination="reactivePagination"
       />
@@ -314,6 +314,7 @@ onMounted(() => {
 //   qTableInnerElement.appendChild(qTableElement);
 //   qTableMiddleElement.appendChild(qTableInnerElement);
 // });
+ 
 </script>
 
 <style lang="scss" scoped>

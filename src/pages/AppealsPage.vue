@@ -9,6 +9,7 @@
         :columns="columns"
         :loading="loading"
         :requestData="clientTableStore.handleRequest"
+        ref="testRef"
       />
     </div>
     <AppealSearchClient
@@ -38,7 +39,11 @@ const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
+const testRef = ref(null);
 
+onMounted(() => {
+  console.log(testRef.value);
+});
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;
 };

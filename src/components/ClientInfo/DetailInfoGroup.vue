@@ -49,7 +49,6 @@
       :rows="allClientTableStore.applicationsRows"
       :columns="columnsWithoutClientName"
       :loading="allClientTableStore.loading"
-      
     />
   </div>
 </template>
