@@ -1,15 +1,15 @@
 <template>
   <div class="details__card details__card_big">
-    <h5 class="details__card-title">Аптека и стоматология</h5>
+    <h5 class="details__card-title">{{ rate?.name }}</h5>
     <div class="details__card-info">
       <div class="details__card-text">
-        <p>
+        <!-- <p>
           <span>Потрачено: </span>
           <span class="text-negative">-1 069 000 UZS</span>
-        </p>
+        </p> -->
         <p>
-          <span>Осталось: </span>
-          <span>931 000 UZS</span>
+          <span>Лимит: </span>
+          <span>{{ limit }}</span>
         </p>
       </div>
       <div class="details__card-icons" v-if="$slots.icons">
@@ -63,7 +63,20 @@
 </template>
 
 <script setup>
+import formatPrice from "src/helpers/formatPrice";
+import { computed } from "vue";
 
+const props = defineProps({
+  rate: {
+    type: Object,
+  },
+});
+
+const rate = computed(() => props.rate);
+
+const limit = computed(() => {
+  return formatPrice(Number(props.rate.limit));
+});
 </script>
 
 <style lang="scss" scoped>

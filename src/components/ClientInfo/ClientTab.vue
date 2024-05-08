@@ -1,19 +1,33 @@
 <template>
   <div :class="['client-tab', { selected: isSelected }]">
-    {{ text }}
+    {{ clientName }}
   </div>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps({
   isSelected: {
     type: Boolean,
     default: false,
   },
-  text: {
-    type: String,
-    default: "Ходжаев Сергей",
+  client: {
+    type: Object,
+    default: () => {},
   },
+});
+
+const client = computed(() => props.client);
+const clientName = computed(() => {
+  const firstname =
+    client.value?.name[0].toUpperCase() +
+    client.value?.name.slice(1).toLowerCase();
+  const lastname =
+    client.value?.lastname[0].toUpperCase() +
+    client.value?.lastname.slice(1).toLowerCase();
+
+  return lastname + " " + firstname;
 });
 </script>
 

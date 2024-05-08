@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
-import formatDate from "src/helpers/formatDate";
 import formatNumber from "src/helpers/formatNumber";
 import { useI18n } from "vue-i18n";
+import { Loading } from "quasar";
 
 export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
 
+  // allTable
   const columns = computed(() => [
     {
       name: "index",
@@ -117,9 +118,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const rows = computed(() => {
-    users.value.forEach((row) => {
-      console.log(row);
-    });
     return users.value.map((row, index) => {
       const insurancePeriod =
         row.contract.start_date.replace(/-/g, ".") +
@@ -137,11 +135,37 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         dmsId: row.dms_code,
         program: row.program?.name ?? "",
         insurancePeriod: insurancePeriod,
-        organizationName: row.contract?.applicant ?? 'no applicant',
+        organizationName: row.contract?.applicant ?? "no applicant",
         index: row.id,
       };
     });
   });
 
-  return { pagination, loading, rows, columns, handleRequest };
+  const clientInfo = ref(null);
+  const setClientInfo = (item) => {
+    clientInfo.value = item;
+  };
+
+  const getClientInfo = async (id) => {
+    loading.value = true;
+    try {
+      const response = await ClientService.getClientInfo(id);
+      const data = response.data.data;
+      setClientInfo(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return {
+    pagination,
+    loading,
+    rows,
+    columns,
+    handleRequest,
+    clientInfo,
+    getClientInfo,
+  };
 });

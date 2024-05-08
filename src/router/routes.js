@@ -113,9 +113,15 @@ const routes = [
             },
           },
           {
-            path: "test",
-            name: "test",
-            component: () => import("pages/TestPage.vue"),
+            path: "clients/:id",
+            name: "clientInfo",
+            component: () => import("pages/ClientInfoPage.vue"),
+            props: (route) => {
+              return {
+                id: route.params.id,
+                key: route.params.id,
+              };
+            },
           },
         ],
       },
