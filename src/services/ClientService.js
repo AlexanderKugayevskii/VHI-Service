@@ -24,6 +24,10 @@ function getFullClients(page, limit, search, filterQueries) {
   });
 }
 
+function getClientInfo(id) {
+  return api.get(`/clinics/clients/${id}`);
+}
+
 function getClientByAppealId(appealId) {
   return api.get(`/clinics/applications/${appealId}`);
 }
@@ -55,7 +59,7 @@ function getClientsByPassport(passport) {
 export default {
   getClients,
   getFullClients,
-
+  getClientInfo, 
   getClientByAppealId,
 
   getClientsByCode,

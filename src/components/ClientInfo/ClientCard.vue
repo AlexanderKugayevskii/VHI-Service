@@ -4,18 +4,18 @@
       <div class="client__card-text">
         <p>
           <span>Клиент: </span>
-          <span>Ходжаев Сергей, 1998</span>
+          <span>{{ clientData.clientName }}, {{ clientData.birthDay }}</span>
         </p>
         <p>
           <span>Паспорт: </span>
-          <span>AA 1234567</span>
+          <span>{{ clientData.passport }}</span>
         </p>
-        <p>
+        <p v-if="clientData.phone">
           <span>Телефон: </span>
-          <span>+998 (90) 123 20 27</span>
+          <span>{{ clientData.phone }}</span>
         </p>
       </div>
-      <div class="client__card-extra">
+      <!-- <div class="client__card-extra">
         <h6 class="client__card-extra-title">Расходы</h6>
         <div class="client__card-extra-text">
           <p>
@@ -27,12 +27,30 @@
             <span>0 UZS</span>
           </p>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { computed } from "vue";
+import formatNumber from "src/helpers/formatNumber";
+const props = defineProps({
+  client: {
+    type: Object,
+  },
+});
+
+const client = computed(() => props.client);
+const clientData = computed(() => {
+  return {
+    clientName: client.value?.lastname + " " + client.value?.name,
+    birthDay: client.value?.birthday.slice(0, 4),
+    passport: client.value?.seria + " " + client.value?.number,
+    phone: client.value?.phone ? formatNumber(client.value?.phone) : null,
+  };
+});
+</script>
 
 <style lang="scss" scoped>
 .client__card {
@@ -86,7 +104,7 @@
           font-weight: 500;
         }
       }
-    }   
+    }
 
     &-title {
       margin: 0;

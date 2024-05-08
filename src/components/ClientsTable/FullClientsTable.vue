@@ -59,7 +59,11 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props" class="clickable">
+        <q-tr
+          :props="props"
+          @mouseup="cancelOpenWhenSelect(props.row)"
+          class="clickable"
+        >
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
@@ -153,16 +157,14 @@ const search = computed(() => searchProp.search);
 
 const tableRef = ref(null);
 
-const appealStore = useAppealStore();
 const clientTableStore = useFullClientTableStore();
 const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
 const cancelOpenWhenSelect = (client) => {
-  console.log(client);
   const selection = window.getSelection().toString();
   console.log(selection);
   if (!selection) {
-    openAppealPage(client);
+    openClientInfo(client);
   } else {
     return;
   }
@@ -192,21 +194,11 @@ const selectOption = (option) => {
   });
 };
 
-const openAppealPage = async (client) => {
-  appealStore.setClient(client);
-  appealStore.setTypeOfAppeal("CHANGE");
-  $q.loading.show({
-    delay: 500,
-  });
-
-  await appealStore.fetchApplicantData();
-  await appealStore.fetchHospitalData();
-
-  $q.loading.hide();
-  router.replace(
+const openClientInfo = async (client) => {
+  router.push(
     Trans.i18nRoute({
-      name: "createAppeal",
-      params: { id: appealStore.client.contractClientId },
+      name: "clientInfo",
+      params: { id: String(client.contractClientId) },
     })
   );
 };
