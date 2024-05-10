@@ -76,7 +76,7 @@ const props = defineProps({
     default: false,
   },
   isError: {
-    type: Boolean,
+    type: [Boolean, String],
     default: false,
   },
 });
