@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableActions>
+    <TableActions @update:search="handleSearch">
       <template #appealBtn>
         <SimpleButton
           type="button"
@@ -22,7 +22,7 @@
         row-key="index"
         v-model:pagination="reactivePagination"
         no-data-label="I didn't find anything for you"
-        no-results-label="The filter didn't uncover any results"
+        no-results-label="Данных по вашему запросу не найдено"
         @request="requestData"
       >
         <template v-slot:loading>
@@ -31,7 +31,7 @@
         <template v-slot:no-data="{ icon, message, filter }">
           <div class="full-width row flex-center text-accent q-gutter-sm">
             <q-icon size="2em" name="sentiment_dissatisfied" />
-            <span> Well this is sad... {{ message }} </span>
+            <span> {{ message }} </span>
             <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
           </div>
         </template>
@@ -80,10 +80,10 @@
             </q-td>
             <q-td key="client" :props="props" class="appeals-td">
               <a class="appeal-link">
-                {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+                {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
               </a>
               <TableTooltip>
-                {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+                {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
               </TableTooltip>
             </q-td>
             <q-td key="appealDate" :props="props" class="appeals-td">
@@ -181,7 +181,7 @@ const $q = useQuasar();
 
 const router = useRouter();
 const props = defineProps([
-  "search",
+  // "search",
   "pagination",
   "rows",
   "columns",
@@ -190,7 +190,11 @@ const props = defineProps([
 ]);
 const emit = defineEmits(["createAppeal"]);
 
-const search = computed(() => props.search);
+const search = ref("");
+const handleSearch = (searchValue) => {
+  search.value = searchValue;
+};
+
 const tableRef = ref(null);
 const appealStore = useAppealStore();
 
@@ -314,7 +318,6 @@ onMounted(() => {
 //   qTableInnerElement.appendChild(qTableElement);
 //   qTableMiddleElement.appendChild(qTableInnerElement);
 // });
- 
 </script>
 
 <style lang="scss" scoped>

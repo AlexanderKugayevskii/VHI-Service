@@ -9,7 +9,6 @@
         :columns="columns"
         :loading="loading"
         :requestData="clientTableStore.handleRequest"
-        ref="testRef"
       />
     </div>
     <AppealSearchClient
@@ -35,14 +34,14 @@ import { storeToRefs } from "pinia";
 import { useClientTableStore } from "src/stores/clientTableStore";
 
 const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+const { pagination, rows, columns, loading, filterData } =
+  storeToRefs(clientTableStore);
 
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
-const testRef = ref(null);
 
 onMounted(() => {
-  console.log(testRef.value);
+  console.log(filterData.value);
 });
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;
