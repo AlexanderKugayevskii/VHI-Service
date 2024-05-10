@@ -12,14 +12,20 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="page-title q-my-none">
-            {{ $t("create_appeal.title") }}
-            {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
-          </h4>
-          <div class="label-row">
-            <span class="title-label green">Клиника</span>
-            <span class="title-label violet">Обращения</span>
+          <div class="modal-header-top">
+            <h4 class="page-title q-my-none">
+              {{ $t("create_appeal.title") }}
+              {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
+            </h4>
+            <div class="label-row">
+              <span class="title-label green">Клиника</span>
+              <span class="title-label violet">Обращения</span>
+            </div>
           </div>
+          <StatusBar
+            :status="clientData.appealStatus"
+            :label="true"
+          ></StatusBar>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -154,11 +160,21 @@
                               </template>
                             </DropdownSelectNew>
                             <SimpleInput
+                              class="dropdown-space"
                               label="Диагноз"
                               placeholder="Введите диагноз"
                               @update:model-value="appealStore.setDiagnosis"
                               :modelValue="appealStore.diagnosis"
                             ></SimpleInput>
+
+                            <DateInput
+                              number
+                              label="Дата обращения"
+                              placeholder="Введите дату (10.05.2024)"
+                              @update:model-value="appealStore.setAppealDate"
+                              :modelValue="appealStore.appealDate"
+                            ></DateInput>
+
                           </div>
                         </q-tab-panel>
 
@@ -582,10 +598,9 @@
 <script setup>
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
-import DropdownSelectLocal from "src/components/Shared/DropdownSelectLocal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import SelectedItem from "src/components/Shared/SelectedItem.vue";
+import DateInput from "src/components/Shared/DateInput.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
@@ -672,10 +687,16 @@ const handleStatusService = (item, isSuggested) => {
   overflow: visible;
 }
 .create-appeal-modal .modal-header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  column-gap: 12px;
+  // border-top-left-radius: 16px;
+  // padding: 24px;
+  &-top {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 12px;
+    margin-bottom: 16px;
+  }
+  display: block;
   border-top-left-radius: 16px;
   padding: 24px;
 }

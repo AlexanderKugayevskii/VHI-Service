@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import formatDate from "src/helpers/formatDate";
-
 import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
@@ -137,7 +136,28 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
-  
+  const filterData = computed(() => {
+    const filters = {
+      doctors: users.value.flatMap((row) => row.doctors).map((doc) => doc.name),
+      services: users.value
+        .flatMap((row) => row.services)
+        .map((service) => service.name),
+      clinics: users.value.map((row) => row.hospital.name),
+      appealDates: [
+        ...new Set(
+          users.value.map((row) =>
+            formatDate(row.created_at, { withHours: false })
+          )
+        ),
+      ],
+      clientName: users.value.map((row) => {
+        return row.client.lastname + " " + row.client.name;
+      }),
+      
+    };
 
-  return { pagination, loading, rows, columns, handleRequest };
+    return filters;
+  });
+
+  return { pagination, loading, rows, columns, handleRequest, filterData };
 });

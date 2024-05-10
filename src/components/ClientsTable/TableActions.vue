@@ -9,6 +9,8 @@
           class="search-input q-px-sm"
           :placeholder="$t('search')"
           debounce="300"
+          v-model="test"
+          @update:model-value="search"
         >
           <!-- v-model="search" -->
           <template v-slot:prepend>
@@ -39,7 +41,7 @@
           </template>
         </q-input>
       </div>
-      <div class="appeals-badges">
+      <!-- <div class="appeals-badges">
         <q-btn
           dense
           round
@@ -93,11 +95,12 @@
             </div>
           </Transition>
         </div>
-      </div>
+      </div> -->
     </div>
     <slot name="appealBtn"></slot>
   </div>
-  <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal>
+
+  <!-- <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal> -->
 </template>
 
 <script setup>
@@ -106,11 +109,18 @@ import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 
+const emit = defineEmits(["update:search"]);
 const modalFilterFixed = ref(false);
 const showDropdown = ref(false);
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
+
+const test = ref("");
+const search = () => {
+  emit("update:search", test.value);
+};
+
 const filterOptions = reactive([
   {
     label: "Клиент",

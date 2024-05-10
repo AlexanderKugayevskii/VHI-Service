@@ -72,10 +72,15 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const diagnosis = ref("");
 
+  const appealDate = ref("");
+
   const setDiagnosis = (value) => {
     diagnosis.value = value;
   };
 
+  const setAppealDate = (value) => {
+    appealDate.value = value;
+  };
   const clinics = ref([]);
   const selectedClinic = ref(null);
 
@@ -467,6 +472,7 @@ export const useAppealStore = defineStore("appeal", () => {
       services: selectedServices.value.map((service) => service.id),
       doctors: selectedDoctors.value.map((doctor) => doctor.id),
       diagnosis: diagnosis.value,
+      applied_date: appealDate.value,
     };
     try {
       const response = await AppealService.saveAppealByAgent(payload);
@@ -504,6 +510,7 @@ export const useAppealStore = defineStore("appeal", () => {
       services: allServicesStatus.value,
       doctors: allDoctorsStatus.value,
       diagnosis: diagnosis.value,
+      applied_date: appealDate.value,
     };
 
     try {
@@ -551,6 +558,9 @@ export const useAppealStore = defineStore("appeal", () => {
       // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
+      
+      const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
+      appealDate.value = `${ad3}-${ad2}-${ad1}`;
 
       filterItems(
         data.doctors,
@@ -745,6 +755,8 @@ export const useAppealStore = defineStore("appeal", () => {
     setClient,
     diagnosis,
     setDiagnosis,
+    appealDate,
+    setAppealDate,
     clinics,
     selectedClinic,
     doctors,

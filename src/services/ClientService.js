@@ -6,7 +6,7 @@ function getClients(page, limit, search, filterQueries) {
     params: {
       _limit: limit,
       page: page,
-      q: search,
+      all_fields: search,
       ...filterQueries,
     },
   });
