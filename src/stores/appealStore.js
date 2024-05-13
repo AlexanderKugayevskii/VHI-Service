@@ -688,7 +688,7 @@ export const useAppealStore = defineStore("appeal", () => {
             ...doctor.pivot,
             status: selectedItem.status ?? doctor.pivot.status,
             progress: selectedItem.progress ?? doctor.pivot.progress,
-            quantity: selectedItem.quantity ?? service.pivot.quantity,
+            quantity: selectedItem.quantity ?? doctor.pivot.quantity,
           },
           status: selectedItem.status,
         };

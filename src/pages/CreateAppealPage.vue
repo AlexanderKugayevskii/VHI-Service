@@ -276,6 +276,9 @@
                               @update:progress="
                                 (item) => handleStatusDoctor(item, false)
                               "
+                              @update:quantity="
+                                (item) => handleStatusDoctor(item, false)
+                              "
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -307,6 +310,9 @@
                                   (item) => handleStatusDoctor(item, true)
                                 "
                                 @update:progress="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
+                                @update:quantity="
                                   (item) => handleStatusDoctor(item, true)
                                 "
                               >
@@ -455,6 +461,9 @@
                                   (item) => handleStatusService(item, true)
                                 "
                                 @update:progress="
+                                  (item) => handleStatusService(item, true)
+                                "
+                                @update:quantity="
                                   (item) => handleStatusService(item, true)
                                 "
                               >
