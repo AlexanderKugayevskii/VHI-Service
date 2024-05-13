@@ -221,6 +221,7 @@ export const useAppealStore = defineStore("appeal", () => {
           ...doctor.pivot,
           status: 0,
           progress: 0,
+          quantity: 1,
         },
         isNew: true,
       });
@@ -263,6 +264,7 @@ export const useAppealStore = defineStore("appeal", () => {
           ...service.pivot,
           status: 0,
           progress: 0,
+          quantity: 1,
         },
         isNew: true,
       });
