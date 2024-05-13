@@ -112,12 +112,13 @@ export const useClientTableStore = defineStore("clientTable", () => {
     return users.value.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
+      const appliedDate = row.applied_date.split("-").reverse().join("-");
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
-        appealDate: formatDate(row.created_at),
+        appealDate: appliedDate,
         appealStatus: row.status,
         clinicName: row.hospital.name,
         doctorName: doctors,
@@ -153,7 +154,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
       clientName: users.value.map((row) => {
         return row.client.lastname + " " + row.client.name;
       }),
-      
     };
 
     return filters;
