@@ -138,26 +138,50 @@ export const useClientTableStore = defineStore("clientTable", () => {
   });
 
   const filterData = computed(() => {
-    const filters = {
-      doctors: users.value.flatMap((row) => row.doctors).map((doc) => doc.name),
-      services: users.value
-        .flatMap((row) => row.services)
-        .map((service) => service.name),
-      clinics: users.value.map((row) => row.hospital.name),
-      appealDates: [
-        ...new Set(
-          users.value.map((row) =>
-            formatDate(row.created_at, { withHours: false })
-          )
-        ),
-      ],
-      clientName: users.value.map((row) => {
-        return row.client.lastname + " " + row.client.name;
-      }),
-    };
-
-    return filters;
+    return [
+      {
+        name: "Клиент",
+        item: users.value.map((row) => {
+          return row.client.lastname + " " + row.client.name;
+        }),
+      },
+      {
+        name: "Дата обращения",
+        item: [
+          ...new Set(
+            users.value.map((row) =>
+              formatDate(row.created_at, { withHours: false })
+            )
+          ),
+        ],
+      },
+      {
+        name: "Статус",
+        item: [...new Set(users.value.map((row) => row.status))],
+      },
+      {
+        name: "Клиника",
+        item: users.value.map((row) => row.hospital.name),
+      },
+      {
+        name: "Врач",
+        item: users.value.flatMap((row) => row.doctors).map((doc) => doc.name),
+      },
+      {
+        name: "Сервис",
+        item: users.value
+          .flatMap((row) => row.services)
+          .map((service) => service.name),
+      },
+    ];
   });
+
+  watch(
+    () => users.value,
+    (newUsers) => {
+      console.log(filterData.value);
+    }
+  );
 
   return { pagination, loading, rows, columns, handleRequest, filterData };
 });

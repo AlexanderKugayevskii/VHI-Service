@@ -41,7 +41,7 @@
           </template>
         </q-input>
       </div>
-      <!-- <div class="appeals-badges">
+      <div class="appeals-badges">
         <q-btn
           dense
           round
@@ -95,12 +95,16 @@
             </div>
           </Transition>
         </div>
-      </div> -->
+      </div>
     </div>
     <slot name="appealBtn"></slot>
   </div>
 
-  <!-- <TableFiltersModal v-model:="modalFilterFixed"></TableFiltersModal> -->
+  <TableFiltersModal v-model:="modalFilterFixed">
+    <template #filters>
+      <slot name="filters"></slot>
+    </template>
+  </TableFiltersModal>
 </template>
 
 <script setup>
@@ -110,6 +114,11 @@ import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 
 const emit = defineEmits(["update:search"]);
+const props = defineProps({
+  filterOptions: {
+    default: [],
+  },
+});
 const modalFilterFixed = ref(false);
 const showDropdown = ref(false);
 const toggleDropdown = () => {
@@ -121,37 +130,11 @@ const search = () => {
   emit("update:search", test.value);
 };
 
-const filterOptions = reactive([
-  {
-    label: "Клиент",
-    value: "Попова Алексей 444",
-  },
-  {
-    label: "Дата обращения",
-    value: "03.07.2023",
-  },
-  {
-    label: "Статус",
-    value: "В работе",
-  },
-  {
-    label: "Клиника",
-    value: "Название клиники",
-  },
-  {
-    label: "Врач",
-    value: "Григорий Чубик",
-  },
-  {
-    label: "Сервис",
-    value: "DMS",
-  },
-]);
 const expandedOptions = computed(() => {
-  return filterOptions.slice(0, 2);
+  return props.filterOptions.slice(0, 2);
 });
 const extraOptions = computed(() => {
-  return filterOptions.slice(2);
+  return props.filterOptions.slice(2);
 });
 
 onMounted(() => {

@@ -31,57 +31,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="filter-item">
-          <SimpleInput
-            label="Клиент"
-            placeholder="Введите фамилию и имя клиента"
-          ></SimpleInput>
-        </div>
-        <div class="filter-item">
-          <SimpleInput
-            label="Дата обращения"
-            placeholder="01.01.1990"
-          ></SimpleInput>
-        </div>
-        <div class="filter-item">
-          <DropdownSelectLocal
-            label="Статус"
-            placeholder="Выберите статус"
-            id-key="statusName"
-            :multiple="false"
-            :initialOptions="[
-              { id: 1, statusName: 'Новое' },
-              { id: 2, statusName: 'В работе' },
-              { id: 3, statusName: 'Завершено' },
-            ]"
-          >
-            <template #option-content="{ option }">
-              <div class="option-content">
-                <span>
-                  {{ option.statusName }}
-                </span>
-              </div>
-            </template>
-          </DropdownSelectLocal>
-        </div>
-        <div class="filter-item">
-          <DropdownSelect
-            label="Клиника"
-            placeholder="Выберете клинику"
-          ></DropdownSelect>
-        </div>
-        <div class="filter-item">
-          <DropdownSelect
-            label="Врач"
-            placeholder="Выберете врача"
-          ></DropdownSelect>
-        </div>
-        <div class="filter-item">
-          <DropdownSelect
-            label="Сервис"
-            placeholder="Выберете сервис"
-          ></DropdownSelect>
-        </div>
+        <slot name = "filters"></slot>
       </div>
       <div class="modal-footer">
         <SimpleButton
@@ -97,9 +47,7 @@
 
 <script setup>
 import { ref } from "vue";
-import SimpleInput from "../Shared/SimpleInput.vue";
-import DropdownSelect from "../Shared/DropdownSelect.vue";
-import DropdownSelectLocal from "../Shared/DropdownSelectLocal.vue";
+
 import SimpleButton from "../Shared/SimpleButton.vue";
 
 const filterDialogRef = ref(null);
