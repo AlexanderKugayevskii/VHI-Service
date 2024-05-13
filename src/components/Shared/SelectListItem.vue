@@ -112,7 +112,12 @@ const props = defineProps({
 
 const quantity = ref("1");
 
-const emit = defineEmits(["update:status", "update:progress", "remove:item"]);
+const emit = defineEmits([
+  "update:status",
+  "update:progress",
+  "update:quantity",
+  "remove:item",
+]);
 
 const disabledRule = computed(() => {
   const createdByOther =
