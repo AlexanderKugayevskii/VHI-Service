@@ -174,7 +174,6 @@
                               @update:model-value="appealStore.setAppealDate"
                               :modelValue="appealStore.appealDate"
                             ></DateInput>
-
                           </div>
                         </q-tab-panel>
 
@@ -419,6 +418,9 @@
                                 (item) => handleStatusService(item, false)
                               "
                               @update:progress="
+                                (item) => handleStatusService(item, false)
+                              "
+                              @update:quantity="
                                 (item) => handleStatusService(item, false)
                               "
                             >

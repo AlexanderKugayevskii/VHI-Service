@@ -94,6 +94,7 @@ const onInput = (e) => {
     e.target.value = e.target.value.replace(/\D/g, "");
   }
   debounceInput.value = e.target.value;
+
   if (props.debounceTime > 0) {
     debounceEmit(debounceInput.value);
   } else {

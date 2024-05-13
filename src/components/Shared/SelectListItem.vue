@@ -72,14 +72,22 @@
         </svg>
       </q-icon>
     </button>
+    <SimpleInput
+      style="width: 10ch"
+      placeholder="кол-во"
+      number
+      v-model="quantity"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
 import DropdownSelectNew from "./DropdownSelectNew.vue";
+import SimpleInput from "./SimpleInput.vue";
+import { watch } from "vue";
 
 const props = defineProps({
   item: {
@@ -101,6 +109,8 @@ const props = defineProps({
     default: true,
   },
 });
+
+const quantity = ref("1");
 
 const emit = defineEmits(["update:status", "update:progress", "remove:item"]);
 
@@ -131,6 +141,10 @@ const handleStatus = (status) => {
 const handleProgress = (progress) => {
   emit("update:progress", { progress, item: props.item });
 };
+
+watch(quantity, (newQuantity) => {
+  emit("update:quantity", { quantity: Number(newQuantity), item: props.item });
+});
 
 const removeItem = () => {
   emit("remove:item", props.item);

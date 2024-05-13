@@ -5,6 +5,7 @@ import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
 import { SessionStorage, Notify } from "quasar";
+import dayjs from "dayjs";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -47,6 +48,7 @@ function filterItems(data, suggestedArr, selectedArr, isOther) {
 }
 
 export const useAppealStore = defineStore("appeal", () => {
+  const todayDate = dayjs().format("DD-MM-YYYY");
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value?.role.id === 8);
@@ -72,7 +74,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const diagnosis = ref("");
 
-  const appealDate = ref("");
+  const appealDate = ref(todayDate);
 
   const setDiagnosis = (value) => {
     diagnosis.value = value;
@@ -93,6 +95,7 @@ export const useAppealStore = defineStore("appeal", () => {
         id: doctor.id,
         status: doctor.pivot.status ?? 0,
         progress: doctor.pivot.progress ?? 0,
+        quantity: doctor.pivot.quantity ?? 1,
       };
     })
   );
@@ -106,6 +109,7 @@ export const useAppealStore = defineStore("appeal", () => {
         id: service.id,
         status: service.pivot.status ?? 0,
         progress: service.pivot.progress ?? 0,
+        quantity: service.pivot.quantity ?? 1,
       };
     })
   );
@@ -286,6 +290,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const clearAppealData = () => {
     diagnosis.value = "";
+    appealDate.value = todayDate;
     doctors.value = [];
     services.value = [];
     selectedDoctors.value = [];
@@ -463,14 +468,26 @@ export const useAppealStore = defineStore("appeal", () => {
   const postAppealData = async () => {
     loading.value = true;
 
+    const services = selectedServices.value.map((service) => {
+      return {
+        quantity: service.pivot.quantity,
+        id: service.id,
+      };
+    });
+    const doctors = selectedDoctors.value.map((doctor) => {
+      return {
+        quantity: doctor.pivot.quantity,
+        id: doctor.id,
+      };
+    });
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
       client_type: 0,
       is_hospital: true,
       client_id: client.value.clientId,
-      services: selectedServices.value.map((service) => service.id),
-      doctors: selectedDoctors.value.map((doctor) => doctor.id),
+      services,
+      doctors,
       diagnosis: diagnosis.value,
       applied_date: appealDate.value,
     };
@@ -558,7 +575,7 @@ export const useAppealStore = defineStore("appeal", () => {
       // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
-      
+
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
 
@@ -697,6 +714,7 @@ export const useAppealStore = defineStore("appeal", () => {
             ...service.pivot,
             status: selectedItem.status ?? service.pivot.status,
             progress: selectedItem.progress ?? service.pivot.progress,
+            quantity: selectedItem.quantity ?? service.pivot.quantity,
           },
           status: selectedItem.status,
         };
