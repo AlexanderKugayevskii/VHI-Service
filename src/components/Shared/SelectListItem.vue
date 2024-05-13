@@ -76,7 +76,8 @@
       style="width: 10ch"
       placeholder="кол-во"
       number
-      v-model="quantity"
+      :model-value="quantity"
+      @update:model-value="handleQuantity"
     />
   </div>
 </template>
@@ -87,7 +88,6 @@ import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
 import DropdownSelectNew from "./DropdownSelectNew.vue";
 import SimpleInput from "./SimpleInput.vue";
-import { watch } from "vue";
 
 const props = defineProps({
   item: {
@@ -109,8 +109,6 @@ const props = defineProps({
     default: true,
   },
 });
-
-const quantity = ref("1");
 
 const emit = defineEmits([
   "update:status",
@@ -140,6 +138,8 @@ const cantRemoveItem = computed(() => {
   return props.item.pivot.status > 0;
 });
 
+const quantity = computed(() => String(props.item.pivot.quantity));
+
 const handleStatus = (status) => {
   emit("update:status", { status, item: props.item });
 };
@@ -147,9 +147,9 @@ const handleProgress = (progress) => {
   emit("update:progress", { progress, item: props.item });
 };
 
-watch(quantity, (newQuantity) => {
-  emit("update:quantity", { quantity: Number(newQuantity), item: props.item });
-});
+const handleQuantity = (quantity) => {
+  emit("update:quantity", { quantity: Number(quantity), item: props.item });
+};
 
 const removeItem = () => {
   emit("remove:item", props.item);
