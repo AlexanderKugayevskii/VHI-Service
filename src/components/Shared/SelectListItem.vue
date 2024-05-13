@@ -72,14 +72,22 @@
         </svg>
       </q-icon>
     </button>
+    <SimpleInput
+      style="width: 10ch"
+      placeholder="кол-во"
+      number
+      :model-value="quantity"
+      @update:model-value="handleQuantity"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
 import DropdownSelectNew from "./DropdownSelectNew.vue";
+import SimpleInput from "./SimpleInput.vue";
 
 const props = defineProps({
   item: {
@@ -102,7 +110,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:status", "update:progress", "remove:item"]);
+const emit = defineEmits([
+  "update:status",
+  "update:progress",
+  "update:quantity",
+  "remove:item",
+]);
 
 const disabledRule = computed(() => {
   const createdByOther =
@@ -125,11 +138,17 @@ const cantRemoveItem = computed(() => {
   return props.item.pivot.status > 0;
 });
 
+const quantity = computed(() => String(props.item.pivot.quantity));
+
 const handleStatus = (status) => {
   emit("update:status", { status, item: props.item });
 };
 const handleProgress = (progress) => {
   emit("update:progress", { progress, item: props.item });
+};
+
+const handleQuantity = (quantity) => {
+  emit("update:quantity", { quantity: Number(quantity), item: props.item });
 };
 
 const removeItem = () => {

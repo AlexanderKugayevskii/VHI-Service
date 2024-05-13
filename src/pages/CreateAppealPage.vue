@@ -174,7 +174,6 @@
                               @update:model-value="appealStore.setAppealDate"
                               :modelValue="appealStore.appealDate"
                             ></DateInput>
-
                           </div>
                         </q-tab-panel>
 
@@ -277,6 +276,9 @@
                               @update:progress="
                                 (item) => handleStatusDoctor(item, false)
                               "
+                              @update:quantity="
+                                (item) => handleStatusDoctor(item, false)
+                              "
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -308,6 +310,9 @@
                                   (item) => handleStatusDoctor(item, true)
                                 "
                                 @update:progress="
+                                  (item) => handleStatusDoctor(item, true)
+                                "
+                                @update:quantity="
                                   (item) => handleStatusDoctor(item, true)
                                 "
                               >
@@ -421,6 +426,9 @@
                               @update:progress="
                                 (item) => handleStatusService(item, false)
                               "
+                              @update:quantity="
+                                (item) => handleStatusService(item, false)
+                              "
                             >
                               <template #label>
                                 {{ service.name }}
@@ -453,6 +461,9 @@
                                   (item) => handleStatusService(item, true)
                                 "
                                 @update:progress="
+                                  (item) => handleStatusService(item, true)
+                                "
+                                @update:quantity="
                                   (item) => handleStatusService(item, true)
                                 "
                               >
