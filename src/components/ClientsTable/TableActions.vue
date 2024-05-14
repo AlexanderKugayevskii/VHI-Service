@@ -62,15 +62,14 @@
               fill="#404F6F"
             />
           </svg>
-          <q-badge floating v-if="filterOptions.length">{{
-            filterOptions.length
-          }}</q-badge>
+          <q-badge floating v-if="optionsLength">{{ optionsLength }}</q-badge>
         </q-btn>
 
         <FilterChip
           v-for="option in expandedOptions"
           :key="option.label"
           :filterOption="option"
+          @delete="removeFilter"
         />
         <div class="filter-chip-dropdown" v-if="extraOptions.length">
           <button
@@ -91,6 +90,7 @@
                 :key="option.label"
                 :filterOption="option"
                 hoverable
+                @delete="removeFilter"
               />
             </div>
           </Transition>
@@ -100,7 +100,7 @@
     <slot name="appealBtn"></slot>
   </div>
 
-  <TableFiltersModal v-model:="modalFilterFixed">
+  <TableFiltersModal v-model:="modalFilterFixed" :optionsLength = "optionsLength">
     <template #filters>
       <slot name="filters"></slot>
     </template>
@@ -116,7 +116,10 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 const emit = defineEmits(["update:search"]);
 const props = defineProps({
   filterOptions: {
-    default: [],
+    default: {},
+  },
+  removeFilter: {
+    default: null,
   },
 });
 const modalFilterFixed = ref(false);
@@ -130,11 +133,13 @@ const search = () => {
   emit("update:search", test.value);
 };
 
+const optionsLength = computed(() => Object.keys(props.filterOptions).length);
+
 const expandedOptions = computed(() => {
-  return props.filterOptions.slice(0, 2);
+  return Object.entries(props.filterOptions).slice(0, 2);
 });
 const extraOptions = computed(() => {
-  return props.filterOptions.slice(2);
+  return Object.entries(props.filterOptions).slice(2);
 });
 
 onMounted(() => {
@@ -144,6 +149,8 @@ onMounted(() => {
     }
     showDropdown.value = false;
   });
+
+  console.log(expandedOptions.value);
 });
 </script>
 

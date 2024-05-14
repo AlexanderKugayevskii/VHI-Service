@@ -1,10 +1,18 @@
 <template>
   <div class="filter-chip q-py-xs q-px-sm" :class="{ active: hoverable }">
     <div>
-      <span class="filter-chip-type">{{ filterOption.label }}: </span>
-      <span class="filter-chip-value">{{ filterOption.value }}</span>
+      <span class="filter-chip-type"
+        >{{ $t(`client_table.${optionKey}`) }}:
+      </span>
+      <span class="filter-chip-value">
+        {{ option }}
+      </span>
     </div>
-    <button type="button" class="filter-chip-delete-btn">
+    <button
+      type="button"
+      class="filter-chip-delete-btn"
+      @click="handleRemoveChip"
+    >
       <q-icon size="20px">
         <svg
           width="20"
@@ -34,9 +42,11 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   filterOption: {
-    type: Object,
+    type: [Object, Array],
     required: true,
   },
   hoverable: {
@@ -44,6 +54,22 @@ defineProps({
     default: false,
   },
 });
+
+const emit = defineEmits(["delete"]);
+
+const option = computed(() => {
+  return Array.isArray(props.filterOption[1])
+    ? props.filterOption[1].join(", ")
+    : typeof props.filterOption[1] === "object"
+    ? props.filterOption[1].name
+    : props.filterOption[1];
+});
+
+const optionKey = computed(() => props.filterOption[0]);
+
+const handleRemoveChip = () => {
+  emit("delete", optionKey.value);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -54,16 +80,27 @@ defineProps({
   color: #404f6f;
   font-size: 15px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   column-gap: 8px;
-  white-space: nowrap;
+  // white-space: nowrap;
+
   transition: 0.3s;
+
+  div {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    flex-grow: 1;
+  }
 
   &-type {
   }
   &-value {
     font-weight: 600;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   &-delete-btn {
     // width: 20px;

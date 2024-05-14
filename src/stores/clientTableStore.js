@@ -6,6 +6,14 @@ import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
+  const statuses = computed(() => {
+    return {
+      0: t("statuses.new"),
+      1: t("statuses.in_progress"),
+      2: t("statuses.completed"),
+    };
+  });
+
   const columns = computed(() => [
     {
       name: "index",
@@ -137,16 +145,28 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
+  
+  const filterQuery = ref({});
   const filterData = computed(() => {
     return [
       {
-        name: "Клиент",
-        item: users.value.map((row) => {
-          return row.client.lastname + " " + row.client.name;
-        }),
+        name: t("client_table.client"),
+        type: "client",
+        placeholder: "Фамилия и имя клиента",
+        multiple: false,
+        item: [
+          ...new Set(
+            users.value.map((row) => {
+              return row.client.lastname + " " + row.client.name;
+            })
+          ),
+        ],
       },
       {
-        name: "Дата обращения",
+        name: t("client_table.date_of_appeal"),
+        type: "date_of_appeal",
+        placeholder: "01.01.1990",
+        multiple: false,
         item: [
           ...new Set(
             users.value.map((row) =>
@@ -156,32 +176,118 @@ export const useClientTableStore = defineStore("clientTable", () => {
         ],
       },
       {
-        name: "Статус",
-        item: [...new Set(users.value.map((row) => row.status))],
-      },
-      {
-        name: "Клиника",
-        item: users.value.map((row) => row.hospital.name),
-      },
-      {
-        name: "Врач",
-        item: users.value.flatMap((row) => row.doctors).map((doc) => doc.name),
-      },
-      {
-        name: "Сервис",
+        name: t("client_table.appeal_status"),
+        type: "appeal_status",
+        placeholder: "Выберите статус",
+        multiple: false,
         item: users.value
-          .flatMap((row) => row.services)
-          .map((service) => service.name),
+          .map((row) => {
+            return {
+              status: row.status,
+              name: statuses.value[row.status],
+            };
+          })
+          .filter((statusItem, index, thisArr) => {
+            return (
+              index === thisArr.findIndex((t) => t.status === statusItem.status)
+            );
+          }),
+      },
+      {
+        name: t("client_table.clinic"),
+        type: "clinic",
+        placeholder: t("create_appeal.dropdowns.clinic"),
+        multiple: false,
+        item: [...new Set(users.value.map((row) => row.hospital.name))],
+      },
+      {
+        name: t("client_table.doctor"),
+        type: "doctors",
+        placeholder: t("create_appeal.dropdowns.doctors"),
+        multiple: true,
+        item: [
+          ...new Set(
+            users.value
+              .flatMap((row) => row.doctors)
+              .map((doctor) => doctor.name)
+          ),
+        ],
+      },
+      {
+        name: t("client_table.service"),
+        type: "services",
+        placeholder: t("create_appeal.dropdowns.services"),
+        multiple: true,
+        item: [
+          ...new Set(
+            users.value
+              .flatMap((row) => row.services)
+              .map((service) => service.name)
+          ),
+        ],
       },
     ];
   });
+  const selectFilterData = (option, type, multiple) => {
+    let optionItem = option;
+    if (!filterQuery.value[type]) {
+      if (multiple) {
+        filterQuery.value[type] = [];
+        filterQuery.value[type].push(optionItem);
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    } else {
+      if (multiple) {
+        const index = filterQuery.value[type].findIndex(
+          (item) => item === optionItem
+        );
+        if (index > -1) {
+          filterQuery.value[type].splice(index, 1);
+        } else {
+          filterQuery.value[type].push(optionItem);
+        }
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    }
+
+    console.log(filterQuery.value);
+  };
+
+  const checkSelectedOption = (option, type, multiple) => {
+    if (multiple) {
+      return filterQuery.value[type]?.some((item) => item === option);
+    } else {
+      if (type === "appeal_status") {
+        return option.status === filterQuery.value[type]?.status;
+      }
+      return option === filterQuery.value[type];
+    }
+  };
+
+  const removeFilter = (filterKey) => {
+    delete filterQuery.value[filterKey];
+  };
 
   watch(
     () => users.value,
     (newUsers) => {
       console.log(filterData.value);
+      console.log(`filterQuery`, filterQuery.value);
     }
   );
 
-  return { pagination, loading, rows, columns, handleRequest, filterData };
+  return {
+    pagination,
+    loading,
+    rows,
+    columns,
+    handleRequest,
+    filterData,
+    selectFilterData,
+    filterQuery,
+    checkSelectedOption,
+    removeFilter
+  };
 });
