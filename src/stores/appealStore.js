@@ -145,7 +145,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
-        return acc + Number(curr.pivot.price);
+        return acc + Number(curr.pivot.price) * Number(curr.pivot.quantity);
       }
       return acc;
     }, 0);

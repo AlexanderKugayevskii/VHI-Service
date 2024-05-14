@@ -8,6 +8,7 @@
         :rows="rows"
         :columns="columns"
         :loading="loading"
+        :filterData="filterData"
         :requestData="clientTableStore.handleRequest"
       />
     </div>
