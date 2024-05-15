@@ -19,7 +19,26 @@
           v-for="filterItem in filterData"
           :key="filterItem.name"
         >
+          <SimpleInput
+            v-if="filterItem.component === 'SimpleInput'"
+            :label="filterItem.name"
+            :placeholder="$t('appeal_search.fio_input')"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DateInput
+            v-if="filterItem.component === 'DateInput'"
+            :label="filterItem.name"
+            placeholder="10-05-2024"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
           <DropdownSelectNew
+            v-if="filterItem.component === 'DropdownSelectNew'"
             :label="filterItem.name"
             :options="filterItem.item"
             :multiple="filterItem.multiple"
@@ -223,6 +242,8 @@ import TableActions from "./TableActions.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
+import SimpleInput from "../Shared/SimpleInput.vue";
+import DateInput from "../Shared/DateInput.vue";
 import { onMounted, ref, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";

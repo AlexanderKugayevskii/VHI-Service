@@ -145,7 +145,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
-  
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
@@ -154,32 +153,23 @@ export const useClientTableStore = defineStore("clientTable", () => {
         type: "client",
         placeholder: "Фамилия и имя клиента",
         multiple: false,
-        item: [
-          ...new Set(
-            users.value.map((row) => {
-              return row.client.lastname + " " + row.client.name;
-            })
-          ),
-        ],
+        component: "SimpleInput",
+        item: "",
       },
       {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
         placeholder: "01.01.1990",
         multiple: false,
-        item: [
-          ...new Set(
-            users.value.map((row) =>
-              formatDate(row.created_at, { withHours: false })
-            )
-          ),
-        ],
+        component: "DateInput",
+        item: "",
       },
       {
         name: t("client_table.appeal_status"),
         type: "appeal_status",
         placeholder: "Выберите статус",
         multiple: false,
+        component: "DropdownSelectNew",
         item: users.value
           .map((row) => {
             return {
@@ -198,6 +188,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         type: "clinic",
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
+        component: "DropdownSelectNew",
         item: [...new Set(users.value.map((row) => row.hospital.name))],
       },
       {
@@ -205,6 +196,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         type: "doctors",
         placeholder: t("create_appeal.dropdowns.doctors"),
         multiple: true,
+        component: "DropdownSelectNew",
         item: [
           ...new Set(
             users.value
@@ -218,6 +210,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         type: "services",
         placeholder: t("create_appeal.dropdowns.services"),
         multiple: true,
+        component: "DropdownSelectNew",
         item: [
           ...new Set(
             users.value
@@ -228,6 +221,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       },
     ];
   });
+
   const selectFilterData = (option, type, multiple) => {
     let optionItem = option;
     if (!filterQuery.value[type]) {
@@ -247,8 +241,18 @@ export const useClientTableStore = defineStore("clientTable", () => {
         } else {
           filterQuery.value[type].push(optionItem);
         }
+        if (filterQuery.value[type].length === 0) {
+          delete filterQuery.value[type];
+        }
       } else {
-        filterQuery.value[type] = optionItem;
+        if (filterQuery.value[type] === optionItem) {
+          delete filterQuery.value[type];
+        } else {
+          filterQuery.value[type] = optionItem;
+        }
+        if (filterQuery.value[type]?.length === 0) {
+          delete filterQuery.value[type];
+        }
       }
     }
 
@@ -288,6 +292,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     selectFilterData,
     filterQuery,
     checkSelectedOption,
-    removeFilter
+    removeFilter,
   };
 });

@@ -43,6 +43,7 @@
           label="Найти"
           custom-class="btn-action"
           :disabled="!optionsLength"
+          @click="handleFind"
         ></SimpleButton>
       </div>
     </div>
@@ -59,11 +60,16 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["find"]);
+
 const filterDialogRef = ref(null);
 const hideModal = () => {
   filterDialogRef.value.hide();
 };
-
+const handleFind = () => {
+  emit("find", true);
+  hideModal();
+};
 </script>
 
 <style scoped lang="scss">

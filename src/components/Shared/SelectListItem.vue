@@ -73,6 +73,7 @@
       </q-icon>
     </button>
     <SimpleInput
+      wrapper-style="padding: 10px 16px"
       style="width: 10ch"
       placeholder="кол-во"
       number
@@ -122,7 +123,7 @@ const disabledRule = computed(() => {
     props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
 
   return (
-    !props.allowHandleStatus ||
+  !props.allowHandleStatus ||
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
     (!props.isAgent &&
@@ -156,7 +157,7 @@ const removeItem = () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .selected-item-row {
   display: flex;
   align-items: center;

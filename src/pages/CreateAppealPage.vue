@@ -170,7 +170,7 @@
                             <DateInput
                               number
                               label="Дата обращения"
-                              placeholder="Введите дату (10.05.2024)"
+                              placeholder="Введите дату (10-05-2024)"
                               @update:model-value="appealStore.setAppealDate"
                               :modelValue="appealStore.appealDate"
                             ></DateInput>
