@@ -14,6 +14,7 @@
         :filter-query="clientTableStore.filterQuery"
         :checkSelectedOption = "clientTableStore.checkSelectedOption"
         :removeFilter = "clientTableStore.removeFilter"
+        :fetchClinics = "clientTableStore.fetchClinics"
       />
     </div>
     <AppealSearchClient

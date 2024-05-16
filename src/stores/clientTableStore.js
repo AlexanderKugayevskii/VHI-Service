@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
+import AppealService from "src/services/AppealService";
 import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
@@ -145,6 +146,19 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
+  const clinics = ref([]);
+  const fetchClinics = async () => {
+    loading.value = true;
+    try {
+      const response = await AppealService.getClinics();
+      clinics.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
@@ -170,18 +184,10 @@ export const useClientTableStore = defineStore("clientTable", () => {
         placeholder: "Выберите статус",
         multiple: false,
         component: "DropdownSelectNew",
-        item: users.value
-          .map((row) => {
-            return {
-              status: row.status,
-              name: statuses.value[row.status],
-            };
-          })
-          .filter((statusItem, index, thisArr) => {
-            return (
-              index === thisArr.findIndex((t) => t.status === statusItem.status)
-            );
-          }),
+        item: Object.keys(statuses.value).map((key) => ({
+          status: Number(key),
+          name: statuses.value[key],
+        })),
       },
       {
         name: t("client_table.clinic"),
@@ -189,35 +195,42 @@ export const useClientTableStore = defineStore("clientTable", () => {
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
         component: "DropdownSelectNew",
-        item: [...new Set(users.value.map((row) => row.hospital.name))],
+        item: clinics.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
       },
       {
         name: t("client_table.doctor"),
         type: "doctors",
         placeholder: t("create_appeal.dropdowns.doctors"),
         multiple: true,
-        component: "DropdownSelectNew",
-        item: [
-          ...new Set(
-            users.value
-              .flatMap((row) => row.doctors)
-              .map((doctor) => doctor.name)
-          ),
-        ],
+        component: "SimpleInput",
+        // item: [
+        //   ...new Set(
+        //     users.value
+        //       .flatMap((row) => row.doctors)
+        //       .map((doctor) => doctor.name)
+        //   ),
+        // ],
+        item: "",
       },
       {
         name: t("client_table.service"),
         type: "services",
         placeholder: t("create_appeal.dropdowns.services"),
         multiple: true,
-        component: "DropdownSelectNew",
-        item: [
-          ...new Set(
-            users.value
-              .flatMap((row) => row.services)
-              .map((service) => service.name)
-          ),
-        ],
+        component: "SimpleInput",
+        // item: [
+        //   ...new Set(
+        //     users.value
+        //       .flatMap((row) => row.services)
+        //       .map((service) => service.name)
+        //   ),
+        // ],
+        item: "",
       },
     ];
   });
@@ -245,7 +258,10 @@ export const useClientTableStore = defineStore("clientTable", () => {
           delete filterQuery.value[type];
         }
       } else {
-        if (filterQuery.value[type] === optionItem) {
+        if (
+          filterQuery.value[type] === optionItem &&
+          type !== "date_of_appeal"
+        ) {
           delete filterQuery.value[type];
         } else {
           filterQuery.value[type] = optionItem;
@@ -293,5 +309,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     filterQuery,
     checkSelectedOption,
     removeFilter,
+    fetchClinics,
   };
 });

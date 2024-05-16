@@ -22,7 +22,7 @@
           <SimpleInput
             v-if="filterItem.component === 'SimpleInput'"
             :label="filterItem.name"
-            :placeholder="$t('appeal_search.fio_input')"
+            :placeholder="filterItem.placeholder"
             :modelValue="filterQuery[filterItem.type]"
             @update:model-value="
               (val) => selectFilterData(val, filterItem.type)
@@ -48,12 +48,13 @@
               (option) =>
                 selectFilterData(option, filterItem.type, filterItem.multiple)
             "
+            @request="fetchClinics"
           >
             <template #top-label>{{ filterItem.name }}</template>
             <template #placeholder>{{ filterItem.placeholder }}</template>
             <template #option-content="{ option }">
               <div>
-                {{ filterItem.type !== "appeal_status" ? option : option.name }}
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
               </div>
               <CheckIcon
                 v-if="
@@ -67,9 +68,7 @@
             </template>
             <template v-slot:selected-options-once="{ option }">
               <div>
-                {{
-                  filterItem.type !== "appeal_status" ? option : option?.name
-                }}
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
               </div>
             </template>
             <template v-slot:selected-options-length="{ length }">
@@ -82,6 +81,7 @@
       </template>
     </TableActions>
     <!-- table -->
+
     <div>
       <q-table
         flat
@@ -268,6 +268,7 @@ const props = defineProps([
   "filterQuery",
   "checkSelectedOption",
   "removeFilter",
+  "fetchClinics",
 ]);
 const emit = defineEmits(["createAppeal"]);
 
