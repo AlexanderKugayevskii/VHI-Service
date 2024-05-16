@@ -97,7 +97,7 @@ export const useAppealStore = defineStore("appeal", () => {
         progress: doctor.pivot.progress ?? 0,
         quantity: doctor.pivot.quantity ?? 1,
       };
-    })
+    })``
   );
 
   const services = ref([]);
@@ -691,6 +691,7 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? doctor.pivot.status,
             progress: selectedItem.progress ?? doctor.pivot.progress,
             quantity: selectedItem.quantity ?? doctor.pivot.quantity,
+            
           },
           status: selectedItem.status,
         };

@@ -2,6 +2,8 @@
   <div>
     <TableActions
       @update:search="handleSearch"
+      @update:find="handleFind"
+      @delete:option="handleDelete"
       :filter-options="filterQuery"
       :removeFilter="removeFilter"
     >
@@ -277,6 +279,13 @@ const search = ref("");
 const handleSearch = (searchValue) => {
   search.value = searchValue;
 };
+const handleFind = () => {
+  tableRef.value.requestServerInteraction();
+};
+const handleDelete = () => {
+  console.log(props.filterQuery);
+  tableRef.value.requestServerInteraction();
+};
 
 const tableRef = ref(null);
 const appealStore = useAppealStore();
@@ -386,6 +395,12 @@ onMounted(() => {
       if (newSuccessAppeal) {
         tableRef.value.requestServerInteraction();
       }
+    }
+  );
+  watch(
+    () => props.filterQuery,
+    () => {
+      console.log(`watcher`, props.filterQuery);
     }
   );
 });
