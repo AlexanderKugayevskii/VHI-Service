@@ -43,7 +43,7 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
                 </div>
-                <div class="create-appeal-client-action">
+                <!-- <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
                     <q-icon size="20px">
                       <svg
@@ -77,7 +77,7 @@
                       </svg>
                     </q-icon>
                   </q-btn>
-                </div>
+                </div> -->
               </div>
               <div class="create-appeal-form">
                 <div class="tabs-container">
@@ -294,6 +294,28 @@
                 </div>
               </div>
             </div>
+            <div class="create-appeal-right">
+              <div class="create-appeal-interaction">
+                <div class="tabs-container tabs-container-gap">
+                  <div class="tabs-content appeal-content">
+                    <div class="create-appeal-client-content-limits">
+                      <div class="create-appeal-client-info">
+                        <div class="create-appeal-client-text">
+                          <span><b>Лимиты</b></span>
+                        </div>
+                      </div>
+                      <div class="create-appeal-client-limits">
+                        <DetailCard
+                          v-for="limit in medicalLimits"
+                          :key="limit.id"
+                          :rate="limit"
+                        ></DetailCard>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="create-appeal-close">
@@ -341,6 +363,7 @@ import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
+import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 
 const testRef = ref(null);
 const testDoctor = ref(null);
@@ -354,7 +377,8 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData } = storeToRefs(appealStore);
+const { client: clientData, medicalLimits } = storeToRefs(appealStore);
+
 const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
@@ -375,11 +399,6 @@ watch(
   (newVal) => {
     if (newVal) {
       appealStore.setSuccessAppeal(false);
-      // createAppealModalRef.value.hide();
-      // appealStore.clearAppealData();
-      // appealStore.clearClinicData();
-
-      // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }
 );
@@ -389,19 +408,6 @@ const hideModal = () => {
   appealStore.clearAppealData();
   appealStore.clearClinicData();
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
-};
-
-const handleRemoveDoctor = (item) => {
-  appealStore.clearDoctors(item);
-};
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
-};
-const handleStatusDoctor = (item, isSuggested) => {
-  appealStore.changeStatusDoctor(item, isSuggested);
-};
-const handleStatusService = (item, isSuggested) => {
-  appealStore.changeStatusService(item, isSuggested);
 };
 </script>
 
@@ -464,6 +470,15 @@ const handleStatusService = (item, isSuggested) => {
       font-weight: 500;
     }
   }
+}
+.create-appeal-client-limits {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  flex-grow: 1;
+}
+.create-appeal-client-content-limits {
+  flex-grow: 1;
 }
 .create-appeal-form {
   flex: 1;
@@ -550,10 +565,10 @@ const handleStatusService = (item, isSuggested) => {
   flex-basis: 35%;
 }
 .create-appeal-interaction {
-  background-color: #fff;
+  // background-color: #fff;
   height: 100%;
   border-radius: 24px;
-  padding: 24px;
+  // padding: 24px;
 }
 
 .option-content-extra {

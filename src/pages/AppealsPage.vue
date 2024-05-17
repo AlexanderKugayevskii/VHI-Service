@@ -12,9 +12,9 @@
         :requestData="clientTableStore.handleRequest"
         :select-filter-data="clientTableStore.selectFilterData"
         :filter-query="clientTableStore.filterQuery"
-        :checkSelectedOption = "clientTableStore.checkSelectedOption"
-        :removeFilter = "clientTableStore.removeFilter"
-        :fetchClinics = "clientTableStore.fetchClinics"
+        :checkSelectedOption="clientTableStore.checkSelectedOption"
+        :removeFilter="clientTableStore.removeFilter"
+        :fetchClinics="clientTableStore.fetchClinics"
       />
     </div>
     <AppealSearchClient
@@ -46,9 +46,7 @@ const { pagination, rows, columns, loading, filterData } =
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
 
-onMounted(() => {
-  console.log(filterData.value);
-});
+onMounted(() => {});
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;
 };

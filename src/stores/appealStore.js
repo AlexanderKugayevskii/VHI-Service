@@ -73,8 +73,9 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const diagnosis = ref("");
-
   const appealDate = ref(todayDate);
+  const medicalProgram = ref(null);
+  const medicalLimits = ref([]);
 
   const setDiagnosis = (value) => {
     diagnosis.value = value;
@@ -89,15 +90,16 @@ export const useAppealStore = defineStore("appeal", () => {
   const doctors = ref([]);
   const selectedDoctors = ref([]);
   const suggestedDoctors = ref([]);
-  const allDoctorsStatus = computed(() =>
-    selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
-      return {
-        id: doctor.id,
-        status: doctor.pivot.status ?? 0,
-        progress: doctor.pivot.progress ?? 0,
-        quantity: doctor.pivot.quantity ?? 1,
-      };
-    })
+  const allDoctorsStatus = computed(
+    () =>
+      selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
+        return {
+          id: doctor.id,
+          status: doctor.pivot.status ?? 0,
+          progress: doctor.pivot.progress ?? 0,
+          quantity: doctor.pivot.quantity ?? 1,
+        };
+      })``
   );
 
   const services = ref([]);
@@ -571,12 +573,16 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-
+      console.log(data);
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
       // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
+      medicalProgram.value = data.contract_client.program;
+      medicalLimits.value = data.contract_client.program.medical_program_items;
+
+      console.log(medicalLimits.value);
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -828,5 +834,8 @@ export const useAppealStore = defineStore("appeal", () => {
     appealTotalDrugConsumption,
     clearDrugstoreData,
     removeDrug,
+
+    medicalProgram,
+    medicalLimits,
   };
 });

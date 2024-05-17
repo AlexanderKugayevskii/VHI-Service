@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, watchEffect } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
 import formatDate from "src/helpers/formatDate";
@@ -87,9 +87,9 @@ export const useClientTableStore = defineStore("clientTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search) {
+  function fetchClients(page = 1, limit = 10, search, queries) {
     loading.value = true;
-    ClientService.getClients(page, limit, search)
+    ClientService.getClients(page, limit, search, queries)
       .then((response) => {
         users.value = response.data.data.data;
         // router.push({
@@ -113,7 +113,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
-      props.filter
+      props.filter,
+      requestFilterQuery.value
     );
   };
 
@@ -271,11 +272,28 @@ export const useClientTableStore = defineStore("clientTable", () => {
         }
       }
     }
-
-    console.log(filterQuery.value);
   };
 
-  const checkSelectedOption = (option, type, multiple) => {
+  const requestFilterQuery = computed(() => {
+    const query = {
+      full_name: filterQuery.value?.client,
+      applied_date: filterQuery.value?.date_of_appeal,
+      status: filterQuery.value.appeal_status?.status,
+      hospital_id: filterQuery.value?.clinic?.id,
+      doctors: filterQuery.value?.doctors,
+      services: filterQuery.value?.services,
+    };
+
+    const entries = Object.entries(query);
+    entries.forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    return query;
+  });
+
+  const checkSelectedOption = (option, type, multiple) => { 
     if (multiple) {
       return filterQuery.value[type]?.some((item) => item === option);
     } else {
@@ -291,11 +309,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
   };
 
   watch(
-    () => users.value,
-    (newUsers) => {
-      console.log(filterData.value);
-      console.log(`filterQuery`, filterQuery.value);
-    }
+    () => filterQuery.value,
+    () => {}
   );
 
   return {

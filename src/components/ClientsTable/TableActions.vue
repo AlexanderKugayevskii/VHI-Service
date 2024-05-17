@@ -69,7 +69,7 @@
           v-for="option in expandedOptions"
           :key="option.label"
           :filterOption="option"
-          @delete="removeFilter"
+          @delete="deleteOption"
         />
         <div class="filter-chip-dropdown" v-if="extraOptions.length">
           <button
@@ -90,7 +90,7 @@
                 :key="option.label"
                 :filterOption="option"
                 hoverable
-                @delete="removeFilter"
+                @delete="deleteOption"
               />
             </div>
           </Transition>
@@ -100,7 +100,11 @@
     <slot name="appealBtn"></slot>
   </div>
 
-  <TableFiltersModal v-model:="modalFilterFixed" :optionsLength = "optionsLength">
+  <TableFiltersModal
+    v-model:="modalFilterFixed"
+    :optionsLength="optionsLength"
+    @find="find"
+  >
     <template #filters>
       <slot name="filters"></slot>
     </template>
@@ -113,7 +117,7 @@ import FilterChip from "src/components/Shared/FilterChip.vue";
 import TableFiltersModal from "components/ClientsTable/TableFiltersModal.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 
-const emit = defineEmits(["update:search"]);
+const emit = defineEmits(["update:search", "update:find", "delete:option"]);
 const props = defineProps({
   filterOptions: {
     default: {},
@@ -131,6 +135,13 @@ const toggleDropdown = () => {
 const test = ref("");
 const search = () => {
   emit("update:search", test.value);
+};
+const find = () => {
+  emit("update:find");
+};
+const deleteOption = (option) => {
+  props.removeFilter(option);
+  emit("delete:option");
 };
 
 const optionsLength = computed(() => Object.keys(props.filterOptions).length);
