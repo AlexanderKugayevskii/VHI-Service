@@ -685,6 +685,7 @@ const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearClinicData();
+  appealStore.setClient(null);
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 

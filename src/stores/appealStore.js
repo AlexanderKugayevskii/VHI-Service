@@ -305,7 +305,7 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
 
-    setClient(null);
+    // client.value = null;
   };
   const clearClinicData = () => {
     selectedClinic.value = null;
@@ -499,6 +499,7 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors,
       diagnosis: diagnosis.value,
       applied_date: appealDate.value,
+      finished: finishedAppeal.value,
     };
     try {
       const response = await AppealService.saveAppealByAgent(payload);
@@ -775,12 +776,13 @@ export const useAppealStore = defineStore("appeal", () => {
   //temporary logic for create old appeal
   const copyDoctors = ref([]);
   const copyServices = ref([]);
+  const finishedAppeal = ref(false);
   let hasWatched = false;
 
   const unwatch = watch(
     () => [selectedDoctors.value, selectedServices.value],
-    (_, [oldDoctors, oldServices]) => {
-      if (!hasWatched) {
+    ([newDoctors, newServices], [oldDoctors, oldServices]) => {
+      if (!hasWatched && oldDoctors?.length && oldServices?.length) {
         copyDoctors.value = oldDoctors;
         copyServices.value = oldServices;
         hasWatched = true;
@@ -814,13 +816,15 @@ export const useAppealStore = defineStore("appeal", () => {
           status: 1,
         };
       });
+      finishedAppeal.value = true;
     } else {
       selectedDoctors.value = [...copyDoctors.value];
       selectedServices.value = [...copyServices.value];
+      finishedAppeal.value = false;
     }
 
-    // console.log(`doctors`, selectedDoctors.value);
-    // console.log(`services`, selectedServices.value);
+    console.log(`doctors`, selectedDoctors.value);
+    console.log(`services`, selectedServices.value);
   };
 
   return {
@@ -894,5 +898,6 @@ export const useAppealStore = defineStore("appeal", () => {
     medicalLimits,
 
     makeAppealDone,
+    finishedAppeal,
   };
 });
