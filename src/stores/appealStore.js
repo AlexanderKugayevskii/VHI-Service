@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
@@ -90,16 +90,15 @@ export const useAppealStore = defineStore("appeal", () => {
   const doctors = ref([]);
   const selectedDoctors = ref([]);
   const suggestedDoctors = ref([]);
-  const allDoctorsStatus = computed(
-    () =>
-      selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
-        return {
-          id: doctor.id,
-          status: doctor.pivot.status ?? 0,
-          progress: doctor.pivot.progress ?? 0,
-          quantity: doctor.pivot.quantity ?? 1,
-        };
-      })``
+  const allDoctorsStatus = computed(() =>
+    selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
+      return {
+        id: doctor.id,
+        status: doctor.pivot.status ?? 0,
+        progress: doctor.pivot.progress ?? 0,
+        quantity: doctor.pivot.quantity ?? 1,
+      };
+    })
   );
 
   const services = ref([]);
@@ -305,6 +304,8 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedDrugs.value = [];
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
+
+    setClient(null);
   };
   const clearClinicData = () => {
     selectedClinic.value = null;
@@ -475,12 +476,16 @@ export const useAppealStore = defineStore("appeal", () => {
     const services = selectedServices.value.map((service) => {
       return {
         quantity: service.pivot.quantity,
+        status: service.pivot.status,
+        progress: service.pivot.progress,
         id: service.id,
       };
     });
     const doctors = selectedDoctors.value.map((doctor) => {
       return {
         quantity: doctor.pivot.quantity,
+        status: doctor.pivot.status,
+        progress: doctor.pivot.progress,
         id: doctor.id,
       };
     });
@@ -581,8 +586,6 @@ export const useAppealStore = defineStore("appeal", () => {
       diagnosis.value = data.diagnosis;
       medicalProgram.value = data.contract_client.program;
       medicalLimits.value = data.contract_client.program.medical_program_items;
-
-      console.log(medicalLimits.value);
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -762,10 +765,62 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedDrugs.value = drugs;
     }
   };
+
   const clearDrugs = (drug) => {
     drugsData.drugs = drugsData.drugs.filter((item) => {
       return drug.id !== item.id;
     });
+  };
+
+  //temporary logic for create old appeal
+  const copyDoctors = ref([]);
+  const copyServices = ref([]);
+  let hasWatched = false;
+
+  const unwatch = watch(
+    () => [selectedDoctors.value, selectedServices.value],
+    (_, [oldDoctors, oldServices]) => {
+      if (!hasWatched) {
+        copyDoctors.value = oldDoctors;
+        copyServices.value = oldServices;
+        hasWatched = true;
+
+        unwatch();
+      }
+    }
+  );
+  const makeAppealDone = (done) => {
+    if (done) {
+      selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+
+      selectedServices.value = selectedServices.value.map((service) => {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+    } else {
+      selectedDoctors.value = [...copyDoctors.value];
+      selectedServices.value = [...copyServices.value];
+    }
+
+    // console.log(`doctors`, selectedDoctors.value);
+    // console.log(`services`, selectedServices.value);
   };
 
   return {
@@ -837,5 +892,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
     medicalProgram,
     medicalLimits,
+
+    makeAppealDone,
   };
 });

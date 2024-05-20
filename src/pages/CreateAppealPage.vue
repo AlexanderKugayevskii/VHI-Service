@@ -512,6 +512,17 @@
                       customClass="btn-cancel"
                       @click="hideModal"
                     ></SimpleButton>
+                    <div
+                      class="create-appeal-done-action"
+                      v-if="appealStore.isAgent"
+                    >
+                      <SimpleCheckbox
+                        @change="handleAppealDoneCheckbox"
+                        :checked="appealDoneCheckbox"
+                      >
+                      </SimpleCheckbox>
+                      <span>Сделать завершенным</span>
+                    </div>
                   </div>
                   <div
                     class="create-appeal-action-expences"
@@ -607,6 +618,7 @@
 </template>
 
 <script setup>
+import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
@@ -645,6 +657,13 @@ const handleCreateAppeal = () => {
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();
 };
+
+const appealDoneCheckbox = ref(false);
+const handleAppealDoneCheckbox = () => {
+  appealDoneCheckbox.value = !appealDoneCheckbox.value;
+  appealStore.makeAppealDone(appealDoneCheckbox.value);
+};
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -904,5 +923,15 @@ const handleStatusService = (item, isSuggested) => {
   font-size: 40px;
   color: hsla(221, 27%, 34%, 0.158);
   user-select: none;
+}
+.create-appeal-done-action {
+  margin-left: 16px;
+  span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 </style>

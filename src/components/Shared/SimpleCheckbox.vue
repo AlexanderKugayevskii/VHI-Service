@@ -31,6 +31,7 @@
           />
         </svg>
       </q-icon>
+      <slot name="text"></slot>
     </label>
   </div>
 </template>
