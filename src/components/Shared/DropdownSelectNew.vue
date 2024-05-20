@@ -15,7 +15,8 @@
             class="dropdown-button-btn-text"
             v-if="
               (checkMultiOptions && !selectedOptions?.length) ||
-              selectedOptions === null
+              selectedOptions === null ||
+              selectedOptions === undefined
             "
           >
             <slot name="placeholder"></slot>
@@ -180,7 +181,7 @@ export default {
     disableChoise: Boolean,
     loading: Boolean,
     label: {
-      type: String,
+      type: [String, Boolean],
       default: "",
     },
     options: Array,
@@ -303,7 +304,7 @@ export default {
       if (this.localSearch) {
         const regex = new RegExp(this.searchValue, "i");
         return this.options.filter((option) =>
-          regex.test(option.name || option.user.name)
+          regex.test(option.name || option.user?.name || option)
         );
       }
       return this.options;

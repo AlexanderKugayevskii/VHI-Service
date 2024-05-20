@@ -1,6 +1,12 @@
 <template>
   <div>
-    <TableActions @update:search="handleSearch">
+    <TableActions
+      @update:search="handleSearch"
+      @update:find="handleFind"
+      @delete:option="handleDelete"
+      :filter-options="filterQuery"
+      :removeFilter="removeFilter"
+    >
       <template #appealBtn>
         <SimpleButton
           type="button"
@@ -10,11 +16,74 @@
         />
       </template>
       <template #filters>
-        <div>
-          <DropdownSelectNew />
+        <div
+          class="filter-item"
+          v-for="filterItem in filterData"
+          :key="filterItem.name"
+        >
+          <SimpleInput
+            v-if="filterItem.component === 'SimpleInput'"
+            :label="filterItem.name"
+            :placeholder="filterItem.placeholder"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DateInput
+            v-if="filterItem.component === 'DateInput'"
+            :label="filterItem.name"
+            placeholder="10-05-2024"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DropdownSelectNew
+            v-if="filterItem.component === 'DropdownSelectNew'"
+            :label="filterItem.name"
+            :options="filterItem.item"
+            :multiple="filterItem.multiple"
+            :selected-options="filterQuery[filterItem.type]"
+            :search-input="filterItem.type !== 'appeal_status'"
+            @select-option="
+              (option) =>
+                selectFilterData(option, filterItem.type, filterItem.multiple)
+            "
+            @request="fetchClinics"
+          >
+            <template #top-label>{{ filterItem.name }}</template>
+            <template #placeholder>{{ filterItem.placeholder }}</template>
+            <template #option-content="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+              <CheckIcon
+                v-if="
+                  checkSelectedOption(
+                    option,
+                    filterItem.type,
+                    filterItem.multiple
+                  )
+                "
+              />
+            </template>
+            <template v-slot:selected-options-once="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+            </template>
+            <template v-slot:selected-options-length="{ length }">
+              {{
+                $t(`create_appeal.dropdowns.${filterItem.type}_choise`, length)
+              }}
+            </template>
+          </DropdownSelectNew>
         </div>
       </template>
     </TableActions>
+    <!-- table -->
+
     <div>
       <q-table
         flat
@@ -142,6 +211,7 @@
         </template>
       </q-table>
     </div>
+    <!-- pagination -->
     <div class="flex q-my-lg">
       <PaginationTable
         v-if="reactivePagination && reactivePagination.rowsNumber >= 10"
@@ -163,7 +233,6 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
@@ -174,6 +243,9 @@ import PaginationTable from "./PaginationTable.vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
+import CheckIcon from "../Shared/CheckIcon.vue";
+import SimpleInput from "../Shared/SimpleInput.vue";
+import DateInput from "../Shared/DateInput.vue";
 import { onMounted, ref, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
@@ -194,12 +266,25 @@ const props = defineProps([
   "loading",
   "filterData",
   "requestData",
+  "selectFilterData",
+  "filterQuery",
+  "checkSelectedOption",
+  "removeFilter",
+  "fetchClinics",
 ]);
 const emit = defineEmits(["createAppeal"]);
 
 const search = ref("");
+
 const handleSearch = (searchValue) => {
   search.value = searchValue;
+};
+const handleFind = () => {
+  tableRef.value.requestServerInteraction();
+};
+const handleDelete = () => {
+  console.log(props.filterQuery);
+  tableRef.value.requestServerInteraction();
 };
 
 const tableRef = ref(null);
@@ -312,6 +397,12 @@ onMounted(() => {
       }
     }
   );
+  watch(
+    () => props.filterQuery,
+    () => {
+      console.log(`watcher`, props.filterQuery);
+    }
+  );
 });
 
 //calculate table height for showing only 10 rows
@@ -401,5 +492,9 @@ tbody tr td:last-child {
 }
 tr.clickable {
   cursor: pointer;
+}
+
+.filter-item {
+  padding-bottom: 20px;
 }
 </style>

@@ -52,6 +52,7 @@
   },
   "client_table": {
     "clients": "Mijozlar",
+    "client": "Mijoz",
     "date_of_appeal": "Ariza berilgan sana",
     "appeal_status": "Holat",
     "clinic": "Klinika",

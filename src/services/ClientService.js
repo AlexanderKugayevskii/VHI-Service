@@ -18,7 +18,7 @@ function getFullClients(page, limit, search, filterQueries) {
     params: {
       _limit: limit,
       page: page,
-      q: search,
+      all_fields: search,
       ...filterQueries,
     },
   });
@@ -59,7 +59,7 @@ function getClientsByPassport(passport) {
 export default {
   getClients,
   getFullClients,
-  getClientInfo, 
+  getClientInfo,
   getClientByAppealId,
 
   getClientsByCode,

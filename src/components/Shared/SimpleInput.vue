@@ -4,7 +4,10 @@
       <div class="input-label__wrapper" v-if="label">
         <span class="input-label__text">{{ label }}</span>
       </div>
-      <div :class="['input-field__wrapper', { error: isError }]">
+      <div
+        :class="['input-field__wrapper', { error: isError }]"
+        :style="wrapperStyle"
+      >
         <input
           :type="type"
           :placeholder="placeholder"
@@ -47,6 +50,7 @@ import { ref, watch } from "vue";
 import debounce from "lodash/debounce";
 
 const props = defineProps({
+  wrapperStyle: {},
   label: {
     type: String,
     default: "",

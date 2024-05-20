@@ -1,5 +1,18 @@
 <template>
   <div>
+    <TableActions
+      @update:search="handleSearch"
+      :filter-options="filterQuery"
+      :removeFilter="removeFilter"
+    >
+      <template #filters>
+        <div
+          class="filter-item"
+          v-for="filterItem in filterData"
+          :key="filterItem.name"
+        ></div>
+      </template>
+    </TableActions>
     <q-table
       flat
       :rows="rows"
@@ -9,10 +22,10 @@
       hide-pagination
       ref="tableRef"
       row-key="index"
-      v-model:pagination="pagination"
+      v-model:pagination="reactivePagination"
       no-data-label="I didn't find anything for you"
       no-results-label="The filter didn't uncover any results"
-      @request="clientTableStore.handleRequest"
+      @request="requestData"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -135,30 +148,44 @@
 </template>
 
 <script setup>
+import { toRef, toRefs } from "vue";
 import { useQuasar } from "quasar";
 
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
-import AppealStatus from "./AppealStatus.vue";
 import RowsPerPage from "./RowsPerPage.vue";
-import UserSettings from "./UserSettings.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
 import { onMounted, computed, ref, watch } from "vue";
-import { useFullClientTableStore } from "src/stores/allClientTableStore";
-import { useAppealStore } from "src/stores/appealStore";
-import { storeToRefs } from "pinia";
+import TableActions from "./TableActions.vue";
 
 const $q = useQuasar();
 
 const router = useRouter();
-const searchProp = defineProps(["search"]);
-const search = computed(() => searchProp.search);
+const props = defineProps([
+  // "search",
+  "pagination",
+  "rows",
+  "columns",
+  "loading",
+  "filterData",
+  "requestData",
+  "selectFilterData",
+  "filterQuery",
+  "checkSelectedOption",
+  "removeFilter",
+  "fetchClinics",
+]);
+const search = ref("");
+
+const handleSearch = (searchValue) => {
+  search.value = searchValue;
+};
 
 const tableRef = ref(null);
 
-const clientTableStore = useFullClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+const reactiveProps = toRefs(props);
+const reactivePagination = toRef(reactiveProps, "pagination");
 
 const cancelOpenWhenSelect = (client) => {
   const selection = window.getSelection().toString();

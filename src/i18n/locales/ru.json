@@ -52,11 +52,14 @@
   },
   "client_table": {
     "clients": "Клиенты",
+    "client": "Клиент", 
     "date_of_appeal": "Дата обращения",
     "appeal_status": "Статус",
     "clinic": "Клиника",
     "doctor": "Врач",
+    "doctors": "Врач", 
     "service": "Сервис",
+    "services": "Сервис",
     "diagnosis": "Диагноз",
     "drugstore": "Аптека",
     "expense": "Расход / {currency}"

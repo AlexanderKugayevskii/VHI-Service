@@ -1,10 +1,19 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, watchEffect } from "vue";
 import ClientService from "src/services/ClientService";
+import AppealService from "src/services/AppealService";
 import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
+
+  const statuses = computed(() => {
+    return {
+      0: t("statuses.new"),
+      1: t("statuses.in_progress"),
+      2: t("statuses.completed"),
+    };
+  });
 
   const columns = computed(() => [
     {
@@ -78,9 +87,9 @@ export const useClientTableStore = defineStore("clientTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search) {
+  function fetchClients(page = 1, limit = 10, search, queries) {
     loading.value = true;
-    ClientService.getClients(page, limit, search)
+    ClientService.getClients(page, limit, search, queries)
       .then((response) => {
         users.value = response.data.data.data;
         // router.push({
@@ -104,7 +113,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
-      props.filter
+      props.filter,
+      requestFilterQuery.value
     );
   };
 
@@ -137,51 +147,183 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
+  const clinics = ref([]);
+  const fetchClinics = async () => {
+    loading.value = true;
+    try {
+      const response = await AppealService.getClinics();
+      clinics.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const filterQuery = ref({});
   const filterData = computed(() => {
     return [
       {
-        name: "Клиент",
-        item: users.value.map((row) => {
-          return row.client.lastname + " " + row.client.name;
+        name: t("client_table.client"),
+        type: "client",
+        placeholder: "Фамилия и имя клиента",
+        multiple: false,
+        component: "SimpleInput",
+        item: "",
+      },
+      {
+        name: t("client_table.date_of_appeal"),
+        type: "date_of_appeal",
+        placeholder: "01.01.1990",
+        multiple: false,
+        component: "DateInput",
+        item: "",
+      },
+      {
+        name: t("client_table.appeal_status"),
+        type: "appeal_status",
+        placeholder: "Выберите статус",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: Object.keys(statuses.value).map((key) => ({
+          status: Number(key),
+          name: statuses.value[key],
+        })),
+      },
+      {
+        name: t("client_table.clinic"),
+        type: "clinic",
+        placeholder: t("create_appeal.dropdowns.clinic"),
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: clinics.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
         }),
       },
       {
-        name: "Дата обращения",
-        item: [
-          ...new Set(
-            users.value.map((row) =>
-              formatDate(row.created_at, { withHours: false })
-            )
-          ),
-        ],
+        name: t("client_table.doctor"),
+        type: "doctors",
+        placeholder: t("create_appeal.dropdowns.doctors"),
+        multiple: true,
+        component: "SimpleInput",
+        // item: [
+        //   ...new Set(
+        //     users.value
+        //       .flatMap((row) => row.doctors)
+        //       .map((doctor) => doctor.name)
+        //   ),
+        // ],
+        item: "",
       },
       {
-        name: "Статус",
-        item: [...new Set(users.value.map((row) => row.status))],
-      },
-      {
-        name: "Клиника",
-        item: users.value.map((row) => row.hospital.name),
-      },
-      {
-        name: "Врач",
-        item: users.value.flatMap((row) => row.doctors).map((doc) => doc.name),
-      },
-      {
-        name: "Сервис",
-        item: users.value
-          .flatMap((row) => row.services)
-          .map((service) => service.name),
+        name: t("client_table.service"),
+        type: "services",
+        placeholder: t("create_appeal.dropdowns.services"),
+        multiple: true,
+        component: "SimpleInput",
+        // item: [
+        //   ...new Set(
+        //     users.value
+        //       .flatMap((row) => row.services)
+        //       .map((service) => service.name)
+        //   ),
+        // ],
+        item: "",
       },
     ];
   });
 
-  watch(
-    () => users.value,
-    (newUsers) => {
-      console.log(filterData.value);
+  const selectFilterData = (option, type, multiple) => {
+    let optionItem = option;
+    if (!filterQuery.value[type]) {
+      if (multiple) {
+        filterQuery.value[type] = [];
+        filterQuery.value[type].push(optionItem);
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    } else {
+      if (multiple) {
+        const index = filterQuery.value[type].findIndex(
+          (item) => item === optionItem
+        );
+        if (index > -1) {
+          filterQuery.value[type].splice(index, 1);
+        } else {
+          filterQuery.value[type].push(optionItem);
+        }
+        if (filterQuery.value[type].length === 0) {
+          delete filterQuery.value[type];
+        }
+      } else {
+        if (
+          filterQuery.value[type] === optionItem &&
+          type !== "date_of_appeal"
+        ) {
+          delete filterQuery.value[type];
+        } else {
+          filterQuery.value[type] = optionItem;
+        }
+        if (filterQuery.value[type]?.length === 0) {
+          delete filterQuery.value[type];
+        }
+      }
     }
+  };
+
+  const requestFilterQuery = computed(() => {
+    const query = {
+      full_name: filterQuery.value?.client,
+      applied_date: filterQuery.value?.date_of_appeal,
+      status: filterQuery.value.appeal_status?.status,
+      hospital_id: filterQuery.value?.clinic?.id,
+      doctors: filterQuery.value?.doctors,
+      services: filterQuery.value?.services,
+    };
+
+    const entries = Object.entries(query);
+    entries.forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    return query;
+  });
+
+  const checkSelectedOption = (option, type, multiple) => { 
+    if (multiple) {
+      return filterQuery.value[type]?.some((item) => item === option);
+    } else {
+      if (type === "appeal_status") {
+        return option.status === filterQuery.value[type]?.status;
+      }
+      return option === filterQuery.value[type];
+    }
+  };
+
+  const removeFilter = (filterKey) => {
+    delete filterQuery.value[filterKey];
+  };
+
+  watch(
+    () => filterQuery.value,
+    () => {}
   );
 
-  return { pagination, loading, rows, columns, handleRequest, filterData };
+  return {
+    pagination,
+    loading,
+    rows,
+    columns,
+    handleRequest,
+    filterData,
+    selectFilterData,
+    filterQuery,
+    checkSelectedOption,
+    removeFilter,
+    fetchClinics,
+  };
 });

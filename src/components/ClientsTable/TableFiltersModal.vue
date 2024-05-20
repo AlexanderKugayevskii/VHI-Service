@@ -31,7 +31,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <slot name = "filters"></slot>
+        <slot name="filters"></slot>
       </div>
       <div class="modal-footer">
         <SimpleButton
@@ -39,7 +39,12 @@
           custom-class="btn-cancel"
           @click="hideModal"
         />
-        <SimpleButton label="Найти" custom-class="btn-action"></SimpleButton>
+        <SimpleButton
+          label="Найти"
+          custom-class="btn-action"
+          :disabled="!optionsLength"
+          @click="handleFind"
+        ></SimpleButton>
       </div>
     </div>
   </q-dialog>
@@ -47,13 +52,23 @@
 
 <script setup>
 import { ref } from "vue";
-
 import SimpleButton from "../Shared/SimpleButton.vue";
 
-const filterDialogRef = ref(null);
+const props = defineProps({
+  optionsLength: {
+    type: Number,
+  },
+});
 
+const emit = defineEmits(["find"]);
+
+const filterDialogRef = ref(null);
 const hideModal = () => {
   filterDialogRef.value.hide();
+};
+const handleFind = () => {
+  emit("find", true);
+  hideModal();
 };
 </script>
 
