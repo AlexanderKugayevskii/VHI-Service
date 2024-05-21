@@ -77,6 +77,19 @@ export const useAppealStore = defineStore("appeal", () => {
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
 
+  // const calculateLimits = computed(() => {
+  //   const allData = [
+  //     ...selectedDoctors.value,
+  //     ...suggestedDoctors.value,
+  //     ...selectedServices.value,
+  //     ...suggestedServices.value,
+  //   ];
+
+  //   return medicalLimits.map(() => {
+      
+  //   });
+  // });
+
   const setDiagnosis = (value) => {
     diagnosis.value = value;
   };
@@ -97,6 +110,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: doctor.pivot.status ?? 0,
         progress: doctor.pivot.progress ?? 0,
         quantity: doctor.pivot.quantity ?? 1,
+        program_item_id: doctor.pivot.program_item_id ?? null,
       };
     })
   );
@@ -111,6 +125,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: service.pivot.status ?? 0,
         progress: service.pivot.progress ?? 0,
         quantity: service.pivot.quantity ?? 1,
+        program_item_id: service.pivot.program_item_id ?? null,
       };
     })
   );
@@ -223,6 +238,7 @@ export const useAppealStore = defineStore("appeal", () => {
           status: 0,
           progress: 0,
           quantity: 1,
+          program_item_id: 0,
         },
         isNew: true,
       });
@@ -266,6 +282,7 @@ export const useAppealStore = defineStore("appeal", () => {
           status: 0,
           progress: 0,
           quantity: 1,
+          program_item_id: 0,
         },
         isNew: true,
       });
@@ -605,6 +622,26 @@ export const useAppealStore = defineStore("appeal", () => {
         isClinic.value
       );
 
+      selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === doctor.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === doctor.pivot.program_item_id;
+
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
       // filterItems(
       //   data.drugs,
       // )
@@ -701,6 +738,12 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? doctor.pivot.status,
             progress: selectedItem.progress ?? doctor.pivot.progress,
             quantity: selectedItem.quantity ?? doctor.pivot.quantity,
+            program_item_id:
+              selectedItem.medical_program.id ?? doctor.pivot.program_item_id,
+            limit: {
+              name: selectedItem.medical_program.name,
+              id: selectedItem.medical_program.id,
+            },
           },
           status: selectedItem.status,
         };

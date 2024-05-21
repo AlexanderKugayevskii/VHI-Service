@@ -73,6 +73,7 @@
       </q-icon>
     </button>
     <SimpleInput
+      :disableInput="disableQuantity"
       wrapper-style="padding: 10px 16px"
       style="width: 10ch"
       placeholder="кол-во"
@@ -109,6 +110,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  disableQuantity: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -123,7 +128,7 @@ const disabledRule = computed(() => {
     props.item.pivot.created_by_clinic ?? props.item.pivot.created_by_drugstore;
 
   return (
-  !props.allowHandleStatus ||
+    !props.allowHandleStatus ||
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
     (!props.isAgent &&
@@ -147,7 +152,6 @@ const handleStatus = (status) => {
 const handleProgress = (progress) => {
   emit("update:progress", { progress, item: props.item });
 };
-
 const handleQuantity = (quantity) => {
   emit("update:quantity", { quantity: Number(quantity), item: props.item });
 };

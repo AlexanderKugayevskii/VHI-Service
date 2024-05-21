@@ -326,7 +326,7 @@ export default {
   width: 100%;
   z-index: 10;
   border-radius: 16px;
-  padding: 0 4px 0 4px;
+  padding: 4px 8px;;
   background-color: #fff;
   box-shadow: 0px 0px 8px 0px #cfd9ea;
 }
@@ -418,7 +418,7 @@ export default {
   color: #404f6f;
 
   &.dense {
-    padding: 4px;
+    padding: 8px 8px;
   }
 
   transition: 0.3s;

@@ -31,7 +31,6 @@ const routes = [
                 path: "create-appeal/:id",
                 name: "createAppeal",
                 props: (route) => {
-                  
                   return {
                     id: route.params.id,
                     key: route.params.id,
@@ -59,6 +58,16 @@ const routes = [
                   };
                 },
                 component: () => import("pages/CreateAppealLimit.vue"),
+                beforeEnter: async (to, from, next) => {
+                  const appealStore = useAppealStore();
+                  if (from.name) {
+                    next();
+                  } else {
+                    await appealStore.fetchApplicantData();
+                    await appealStore.fetchHospitalData();
+                    next();
+                  }
+                },
               },
             ],
           },
@@ -123,7 +132,7 @@ const routes = [
                   };
                 },
               },
-            ]
+            ],
           },
         ],
       },

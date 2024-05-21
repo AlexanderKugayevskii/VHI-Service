@@ -116,6 +116,7 @@
                               :isAgent="appealStore.isAgent"
                               :showProgressSwitcher="false"
                               :allow-handle-status="false"
+                              :disableQuantity="true"
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -128,24 +129,22 @@
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
-                                  :options="[
-                                    { id: 1, name: 'first' },
-                                    { id: 2, name: 'second' },
-                                    { id: 3, name: 'thirds' },
-                                  ]"
-                                  :selected-options="testRef"
+                                  :options="appealStore.medicalLimits"
+                                  :selected-options="doctor.pivot.limit"
                                   @select-option="
                                     (item) => selectTestRef(item, doctor)
                                   "
                                 >
-                                  <template #placeholder> Лимит </template>
+                                  <template #placeholder>Лимит</template>
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
-                                    <div>{{ props.option.name }}</div>
+                                    <div style="font-size: 15px">
+                                      {{ props.option.name }}
+                                    </div>
                                   </template>
                                   <template v-slot:option-content="props">
-                                    <div>
+                                    <div style="font-size: 15px">
                                       <span>
                                         {{ props.option.name }}
                                       </span>
@@ -175,6 +174,7 @@
                                 :isAgent="appealStore.isAgent"
                                 :showProgressSwitcher="false"
                                 :allow-handle-status="false"
+                                :disableQuantity="true"
                               >
                                 <template #label>
                                   {{ doctor.name }}
@@ -198,6 +198,7 @@
                               :isAgent="appealStore.isAgent"
                               :showProgressSwitcher="false"
                               :allow-handle-status="false"
+                              :disableQuantity="true"
                             >
                               <template #label>
                                 {{ service.name }}
@@ -228,6 +229,7 @@
                                 :isAgent="appealStore.isAgent"
                                 :showProgressSwitcher="false"
                                 :allow-handle-status="false"
+                                :disableQuantity="true"
                               >
                                 <template #label>
                                   {{ service.name }}
@@ -286,10 +288,6 @@
                     <span class="create-appeal-action-expences-total">{{
                       formatPrice(appealStore.appealTotalConsumption)
                     }}</span>
-
-                    {{ testRef }}
-                    ---
-                    {{ testDoctor?.name }}
                   </div>
                 </div>
               </div>
@@ -365,14 +363,6 @@ import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 
-const testRef = ref(null);
-const testDoctor = ref(null);
-
-const selectTestRef = (item, doctor) => {
-  testRef.value = item;
-  testDoctor.value = doctor;
-};
-
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
@@ -408,6 +398,19 @@ const hideModal = () => {
   appealStore.clearAppealData();
   appealStore.clearClinicData();
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+};
+
+const testRef = ref(null);
+const testDoctor = ref(null);
+
+const selectTestRef = (item, doctor) => {
+  testRef.value = item;
+  testDoctor.value = doctor;
+
+  appealStore.changeStatusDoctor(
+    { medical_program: item, item: doctor },
+    false
+  );
 };
 </script>
 
