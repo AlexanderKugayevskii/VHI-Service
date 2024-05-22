@@ -92,6 +92,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     ClientService.getClients(page, limit, search, queries)
       .then((response) => {
         users.value = response.data.data.data;
+  
         // router.push({
         //   name: "appeals-page",
         //   query: {

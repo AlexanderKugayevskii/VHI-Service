@@ -3,10 +3,14 @@
     <h5 class="details__card-title">{{ rate?.name }}</h5>
     <div class="details__card-info">
       <div class="details__card-text">
-        <!-- <p>
+        <p>
           <span>Потрачено: </span>
-          <span class="text-negative">-1 069 000 UZS</span>
-        </p> -->
+          <span class="text-negative">{{ spent }}</span>
+        </p>
+        <p>
+          <span>Осталось: </span>
+          <span>{{ remaind }}</span>
+        </p>
         <p>
           <span>Лимит: </span>
           <span>{{ limit }}</span>
@@ -77,6 +81,12 @@ const rate = computed(() => props.rate);
 const limit = computed(() => {
   return formatPrice(Number(props.rate.limit));
 });
+const spent = computed(() => {
+  return formatPrice(-Number(props.rate.spent));
+});
+const remaind = computed(() =>
+  formatPrice(Number(props.rate.limit) - Number(props.rate.spent))
+);
 </script>
 
 <style lang="scss" scoped>

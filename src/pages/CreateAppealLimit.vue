@@ -132,7 +132,8 @@
                                   :options="appealStore.medicalLimits"
                                   :selected-options="doctor.pivot.limit"
                                   @select-option="
-                                    (item) => selectTestRef(item, doctor)
+                                    (item) =>
+                                      selectLimitDoctor(item, doctor, false)
                                   "
                                 >
                                   <template #placeholder>Лимит</template>
@@ -182,6 +183,35 @@
                                 <template #price>
                                   {{ formatPrice(Number(doctor.pivot.price)) }}
                                 </template>
+                                <template #dropdown>
+                                  <DropdownSelectNew
+                                    dense
+                                    style="min-width: 300px"
+                                    :searchInput="false"
+                                    :options="appealStore.medicalLimits"
+                                    :selected-options="doctor.pivot.limit"
+                                    @select-option="
+                                      (item) =>
+                                        selectLimitDoctor(item, doctor, true)
+                                    "
+                                  >
+                                    <template #placeholder>Лимит</template>
+                                    <template
+                                      v-slot:selected-options-once="props"
+                                    >
+                                      <div style="font-size: 15px">
+                                        {{ props.option.name }}
+                                      </div>
+                                    </template>
+                                    <template v-slot:option-content="props">
+                                      <div style="font-size: 15px">
+                                        <span>
+                                          {{ props.option.name }}
+                                        </span>
+                                      </div>
+                                    </template>
+                                  </DropdownSelectNew>
+                                </template>
                               </SelectListItem>
                             </div>
                           </div>
@@ -205,6 +235,35 @@
                               </template>
                               <template #price>
                                 {{ formatPrice(Number(service.pivot.price)) }}
+                              </template>
+                              <template #dropdown>
+                                <DropdownSelectNew
+                                  dense
+                                  style="min-width: 300px"
+                                  :searchInput="false"
+                                  :options="appealStore.medicalLimits"
+                                  :selected-options="service.pivot.limit"
+                                  @select-option="
+                                    (item) =>
+                                      selectLimitService(item, service, false)
+                                  "
+                                >
+                                  <template #placeholder>Лимит</template>
+                                  <template
+                                    v-slot:selected-options-once="props"
+                                  >
+                                    <div style="font-size: 15px">
+                                      {{ props.option.name }}
+                                    </div>
+                                  </template>
+                                  <template v-slot:option-content="props">
+                                    <div style="font-size: 15px">
+                                      <span>
+                                        {{ props.option.name }}
+                                      </span>
+                                    </div>
+                                  </template>
+                                </DropdownSelectNew>
                               </template>
                             </SelectListItem>
 
@@ -236,6 +295,35 @@
                                 </template>
                                 <template #price>
                                   {{ formatPrice(Number(service.pivot.price)) }}
+                                </template>
+                                <template #dropdown>
+                                  <DropdownSelectNew
+                                    dense
+                                    style="min-width: 300px"
+                                    :searchInput="false"
+                                    :options="appealStore.medicalLimits"
+                                    :selected-options="service.pivot.limit"
+                                    @select-option="
+                                      (item) =>
+                                        selectLimitService(item, service, true)
+                                    "
+                                  >
+                                    <template #placeholder>Лимит</template>
+                                    <template
+                                      v-slot:selected-options-once="props"
+                                    >
+                                      <div style="font-size: 15px">
+                                        {{ props.option.name }}
+                                      </div>
+                                    </template>
+                                    <template v-slot:option-content="props">
+                                      <div style="font-size: 15px">
+                                        <span>
+                                          {{ props.option.name }}
+                                        </span>
+                                      </div>
+                                    </template>
+                                  </DropdownSelectNew>
                                 </template>
                               </SelectListItem>
                             </div>
@@ -304,7 +392,7 @@
                       </div>
                       <div class="create-appeal-client-limits">
                         <DetailCard
-                          v-for="limit in medicalLimits"
+                          v-for="limit in calculateLimits"
                           :key="limit.id"
                           :rate="limit"
                         ></DetailCard>
@@ -367,7 +455,11 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData, medicalLimits } = storeToRefs(appealStore);
+const {
+  client: clientData,
+  medicalLimits,
+  calculateLimits,
+} = storeToRefs(appealStore);
 
 const createAppealModalFixed = ref(true);
 const router = useRouter();
@@ -400,16 +492,19 @@ const hideModal = () => {
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
 };
 
-const testRef = ref(null);
-const testDoctor = ref(null);
-
-const selectTestRef = (item, doctor) => {
-  testRef.value = item;
-  testDoctor.value = doctor;
-
+const selectLimitDoctor = (item, doctor, isSuggested) => {
   appealStore.changeStatusDoctor(
     { medical_program: item, item: doctor },
-    false
+    isSuggested
+  );
+};
+const selectLimitService = (item, service, isSuggested) => {
+  appealStore.changeStatusService(
+    {
+      medical_program: item,
+      item: service,
+    },
+    isSuggested
   );
 };
 </script>

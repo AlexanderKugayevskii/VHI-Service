@@ -362,6 +362,7 @@ const openAppealLimit = async (client) => {
 
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
+  await appealStore.fetchMedicalPrograms();
 
   $q.loading.hide();
   router.replace(

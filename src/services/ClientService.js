@@ -32,6 +32,11 @@ function getClientByAppealId(appealId) {
   return api.get(`/clinics/applications/${appealId}`);
 }
 
+function getMedicalPrograms(id) {
+  return api.get(`/clinics/limits/${id}`);
+}
+
+
 function getClientsByCode(code) {
   return api.get("/clinics/search-by-code", {
     params: {
@@ -61,7 +66,7 @@ export default {
   getFullClients,
   getClientInfo,
   getClientByAppealId,
-
+  getMedicalPrograms,
   getClientsByCode,
   getClientsByName,
   getClientsByPassport,
