@@ -136,7 +136,9 @@
                                       selectLimitDoctor(item, doctor, false)
                                   "
                                 >
-                                  <template #placeholder>Лимит</template>
+                                  <template #placeholder
+                                    >Выберите лимит</template
+                                  >
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
@@ -195,7 +197,9 @@
                                         selectLimitDoctor(item, doctor, true)
                                     "
                                   >
-                                    <template #placeholder>Лимит</template>
+                                    <template #placeholder
+                                      >Выберите лимит</template
+                                    >
                                     <template
                                       v-slot:selected-options-once="props"
                                     >
@@ -248,7 +252,9 @@
                                       selectLimitService(item, service, false)
                                   "
                                 >
-                                  <template #placeholder>Лимит</template>
+                                  <template #placeholder
+                                    >Выберите лимит</template
+                                  >
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
@@ -308,7 +314,9 @@
                                         selectLimitService(item, service, true)
                                     "
                                   >
-                                    <template #placeholder>Лимит</template>
+                                    <template #placeholder
+                                      >Выберите лимит</template
+                                    >
                                     <template
                                       v-slot:selected-options-once="props"
                                     >

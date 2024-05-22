@@ -13,6 +13,7 @@ import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useQuasar } from "quasar";
 import { useFullClientTableStore } from "src/stores/allClientTableStore";
+import { useAppealStore } from "src/stores/appealStore";
 import { onBeforeMount } from "vue";
 const props = defineProps({
   id: {
@@ -26,6 +27,7 @@ const i18n = useI18n();
 const allClientTableStore = useFullClientTableStore();
 onBeforeMount(() => {
   allClientTableStore.getClientInfo(props.id);
+  allClientTableStore.fetchMedicalPrograms(props.id);
 });
 onMounted(() => {
   $q.loading.show({ delay: 20 });

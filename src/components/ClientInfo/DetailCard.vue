@@ -1,15 +1,25 @@
 <template>
-  <div class="details__card details__card_big">
+  <div
+    :class="[
+      'details__card',
+      'details__card_big',
+      { details__card_negative: remaind < 0 },
+    ]"
+  >
     <h5 class="details__card-title">{{ rate?.name }}</h5>
     <div class="details__card-info">
       <div class="details__card-text">
         <p>
           <span>Потрачено: </span>
-          <span class="text-negative">{{ spent }}</span>
+          <span :class="[{ 'text-negative': spent < 0 }]">{{
+            formatPrice(spent)
+          }}</span>
         </p>
         <p>
           <span>Осталось: </span>
-          <span>{{ remaind }}</span>
+          <span :class="[{ 'text-negative': remaind < 0 }]">{{
+            formatPrice(remaind)
+          }}</span>
         </p>
         <p>
           <span>Лимит: </span>
@@ -68,6 +78,7 @@
 
 <script setup>
 import formatPrice from "src/helpers/formatPrice";
+import { watchEffect } from "vue";
 import { computed } from "vue";
 
 const props = defineProps({
@@ -82,11 +93,13 @@ const limit = computed(() => {
   return formatPrice(Number(props.rate.limit));
 });
 const spent = computed(() => {
-  return formatPrice(-Number(props.rate.spent));
+  const spentNumber = -Number(props.rate.spent);
+  if (spentNumber >= 0) return Number(props.rate.spent);
+  return spentNumber;
 });
-const remaind = computed(() =>
-  formatPrice(Number(props.rate.limit) - Number(props.rate.spent))
-);
+const remaind = computed(() => {
+  return Number(props.rate.limit) - Number(props.rate.spent);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +110,12 @@ const remaind = computed(() =>
   flex-direction: column;
   row-gap: 12px;
   border-radius: 24px;
+  border: 1px solid transparent;
+  transition: 0.3s;
 
+  &_negative {
+    border: 1px solid var(--q-negative);
+  }
   &-title {
     margin: 0;
     font-size: 18px;

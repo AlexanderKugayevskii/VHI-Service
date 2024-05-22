@@ -80,14 +80,15 @@ const columnsWithoutClientName = computed(() => {
 });
 
 const clientInfo = computed(() => allClientTableStore.clientInfo);
+const medicalLimits = computed(() => allClientTableStore.medicalLimits)
 const program = computed(() => {
   return clientInfo.value.program.medical_program_items;
 });
 const mainPrograms = computed(() => {
-  return program.value?.slice(0, 2);
+  return medicalLimits.value?.slice(0, 2);
 });
 const extraPrograms = computed(() => {
-  return program.value?.slice(2);
+  return medicalLimits.value?.slice(2);
 });
 const client = computed(() => {
   return clientInfo.value?.client;
