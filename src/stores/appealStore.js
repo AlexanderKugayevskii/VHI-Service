@@ -335,6 +335,8 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
 
+    hasWatched.value = false;
+
     // client.value = null;
   };
   const clearClinicData = () => {
@@ -882,16 +884,15 @@ export const useAppealStore = defineStore("appeal", () => {
   const copyDoctors = ref([]);
   const copyServices = ref([]);
   const finishedAppeal = ref(false);
-  let hasWatched = false;
+  const hasWatched = ref(false);
 
   const unwatch = watch(
     () => [selectedDoctors.value, selectedServices.value],
     ([newDoctors, newServices], [oldDoctors, oldServices]) => {
-      console.log(`WATCH`, oldDoctors);
-      if (oldDoctors?.length && oldServices?.length) {
+      if (!hasWatched.value) {
         copyDoctors.value = oldDoctors;
         copyServices.value = oldServices;
-        hasWatched = true;
+        hasWatched.value = true;
         unwatch();
       }
     }
