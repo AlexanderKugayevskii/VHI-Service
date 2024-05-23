@@ -77,28 +77,28 @@ export const useAppealStore = defineStore("appeal", () => {
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
 
-  const calculateLimits = computed(() => {
-    return medicalLimits.value.map((limit) => {
-      const allData = [
-        ...selectedDoctors.value,
-        ...suggestedDoctors.value,
-        ...selectedServices.value,
-        ...suggestedServices.value,
-      ];
+  // const calculateLimits = computed(() => {
+  //   const allData = [
+  //     ...selectedDoctors.value,
+  //     ...suggestedDoctors.value,
+  //     ...selectedServices.value,
+  //     ...suggestedServices.value,
+  //   ];
 
-      const findItemsSumm = allData.reduce((acc, curr) => {
-        if (curr.pivot.limit?.id === limit.id) {
-          return acc + Number(curr.pivot.price) * curr.pivot.quantity;
-        }
-        return acc;
-      }, 0);
+  //   // return medicalLimits.value.map((limit) => {
+  //   //   const findItemsSumm = allData.reduce((acc, curr) => {
+  //   //     if (curr.pivot.limit?.id === limit.id) {
+  //   //       return acc + Number(curr.pivot.price) * curr.pivot.quantity;
+  //   //     }
+  //   //     return acc;
+  //   //   }, 0);
 
-      return {
-        ...limit,
-        spent: limit.spent + findItemsSumm,
-      };
-    });
-  });
+  //   //   return {
+  //   //     ...limit,
+  //   //     spent: findItemsSumm,
+  //   //   };
+  //   // });
+  // });
 
   const setDiagnosis = (value) => {
     diagnosis.value = value;
@@ -139,6 +139,8 @@ export const useAppealStore = defineStore("appeal", () => {
       };
     })
   );
+
+  const allSumm = ref(0);
 
   const drugAppealImage = ref({});
   const drugs = ref([]);
@@ -614,7 +616,8 @@ export const useAppealStore = defineStore("appeal", () => {
       medicalLimits.value = medicalLimits.value.map((limit) => {
         return {
           ...limit,
-          spent: Number(limit.spent),
+          spent: parseFloat(limit.spent),
+          originalSpent: parseFloat(limit.spent),
         };
       });
 
@@ -703,6 +706,21 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
+      const all = [
+        ...selectedDoctors.value,
+        ...suggestedDoctors.value,
+        ...selectedServices.value,
+        ...suggestedServices.value,
+      ];
+
+      allSumm.value = all.reduce((acc, curr) => {
+        if (curr.pivot.program_item_id === 0) {
+          return acc;
+        }
+        return acc + parseFloat(curr.pivot.price) * curr.pivot.quantity;
+      }, 0);
+
+      console.log(all);
       // filterItems(
       //   data.drugs,
       // )
@@ -803,8 +821,7 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? doctor.pivot.status,
             progress: selectedItem.progress ?? doctor.pivot.progress,
             quantity: selectedItem.quantity ?? doctor.pivot.quantity,
-            program_item_id:
-              selectedItem.medical_program.id ?? doctor.pivot.program_item_id,
+            program_item_id: limit.id === doctor.pivot.limit?.id ? 0 : limit.id,
             limit: limit.id === doctor.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
@@ -818,6 +835,8 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = doctors;
     }
+
+    console.log(selectedDoctors.value);
   };
 
   const changeStatusService = (selectedItem, isSuggested = true) => {
@@ -839,7 +858,7 @@ export const useAppealStore = defineStore("appeal", () => {
             progress: selectedItem.progress ?? service.pivot.progress,
             quantity: selectedItem.quantity ?? service.pivot.quantity,
             program_item_id:
-              selectedItem.medical_program.id ?? service.pivot.program_item_id,
+              limit.id === service.pivot.limit?.id ? 0 : limit.id,
             limit: limit.id === service.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
@@ -854,6 +873,33 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedServices.value = services;
     }
   };
+
+  const allData = computed(() => {
+    return [
+      ...selectedDoctors.value,
+      ...suggestedDoctors.value,
+      ...selectedServices.value,
+      ...suggestedServices.value,
+    ];
+  });
+
+  watch([() => allData.value, () => allSumm.value], () => {
+    console.log(allSumm.value);
+    medicalLimits.value = medicalLimits.value.map((limit) => {
+      const findItemsSumm = allData.value.reduce((acc, curr) => {
+        if (curr.pivot.limit?.id === limit.id) {
+          return acc + Number(curr.pivot.price) * curr.pivot.quantity;
+        }
+        return acc;
+      }, 0);
+      const remaind = limit.originalSpent - allSumm.value;
+
+      return {
+        ...limit,
+        spent: limit.spent,
+      };
+    });
+  });
 
   const changeStatusDrugs = (selectedItem, isSuggested = true) => {
     let drugs = isSuggested ? suggestedDrugs.value : selectedDrugs.value;
@@ -1010,6 +1056,6 @@ export const useAppealStore = defineStore("appeal", () => {
 
     makeAppealDone,
     finishedAppeal,
-    calculateLimits,
+    // calculateLimits,
   };
 });
