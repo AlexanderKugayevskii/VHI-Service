@@ -63,9 +63,9 @@ const routes = [
                   if (from.name) {
                     next();
                   } else {
+                    await appealStore.fetchMedicalPrograms();
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
-                    await appealStore.fetchMedicalPrograms();
                     next();
                   }
                 },

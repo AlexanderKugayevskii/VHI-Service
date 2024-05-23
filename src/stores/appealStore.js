@@ -599,9 +599,14 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const fetchMedicalPrograms = async () => {
+    loading.value = true;
+    const localClient = SessionStorage.getItem("client");
+    client.value = localClient;
+
+    const currentClient = localClient ? localClient : client.value;
     try {
       const response = await ClientService.getMedicalPrograms(
-        client.value.contractClientId
+        currentClient.contractClientId
       );
       const data = response.data;
       medicalLimits.value = data.data;
@@ -613,6 +618,7 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
+      loading.value = false;
       console.log(`MEDICAL PROGRAMS`, medicalLimits.value);
     } catch (e) {
       console.error(e);
@@ -700,11 +706,11 @@ export const useAppealStore = defineStore("appeal", () => {
       // filterItems(
       //   data.drugs,
       // )
-        // console.log(`Suggested by other`, suggestedDoctors.value);
-        // console.log(`Selected by owner`, selectedDoctors.value);
-        // console.log("-------------------------------------");
-        // console.log(`Suggested by other`, suggestedServices.value);
-        // console.log(`Selected by owner`, selectedServices.value);
+      // console.log(`Suggested by other`, suggestedDoctors.value);
+      // console.log(`Selected by owner`, selectedDoctors.value);
+      // console.log("-------------------------------------");
+      // console.log(`Suggested by other`, suggestedServices.value);
+      // console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
       console.error(e);
     } finally {
