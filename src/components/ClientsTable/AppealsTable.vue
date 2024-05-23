@@ -360,9 +360,9 @@ const openAppealLimit = async (client) => {
     delay: 500,
   });
 
+  await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
-  await appealStore.fetchMedicalPrograms();
 
   $q.loading.hide();
   router.replace(

@@ -700,11 +700,11 @@ export const useAppealStore = defineStore("appeal", () => {
       // filterItems(
       //   data.drugs,
       // )
-      console.log(`Suggested by other`, suggestedDoctors.value);
-      console.log(`Selected by owner`, selectedDoctors.value);
-      console.log("-------------------------------------");
-      console.log(`Suggested by other`, suggestedServices.value);
-      console.log(`Selected by owner`, selectedServices.value);
+        // console.log(`Suggested by other`, suggestedDoctors.value);
+        // console.log(`Selected by owner`, selectedDoctors.value);
+        // console.log("-------------------------------------");
+        // console.log(`Suggested by other`, suggestedServices.value);
+        // console.log(`Selected by owner`, selectedServices.value);
     } catch (e) {
       console.error(e);
     } finally {
