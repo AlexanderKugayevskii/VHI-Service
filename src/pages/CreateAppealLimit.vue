@@ -400,7 +400,7 @@
                       </div>
                       <div class="create-appeal-client-limits">
                         <DetailCard
-                          v-for="limit in medicalLimits"
+                          v-for="limit in calculateLimits"
                           :key="limit.id"
                           :rate="limit"
                         ></DetailCard>

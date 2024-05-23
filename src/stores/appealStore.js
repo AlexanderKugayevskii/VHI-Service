@@ -77,28 +77,27 @@ export const useAppealStore = defineStore("appeal", () => {
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
 
-  // const calculateLimits = computed(() => {
-  //   const allData = [
-  //     ...selectedDoctors.value,
-  //     ...suggestedDoctors.value,
-  //     ...selectedServices.value,
-  //     ...suggestedServices.value,
-  //   ];
+  const calculateLimits = computed(() => {
+    const allData = [
+      ...selectedDoctors.value,
+      ...suggestedDoctors.value,
+      ...selectedServices.value,
+      ...suggestedServices.value,
+    ];
+    return medicalLimits.value.map((limit) => {
+      const findItemsSumm = allData.reduce((acc, curr) => {
+        if (curr.pivot.program_item_id === limit.id) {
+          return acc + parseFloat(curr.pivot.price) * curr.pivot.quantity;
+        }
+        return acc;
+      }, 0);
 
-  //   // return medicalLimits.value.map((limit) => {
-  //   //   const findItemsSumm = allData.reduce((acc, curr) => {
-  //   //     if (curr.pivot.limit?.id === limit.id) {
-  //   //       return acc + Number(curr.pivot.price) * curr.pivot.quantity;
-  //   //     }
-  //   //     return acc;
-  //   //   }, 0);
-
-  //   //   return {
-  //   //     ...limit,
-  //   //     spent: findItemsSumm,
-  //   //   };
-  //   // });
-  // });
+      return {
+        ...limit,
+        spent: limit.spent - allSumm.value[limit.name] + findItemsSumm,
+      };
+    });
+  });
 
   const setDiagnosis = (value) => {
     diagnosis.value = value;
@@ -140,7 +139,7 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
-  const allSumm = ref(0);
+  const allSumm = ref(null);
 
   const drugAppealImage = ref({});
   const drugs = ref([]);
@@ -713,14 +712,24 @@ export const useAppealStore = defineStore("appeal", () => {
         ...suggestedServices.value,
       ];
 
-      allSumm.value = all.reduce((acc, curr) => {
-        if (curr.pivot.program_item_id === 0) {
-          return acc;
-        }
-        return acc + parseFloat(curr.pivot.price) * curr.pivot.quantity;
-      }, 0);
+      allSumm.value = medicalLimits.value.reduce((acc, curr) => {
+        const summ = all.reduce((a, c) => {
+          if (curr.id === c.pivot.program_item_id) {
+            return a + parseFloat(c.pivot.price) * c.pivot.quantity;
+          }
+          return a;
+        }, 0);
 
-      console.log(all);
+        if (acc[curr.name]) {
+          acc[curr.name] += summ;
+        } else {
+          acc[curr.name] = summ;
+        }
+
+        return acc;
+      }, {});
+
+      console.log(allSumm.value);
       // filterItems(
       //   data.drugs,
       // )
@@ -873,33 +882,6 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedServices.value = services;
     }
   };
-
-  const allData = computed(() => {
-    return [
-      ...selectedDoctors.value,
-      ...suggestedDoctors.value,
-      ...selectedServices.value,
-      ...suggestedServices.value,
-    ];
-  });
-
-  watch([() => allData.value, () => allSumm.value], () => {
-    console.log(allSumm.value);
-    medicalLimits.value = medicalLimits.value.map((limit) => {
-      const findItemsSumm = allData.value.reduce((acc, curr) => {
-        if (curr.pivot.limit?.id === limit.id) {
-          return acc + Number(curr.pivot.price) * curr.pivot.quantity;
-        }
-        return acc;
-      }, 0);
-      const remaind = limit.originalSpent - allSumm.value;
-
-      return {
-        ...limit,
-        spent: limit.spent,
-      };
-    });
-  });
 
   const changeStatusDrugs = (selectedItem, isSuggested = true) => {
     let drugs = isSuggested ? suggestedDrugs.value : selectedDrugs.value;
@@ -1056,6 +1038,6 @@ export const useAppealStore = defineStore("appeal", () => {
 
     makeAppealDone,
     finishedAppeal,
-    // calculateLimits,
+    calculateLimits,
   };
 });
