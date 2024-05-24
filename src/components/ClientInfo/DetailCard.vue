@@ -10,6 +10,10 @@
     <div class="details__card-info">
       <div class="details__card-text">
         <p>
+          <span>Лимит: </span>
+          <span>{{ limit }}</span>
+        </p>
+        <p>
           <span>Потрачено: </span>
           <span :class="[{ 'text-negative': spent < 0 }]">{{
             formatPrice(spent)
@@ -21,10 +25,7 @@
             formatPrice(remaind)
           }}</span>
         </p>
-        <p>
-          <span>Лимит: </span>
-          <span>{{ limit }}</span>
-        </p>
+      
       </div>
       <div class="details__card-icons" v-if="$slots.icons">
         <slot name="icons">

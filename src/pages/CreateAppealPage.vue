@@ -514,7 +514,9 @@
                     ></SimpleButton>
                     <div
                       class="create-appeal-done-action"
-                      v-if="appealStore.isAgent && clientData.appealStatus !== 2"
+                      v-if="
+                        appealStore.isAgent && clientData.appealStatus !== 2
+                      "
                     >
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
@@ -629,14 +631,16 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 import { ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { onMounted } from "vue";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
@@ -649,6 +653,7 @@ const route = useRoute();
 const tab = ref("clinics");
 const tabRight = ref("chat");
 const createAppealModalRef = ref(null);
+const previousRoute = ref(null);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
@@ -673,20 +678,23 @@ watch(
       // appealStore.clearAppealData();
       // appealStore.clearClinicData();
 
-      // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+      router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }
 );
 
 onMounted(() => {
-  
+  console.log(route);
+  console.log(route.redirectedFrom);
 });
+
 const hideModal = () => {
-  createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearClinicData();
   appealStore.setClient(null);
+
   router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  createAppealModalRef.value.hide();
 };
 
 const handleRemoveDoctor = (item) => {

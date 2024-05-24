@@ -4,7 +4,7 @@ import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
-import { SessionStorage, Notify } from "quasar";
+import { SessionStorage, Notify } from "quasar"; 
 import dayjs from "dayjs";
 
 const appendFormData = (formData, data, parentKey = "") => {
@@ -94,7 +94,8 @@ export const useAppealStore = defineStore("appeal", () => {
 
       return {
         ...limit,
-        spent: limit.spent - allMedicalLimitsSumm.value[limit.name] + findItemsSumm,
+        spent:
+          limit.spent - allMedicalLimitsSumm.value[limit.name] + findItemsSumm,
       };
     });
   });
@@ -336,7 +337,7 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
 
-    hasWatched.value = false;
+    // hasWatched.value = false;
 
     // client.value = null;
   };
@@ -364,8 +365,6 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getDrugs(name);
       drugs.value = response.data.data;
-
-
     } catch (e) {
       console.error(e);
     } finally {
@@ -640,7 +639,7 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      
+
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
       // client.value.appealStatus = data.status;
@@ -728,11 +727,8 @@ export const useAppealStore = defineStore("appeal", () => {
         return acc;
       }, {});
 
-   
-
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
-      
     } catch (e) {
       console.error(e);
     } finally {
@@ -788,8 +784,6 @@ export const useAppealStore = defineStore("appeal", () => {
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
-
-      
     } catch (e) {
       console.error(e);
     } finally {
@@ -813,8 +807,8 @@ export const useAppealStore = defineStore("appeal", () => {
     doctors = doctors.map((doctor) => {
       if (selectedItem.item.id === doctor.id) {
         const limit = {
-          name: selectedItem.medical_program.name,
-          id: selectedItem.medical_program.id,
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
         };
         return {
           ...doctor,
@@ -837,8 +831,6 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = doctors;
     }
-
-   
   };
 
   const changeStatusService = (selectedItem, isSuggested = true) => {
@@ -848,8 +840,8 @@ export const useAppealStore = defineStore("appeal", () => {
     services = services.map((service) => {
       if (selectedItem.item.id === service.id) {
         const limit = {
-          name: selectedItem.medical_program.name,
-          id: selectedItem.medical_program.id,
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
         };
 
         return {

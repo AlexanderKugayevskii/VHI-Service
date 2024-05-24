@@ -283,7 +283,7 @@ const handleFind = () => {
   tableRef.value.requestServerInteraction();
 };
 const handleDelete = () => {
-  
+  console.log(props.filterQuery);
   tableRef.value.requestServerInteraction();
 };
 
@@ -334,7 +334,7 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
-
+  console.log(`client`, client);
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
@@ -398,7 +398,12 @@ onMounted(() => {
       }
     }
   );
- 
+  watch(
+    () => props.filterQuery,
+    () => {
+      console.log(`watcher`, props.filterQuery);
+    }
+  );
 });
 
 //calculate table height for showing only 10 rows
@@ -429,14 +434,14 @@ onMounted(() => {
 }
 
 .appeals-th:nth-of-type(1) {
-  width: 48px;
+  width: 56px;
 }
 // .appeals-th:nth-of-type(2) {
 //   width: 200px;
 // }
-// .appeals-th:nth-of-type(3) {
-//   width: 150px;
-// }
+.appeals-th:nth-of-type(3) {
+  width: 150px;
+}
 .appeals-th:nth-of-type(4) {
   width: 120px;
 }
