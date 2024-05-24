@@ -195,7 +195,7 @@ const selectOption = (option) => {
 
 const cancelOpenWhenSelect = (client) => {
   const selection = window.getSelection().toString();
-  console.log(selection);
+
   if (!selection) {
     openAppealPage(client);
   } else {

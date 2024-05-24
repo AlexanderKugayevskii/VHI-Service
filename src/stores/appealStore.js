@@ -94,7 +94,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       return {
         ...limit,
-        spent: limit.spent - allSumm.value[limit.name] + findItemsSumm,
+        spent: limit.spent - allMedicalLimitsSumm.value[limit.name] + findItemsSumm,
       };
     });
   });
@@ -139,7 +139,7 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
-  const allSumm = ref(null);
+  const allMedicalLimitsSumm = ref(null);
 
   const drugAppealImage = ref({});
   const drugs = ref([]);
@@ -365,7 +365,7 @@ export const useAppealStore = defineStore("appeal", () => {
       const response = await AppealService.getDrugs(name);
       drugs.value = response.data.data;
 
-      console.log(drugs.value);
+
     } catch (e) {
       console.error(e);
     } finally {
@@ -537,7 +537,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       const data = response.data.data;
-      console.log(data);
+
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -640,8 +640,7 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      console.log(currentClient);
-      console.log(data);
+      
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
       // client.value.appealStatus = data.status;
@@ -712,7 +711,7 @@ export const useAppealStore = defineStore("appeal", () => {
         ...suggestedServices.value,
       ];
 
-      allSumm.value = medicalLimits.value.reduce((acc, curr) => {
+      allMedicalLimitsSumm.value = medicalLimits.value.reduce((acc, curr) => {
         const summ = all.reduce((a, c) => {
           if (curr.id === c.pivot.program_item_id) {
             return a + parseFloat(c.pivot.price) * c.pivot.quantity;
@@ -729,18 +728,11 @@ export const useAppealStore = defineStore("appeal", () => {
         return acc;
       }, {});
 
-      console.log(allSumm.value);
+   
 
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
-      // filterItems(
-      //   data.drugs,
-      // )
-      // console.log(`Suggested by other`, suggestedDoctors.value);
-      // console.log(`Selected by owner`, selectedDoctors.value);
-      // console.log("-------------------------------------");
-      // console.log(`Suggested by other`, suggestedServices.value);
-      // console.log(`Selected by owner`, selectedServices.value);
+      
     } catch (e) {
       console.error(e);
     } finally {
@@ -797,9 +789,7 @@ export const useAppealStore = defineStore("appeal", () => {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
 
-      console.log(drugAppealImage.value);
-      console.log(`Suggested by other`, suggestedDrugs.value);
-      console.log(`Selected by owner`, selectedDrugs.value);
+      
     } catch (e) {
       console.error(e);
     } finally {
@@ -848,7 +838,7 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedDoctors.value = doctors;
     }
 
-    console.log(selectedDoctors.value);
+   
   };
 
   const changeStatusService = (selectedItem, isSuggested = true) => {

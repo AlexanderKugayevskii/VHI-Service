@@ -116,7 +116,7 @@
             >
               <UserSettings
                 :client="props.row"
-                @openModalLimit="() => console.log('working emitter')"
+               
               ></UserSettings>
               <!-- @openModal="openAppealPage(props.row)" -->
             </q-td>

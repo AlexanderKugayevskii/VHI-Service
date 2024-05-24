@@ -283,7 +283,7 @@ const handleFind = () => {
   tableRef.value.requestServerInteraction();
 };
 const handleDelete = () => {
-  console.log(props.filterQuery);
+  
   tableRef.value.requestServerInteraction();
 };
 
@@ -334,7 +334,7 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
-  console.log(`client`, client);
+
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
@@ -398,12 +398,7 @@ onMounted(() => {
       }
     }
   );
-  watch(
-    () => props.filterQuery,
-    () => {
-      console.log(`watcher`, props.filterQuery);
-    }
-  );
+ 
 });
 
 //calculate table height for showing only 10 rows

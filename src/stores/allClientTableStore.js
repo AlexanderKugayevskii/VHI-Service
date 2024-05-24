@@ -150,7 +150,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
       setClientInfo(data);
-      console.log(data);
+
     } catch (e) {
       console.error(e);
     } finally {
@@ -171,7 +171,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         };
       });
 
-      console.log(`MEDICAL PROGRAMS`, medicalLimits.value);
+      
     } catch (e) {
       console.error(e);
     }

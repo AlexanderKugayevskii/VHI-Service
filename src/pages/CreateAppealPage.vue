@@ -679,7 +679,7 @@ watch(
 );
 
 onMounted(() => {
-  console.log(route.redirectedFrom);
+  
 });
 const hideModal = () => {
   createAppealModalRef.value.hide();

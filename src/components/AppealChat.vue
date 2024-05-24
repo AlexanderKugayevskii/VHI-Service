@@ -260,7 +260,7 @@ onMounted(async () => {
   if (props.appealType === 1) {
     await getMessages();
     // await listenMessages(); //temporary
-    console.log(mappedMessages.value);
+    
 
     longPoolIntervalId.value = setInterval(async () => {
       await getMessages();
