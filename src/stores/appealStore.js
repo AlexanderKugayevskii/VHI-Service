@@ -730,6 +730,9 @@ export const useAppealStore = defineStore("appeal", () => {
       }, {});
 
       console.log(allSumm.value);
+
+      copyDoctors.value = [...selectedDoctors.value];
+      copyServices.value = [...selectedServices.value];
       // filterItems(
       //   data.drugs,
       // )
@@ -918,19 +921,19 @@ export const useAppealStore = defineStore("appeal", () => {
   const copyDoctors = ref([]);
   const copyServices = ref([]);
   const finishedAppeal = ref(false);
-  const hasWatched = ref(false);
+  // const hasWatched = ref(false);
 
-  const unwatch = watch(
-    () => [selectedDoctors.value, selectedServices.value],
-    ([newDoctors, newServices], [oldDoctors, oldServices]) => {
-      if (!hasWatched.value) {
-        copyDoctors.value = oldDoctors;
-        copyServices.value = oldServices;
-        hasWatched.value = true;
-        unwatch();
-      }
-    }
-  );
+  // const unwatch = watch(
+  //   () => [selectedDoctors.value, selectedServices.value],
+  //   ([newDoctors, newServices], [oldDoctors, oldServices]) => {
+  //     if (!hasWatched.value) {
+  //       copyDoctors.value = oldDoctors;
+  //       copyServices.value = oldServices;
+  //       hasWatched.value = true;
+  //       unwatch();
+  //     }
+  //   }
+  // );
 
   const makeAppealDone = (done) => {
     if (done) {
