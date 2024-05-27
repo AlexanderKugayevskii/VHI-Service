@@ -277,6 +277,7 @@
                                   label="добавить врача"
                                   customClass="btn-action"
                                   @click="addCustomDoctor"
+                                  :disabled="disabledDoctorButton"
                                   full-width
                                 ></SimpleButton>
                               </template>
@@ -446,6 +447,7 @@
                                   label="добавить сервис"
                                   customClass="btn-action"
                                   @click="addCustomService"
+                                  :disabled="disabledServiceButton"
                                   full-width
                                 ></SimpleButton>
                               </template>
@@ -668,7 +670,7 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
@@ -697,12 +699,18 @@ const doctorCustomPrice = reactive({
   rawValue: "",
   formattedValue: "",
 });
+const disabledDoctorButton = computed(
+  () => doctorCustomPrice.rawValue.length === 0
+);
 
 const serviceDropdownRef = ref(null);
 const serviceCustomPrice = reactive({
   rawValue: "",
   formattedValue: "",
 });
+const disabledServiceButton = computed(
+  () => serviceCustomPrice.rawValue.length === 0
+);
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
