@@ -716,7 +716,9 @@ const handleCreateAppeal = () => {
   appealStore.postAppealData();
   appealStore.setTypeOfAppeal("CHANGE");
 };
+
 const handleChangeAppeal = () => {
+  console.log("trigger");
   appealStore.changeAppealData();
 };
 
@@ -735,7 +737,7 @@ watch(
       // appealStore.clearAppealData();
       // appealStore.clearClinicData();
 
-      router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+      // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
     }
   }
 );
@@ -769,7 +771,7 @@ const addCustomDoctor = () => {
       price: doctorCustomPrice.rawValue,
     },
   };
-  console.log(doctor);
+
   appealStore.selectDoctors(doctor);
   doctorDropdownRef.value.closeModal();
 };

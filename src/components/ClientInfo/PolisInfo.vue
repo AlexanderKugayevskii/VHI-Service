@@ -13,7 +13,7 @@
     <div class="polis-info__right">
       <div class="polis-info__remainder">
         <span>Общий остаток</span>
-        <span>{{ data.liability }}</span>
+        <span>{{ formatPrice(data.remaind) }}</span>
       </div>
     </div>
   </div>
@@ -22,20 +22,24 @@
 <script setup>
 import { computed } from "vue";
 import { useFullClientTableStore } from "src/stores/allClientTableStore";
-import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { onMounted } from "vue";
 
 const allClientTableStore = useFullClientTableStore();
 const clientInfo = computed(() => allClientTableStore.clientInfo);
+const medicalPrograms = computed(() => allClientTableStore.medicalLimits);
 
 const data = computed(() => {
   return {
     dmsCode: clientInfo.value?.dms_code,
     programName: clientInfo.value?.program?.name,
-    liability: formatPrice(Number(clientInfo.value.program?.liability)),
+    liability: formatPrice(parseFloat(clientInfo.value.program?.liability)),
+    remaind: medicalPrograms.value.reduce((acc, curr) => {
+      return acc + (parseFloat(curr.limit) - parseFloat(curr.spent));
+    }, 0),
   };
 });
+
 onMounted(() => {});
 </script>
 
