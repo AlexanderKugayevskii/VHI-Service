@@ -180,6 +180,7 @@
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
                             <DropdownSelectNew
+                              ref="doctorDropdownRef"
                               class="dropdown-space"
                               :multiple="true"
                               :loading="appealStore.loading"
@@ -262,10 +263,20 @@
                                 />
                               </template>
                               <template v-slot:action>
+                                <SimpleInput
+                                  class="dropdown-space"
+                                  placeholder="введите стоимость услуги"
+                                  @update:model-value="handleDoctorCustomPrice"
+                                  :model-value="
+                                    doctorCustomPrice.formattedValue
+                                  "
+                                  number
+                                />
                                 <SimpleButton
                                   type="button"
                                   label="добавить врача"
                                   customClass="btn-action"
+                                  @click="addCustomDoctor"
                                   full-width
                                 ></SimpleButton>
                               </template>
@@ -338,6 +349,7 @@
                         <q-tab-panel name="services" key="services">
                           <div class="tab-header">
                             <DropdownSelectNew
+                              ref="serviceDropdownRef"
                               class="dropdown-space"
                               :multiple="true"
                               :loading="appealStore.loading"
@@ -418,6 +430,24 @@
                                     )
                                   "
                                 />
+                              </template>
+                              <template v-slot:action>
+                                <SimpleInput
+                                  class="dropdown-space"
+                                  placeholder="введите стоимость услуги"
+                                  @update:model-value="handleServiceCustomPrice"
+                                  :model-value="
+                                    serviceCustomPrice.formattedValue
+                                  "
+                                  number
+                                />
+                                <SimpleButton
+                                  type="button"
+                                  label="добавить сервис"
+                                  customClass="btn-action"
+                                  @click="addCustomService"
+                                  full-width
+                                ></SimpleButton>
                               </template>
                             </DropdownSelectNew>
                           </div>
@@ -638,7 +668,7 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, watch } from "vue";
+import { ref, reactive, watch } from "vue";
 import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
@@ -661,7 +691,18 @@ const route = useRoute();
 const tab = ref("clinics");
 const tabRight = ref("chat");
 const createAppealModalRef = ref(null);
-const previousRoute = ref(null);
+
+const doctorDropdownRef = ref(null);
+const doctorCustomPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
+
+const serviceDropdownRef = ref(null);
+const serviceCustomPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
@@ -705,12 +746,46 @@ const hideModal = () => {
   createAppealModalRef.value.hide();
 };
 
-const handleRemoveDoctor = (item) => {
-  appealStore.clearDoctors(item);
+const handleDoctorCustomPrice = (value) => {
+  doctorCustomPrice.rawValue = value;
+  doctorCustomPrice.formattedValue = value.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    " "
+  );
 };
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
+const addCustomDoctor = () => {
+  const doctor = {
+    name: doctorDropdownRef.value.searchValue,
+    id: null,
+    pivot: {
+      price: doctorCustomPrice.rawValue,
+    },
+  };
+  console.log(doctor);
+  appealStore.selectDoctors(doctor);
+  doctorDropdownRef.value.closeModal();
 };
+
+const handleServiceCustomPrice = (value) => {
+  serviceCustomPrice.rawValue = value;
+  serviceCustomPrice.formattedValue = value.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    " "
+  );
+};
+const addCustomService = () => {
+  const service = {
+    name: serviceDropdownRef.value.searchValue,
+    id: null,
+    pivot: {
+      price: serviceCustomPrice.rawValue,
+    },
+  };
+
+  appealStore.selectServices(service);
+  serviceDropdownRef.value.closeModal();
+};
+
 const handleStatusDoctor = (item, isSuggested) => {
   appealStore.changeStatusDoctor(item, isSuggested);
 };

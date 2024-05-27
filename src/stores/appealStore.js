@@ -4,7 +4,7 @@ import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
-import { SessionStorage, Notify } from "quasar"; 
+import { SessionStorage, Notify } from "quasar";
 import dayjs from "dayjs";
 
 const appendFormData = (formData, data, parentKey = "") => {
@@ -215,6 +215,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const cantRemoveFromSelectedDoctors = (doctor) => {
+
     return selectedDoctors.value.some((item) => {
       if (doctor.id === item.id) {
         return (
