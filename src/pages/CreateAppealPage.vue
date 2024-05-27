@@ -261,6 +261,14 @@
                                   "
                                 />
                               </template>
+                              <template v-slot:action>
+                                <SimpleButton
+                                  type="button"
+                                  label="добавить врача"
+                                  customClass="btn-action"
+                                  full-width
+                                ></SimpleButton>
+                              </template>
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
