@@ -115,13 +115,19 @@ export const useAppealStore = defineStore("appeal", () => {
   const suggestedDoctors = ref([]);
   const allDoctorsStatus = computed(() =>
     selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
-      return {
+      const doctorData = {
         id: doctor.id,
         status: doctor.pivot.status ?? 0,
         progress: doctor.pivot.progress ?? 0,
         quantity: doctor.pivot.quantity ?? 1,
         program_item_id: doctor.pivot.program_item_id ?? 0,
       };
+      if (doctorData.id === null) {
+        doctorData.name = doctor.name;
+        doctorData.price = doctor.pivot.price;
+      }
+
+      return doctorData;
     })
   );
 
@@ -130,13 +136,20 @@ export const useAppealStore = defineStore("appeal", () => {
   const suggestedServices = ref([]);
   const allServicesStatus = computed(() =>
     selectedServices.value.concat(suggestedServices.value).map((service) => {
-      return {
+      const serviceData = {
         id: service.id,
         status: service.pivot.status ?? 0,
         progress: service.pivot.progress ?? 0,
         quantity: service.pivot.quantity ?? 1,
         program_item_id: service.pivot.program_item_id ?? 0,
       };
+
+      if (serviceData.id === null) {
+        serviceData.name = service.name;
+        serviceData.price = service.pivot.price;
+      }
+
+      return serviceData;
     })
   );
 
@@ -215,7 +228,6 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const cantRemoveFromSelectedDoctors = (doctor) => {
-
     return selectedDoctors.value.some((item) => {
       if (doctor.id === item.id) {
         return (
@@ -507,20 +519,32 @@ export const useAppealStore = defineStore("appeal", () => {
     loading.value = true;
 
     const services = selectedServices.value.map((service) => {
-      return {
+      const serviceData = {
         quantity: service.pivot.quantity,
         status: service.pivot.status,
         progress: service.pivot.progress,
         id: service.id,
       };
+
+      if (serviceData.id === null) {
+        serviceData.name = service.name;
+        serviceData.price = service.pivot.price;
+      }
+      return serviceData;
     });
     const doctors = selectedDoctors.value.map((doctor) => {
-      return {
+      const doctorData = {
         quantity: doctor.pivot.quantity,
         status: doctor.pivot.status,
         progress: doctor.pivot.progress,
         id: doctor.id,
       };
+      if (doctorData.id === null) {
+        doctorData.name = doctor.name;
+        doctorData.price = doctor.pivot.price;
+      }
+
+      return doctorData;
     });
     const payload = {
       hospital_id: selectedClinic.value.id,
