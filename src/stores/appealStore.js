@@ -268,6 +268,17 @@ export const useAppealStore = defineStore("appeal", () => {
         },
         isNew: true,
       });
+
+      copyDoctors.value.push({
+        ...doctor,
+        pivot: {
+          ...doctor.pivot,
+          status: 0,
+          progress: 0,
+          quantity: 1,
+          program_item_id: 0,
+        },
+      })
     }
   };
 
@@ -312,6 +323,16 @@ export const useAppealStore = defineStore("appeal", () => {
         },
         isNew: true,
       });
+      copyServices.value.push({
+        ...service,
+        pivot: {
+          ...service.pivot,
+          status: 0,
+          progress: 0,
+          quantity: 1,
+          program_item_id: 0,
+        },
+      })
     }
   };
 
