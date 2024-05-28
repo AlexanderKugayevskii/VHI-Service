@@ -208,7 +208,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
-    console.log(selectedClinic.value);
+
     clearAppealData();
   };
 
