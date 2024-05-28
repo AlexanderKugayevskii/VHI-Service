@@ -555,7 +555,7 @@
                     <div
                       class="create-appeal-done-action"
                       v-if="
-                        appealStore.isAgent && clientData.appealStatus !== 2
+                        appealStore.isAgent
                       "
                     >
                       <SimpleCheckbox

@@ -39,12 +39,15 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  console.log(from.name)
                   if (from.name) {
                     next();
-                  } else {
+                  } else if(appealStore.typeOfAppeal === 1) {
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
                     next();
+                  } else {
+                    next({name: 'appeals-page'})
                   }
                 },
               },
