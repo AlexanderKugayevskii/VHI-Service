@@ -15,6 +15,7 @@
         :checkSelectedOption="clientTableStore.checkSelectedOption"
         :removeFilter="clientTableStore.removeFilter"
         :fetchClinics="clientTableStore.fetchClinics"
+        :total = "total"
       />
     </div>
     <AppealSearchClient
@@ -51,7 +52,7 @@ const $q = useQuasar();
 // });
 
 const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading, filterData } =
+const { pagination, rows, columns, loading, filterData, total } =
   storeToRefs(clientTableStore);
 
 const searchFilterFixed = ref(false);

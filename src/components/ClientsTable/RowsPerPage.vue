@@ -15,6 +15,9 @@
         {{ option }}
       </button>
     </div>
+    <div class="table-total">
+      Общее: <span class="">{{ total }}</span>
+    </div>
   </div>
 </template>
 
@@ -22,7 +25,7 @@
 import { ref, defineEmits, computed } from "vue";
 import { useRoute } from "vue-router";
 const emit = defineEmits(["choiceOption"]);
-const props = defineProps(["pagination"]);
+const props = defineProps(["pagination", "total"]);
 
 // const route = useRoute();
 const options = computed(() => {
@@ -76,5 +79,18 @@ const handleChoice = (option) => {
 }
 .option-button--active {
   background-color: #e3e8f0;
+}
+
+.table-total {
+  color: #a0aabc;
+  font-weight: 400;
+  line-height: 20px;
+
+  span {
+    color: #404f6f;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background-color: #e3e8f0;
+  }
 }
 </style>

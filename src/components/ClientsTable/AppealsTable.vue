@@ -214,8 +214,8 @@
     <!-- pagination -->
     <div class="flex q-my-lg">
       <PaginationTable
-        v-if="reactivePagination && reactivePagination.rowsNumber >= 10"
-        :pagination="reactiveProps.pagination"
+        v-if="reactivePagination"
+        :pagination="reactivePagination"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
@@ -226,6 +226,7 @@
         v-if="reactivePagination"
         @choiceOption="selectOption"
         :pagination="reactivePagination"
+        :total="total"
       />
     </div>
   </div>
@@ -271,6 +272,7 @@ const props = defineProps([
   "checkSelectedOption",
   "removeFilter",
   "fetchClinics",
+  "total",
 ]);
 const emit = defineEmits(["createAppeal"]);
 
@@ -406,6 +408,8 @@ onMounted(() => {
   );
 });
 
+onMounted(() => {});
+
 //calculate table height for showing only 10 rows
 // onMounted(() => {
 //   const qTableMiddleElement = document.querySelector(".q-table__middle");
@@ -498,4 +502,6 @@ tr.clickable {
 .filter-item {
   padding-bottom: 20px;
 }
+
+
 </style>
