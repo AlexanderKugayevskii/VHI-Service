@@ -34,24 +34,24 @@
               :length="selectedOptions.length"
             ></slot>
           </span>
+          <q-icon size="20px" v-if="!disableChoise">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M5 7.5L10 12.5L15 7.5"
+                stroke="#7A88A6"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </q-icon>
         </button>
-        <q-icon size="20px" v-if="!disableChoise">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              d="M5 7.5L10 12.5L15 7.5"
-              stroke="#7A88A6"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </q-icon>
       </div>
     </div>
 
@@ -326,7 +326,7 @@ export default {
   width: 100%;
   z-index: 10;
   border-radius: 16px;
-  padding: 4px 8px;;
+  padding: 4px 8px;
   background-color: #fff;
   box-shadow: 0px 0px 8px 0px #cfd9ea;
 }
@@ -350,8 +350,10 @@ export default {
   width: 100%;
 }
 .dropdown-button {
-  padding: 12px 16px;
+  // padding: 12px 16px;
   display: flex;
+  align-items: center;
+  padding: 0 0;
   background-color: #f2f5fa;
   border-radius: 16px;
   cursor: pointer;
@@ -363,11 +365,13 @@ export default {
 .dropdown-button-btn {
   width: 100%;
   background: none;
+  padding: 12px 16px 12px 16px;
   border: none;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   color: #7a88a6;
-  padding: 0;
+  // padding: 0;
   cursor: pointer;
 }
 

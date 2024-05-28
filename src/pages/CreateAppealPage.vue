@@ -559,6 +559,7 @@
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
                         :checked="appealDoneCheckbox"
+                        :disabled="appealDoneCheckbox"
                       >
                       </SimpleCheckbox>
                       <span>Сделать завершенным</span>

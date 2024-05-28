@@ -232,7 +232,9 @@ export const useAppealStore = defineStore("appeal", () => {
     return selectedDoctors.value.some((item) => {
       if (doctor.id === item.id) {
         return (
-          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
           (item.pivot.status !== 0 && !isAgent.value)
         );
       }
@@ -257,17 +259,31 @@ export const useAppealStore = defineStore("appeal", () => {
     if (index > -1 && doctor.id !== null) {
       selectedDoctors.value.splice(index, 1);
     } else {
-      selectedDoctors.value.push({
-        ...doctor,
-        pivot: {
-          ...doctor.pivot,
-          status: 0,
-          progress: 0,
-          quantity: 1,
-          program_item_id: 0,
-        },
-        isNew: true,
-      });
+      if (finishedAppeal.value) {
+        selectedDoctors.value.push({
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            status: 1,
+            progress: 2,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      } else {
+        selectedDoctors.value.push({
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            status: 0,
+            progress: 0,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      }
 
       copyDoctors.value.push({
         ...doctor,
@@ -278,7 +294,7 @@ export const useAppealStore = defineStore("appeal", () => {
           quantity: 1,
           program_item_id: 0,
         },
-      })
+      });
     }
   };
 
@@ -291,7 +307,9 @@ export const useAppealStore = defineStore("appeal", () => {
     return selectedServices.value.some((item) => {
       if (service.id === item.id) {
         return (
-          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
           (item.pivot.status !== 0 && !isAgent.value)
         );
       }
@@ -312,17 +330,31 @@ export const useAppealStore = defineStore("appeal", () => {
     if (index > -1 && service.id !== null) {
       selectedServices.value.splice(index, 1);
     } else {
-      selectedServices.value.push({
-        ...service,
-        pivot: {
-          ...service.pivot,
-          status: 0,
-          progress: 0,
-          quantity: 1,
-          program_item_id: 0,
-        },
-        isNew: true,
-      });
+      if (finishedAppeal.value) {
+        selectedServices.value.push({
+          ...service,
+          pivot: {
+            ...service.pivot,
+            status: 1,
+            progress: 2,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      } else {
+        selectedServices.value.push({
+          ...service,
+          pivot: {
+            ...service.pivot,
+            status: 0,
+            progress: 0,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      }
       copyServices.value.push({
         ...service,
         pivot: {
@@ -332,7 +364,7 @@ export const useAppealStore = defineStore("appeal", () => {
           quantity: 1,
           program_item_id: 0,
         },
-      })
+      });
     }
   };
 
