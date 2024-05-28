@@ -554,9 +554,7 @@
                     ></SimpleButton>
                     <div
                       class="create-appeal-done-action"
-                      v-if="
-                        appealStore.isAgent
-                      "
+                      v-if="appealStore.isAgent"
                     >
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
@@ -718,7 +716,6 @@ const handleCreateAppeal = () => {
 };
 
 const handleChangeAppeal = () => {
-  console.log("trigger");
   appealStore.changeAppealData();
 };
 
@@ -772,6 +769,8 @@ const addCustomDoctor = () => {
     },
   };
 
+  doctorCustomPrice.rawValue = "";
+  doctorCustomPrice.formattedValue = "";
   appealStore.selectDoctors(doctor);
   doctorDropdownRef.value.closeModal();
 };
@@ -792,6 +791,8 @@ const addCustomService = () => {
     },
   };
 
+  serviceCustomPrice.rawValue = "";
+  serviceCustomPrice.formattedValue = "";
   appealStore.selectServices(service);
   serviceDropdownRef.value.closeModal();
 };

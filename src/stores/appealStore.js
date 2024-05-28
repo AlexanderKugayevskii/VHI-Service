@@ -254,7 +254,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const index = selectedDoctors.value.findIndex(
       (item) => item?.id === doctor.id
     );
-    if (index > -1) {
+    if (index > -1 && doctor.id !== null) {
       selectedDoctors.value.splice(index, 1);
     } else {
       selectedDoctors.value.push({
@@ -298,7 +298,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const index = selectedServices.value.findIndex(
       (item) => item.id === service.id
     );
-    if (index > -1) {
+    if (index > -1 && service.id !== null) {
       selectedServices.value.splice(index, 1);
     } else {
       selectedServices.value.push({
