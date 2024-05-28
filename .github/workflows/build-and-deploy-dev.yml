@@ -101,7 +101,9 @@ jobs:
         uses: hashicorp/vault-action@v2
         with:
           url: https://vault.megahertz.uz
-          token: ${{ secrets.VAULT_TOKEN }}
+          method: userpass
+          username: kh_khidoyatov
+          password: OraIRgI7cSSz
           secrets: |
               neoinsurance/data/ssh private_key | SSH_PRIVATE_KEY ;
 
