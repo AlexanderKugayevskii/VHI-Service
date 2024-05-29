@@ -74,7 +74,6 @@
               :key="col.name"
               :props="props"
               class="appeals-th"
-              :class="{ 'text-left': col.name === 'expenseAmount' }"
             >
               {{ col.label }}
             </q-th>
