@@ -24,6 +24,12 @@ function getFullClients(page, limit, search, filterQueries) {
   });
 }
 
+function getClientExcelData(contract_client_id) {
+  return api.get(`/clinics/client-excel/${contract_client_id}`, {
+    responseType: "blob",
+  });
+}
+
 function getClientInfo(id) {
   return api.get(`/clinics/clients/${id}`);
 }
@@ -35,7 +41,6 @@ function getClientByAppealId(appealId) {
 function getMedicalPrograms(id) {
   return api.get(`/clinics/limits/${id}`);
 }
-
 
 function getClientsByCode(code) {
   return api.get("/clinics/search-by-code", {
@@ -70,4 +75,5 @@ export default {
   getClientsByCode,
   getClientsByName,
   getClientsByPassport,
+  getClientExcelData,
 };

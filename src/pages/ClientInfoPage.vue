@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex body-bg">
     <div class="col page-container">
-      <DetailInfoGroup />
+      <DetailInfoGroup :contractClientId="id" />
     </div>
   </q-page>
 </template>
