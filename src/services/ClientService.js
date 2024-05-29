@@ -30,6 +30,10 @@ function getClientExcelData(contract_client_id) {
   });
 }
 
+function getClinicExcelData(clinic_id) {
+  return api.get(`/clinics/hospital-excel/${clinic_id}`);
+}
+
 function getClientInfo(id) {
   return api.get(`/clinics/clients/${id}`);
 }
@@ -76,4 +80,5 @@ export default {
   getClientsByName,
   getClientsByPassport,
   getClientExcelData,
+  getClinicExcelData,
 };

@@ -39,15 +39,15 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
-                  console.log(from.name)
+                  console.log(from.name);
                   if (from.name) {
                     next();
-                  } else if(appealStore.typeOfAppeal === 1) {
+                  } else if (appealStore.typeOfAppeal === 1) {
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
                     next();
                   } else {
-                    next({name: 'appeals-page'})
+                    next({ name: "appeals-page" });
                   }
                 },
               },
@@ -137,6 +137,11 @@ const routes = [
                 },
               },
             ],
+          },
+          {
+            path: "reports",
+            name: "reports-page",
+            component: () => import("pages/ReportsPage.vue"),
           },
         ],
       },

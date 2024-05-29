@@ -73,10 +73,15 @@
 
 <script setup>
 import usePaginate from "src/composables/usePaginate";
+import { computed } from "vue";
 import { toRef } from "vue";
 const props = defineProps({
   pagination: {
     type: Object,
+  },
+  total: {
+    type: Number,
+    required: false,
   },
 });
 const emit = defineEmits([
@@ -86,8 +91,12 @@ const emit = defineEmits([
 ]);
 
 const pagination = toRef(() => props.pagination);
+const total = toRef(() => props.total);
 
-const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(pagination);
+const { hasNextPage, hasPrevPage, paginationRange } = usePaginate(
+  pagination,
+  total
+);
 
 const increment = () => {
   emit("onIncrementPage");

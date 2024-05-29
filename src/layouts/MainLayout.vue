@@ -94,6 +94,13 @@
           >
           </RouteLink>
           <RouteLink
+            class="q-px-sm"
+            caption="Отчеты"
+            v-if="appealStore.isAgent"
+            :routeTo="Trans.i18nRoute({ name: 'reports-page' })"
+          >
+          </RouteLink>
+          <RouteLink
             v-if="appealStore.isClinic"
             class="q-px-sm"
             caption="Обращения"

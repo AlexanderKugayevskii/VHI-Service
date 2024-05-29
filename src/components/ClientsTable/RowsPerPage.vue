@@ -30,12 +30,17 @@ const props = defineProps(["pagination", "total"]);
 // const route = useRoute();
 const options = computed(() => {
   const rowsNumber = props.pagination.rowsNumber;
-  if (rowsNumber >= 25) {
-    return [10, 25, 50];
-  } else if (rowsNumber >= 10) {
-    return [10, 25];
+
+  if (rowsNumber) {
+    if (rowsNumber >= 25) {
+      return [10, 25, 50];
+    } else if (rowsNumber >= 10) {
+      return [10, 25];
+    } else {
+      return [10];
+    }
   } else {
-    return [10];
+    return [10, 25, 50];
   }
 });
 
