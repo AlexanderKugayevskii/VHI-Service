@@ -124,7 +124,7 @@ const getExcelData = async () => {
     const response = await ClientService.getClientExcelData(
       props.contractClientId
     );
-
+    console.log(`infoclient`, response);
     const fileName = `${client.value.lastname}-${client.value.name}`;
     const fileDate = dayjs().format("D-MM-YY");
 

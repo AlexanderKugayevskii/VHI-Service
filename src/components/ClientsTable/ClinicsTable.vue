@@ -96,7 +96,7 @@
               <SimpleButton
                 label="Скачать отчет"
                 custom-class="appeals-btn reports-btn"
-                @click="getExcelData(props.row.index)"
+                @click="getExcelData(props.row)"
               />
             </q-td>
           </q-tr>
@@ -131,6 +131,7 @@ import RowsPerPage from "./RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import { useI18n } from "vue-i18n";
+import dayjs from "dayjs";
 
 const { t } = useI18n();
 
@@ -208,25 +209,26 @@ const fetchClinics = async () => {
 
 const fileLoad = ref(false);
 const fileError = ref("");
-const getExcelData = async (clinicId) => {
+const getExcelData = async (row) => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getClinicExcelData(clinicId);
+    const response = await ClientService.getClinicExcelData(row.index);
 
-    const fileName = `${client.value.lastname}-${client.value.name}`;
+    const fileName = row.clinicName;
     const fileDate = dayjs().format("D-MM-YY");
-
     const blob = new Blob([response.data], { type: response.data.type });
+    console.log(`clinic table`, response);
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `${fileName}_${fileDate}.xlsx`);
+    link.setAttribute("download", `${fileName}-${fileDate}.xlsx`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   } catch (e) {
+    console.error(e);
     fileError.value = `Ошибка при скачивании файла`;
   } finally {
     fileLoad.value = false;

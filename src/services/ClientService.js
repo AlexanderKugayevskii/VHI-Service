@@ -31,7 +31,9 @@ function getClientExcelData(contract_client_id) {
 }
 
 function getClinicExcelData(clinic_id) {
-  return api.get(`/clinics/hospital-excel/${clinic_id}`);
+  return api.get(`/clinics/hospital-excel/${clinic_id}`, {
+    responseType: "blob",
+  });
 }
 
 function getClientInfo(id) {
