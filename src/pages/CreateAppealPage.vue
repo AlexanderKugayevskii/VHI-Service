@@ -750,7 +750,8 @@ const hideModal = () => {
   appealStore.clearClinicData();
   appealStore.setClient(null);
 
-  router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  router.go(-1);
   createAppealModalRef.value.hide();
 };
 

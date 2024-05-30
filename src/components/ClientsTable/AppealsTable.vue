@@ -347,7 +347,7 @@ const openAppealPage = async (client) => {
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
-  router.replace(
+  router.push(
     Trans.i18nRoute({
       name: "createAppeal",
       params: { id: appealStore.client.contractClientId },
@@ -367,7 +367,7 @@ const openAppealLimit = async (client) => {
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
-  router.replace(
+  router.push(
     Trans.i18nRoute({
       name: "createAppealLimit",
       params: { id: appealStore.client.contractClientId },
@@ -424,7 +424,6 @@ onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>
-
 .appeal-link {
   font-size: 14px;
   line-height: 20px;
@@ -503,6 +502,4 @@ tr.clickable {
 .filter-item {
   padding-bottom: 20px;
 }
-
-
 </style>

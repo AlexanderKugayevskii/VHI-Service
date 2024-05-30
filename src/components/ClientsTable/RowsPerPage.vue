@@ -16,7 +16,7 @@
       </button>
     </div>
     <div class="table-total">
-      Общее: <span class="">{{ total }}</span>
+      Общее: <span class="">{{ pagination.rowsNumber ?? total }}</span>
     </div>
   </div>
 </template>

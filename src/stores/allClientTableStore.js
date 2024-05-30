@@ -150,7 +150,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
       setClientInfo(data);
-
     } catch (e) {
       console.error(e);
     } finally {
@@ -170,8 +169,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
           spent: Number(limit.spent),
         };
       });
-
-      
     } catch (e) {
       console.error(e);
     }
