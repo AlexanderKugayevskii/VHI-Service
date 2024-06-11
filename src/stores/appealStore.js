@@ -65,6 +65,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setTypeOfAppeal = (type) => {
     typeOfAppeal.value = TYPE_OF_APPEALS[type];
+    SessionStorage.set("typeOfAppeal", typeOfAppeal.value);
   };
 
   const setClient = (item) => {
@@ -119,7 +120,7 @@ export const useAppealStore = defineStore("appeal", () => {
         id: doctor.id,
         status: doctor.pivot.status ?? 0,
         progress: doctor.pivot.progress ?? 0,
-        quantity: doctor.pivot.quantity ?? 1,
+        quntity: doctor.pivot.quantity ?? 1,
         program_item_id: doctor.pivot.program_item_id ?? 0,
       };
       if (doctorData.id === null) {
@@ -186,7 +187,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
-        return acc + Number(curr.pivot.price) * Number(curr.pivot.quantity);
+        return (
+          acc + parseFloat(curr.pivot.price) * parseFloat(curr.pivot.quantity)
+        );
       }
       return acc;
     }, 0);
@@ -197,7 +200,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
-        return acc + Number(curr.pivot.price);
+        return (
+          acc + parseFloat(curr.pivot.price) * parseFloat(curr.pivot.quantity)
+        );
       }
       return acc;
     }, 0);
@@ -506,6 +511,7 @@ export const useAppealStore = defineStore("appeal", () => {
       is_hospital: false,
       drugstore_id: selectedDrugstore.value.id,
       drugs: drugsData,
+      applied_date: appealDate.value,
     };
 
     appendFormData(formData, payload);
@@ -523,7 +529,14 @@ export const useAppealStore = defineStore("appeal", () => {
       ) {
         client.value.appealId = data.id;
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+
         setSuccessAppeal(true);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно создано!",
+          position: "bottom-left",
+        });
         // clearAppealData();
       }
     } catch (e) {
@@ -542,6 +555,7 @@ export const useAppealStore = defineStore("appeal", () => {
       client_id: client.value.clientId,
       drugstore_id: selectedDrugstore.value.id,
       drugs: allDrugsStatus.value,
+      applied_date: appealDate.value,
     };
 
     // appendFormData(formData, payload);
@@ -561,6 +575,11 @@ export const useAppealStore = defineStore("appeal", () => {
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно изменено!",
+        });
       }
     } catch (e) {
       console.error(e);
@@ -586,6 +605,7 @@ export const useAppealStore = defineStore("appeal", () => {
       }
       return serviceData;
     });
+
     const doctors = selectedDoctors.value.map((doctor) => {
       const doctorData = {
         quantity: doctor.pivot.quantity,
@@ -600,6 +620,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       return doctorData;
     });
+
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
@@ -827,12 +848,14 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-
+      console.log(data);
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
       client.value.appealStatus = data.status;
-
       selectedDrugstore.value = data.drugstore;
+
+      const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
+      appealDate.value = `${ad3}-${ad2}-${ad1}`;
 
       filterItems(
         data.drugs,
@@ -846,7 +869,7 @@ export const useAppealStore = defineStore("appeal", () => {
           ...drug,
           pivot: {
             ...drug.pivot,
-            price: Number(drug.pivot.price.match(/\d+/)[0]),
+            price: parseFloat(drug.pivot.price.match(/\d+/)[0]),
           },
         };
       });
@@ -855,7 +878,7 @@ export const useAppealStore = defineStore("appeal", () => {
           ...drug,
           pivot: {
             ...drug.pivot,
-            price: Number(drug.pivot.price.match(/\d+/)[0]),
+            price: parseFloat(drug.pivot.price.match(/\d+/)[0]),
           },
         };
       });
@@ -952,12 +975,21 @@ export const useAppealStore = defineStore("appeal", () => {
 
     drugs = drugs.map((drug) => {
       if (selectedItem.item.id === drug.id) {
+        const limit = {
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
+        };
+
         return {
           ...drug,
           pivot: {
             ...drug.pivot,
             status: selectedItem.status ?? drug.pivot.status,
             progress: selectedItem.progress ?? drug.pivot.progress,
+            quantity: selectedItem.quantity ?? drug.pivot.quantity,
+            program_item_id:
+              limit.id === service.pivot.limit?.id ? 0 : limit.id,
+            limit: limit.id === service.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
         };
@@ -1008,6 +1040,7 @@ export const useAppealStore = defineStore("appeal", () => {
           status: 1,
         };
       });
+
       finishedAppeal.value = true;
     } else {
       selectedDoctors.value = [...copyDoctors.value];

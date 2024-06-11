@@ -2,6 +2,7 @@ import Trans from "src/i18n/translation";
 import { RouterView } from "vue-router";
 import { useAuthStore } from "src/stores/authStore";
 import { useAppealStore } from "src/stores/appealStore";
+import { SessionStorage } from "quasar";
 
 const routes = [
   {
@@ -39,10 +40,13 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
-                  console.log(from.name);
+                  const appealType =
+                    SessionStorage.getItem("typeOfAppeal") ||
+                    appealStore.typeOfAppeal;
+
                   if (from.name) {
                     next();
-                  } else if (appealStore.typeOfAppeal === 1) {
+                  } else if (appealType === 1) {
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
                     next();
@@ -101,12 +105,17 @@ const routes = [
                 component: () => import("pages/CreateDrugAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const appealType =
+                    SessionStorage.getItem("typeOfAppeal") ||
+                    appealStore.typeOfAppeal;
+
                   if (from.name) {
                     next();
-                  } else {
+                  } else if (appealType === 1) {
                     await appealStore.fetchApplicantDrugData();
-
                     next();
+                  } else {
+                    next({ name: "drugstore-page" });
                   }
                 },
               },

@@ -73,6 +73,7 @@
       </q-icon>
     </button>
     <SimpleInput
+      v-if="hasQuantity"
       :disableInput="disableQuantity"
       wrapper-style="padding: 10px 16px"
       style="width: 10ch"
@@ -113,6 +114,10 @@ const props = defineProps({
   disableQuantity: {
     type: Boolean,
     default: false,
+  },
+  hasQuantity: {
+    type: Boolean,
+    default: true,
   },
 });
 

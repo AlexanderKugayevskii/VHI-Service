@@ -16,6 +16,7 @@
             {{ $t("create_appeal.title") }}
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
+
           <StatusBar
             :status="clientData.appealStatus"
             :label="true"
@@ -47,6 +48,7 @@
                       >Родственник: <b>{{ clientData.clientName }} </b></span
                     > -->
                 </div>
+
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
                     <q-icon size="20px">
@@ -119,6 +121,16 @@
                             ></UploadImage>
                           </div>
                           <div class="tab-body">
+                            <div class="q-mb-sm">
+                              <DateInput
+                                number
+                                label="Дата обращения"
+                                placeholder="Введите дату (10-05-2024)"
+                                @update:model-value="appealStore.setAppealDate"
+                                :modelValue="appealStore.appealDate"
+                              ></DateInput>
+                            </div>
+
                             <div class="drugstore-form q-mb-sm">
                               <DropdownSelectNew
                                 ref="drugstoreDropdownRef"
@@ -180,6 +192,7 @@
                             </div>
 
                             <SelectListItem
+                              :hasQuantity="false"
                               v-for="drug in appealStore.selectedDrugs"
                               :item="drug"
                               :key="drug.id"
@@ -322,6 +335,18 @@
                       customClass="btn-cancel"
                       @click="hideModal"
                     ></SimpleButton>
+                    <div
+                      class="create-appeal-done-action"
+                      v-if="appealStore.isAgent"
+                    >
+                      <SimpleCheckbox
+                        @change="handleAppealDoneCheckbox"
+                        :checked="appealDoneCheckbox"
+                        :disabled="appealDoneCheckbox"
+                      >
+                      </SimpleCheckbox>
+                      <span>Сделать завершенным</span>
+                    </div>
                   </div>
                   <div
                     class="create-appeal-action-expences"
@@ -422,11 +447,12 @@ import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import UploadImage from "src/components/Shared/UploadImage.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import SelectedItem from "src/components/Shared/SelectedItem.vue";
+import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
+import DateInput from "src/components/Shared/DateInput.vue";
 
 import { ref, computed, watch, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -486,7 +512,7 @@ const handleAddCustomDrug = () => {
     id: null,
   };
   drugstoreDropdownRef.value.closeModal();
-}; 
+};
 
 const handleAddDrugData = () => {
   const drugData = {
@@ -518,6 +544,13 @@ const handleStatusDrugs = (item, isSuggested) => {
 const handleRemoveItem = (item) => {
   appealStore.removeDrug(item);
 };
+
+const appealDoneCheckbox = ref(false);
+const handleAppealDoneCheckbox = () => {
+  appealDoneCheckbox.value = !appealDoneCheckbox.value;
+  appealStore.makeAppealDone(appealDoneCheckbox.value);
+};
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -740,5 +773,16 @@ watch(
   font-size: 40px;
   color: hsla(221, 27%, 34%, 0.158);
   user-select: none;
+}
+
+.create-appeal-done-action {
+  margin-left: 16px;
+  span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 </style>

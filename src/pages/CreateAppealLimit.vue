@@ -448,6 +448,7 @@
 <script setup>
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
+import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, watch } from "vue";

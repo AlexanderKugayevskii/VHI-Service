@@ -14,6 +14,7 @@ export const useAuthStore = defineStore("auth", () => {
   //   const { t } = useI18n();
   //actions
   const setUser = (payload) => {
+    console.log(payload);
     user.value = payload.user;
     token.value = payload.token;
 
@@ -61,6 +62,7 @@ export const useAuthStore = defineStore("auth", () => {
         message: "Вы успешно вошли!",
         position: "bottom",
       });
+
       return true;
     } catch (error) {
       Notify.create({
