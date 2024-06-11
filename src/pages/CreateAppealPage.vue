@@ -762,6 +762,7 @@ const handleDoctorCustomPrice = (value) => {
     " "
   );
 };
+
 const addCustomDoctor = () => {
   const doctor = {
     name: doctorDropdownRef.value.searchValue,

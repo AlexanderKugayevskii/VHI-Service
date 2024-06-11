@@ -166,7 +166,8 @@
                                 label="Цена"
                                 placeholder="0"
                                 number
-                                v-model:model-value="drugPrice"
+                                @update:model-value="handleDrugPrice"
+                                :model-value="drugPrice.formattedValue"
                               ></SimpleInput>
                               <SimpleButton
                                 label="Добавить"
@@ -427,7 +428,7 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
@@ -453,13 +454,20 @@ const createAppealModalRef = ref(null);
 
 const selectedDrug = ref(null);
 const drugAmount = ref(null);
-const drugPrice = ref(null);
+const drugPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
 
 const disableAddButton = computed(
-  () => !selectedDrug.value || !drugAmount.value || !drugPrice.value
+  () => !selectedDrug.value || !drugAmount.value || !drugPrice.rawValue
 );
 
 const handleSelectDrug = (drug) => (selectedDrug.value = drug);
+const handleDrugPrice = (value) => {
+  drugPrice.rawValue = value;
+  drugPrice.formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 
 const handleCreateAppeal = () => {
   appealStore.postAppealDrugData();
@@ -478,20 +486,21 @@ const handleAddCustomDrug = () => {
     id: null,
   };
   drugstoreDropdownRef.value.closeModal();
-};
+}; 
 
 const handleAddDrugData = () => {
   const drugData = {
     id: selectedDrug.value.id,
     name: selectedDrug.value.name,
     quantity: +drugAmount.value,
-    price: +drugPrice.value,
+    price: parseFloat(drugPrice.rawValue),
   };
 
   appealStore.selectDrugs(drugData);
   selectedDrug.value = null;
   drugAmount.value = null;
-  drugPrice.value = null;
+  drugPrice.rawValue = null;
+  drugPrice.formattedValue = null;
 };
 
 const handleImage = (image) => {

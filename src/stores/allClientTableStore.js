@@ -175,6 +175,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const applicationsRows = computed(() => {
+    console.log(clientInfo.value.applications);
     return clientInfo.value.applications.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
@@ -185,7 +186,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         clientLastname: clientInfo.value.client.lastname,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
-        clinicName: row.hospital.name,
+        clinicName: row.hospital?.name,
         doctorName: doctors,
         serviceName: services,
         diagnosisName: row.diagnosis ?? "",
