@@ -81,6 +81,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const loading = ref(true);
   const users = ref([]);
+  const medicalLimits = ref([]);
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
@@ -149,11 +150,27 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
       setClientInfo(data);
-      console.log(data);
     } catch (e) {
       console.error(e);
     } finally {
       loading.value = false;
+    }
+  };
+
+  const fetchMedicalPrograms = async (id) => {
+    try {
+      const response = await ClientService.getMedicalPrograms(id);
+      const data = response.data;
+      medicalLimits.value = data.data;
+
+      medicalLimits.value = medicalLimits.value.map((limit) => {
+        return {
+          ...limit,
+          spent: Number(limit.spent),
+        };
+      });
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -193,6 +210,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     handleRequest,
     clientInfo,
     getClientInfo,
+    fetchMedicalPrograms,
     applicationsRows,
+    medicalLimits,
   };
 });

@@ -27,9 +27,9 @@
     </div>
     <div
       class="status-item status-done clickable"
-      @click="() => isAgent && handleChangeProgress(1)"
       v-if="progress === 2"
-    >
+      >
+      <!-- @click="() => isAgent && handleChangeProgress(1)" -->
       Подтверждено
     </div>
   </div>

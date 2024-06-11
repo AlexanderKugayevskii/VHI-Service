@@ -15,6 +15,9 @@
         {{ option }}
       </button>
     </div>
+    <div class="table-total">
+      Общее: <span class="">{{ pagination.rowsNumber ?? total }}</span>
+    </div>
   </div>
 </template>
 
@@ -22,17 +25,22 @@
 import { ref, defineEmits, computed } from "vue";
 import { useRoute } from "vue-router";
 const emit = defineEmits(["choiceOption"]);
-const props = defineProps(["pagination"]);
+const props = defineProps(["pagination", "total"]);
 
 // const route = useRoute();
 const options = computed(() => {
   const rowsNumber = props.pagination.rowsNumber;
-  if (rowsNumber >= 25) {
-    return [10, 25, 50];
-  } else if (rowsNumber >= 10) {
-    return [10, 25];
+
+  if (rowsNumber) {
+    if (rowsNumber >= 25) {
+      return [10, 25, 50];
+    } else if (rowsNumber >= 10) {
+      return [10, 25];
+    } else {
+      return [10];
+    }
   } else {
-    return [10];
+    return [10, 25, 50];
   }
 });
 
@@ -76,5 +84,18 @@ const handleChoice = (option) => {
 }
 .option-button--active {
   background-color: #e3e8f0;
+}
+
+.table-total {
+  color: #a0aabc;
+  font-weight: 400;
+  line-height: 20px;
+
+  span {
+    color: #404f6f;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background-color: #e3e8f0;
+  }
 }
 </style>

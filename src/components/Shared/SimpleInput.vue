@@ -9,6 +9,7 @@
         :style="wrapperStyle"
       >
         <input
+          :disabled="disableInput"
           :type="type"
           :placeholder="placeholder"
           class="input-field__text-input"
@@ -81,6 +82,10 @@ const props = defineProps({
   },
   isError: {
     type: [Boolean, String],
+    default: false,
+  },
+  disableInput: {
+    type: Boolean,
     default: false,
   },
 });

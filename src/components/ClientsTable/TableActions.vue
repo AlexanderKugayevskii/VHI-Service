@@ -161,7 +161,6 @@ onMounted(() => {
     showDropdown.value = false;
   });
 
-  console.log(expandedOptions.value);
 });
 </script>
 

@@ -82,10 +82,10 @@
           </q-td>
           <q-td key="clientName" :props="props" class="appeals-td">
             <a class="appeal-link">
-              {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+              {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
             </a>
             <TableTooltip>
-              {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
+              {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
             </TableTooltip>
           </q-td>
           <q-td key="clientType" :props="props" class="appeals-td">

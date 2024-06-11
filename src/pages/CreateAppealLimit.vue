@@ -116,6 +116,7 @@
                               :isAgent="appealStore.isAgent"
                               :showProgressSwitcher="false"
                               :allow-handle-status="false"
+                              :disableQuantity="true"
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -128,24 +129,25 @@
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
-                                  :options="[
-                                    { id: 1, name: 'first' },
-                                    { id: 2, name: 'second' },
-                                    { id: 3, name: 'thirds' },
-                                  ]"
-                                  :selected-options="testRef"
+                                  :options="appealStore.medicalLimits"
+                                  :selected-options="doctor.pivot.limit"
                                   @select-option="
-                                    (item) => selectTestRef(item, doctor)
+                                    (item) =>
+                                      selectLimitDoctor(item, doctor, false)
                                   "
                                 >
-                                  <template #placeholder> Лимит </template>
+                                  <template #placeholder
+                                    >Выберите лимит</template
+                                  >
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
-                                    <div>{{ props.option.name }}</div>
+                                    <div style="font-size: 15px">
+                                      {{ props.option.name }}
+                                    </div>
                                   </template>
                                   <template v-slot:option-content="props">
-                                    <div>
+                                    <div style="font-size: 15px">
                                       <span>
                                         {{ props.option.name }}
                                       </span>
@@ -175,12 +177,44 @@
                                 :isAgent="appealStore.isAgent"
                                 :showProgressSwitcher="false"
                                 :allow-handle-status="false"
+                                :disableQuantity="true"
                               >
                                 <template #label>
                                   {{ doctor.name }}
                                 </template>
                                 <template #price>
                                   {{ formatPrice(Number(doctor.pivot.price)) }}
+                                </template>
+                                <template #dropdown>
+                                  <DropdownSelectNew
+                                    dense
+                                    style="min-width: 300px"
+                                    :searchInput="false"
+                                    :options="appealStore.medicalLimits"
+                                    :selected-options="doctor.pivot.limit"
+                                    @select-option="
+                                      (item) =>
+                                        selectLimitDoctor(item, doctor, true)
+                                    "
+                                  >
+                                    <template #placeholder
+                                      >Выберите лимит</template
+                                    >
+                                    <template
+                                      v-slot:selected-options-once="props"
+                                    >
+                                      <div style="font-size: 15px">
+                                        {{ props.option.name }}
+                                      </div>
+                                    </template>
+                                    <template v-slot:option-content="props">
+                                      <div style="font-size: 15px">
+                                        <span>
+                                          {{ props.option.name }}
+                                        </span>
+                                      </div>
+                                    </template>
+                                  </DropdownSelectNew>
                                 </template>
                               </SelectListItem>
                             </div>
@@ -198,12 +232,44 @@
                               :isAgent="appealStore.isAgent"
                               :showProgressSwitcher="false"
                               :allow-handle-status="false"
+                              :disableQuantity="true"
                             >
                               <template #label>
                                 {{ service.name }}
                               </template>
                               <template #price>
                                 {{ formatPrice(Number(service.pivot.price)) }}
+                              </template>
+                              <template #dropdown>
+                                <DropdownSelectNew
+                                  dense
+                                  style="min-width: 300px"
+                                  :searchInput="false"
+                                  :options="appealStore.medicalLimits"
+                                  :selected-options="service.pivot.limit"
+                                  @select-option="
+                                    (item) =>
+                                      selectLimitService(item, service, false)
+                                  "
+                                >
+                                  <template #placeholder
+                                    >Выберите лимит</template
+                                  >
+                                  <template
+                                    v-slot:selected-options-once="props"
+                                  >
+                                    <div style="font-size: 15px">
+                                      {{ props.option.name }}
+                                    </div>
+                                  </template>
+                                  <template v-slot:option-content="props">
+                                    <div style="font-size: 15px">
+                                      <span>
+                                        {{ props.option.name }}
+                                      </span>
+                                    </div>
+                                  </template>
+                                </DropdownSelectNew>
                               </template>
                             </SelectListItem>
 
@@ -228,12 +294,44 @@
                                 :isAgent="appealStore.isAgent"
                                 :showProgressSwitcher="false"
                                 :allow-handle-status="false"
+                                :disableQuantity="true"
                               >
                                 <template #label>
                                   {{ service.name }}
                                 </template>
                                 <template #price>
                                   {{ formatPrice(Number(service.pivot.price)) }}
+                                </template>
+                                <template #dropdown>
+                                  <DropdownSelectNew
+                                    dense
+                                    style="min-width: 300px"
+                                    :searchInput="false"
+                                    :options="appealStore.medicalLimits"
+                                    :selected-options="service.pivot.limit"
+                                    @select-option="
+                                      (item) =>
+                                        selectLimitService(item, service, true)
+                                    "
+                                  >
+                                    <template #placeholder
+                                      >Выберите лимит</template
+                                    >
+                                    <template
+                                      v-slot:selected-options-once="props"
+                                    >
+                                      <div style="font-size: 15px">
+                                        {{ props.option.name }}
+                                      </div>
+                                    </template>
+                                    <template v-slot:option-content="props">
+                                      <div style="font-size: 15px">
+                                        <span>
+                                          {{ props.option.name }}
+                                        </span>
+                                      </div>
+                                    </template>
+                                  </DropdownSelectNew>
                                 </template>
                               </SelectListItem>
                             </div>
@@ -286,10 +384,6 @@
                     <span class="create-appeal-action-expences-total">{{
                       formatPrice(appealStore.appealTotalConsumption)
                     }}</span>
-
-                    {{ testRef }}
-                    ---
-                    {{ testDoctor?.name }}
                   </div>
                 </div>
               </div>
@@ -306,7 +400,7 @@
                       </div>
                       <div class="create-appeal-client-limits">
                         <DetailCard
-                          v-for="limit in medicalLimits"
+                          v-for="limit in calculateLimits"
                           :key="limit.id"
                           :rate="limit"
                         ></DetailCard>
@@ -365,19 +459,15 @@ import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 
-const testRef = ref(null);
-const testDoctor = ref(null);
-
-const selectTestRef = (item, doctor) => {
-  testRef.value = item;
-  testDoctor.value = doctor;
-};
-
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
 
-const { client: clientData, medicalLimits } = storeToRefs(appealStore);
+const {
+  client: clientData,
+  medicalLimits,
+  calculateLimits,
+} = storeToRefs(appealStore);
 
 const createAppealModalFixed = ref(true);
 const router = useRouter();
@@ -407,7 +497,24 @@ const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearClinicData();
-  router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  router.go(-1);
+};
+
+const selectLimitDoctor = (item, doctor, isSuggested) => {
+  appealStore.changeStatusDoctor(
+    { medical_program: item, item: doctor },
+    isSuggested
+  );
+};
+const selectLimitService = (item, service, isSuggested) => {
+  appealStore.changeStatusService(
+    {
+      medical_program: item,
+      item: service,
+    },
+    isSuggested
+  );
 };
 </script>
 

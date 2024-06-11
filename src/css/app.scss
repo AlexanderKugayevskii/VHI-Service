@@ -291,6 +291,10 @@ button[class^="btn"] {
   padding: 0 32px;
   font-weight: 500;
   cursor: pointer;
+
+  &_negative {
+    background-color: var(--q-negative);
+  }
 }
 
 .appeal-content {

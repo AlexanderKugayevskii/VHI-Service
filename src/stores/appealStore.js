@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
 import { useAuthStore } from "./authStore";
@@ -77,6 +77,29 @@ export const useAppealStore = defineStore("appeal", () => {
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
 
+  const calculateLimits = computed(() => {
+    const allData = [
+      ...selectedDoctors.value,
+      ...suggestedDoctors.value,
+      ...selectedServices.value,
+      ...suggestedServices.value,
+    ];
+    return medicalLimits.value.map((limit) => {
+      const findItemsSumm = allData.reduce((acc, curr) => {
+        if (curr.pivot.program_item_id === limit.id) {
+          return acc + parseFloat(curr.pivot.price) * curr.pivot.quantity;
+        }
+        return acc;
+      }, 0);
+
+      return {
+        ...limit,
+        spent:
+          limit.spent - allMedicalLimitsSumm.value[limit.name] + findItemsSumm,
+      };
+    });
+  });
+
   const setDiagnosis = (value) => {
     diagnosis.value = value;
   };
@@ -90,16 +113,22 @@ export const useAppealStore = defineStore("appeal", () => {
   const doctors = ref([]);
   const selectedDoctors = ref([]);
   const suggestedDoctors = ref([]);
-  const allDoctorsStatus = computed(
-    () =>
-      selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
-        return {
-          id: doctor.id,
-          status: doctor.pivot.status ?? 0,
-          progress: doctor.pivot.progress ?? 0,
-          quantity: doctor.pivot.quantity ?? 1,
-        };
-      })``
+  const allDoctorsStatus = computed(() =>
+    selectedDoctors.value.concat(suggestedDoctors.value).map((doctor) => {
+      const doctorData = {
+        id: doctor.id,
+        status: doctor.pivot.status ?? 0,
+        progress: doctor.pivot.progress ?? 0,
+        quantity: doctor.pivot.quantity ?? 1,
+        program_item_id: doctor.pivot.program_item_id ?? 0,
+      };
+      if (doctorData.id === null) {
+        doctorData.name = doctor.name;
+        doctorData.price = doctor.pivot.price;
+      }
+
+      return doctorData;
+    })
   );
 
   const services = ref([]);
@@ -107,14 +136,24 @@ export const useAppealStore = defineStore("appeal", () => {
   const suggestedServices = ref([]);
   const allServicesStatus = computed(() =>
     selectedServices.value.concat(suggestedServices.value).map((service) => {
-      return {
+      const serviceData = {
         id: service.id,
         status: service.pivot.status ?? 0,
         progress: service.pivot.progress ?? 0,
         quantity: service.pivot.quantity ?? 1,
+        program_item_id: service.pivot.program_item_id ?? 0,
       };
+
+      if (serviceData.id === null) {
+        serviceData.name = service.name;
+        serviceData.price = service.pivot.price;
+      }
+
+      return serviceData;
     })
   );
+
+  const allMedicalLimitsSumm = ref(null);
 
   const drugAppealImage = ref({});
   const drugs = ref([]);
@@ -169,6 +208,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const selectClinic = (clinic) => {
     selectedClinic.value = clinic;
+
     clearAppealData();
   };
 
@@ -192,7 +232,9 @@ export const useAppealStore = defineStore("appeal", () => {
     return selectedDoctors.value.some((item) => {
       if (doctor.id === item.id) {
         return (
-          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
           (item.pivot.status !== 0 && !isAgent.value)
         );
       }
@@ -214,18 +256,44 @@ export const useAppealStore = defineStore("appeal", () => {
     const index = selectedDoctors.value.findIndex(
       (item) => item?.id === doctor.id
     );
-    if (index > -1) {
+    if (index > -1 && doctor.id !== null) {
       selectedDoctors.value.splice(index, 1);
     } else {
-      selectedDoctors.value.push({
+      if (finishedAppeal.value) {
+        selectedDoctors.value.push({
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            status: 1,
+            progress: 2,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      } else {
+        selectedDoctors.value.push({
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            status: 0,
+            progress: 0,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      }
+
+      copyDoctors.value.push({
         ...doctor,
         pivot: {
           ...doctor.pivot,
           status: 0,
           progress: 0,
           quantity: 1,
+          program_item_id: 0,
         },
-        isNew: true,
       });
     }
   };
@@ -239,7 +307,9 @@ export const useAppealStore = defineStore("appeal", () => {
     return selectedServices.value.some((item) => {
       if (service.id === item.id) {
         return (
-          (item.pivot.progress >= 1 && isAgent.value) ||
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
           (item.pivot.status !== 0 && !isAgent.value)
         );
       }
@@ -257,18 +327,43 @@ export const useAppealStore = defineStore("appeal", () => {
     const index = selectedServices.value.findIndex(
       (item) => item.id === service.id
     );
-    if (index > -1) {
+    if (index > -1 && service.id !== null) {
       selectedServices.value.splice(index, 1);
     } else {
-      selectedServices.value.push({
+      if (finishedAppeal.value) {
+        selectedServices.value.push({
+          ...service,
+          pivot: {
+            ...service.pivot,
+            status: 1,
+            progress: 2,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      } else {
+        selectedServices.value.push({
+          ...service,
+          pivot: {
+            ...service.pivot,
+            status: 0,
+            progress: 0,
+            quantity: 1,
+            program_item_id: 0,
+          },
+          isNew: true,
+        });
+      }
+      copyServices.value.push({
         ...service,
         pivot: {
           ...service.pivot,
           status: 0,
           progress: 0,
           quantity: 1,
+          program_item_id: 0,
         },
-        isNew: true,
       });
     }
   };
@@ -302,9 +397,16 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDoctors.value = [];
     suggestedServices.value = [];
 
+    copyDoctors.value = [];
+    copyServices.value = [];
+
     selectedDrugs.value = [];
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
+
+    // hasWatched.value = false;
+
+    // client.value = null;
   };
   const clearClinicData = () => {
     selectedClinic.value = null;
@@ -330,8 +432,6 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.getDrugs(name);
       drugs.value = response.data.data;
-
-      console.log(drugs.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -473,16 +573,32 @@ export const useAppealStore = defineStore("appeal", () => {
     loading.value = true;
 
     const services = selectedServices.value.map((service) => {
-      return {
+      const serviceData = {
         quantity: service.pivot.quantity,
+        status: service.pivot.status,
+        progress: service.pivot.progress,
         id: service.id,
       };
+
+      if (serviceData.id === null) {
+        serviceData.name = service.name;
+        serviceData.price = service.pivot.price;
+      }
+      return serviceData;
     });
     const doctors = selectedDoctors.value.map((doctor) => {
-      return {
+      const doctorData = {
         quantity: doctor.pivot.quantity,
+        status: doctor.pivot.status,
+        progress: doctor.pivot.progress,
         id: doctor.id,
       };
+      if (doctorData.id === null) {
+        doctorData.name = doctor.name;
+        doctorData.price = doctor.pivot.price;
+      }
+
+      return doctorData;
     });
     const payload = {
       hospital_id: selectedClinic.value.id,
@@ -494,11 +610,12 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors,
       diagnosis: diagnosis.value,
       applied_date: appealDate.value,
+      finished: finishedAppeal.value,
     };
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       const data = response.data.data;
-      console.log(data);
+
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -560,6 +677,34 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const fetchMedicalPrograms = async () => {
+    loading.value = true;
+    const localClient = SessionStorage.getItem("client");
+    client.value = localClient;
+
+    const currentClient = localClient ? localClient : client.value;
+    try {
+      const response = await ClientService.getMedicalPrograms(
+        currentClient.contractClientId
+      );
+      const data = response.data;
+      medicalLimits.value = data.data;
+
+      medicalLimits.value = medicalLimits.value.map((limit) => {
+        return {
+          ...limit,
+          spent: parseFloat(limit.spent),
+          originalSpent: parseFloat(limit.spent),
+        };
+      });
+
+      loading.value = false;
+      console.log(`MEDICAL PROGRAMS`, medicalLimits.value);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const fetchApplicantData = async () => {
     setTypeOfAppeal("CHANGE");
     loading.value = true;
@@ -573,16 +718,12 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      console.log(data);
+
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
       // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
-      medicalProgram.value = data.contract_client.program;
-      medicalLimits.value = data.contract_client.program.medical_program_items;
-
-      console.log(medicalLimits.value);
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -601,14 +742,72 @@ export const useAppealStore = defineStore("appeal", () => {
         isClinic.value
       );
 
-      // filterItems(
-      //   data.drugs,
-      // )
-      console.log(`Suggested by other`, suggestedDoctors.value);
-      console.log(`Selected by owner`, selectedDoctors.value);
-      console.log("-------------------------------------");
-      console.log(`Suggested by other`, suggestedServices.value);
-      console.log(`Selected by owner`, selectedServices.value);
+      selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === doctor.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === doctor.pivot.program_item_id;
+
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
+      selectedServices.value = selectedServices.value.map((service) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === service.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === service.pivot.program_item_id;
+
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
+      const all = [
+        ...selectedDoctors.value,
+        ...suggestedDoctors.value,
+        ...selectedServices.value,
+        ...suggestedServices.value,
+      ];
+
+      allMedicalLimitsSumm.value = medicalLimits.value.reduce((acc, curr) => {
+        const summ = all.reduce((a, c) => {
+          if (curr.id === c.pivot.program_item_id) {
+            return a + parseFloat(c.pivot.price) * c.pivot.quantity;
+          }
+          return a;
+        }, 0);
+
+        if (acc[curr.name]) {
+          acc[curr.name] += summ;
+        } else {
+          acc[curr.name] = summ;
+        }
+
+        return acc;
+      }, {});
+
+      copyDoctors.value = [...selectedDoctors.value];
+      copyServices.value = [...selectedServices.value];
     } catch (e) {
       console.error(e);
     } finally {
@@ -664,10 +863,6 @@ export const useAppealStore = defineStore("appeal", () => {
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
-
-      console.log(drugAppealImage.value);
-      console.log(`Suggested by other`, suggestedDrugs.value);
-      console.log(`Selected by owner`, selectedDrugs.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -690,6 +885,10 @@ export const useAppealStore = defineStore("appeal", () => {
     let doctors = isSuggested ? suggestedDoctors.value : selectedDoctors.value;
     doctors = doctors.map((doctor) => {
       if (selectedItem.item.id === doctor.id) {
+        const limit = {
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
+        };
         return {
           ...doctor,
           pivot: {
@@ -697,6 +896,8 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? doctor.pivot.status,
             progress: selectedItem.progress ?? doctor.pivot.progress,
             quantity: selectedItem.quantity ?? doctor.pivot.quantity,
+            program_item_id: limit.id === doctor.pivot.limit?.id ? 0 : limit.id,
+            limit: limit.id === doctor.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
         };
@@ -717,6 +918,11 @@ export const useAppealStore = defineStore("appeal", () => {
       : selectedServices.value;
     services = services.map((service) => {
       if (selectedItem.item.id === service.id) {
+        const limit = {
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
+        };
+
         return {
           ...service,
           pivot: {
@@ -724,6 +930,9 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? service.pivot.status,
             progress: selectedItem.progress ?? service.pivot.progress,
             quantity: selectedItem.quantity ?? service.pivot.quantity,
+            program_item_id:
+              limit.id === service.pivot.limit?.id ? 0 : limit.id,
+            limit: limit.id === service.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
         };
@@ -762,10 +971,49 @@ export const useAppealStore = defineStore("appeal", () => {
       selectedDrugs.value = drugs;
     }
   };
+
   const clearDrugs = (drug) => {
     drugsData.drugs = drugsData.drugs.filter((item) => {
       return drug.id !== item.id;
     });
+  };
+
+  //temporary logic for create old appeal
+  const copyDoctors = ref([]);
+  const copyServices = ref([]);
+  const finishedAppeal = ref(false);
+
+  const makeAppealDone = (done) => {
+    if (done) {
+      selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+
+      selectedServices.value = selectedServices.value.map((service) => {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+      finishedAppeal.value = true;
+    } else {
+      selectedDoctors.value = [...copyDoctors.value];
+      selectedServices.value = [...copyServices.value];
+      finishedAppeal.value = false;
+    }
   };
 
   return {
@@ -798,6 +1046,7 @@ export const useAppealStore = defineStore("appeal", () => {
     fetchDrugstores,
     fetchHospitalData,
     fetchApplicantData,
+    fetchMedicalPrograms,
     selectClinic,
     selectDoctors,
     selectServices,
@@ -837,5 +1086,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     medicalProgram,
     medicalLimits,
+
+    makeAppealDone,
+    finishedAppeal,
+    calculateLimits,
   };
 });

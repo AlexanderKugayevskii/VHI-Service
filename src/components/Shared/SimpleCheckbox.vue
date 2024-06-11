@@ -12,6 +12,7 @@
         :name="name"
         :value="item"
         :checked="checked"
+        :disabled="disabled"
         @change="emitChange"
       />
       <q-icon size="16px" class="check-icon" v-if="checked">
@@ -31,6 +32,7 @@
           />
         </svg>
       </q-icon>
+      <slot name="text"></slot>
     </label>
   </div>
 </template>
@@ -44,6 +46,9 @@ const props = defineProps({
     type: String,
   },
   checked: {
+    type: Boolean,
+  },
+  disabled: {
     type: Boolean,
   },
 });
@@ -82,9 +87,9 @@ const emitChange = (event) => {
   width: 100%;
   height: 100%;
 }
-// .check-icon {
-//   display: none;
-// }
+.check-icon {
+  pointer-events: none;
+}
 // .checkbox-input:checked + .check-icon {
 //   display: inline-block;
 // }

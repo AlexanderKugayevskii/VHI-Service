@@ -214,8 +214,8 @@
     <!-- pagination -->
     <div class="flex q-my-lg">
       <PaginationTable
-        v-if="reactivePagination && reactivePagination.rowsNumber >= 10"
-        :pagination="reactiveProps.pagination"
+        v-if="reactivePagination"
+        :pagination="reactivePagination"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
@@ -226,6 +226,7 @@
         v-if="reactivePagination"
         @choiceOption="selectOption"
         :pagination="reactivePagination"
+        :total="total"
       />
     </div>
   </div>
@@ -271,6 +272,7 @@ const props = defineProps([
   "checkSelectedOption",
   "removeFilter",
   "fetchClinics",
+  "total",
 ]);
 const emit = defineEmits(["createAppeal"]);
 
@@ -345,7 +347,7 @@ const openAppealPage = async (client) => {
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
-  router.replace(
+  router.push(
     Trans.i18nRoute({
       name: "createAppeal",
       params: { id: appealStore.client.contractClientId },
@@ -360,11 +362,12 @@ const openAppealLimit = async (client) => {
     delay: 500,
   });
 
+  await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
-  router.replace(
+  router.push(
     Trans.i18nRoute({
       name: "createAppealLimit",
       params: { id: appealStore.client.contractClientId },
@@ -405,6 +408,8 @@ onMounted(() => {
   );
 });
 
+onMounted(() => {});
+
 //calculate table height for showing only 10 rows
 // onMounted(() => {
 //   const qTableMiddleElement = document.querySelector(".q-table__middle");
@@ -433,14 +438,14 @@ onMounted(() => {
 }
 
 .appeals-th:nth-of-type(1) {
-  width: 48px;
+  width: 56px;
 }
 // .appeals-th:nth-of-type(2) {
 //   width: 200px;
 // }
-// .appeals-th:nth-of-type(3) {
-//   width: 150px;
-// }
+.appeals-th:nth-of-type(3) {
+  width: 150px;
+}
 .appeals-th:nth-of-type(4) {
   width: 120px;
 }

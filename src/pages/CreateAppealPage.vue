@@ -180,6 +180,7 @@
                         <q-tab-panel name="doctors" key="doctors">
                           <div class="tab-header">
                             <DropdownSelectNew
+                              ref="doctorDropdownRef"
                               class="dropdown-space"
                               :multiple="true"
                               :loading="appealStore.loading"
@@ -261,6 +262,25 @@
                                   "
                                 />
                               </template>
+                              <template v-slot:action>
+                                <SimpleInput
+                                  class="dropdown-space"
+                                  placeholder="введите стоимость услуги"
+                                  @update:model-value="handleDoctorCustomPrice"
+                                  :model-value="
+                                    doctorCustomPrice.formattedValue
+                                  "
+                                  number
+                                />
+                                <SimpleButton
+                                  type="button"
+                                  label="добавить врача"
+                                  customClass="btn-action"
+                                  @click="addCustomDoctor"
+                                  :disabled="disabledDoctorButton"
+                                  full-width
+                                ></SimpleButton>
+                              </template>
                             </DropdownSelectNew>
                           </div>
                           <div class="tab-body">
@@ -330,6 +350,7 @@
                         <q-tab-panel name="services" key="services">
                           <div class="tab-header">
                             <DropdownSelectNew
+                              ref="serviceDropdownRef"
                               class="dropdown-space"
                               :multiple="true"
                               :loading="appealStore.loading"
@@ -410,6 +431,25 @@
                                     )
                                   "
                                 />
+                              </template>
+                              <template v-slot:action>
+                                <SimpleInput
+                                  class="dropdown-space"
+                                  placeholder="введите стоимость услуги"
+                                  @update:model-value="handleServiceCustomPrice"
+                                  :model-value="
+                                    serviceCustomPrice.formattedValue
+                                  "
+                                  number
+                                />
+                                <SimpleButton
+                                  type="button"
+                                  label="добавить сервис"
+                                  customClass="btn-action"
+                                  @click="addCustomService"
+                                  :disabled="disabledServiceButton"
+                                  full-width
+                                ></SimpleButton>
                               </template>
                             </DropdownSelectNew>
                           </div>
@@ -512,6 +552,18 @@
                       customClass="btn-cancel"
                       @click="hideModal"
                     ></SimpleButton>
+                    <div
+                      class="create-appeal-done-action"
+                      v-if="appealStore.isAgent"
+                    >
+                      <SimpleCheckbox
+                        @change="handleAppealDoneCheckbox"
+                        :checked="appealDoneCheckbox"
+                        :disabled="appealDoneCheckbox"
+                      >
+                      </SimpleCheckbox>
+                      <span>Сделать завершенным</span>
+                    </div>
                   </div>
                   <div
                     class="create-appeal-action-expences"
@@ -607,6 +659,7 @@
 </template>
 
 <script setup>
+import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
@@ -616,15 +669,17 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, reactive, computed, watch } from "vue";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { onMounted } from "vue";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
@@ -638,13 +693,39 @@ const tab = ref("clinics");
 const tabRight = ref("chat");
 const createAppealModalRef = ref(null);
 
+const doctorDropdownRef = ref(null);
+const doctorCustomPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
+const disabledDoctorButton = computed(
+  () => doctorCustomPrice.rawValue.length === 0
+);
+
+const serviceDropdownRef = ref(null);
+const serviceCustomPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
+const disabledServiceButton = computed(
+  () => serviceCustomPrice.rawValue.length === 0
+);
+
 const handleCreateAppeal = () => {
   appealStore.postAppealData();
   appealStore.setTypeOfAppeal("CHANGE");
 };
+
 const handleChangeAppeal = () => {
   appealStore.changeAppealData();
 };
+
+const appealDoneCheckbox = ref(false);
+const handleAppealDoneCheckbox = () => {
+  appealDoneCheckbox.value = !appealDoneCheckbox.value;
+  appealStore.makeAppealDone(appealDoneCheckbox.value);
+};
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -660,21 +741,64 @@ watch(
 );
 
 onMounted(() => {
+  console.log(route);
   console.log(route.redirectedFrom);
 });
+
 const hideModal = () => {
-  createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearClinicData();
-  router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  appealStore.setClient(null);
+
+  // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  router.go(-1);
+  createAppealModalRef.value.hide();
 };
 
-const handleRemoveDoctor = (item) => {
-  appealStore.clearDoctors(item);
+const handleDoctorCustomPrice = (value) => {
+  doctorCustomPrice.rawValue = value;
+  doctorCustomPrice.formattedValue = value.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    " "
+  );
 };
-const handleRemoveService = (item) => {
-  appealStore.clearServices(item);
+const addCustomDoctor = () => {
+  const doctor = {
+    name: doctorDropdownRef.value.searchValue,
+    id: null,
+    pivot: {
+      price: doctorCustomPrice.rawValue,
+    },
+  };
+
+  doctorCustomPrice.rawValue = "";
+  doctorCustomPrice.formattedValue = "";
+  appealStore.selectDoctors(doctor);
+  doctorDropdownRef.value.closeModal();
 };
+
+const handleServiceCustomPrice = (value) => {
+  serviceCustomPrice.rawValue = value;
+  serviceCustomPrice.formattedValue = value.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    " "
+  );
+};
+const addCustomService = () => {
+  const service = {
+    name: serviceDropdownRef.value.searchValue,
+    id: null,
+    pivot: {
+      price: serviceCustomPrice.rawValue,
+    },
+  };
+
+  serviceCustomPrice.rawValue = "";
+  serviceCustomPrice.formattedValue = "";
+  appealStore.selectServices(service);
+  serviceDropdownRef.value.closeModal();
+};
+
 const handleStatusDoctor = (item, isSuggested) => {
   appealStore.changeStatusDoctor(item, isSuggested);
 };
@@ -904,5 +1028,15 @@ const handleStatusService = (item, isSuggested) => {
   font-size: 40px;
   color: hsla(221, 27%, 34%, 0.158);
   user-select: none;
+}
+.create-appeal-done-action {
+  margin-left: 16px;
+  span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 </style>

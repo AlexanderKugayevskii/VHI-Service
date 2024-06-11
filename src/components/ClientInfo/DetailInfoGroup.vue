@@ -1,7 +1,17 @@
 <template>
   <LoadingSpinner v-if="allClientTableStore.loading" />
   <div class="details" v-else>
-    <h2 class="page-title q-my-none">Информация полиса</h2>
+    <div class="details-header">
+      <h2 class="page-title q-my-none">Информация полиса</h2>
+      <SimpleButton
+        label="Скачать отчет"
+        :customClass="[
+          'appeals-btn',
+          { 'appeals-btn_negative': fileError.length },
+        ]"
+        @click="getExcelData"
+      />
+    </div>
     <PolisInfo />
     <div class="details-main">
       <DetailCard v-for="item in mainPrograms" :key="item.id" :rate="item" />
@@ -65,6 +75,16 @@ import { storeToRefs } from "pinia";
 import { useFullClientTableStore } from "src/stores/allClientTableStore";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import AppealsTable from "../ClientsTable/AppealsTable.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
+import ClientService from "src/services/ClientService";
+import dayjs from "dayjs";
+
+const props = defineProps({
+  contractClientId: {
+    type: String,
+    required: true,
+  },
+});
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
@@ -80,19 +100,49 @@ const columnsWithoutClientName = computed(() => {
 });
 
 const clientInfo = computed(() => allClientTableStore.clientInfo);
+const medicalLimits = computed(() => allClientTableStore.medicalLimits);
 const program = computed(() => {
   return clientInfo.value.program.medical_program_items;
 });
 const mainPrograms = computed(() => {
-  return program.value?.slice(0, 2);
+  return medicalLimits.value?.slice(0, 2);
 });
 const extraPrograms = computed(() => {
-  return program.value?.slice(2);
+  return medicalLimits.value?.slice(2);
 });
 const client = computed(() => {
   return clientInfo.value?.client;
 });
 const subClients = computed(() => clientInfo.value?.sub_clients);
+
+const fileLoad = ref(false);
+const fileError = ref("");
+const getExcelData = async () => {
+  fileLoad.value = true;
+  fileError.value = "";
+  try {
+    const response = await ClientService.getClientExcelData(
+      props.contractClientId
+    );
+    console.log(`infoclient`, response);
+    const fileName = `${client.value.lastname}-${client.value.name}`;
+    const fileDate = dayjs().format("D-MM-YY");
+
+    const blob = new Blob([response.data], { type: response.data.type });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${fileName}_${fileDate}.xlsx`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    fileError.value = `Ошибка при скачивании файла`;
+  } finally {
+    fileLoad.value = false;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +151,11 @@ const subClients = computed(() => clientInfo.value?.sub_clients);
   flex-direction: column;
   row-gap: 16px;
 
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   &-main {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

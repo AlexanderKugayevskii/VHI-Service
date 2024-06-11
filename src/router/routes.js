@@ -31,7 +31,6 @@ const routes = [
                 path: "create-appeal/:id",
                 name: "createAppeal",
                 props: (route) => {
-                  
                   return {
                     id: route.params.id,
                     key: route.params.id,
@@ -40,12 +39,15 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  console.log(from.name);
                   if (from.name) {
                     next();
-                  } else {
+                  } else if (appealStore.typeOfAppeal === 1) {
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
                     next();
+                  } else {
+                    next({ name: "appeals-page" });
                   }
                 },
               },
@@ -59,6 +61,17 @@ const routes = [
                   };
                 },
                 component: () => import("pages/CreateAppealLimit.vue"),
+                beforeEnter: async (to, from, next) => {
+                  const appealStore = useAppealStore();
+                  if (from.name) {
+                    next();
+                  } else {
+                    await appealStore.fetchMedicalPrograms();
+                    await appealStore.fetchApplicantData();
+                    await appealStore.fetchHospitalData();
+                    next();
+                  }
+                },
               },
             ],
           },
@@ -123,7 +136,12 @@ const routes = [
                   };
                 },
               },
-            ]
+            ],
+          },
+          {
+            path: "reports",
+            name: "reports-page",
+            component: () => import("pages/ReportsPage.vue"),
           },
         ],
       },

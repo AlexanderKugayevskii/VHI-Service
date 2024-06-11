@@ -96,11 +96,11 @@ const emit = defineEmits(["openModal", "openModalLimit"]);
 
 const openAppealPage = async () => {
   emit("openModal"); 
-  console.log("open appeal work");
+
 };
 const openAppealLimit = async () => {
   emit("openModalLimit");
-  console.log("open limit work");
+
 };
 </script>
 

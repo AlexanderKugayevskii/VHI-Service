@@ -15,6 +15,7 @@
         :checkSelectedOption="clientTableStore.checkSelectedOption"
         :removeFilter="clientTableStore.removeFilter"
         :fetchClinics="clientTableStore.fetchClinics"
+        :total = "total"
       />
     </div>
     <AppealSearchClient
@@ -38,9 +39,20 @@ import AppealType from "./AppealType.vue";
 // const page = computed(() => props.page);
 import { storeToRefs } from "pinia";
 import { useClientTableStore } from "src/stores/clientTableStore";
+import { onBeforeRouteLeave } from "vue-router";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
+// onBeforeRouteLeave((to, from, next) => {
+//   // previusRoute.value = from;
+//   console.log(from.fullPath);
+
+//   $q.sessionStorage.set("previuos", from.fullPath);
+//   next();
+// });
 
 const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading, filterData } =
+const { pagination, rows, columns, loading, filterData, total } =
   storeToRefs(clientTableStore);
 
 const searchFilterFixed = ref(false);

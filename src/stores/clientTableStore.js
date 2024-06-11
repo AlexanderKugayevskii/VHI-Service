@@ -86,12 +86,15 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   const loading = ref(true);
   const users = ref([]);
+  const total = ref(0);
 
   function fetchClients(page = 1, limit = 10, search, queries) {
     loading.value = true;
     ClientService.getClients(page, limit, search, queries)
       .then((response) => {
         users.value = response.data.data.data;
+        total.value = response.data.data.total;
+        
         // router.push({
         //   name: "appeals-page",
         //   query: {
@@ -293,7 +296,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     return query;
   });
 
-  const checkSelectedOption = (option, type, multiple) => { 
+  const checkSelectedOption = (option, type, multiple) => {
     if (multiple) {
       return filterQuery.value[type]?.some((item) => item === option);
     } else {
@@ -314,8 +317,9 @@ export const useClientTableStore = defineStore("clientTable", () => {
   );
 
   return {
-    pagination,
     loading,
+    total,
+    pagination,
     rows,
     columns,
     handleRequest,
