@@ -24,6 +24,10 @@ function getFullClients(page, limit, search, filterQueries) {
   });
 }
 
+function updateClientData(id, payload) {
+  return api.post(`/clinics/clients/update/${id}`, payload);
+}
+
 function getClientExcelData(contract_client_id) {
   return api.get(`/clinics/client-excel/${contract_client_id}`, {
     responseType: "blob",
@@ -83,4 +87,5 @@ export default {
   getClientsByPassport,
   getClientExcelData,
   getClinicExcelData,
+  updateClientData,
 };

@@ -3,7 +3,7 @@
     <button
       :type="type"
       @click="handleClick"
-      :class="[customClass, {'full-width': fullWidth}]"
+      :class="[customClass, { 'full-width': fullWidth }]"
       :disabled="disabled"
     >
       <span v-if="!loading">
@@ -28,9 +28,9 @@ defineProps({
     default: false,
   },
   fullWidth: {
-    type: Boolean, 
-    default: false, 
-  }
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits(["click"]);
 
@@ -40,7 +40,7 @@ const handleClick = () => {
 </script>
 
 <style scoped>
-  .full-width {
-    width: 100%;
-  }
+.full-width {
+  width: 100%;
+}
 </style>

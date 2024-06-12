@@ -59,6 +59,15 @@ body {
   border-collapse: collapse;
 }
 
+.full-client-table .q-table {
+  table-layout: fixed;
+}
+
+// .full-client-table .q-table tr th:last-child,
+// .full-client-table .q-table tr td:last-child {
+//   position: static;
+// }
+
 .q-table__middle {
   background: none;
   padding-bottom: 8px;
@@ -295,6 +304,10 @@ button[class^="btn"] {
   &_negative {
     background-color: var(--q-negative);
   }
+}
+
+.reports-btn {
+  height: 24px;
 }
 
 .appeal-content {

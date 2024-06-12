@@ -69,6 +69,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       label: "Организация",
       field: "organizationName",
     },
+    {
+      name: "change",
+      align: "left",
+      label: "",
+      field: "change",
+    },
   ]);
 
   const pagination = ref({
@@ -126,6 +132,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         contractClientId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
+        clientId: row.client.id,
+        residentType: row.client.residentType,
         passport: `${row.client.seria} ${row.client.number}`,
         pinfl: row.client.pinfl,
         phone: formatNumber(row.client.phone),
@@ -184,6 +192,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client.lastname,
+
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         clinicName: row.hospital?.name,
