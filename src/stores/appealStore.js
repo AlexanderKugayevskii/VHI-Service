@@ -373,17 +373,62 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const checkSuggestedDrugs = (drug) => {
+    return suggestedDrugs.value.some((item) => drug.id === item.id);
+  };
+  const cantRemoveFromSelectedDrugs = (drug) => {
+    return selectedDrugs.value.some((item) => {
+      if (drug.id === item.id) {
+        return (
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
+          (item.pivot.status !== 0 && !isAgent.value)
+        );
+      }
+    });
+  };
   const selectDrugs = (drug) => {
-    selectedDrugs.value.push({
+    if (checkSuggestedDrugs(drug)) {
+      return;
+    }
+    if (cantRemoveFromSelectedDrugs(drug)) {
+      return;
+    }
+
+    if (finishedAppeal.value) {
+      selectedDrugs.value.push({
+        ...drug,
+        pivot: {
+          ...drug?.pivot,
+          quantity: drug.quantity,
+          price: drug.price,
+          status: 1,
+          progress: 2,
+        },
+        isNew: true,
+      });
+    } else {
+      selectedDrugs.value.push({
+        ...drug,
+        pivot: {
+          ...drug?.pivot,
+          quantity: drug.quantity,
+          price: drug.price,
+          status: 0,
+          progress: 0,
+        },
+        isNew: true,
+      });
+    }
+
+    copyDrugs.value.push({
       ...drug,
       pivot: {
-        ...drug?.pivot,
-        quantity: drug.quantity,
-        price: drug.price,
+        ...drug.pivot,
         status: 0,
         progress: 0,
       },
-      isNew: true,
     });
   };
 
@@ -848,7 +893,6 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      console.log(data);
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
       client.value.appealStatus = data.status;
@@ -864,6 +908,8 @@ export const useAppealStore = defineStore("appeal", () => {
         isDrugstore.value
       );
 
+      console.log(selectedDrugs.value);
+
       selectedDrugs.value = selectedDrugs.value.map((drug) => {
         return {
           ...drug,
@@ -873,6 +919,7 @@ export const useAppealStore = defineStore("appeal", () => {
           },
         };
       });
+
       suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
         return {
           ...drug,
@@ -882,6 +929,8 @@ export const useAppealStore = defineStore("appeal", () => {
           },
         };
       });
+
+      copyDrugs.value = [...selectedDrugs.value];
 
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
@@ -987,9 +1036,8 @@ export const useAppealStore = defineStore("appeal", () => {
             status: selectedItem.status ?? drug.pivot.status,
             progress: selectedItem.progress ?? drug.pivot.progress,
             quantity: selectedItem.quantity ?? drug.pivot.quantity,
-            program_item_id:
-              limit.id === service.pivot.limit?.id ? 0 : limit.id,
-            limit: limit.id === service.pivot.limit?.id ? null : limit,
+            program_item_id: limit.id === drug.pivot.limit?.id ? 0 : limit.id,
+            limit: limit.id === drug.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
         };
@@ -1045,6 +1093,27 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = [...copyDoctors.value];
       selectedServices.value = [...copyServices.value];
+      finishedAppeal.value = false;
+    }
+  };
+
+  const copyDrugs = ref([]);
+  const makeAppealDrugDone = (done) => {
+    if (done) {
+      selectedDrugs.value = selectedDrugs.value.map((drug) => {
+        return {
+          ...drug,
+          pivot: {
+            ...drug.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+      finishedAppeal.value = true;
+    } else {
+      selectedDrugs.value = [...copyDrugs.value];
       finishedAppeal.value = false;
     }
   };
