@@ -548,7 +548,7 @@ const handleRemoveItem = (item) => {
 const appealDoneCheckbox = ref(false);
 const handleAppealDoneCheckbox = () => {
   appealDoneCheckbox.value = !appealDoneCheckbox.value;
-  appealStore.makeAppealDone(appealDoneCheckbox.value);
+  appealStore.makeAppealDrugDone(appealDoneCheckbox.value);
 };
 
 watch(

@@ -454,6 +454,7 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
 
+    finishedAppeal.value = false;
     // hasWatched.value = false;
 
     // client.value = null;
@@ -1190,6 +1191,7 @@ export const useAppealStore = defineStore("appeal", () => {
     medicalLimits,
 
     makeAppealDone,
+    makeAppealDrugDone,
     finishedAppeal,
     calculateLimits,
   };
