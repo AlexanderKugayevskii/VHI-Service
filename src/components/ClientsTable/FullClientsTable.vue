@@ -255,6 +255,8 @@ const openChangeUserModal = (user) => {
     componentProps: {
       user: user,
     },
+  }).onOk(() => {
+    tableRef.value.requestServerInteraction();
   });
 };
 </script>

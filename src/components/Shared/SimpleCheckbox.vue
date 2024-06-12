@@ -2,9 +2,10 @@
   <div class="checkbox-wrapper">
     <label
       class="checkbox-label"
-      :class="{
-        'checkbox-label--checked': checked,
-      }"
+      :class="[
+        { 'checkbox-label--checked': checked },
+        { 'checkbox-label_square': square },
+      ]"
     >
       <input
         type="checkbox"
@@ -51,7 +52,9 @@ const props = defineProps({
   disabled: {
     type: Boolean,
   },
-  
+  square: {
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(["change"]);
@@ -77,6 +80,10 @@ const emitChange = (event) => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &_square {
+    border-radius: 4px;
+  }
 }
 .checkbox-input {
   position: absolute;
