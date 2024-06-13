@@ -9,6 +9,7 @@
         :style="wrapperStyle"
       >
         <input
+          :maxlength="maxlength"
           :disabled="disableInput"
           :type="type"
           :placeholder="placeholder"
@@ -52,6 +53,9 @@ import debounce from "lodash/debounce";
 
 const props = defineProps({
   wrapperStyle: {},
+  maxlength: {
+    type: [String, Number],
+  },
   label: {
     type: String,
     default: "",

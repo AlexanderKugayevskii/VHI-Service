@@ -15,10 +15,12 @@
         </div>
         <div class="modal-row">
           <SimpleInput
+            maxlength="14"
             label="ПИНФЛ"
-            placeholder="0000000000000000"
+            placeholder="00000000000000"
             @update:model-value="changeUserPinfl"
             :model-value="userPinfl"
+            number
           />
         </div>
         <div class="modal-row">
@@ -70,7 +72,7 @@ const { dialogRef, onDialogOK, onDialogHide } = useDialogPluginComponent();
 
 const userPinfl = ref(props.user.pinfl);
 const userPhone = ref(props.user.phone);
-const isResident = ref(props.user.residentType);
+const isResident = ref(props.user.residentType ?? 2);
 const changeResidentType = () => {
   isResident.value = isResident.value === 2 ? 1 : 2;
 };
