@@ -120,7 +120,7 @@ export const useAppealStore = defineStore("appeal", () => {
         id: doctor.id,
         status: doctor.pivot.status ?? 0,
         progress: doctor.pivot.progress ?? 0,
-        quntity: doctor.pivot.quantity ?? 1,
+        quantity: doctor.pivot.quantity ?? 1,
         program_item_id: doctor.pivot.program_item_id ?? 0,
       };
       if (doctorData.id === null) {
