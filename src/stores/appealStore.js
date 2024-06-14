@@ -84,6 +84,8 @@ export const useAppealStore = defineStore("appeal", () => {
       ...suggestedDoctors.value,
       ...selectedServices.value,
       ...suggestedServices.value,
+      ...selectedDrugs.value,
+      ...suggestedDrugs.value,
     ];
     return medicalLimits.value.map((limit) => {
       const findItemsSumm = allData.reduce((acc, curr) => {
@@ -149,7 +151,6 @@ export const useAppealStore = defineStore("appeal", () => {
         serviceData.name = service.name;
         serviceData.price = service.pivot.price;
       }
-
       return serviceData;
     })
   );
@@ -166,14 +167,22 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const allDrugsStatus = computed(() =>
     selectedDrugs.value.concat(suggestedDrugs.value).map((drug) => {
-      return {
+      const drugData = {
         id: drug.id,
         name: drug.name,
         price: drug.pivot.price,
-        quantity: drug.quantity ?? drug.pivot.quantity,
         status: drug.pivot.status ?? 0,
+        quantity: drug.quantity ?? drug.pivot.quantity,
         progress: drug.pivot.progress ?? 0,
+        program_item_id: drug.pivot.program_item_id ?? 0,
       };
+
+      if (drugData.id === null) {
+        drugData.name = drug.name;
+        drugData.price = drug.pivot.price;
+      }
+
+      return drugData;
     })
   );
 
@@ -909,30 +918,71 @@ export const useAppealStore = defineStore("appeal", () => {
         isDrugstore.value
       );
 
-      console.log(selectedDrugs.value);
-
       selectedDrugs.value = selectedDrugs.value.map((drug) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === drug.pivot?.program_item_id
+        );
+
+        const equalId =
+          medicalLimit !== undefined &&
+          medicalLimit?.id === drug.pivot.program_item_id;
+        console.log(`EQUALID`, equalId);
         return {
           ...drug,
           pivot: {
             ...drug.pivot,
-            price: parseFloat(drug.pivot.price.match(/\d+/)[0]),
+            price: parseFloat(drug.pivot.price),
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
           },
         };
       });
 
       suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === drug.pivot.program_item_id
+        );
+        const equalId =
+          medicalLimit !== undefined &&
+          medicalLimit?.id === drug.pivot.program_item_id;
         return {
           ...drug,
           pivot: {
             ...drug.pivot,
-            price: parseFloat(drug.pivot.price.match(/\d+/)[0]),
+            price: parseFloat(drug.pivot.price),
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
           },
         };
       });
 
-      copyDrugs.value = [...selectedDrugs.value];
+      const all = [...selectedDrugs.value, ...suggestedDrugs.value];
+      allMedicalLimitsSumm.value = medicalLimits.value.reduce((acc, curr) => {
+        const summ = all.reduce((a, c) => {
+          if (curr.id === c.pivot.program_item_id) {
+            return a + parseFloat(c.pivot.price) * c.pivot.quantity;
+          }
+          return a;
+        }, 0);
 
+        if (acc[curr.name]) {
+          acc[curr.name] += summ;
+        } else {
+          acc[curr.name] = summ;
+        }
+
+        return acc;
+      }, {});
+
+      copyDrugs.value = [...selectedDrugs.value];
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }

@@ -119,6 +119,27 @@ const routes = [
                   }
                 },
               },
+              {
+                path: "create-appeal-drug-limit/:id",
+                name: "createAppealDrugLimit",
+                props: (route) => {
+                  return {
+                    id: route.params.id,
+                    key: route.params.id,
+                  };
+                },
+                component: () => import("pages/CreateAppealDrugLimit.vue"),
+                beforeEnter: async (to, from, next) => {
+                  const appealStore = useAppealStore();
+                  if (from.name) {
+                    next();
+                  } else {
+                    await appealStore.fetchMedicalPrograms();
+                    await appealStore.fetchApplicantDrugData();
+                    next();
+                  }
+                },
+              },
             ],
           },
           {

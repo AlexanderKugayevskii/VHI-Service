@@ -75,7 +75,6 @@
     <SimpleInput
       v-if="hasQuantity"
       :disableInput="disableQuantity"
-      wrapper-style="padding: 10px 16px"
       style="width: 10ch"
       placeholder="кол-во"
       number
@@ -180,10 +179,13 @@ const removeItem = () => {
   border-radius: 16px;
   display: flex;
   align-items: center;
+
   column-gap: 16px;
 }
 .selected-item-left {
+  // width: 450px;
   flex-grow: 1;
+  
 }
 .selected-item-label {
   color: #404f6f;
@@ -193,11 +195,14 @@ const removeItem = () => {
   line-height: 20px;
 }
 .selected-item-right {
+  // flex-grow: 1;
   display: flex;
   align-items: center;
+  // justify-content: space-between;
   column-gap: 16px;
 }
 .selected-item-price {
+  // flex-grow: 1;
   white-space: nowrap;
   font-size: 15px;
   font-style: normal;

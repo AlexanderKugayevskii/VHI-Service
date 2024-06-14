@@ -4,9 +4,9 @@
       <div :class="{ 'dropdown-label-wrapper': !!label }">
         <slot name="top-label"></slot>
       </div>
-      <div :class="['dropdown-button', { dense }]" ref="button" role="button">
+      <div :class="['dropdown-button']" ref="button" role="button">
         <button
-          class="dropdown-button-btn"
+          :class="['dropdown-button-btn', { dense }]"
           :disabled="disableChoise"
           @click.once="handleRequest"
           @click="handleDropdown"
@@ -357,10 +357,6 @@ export default {
   background-color: #f2f5fa;
   border-radius: 16px;
   cursor: pointer;
-
-  &.dense {
-    padding: 3px 4px;
-  }
 }
 .dropdown-button-btn {
   width: 100%;
@@ -373,6 +369,10 @@ export default {
   color: #7a88a6;
   // padding: 0;
   cursor: pointer;
+
+  &.dense {
+    padding: 3px 4px;
+  }
 }
 
 .dropdown-select-search {
