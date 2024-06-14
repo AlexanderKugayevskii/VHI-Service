@@ -932,7 +932,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       selectedDrugs.value = selectedDrugs.value.map((drug) => {
         const medicalLimit = medicalLimits.value.find(
-          (limit) => limit.id === drug.pivot?.program_item_id
+          (limit) => limit.id === drug.pivot.program_item_id
         );
 
         const equalId =
