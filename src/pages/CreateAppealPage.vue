@@ -286,7 +286,7 @@
                           <div class="tab-body">
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
-                              :removable="false"
+                              :removable="true"
                               :item="doctor"
                               :key="doctor.id"
                               :isAgent="appealStore.isAgent"
@@ -299,6 +299,7 @@
                               @update:quantity="
                                 (item) => handleStatusDoctor(item, false)
                               "
+                              @remove:item="(item) => handleRemoveDoctor(item)"
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -457,7 +458,7 @@
                             <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
-                              :removable="false"
+                              :removable="true"
                               :key="service.id"
                               :isAgent="appealStore.isAgent"
                               @update:status="
@@ -469,6 +470,7 @@
                               @update:quantity="
                                 (item) => handleStatusService(item, false)
                               "
+                              @remove:item="(item) => handleRemoveService(item)"
                             >
                               <template #label>
                                 {{ service.name }}
@@ -710,6 +712,13 @@ const serviceCustomPrice = reactive({
 const disabledServiceButton = computed(
   () => serviceCustomPrice.rawValue.length === 0
 );
+
+const handleRemoveDoctor = (doctor) => {
+  appealStore.removeDoctor(doctor);
+};
+const handleRemoveService = (service) => {
+  appealStore.removeService(service);
+};
 
 const handleCreateAppeal = () => {
   appealStore.postAppealData();

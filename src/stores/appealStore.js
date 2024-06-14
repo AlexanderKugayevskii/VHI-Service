@@ -441,6 +441,18 @@ export const useAppealStore = defineStore("appeal", () => {
     });
   };
 
+  const removeDoctor = (doctor) => {
+    selectedDoctors.value = selectedDoctors.value.filter(
+      (item) => item.id !== doctor.id
+    );
+  };
+
+  const removeService = (service) => {
+    selectedServices.value = selectedServices.value.filter(
+      (item) => item.id !== service.id
+    );
+  };
+
   const removeDrug = (drug) => {
     selectedDrugs.value = selectedDrugs.value.filter(
       (item) => item.id !== drug.id
@@ -612,7 +624,7 @@ export const useAppealStore = defineStore("appeal", () => {
       drugs: allDrugsStatus.value,
       applied_date: appealDate.value,
     };
-
+    console.log(payload);
     // appendFormData(formData, payload);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
@@ -1236,6 +1248,8 @@ export const useAppealStore = defineStore("appeal", () => {
     appealTotalDrugConsumption,
     clearDrugstoreData,
     removeDrug,
+    removeDoctor,
+    removeService,
 
     medicalProgram,
     medicalLimits,

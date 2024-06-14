@@ -155,9 +155,9 @@
                             >
                               <p
                                 class="added-by-title"
-                                v-if="!appealStore.isClinic"
+                                v-if="!appealStore.isDrugstore"
                               >
-                                Добавлено клиникой
+                                Добавлено аптекой
                               </p>
                               <p class="added-by-title" v-else>
                                 Добавлено компанией
@@ -274,12 +274,14 @@
                           <span><b>Лимиты</b></span>
                         </div>
                       </div>
-                      <div class="create-appeal-client-limits">
-                        <DetailCard
-                          v-for="limit in calculateLimits"
-                          :key="limit.id"
-                          :rate="limit"
-                        ></DetailCard>
+                      <div class="create-appeal-client-wrapper">
+                        <div class="create-appeal-client-limits">
+                          <DetailCard
+                            v-for="limit in calculateLimits"
+                            :key="limit.id"
+                            :rate="limit"
+                          ></DetailCard>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -358,7 +360,7 @@ const handleCreateAppeal = () => {
   appealStore.setTypeOfAppeal("CHANGE");
 };
 const handleChangeAppeal = () => {
-  appealStore.changeAppealData();
+  appealStore.changeAppealDrugData();
 };
 watch(
   () => appealStore.successAppeal,
@@ -462,6 +464,22 @@ const selectLimitDrug = (item, drug, isSuggested) => {
     b {
       font-weight: 500;
     }
+  }
+}
+.create-appeal-client-wrapper {
+  height: calc(100vh - 180px);
+  overflow: auto;
+  padding-right: 8px;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 50px;
+    background-color: #f2f5fa;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    background-color: #e3e8f0;
   }
 }
 .create-appeal-client-limits {

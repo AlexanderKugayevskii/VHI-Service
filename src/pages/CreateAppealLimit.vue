@@ -398,12 +398,14 @@
                           <span><b>Лимиты</b></span>
                         </div>
                       </div>
-                      <div class="create-appeal-client-limits">
-                        <DetailCard
-                          v-for="limit in calculateLimits"
-                          :key="limit.id"
-                          :rate="limit"
-                        ></DetailCard>
+                      <div class="create-appeal-client-wrapper">
+                        <div class="create-appeal-client-limits">
+                          <DetailCard
+                            v-for="limit in calculateLimits"
+                            :key="limit.id"
+                            :rate="limit"
+                          ></DetailCard>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -579,12 +581,30 @@ const selectLimitService = (item, service, isSuggested) => {
     }
   }
 }
+
+.create-appeal-client-wrapper {
+  height: calc(100vh - 180px);
+  overflow: auto;
+  padding-right: 8px;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 50px;
+    background-color: #f2f5fa;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    background-color: #e3e8f0;
+  }
+}
 .create-appeal-client-limits {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 16px;
-  flex-grow: 1;
+  // flex-grow: 1;
 }
+
 .create-appeal-client-content-limits {
   flex-grow: 1;
 }
