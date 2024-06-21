@@ -6,12 +6,24 @@
       </div>
       <div class="modal-body">
         <div class="modal-row">
-          <span>Резидент: </span>
-          <SimpleCheckbox
-            :checked="isResident === 1"
-            @change="changeResidentType"
-            square
-          />
+          <DropdownSelectNew
+            label="Резидент"
+            class="dropdown-space"
+            :multiple="false"
+            :options="residentsTypes"
+            :selected-options="selectedResidentType"
+            @select-option="selectResidentType"
+          >
+            <template #top-label>Резидент</template>
+            <template #placeholder> Выберите тип </template>
+            <template v-slot:selected-options-once="props">
+              <div>{{ props.option.name }}</div>
+            </template>
+            <template v-slot:option-content="props">
+              <div>{{ props.option.name }}</div>
+              <CheckIcon v-if="checkSelectedResident(props.option)" />
+            </template>
+          </DropdownSelectNew>
         </div>
         <div class="modal-row">
           <SimpleInput
@@ -52,12 +64,14 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { useDialogPluginComponent } from "quasar";
-import { ref } from "vue";
+import { ref, computed, onMounted, watchEffect } from "vue";
 import ClientService from "src/services/ClientService";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import PhoneInput from "../Shared/PhoneInput.vue";
+import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
+import CheckIcon from "../Shared/CheckIcon.vue";
 
 const props = defineProps({
   user: {
@@ -70,18 +84,60 @@ defineEmits([...useDialogPluginComponent.emits]);
 const $q = useQuasar();
 const { dialogRef, onDialogOK, onDialogHide } = useDialogPluginComponent();
 
+const residentsTypes = ref([
+  {
+    id: 1,
+    name: "Гражданин",
+  },
+  {
+    id: 2,
+    name: "Иностранец",
+  },
+  {
+    id: 3,
+    name: "ЛБГ",
+  },
+  {
+    id: 4,
+    name: "Военный",
+  },
+  {
+    id: 5,
+    name: "Иностранный резидент",
+  },
+  {
+    id: 6,
+    name: "Ребёнок",
+  },
+]);
+const selectedResidentTypeId = ref(props.user.residentType ?? null);
+
+const selectedResidentType = computed(() => {
+  return residentsTypes.value.find(
+    (resident) => resident.id === selectedResidentTypeId.value
+  );
+});
+
 const userPinfl = ref(props.user.pinfl);
 const userPhone = ref(props.user.phone);
-const isResident = ref(props.user.residentType ?? 2);
-const changeResidentType = () => {
-  isResident.value = isResident.value === 2 ? 1 : 2;
-};
+
 const changeUserPinfl = (value) => {
   userPinfl.value = value;
 };
 const changeUserPhone = (value) => {
-  console.log(value);
   userPhone.value = value;
+};
+
+const selectResidentType = (resident) => {
+  if (selectedResidentTypeId.value === resident.id) {
+    selectedResidentTypeId.value = null;
+  } else {
+    selectedResidentTypeId.value = resident.id;
+  }
+};
+
+const checkSelectedResident = (resident) => {
+  return resident.id === selectedResidentTypeId.value;
 };
 
 const changeUserData = async () => {
@@ -89,13 +145,13 @@ const changeUserData = async () => {
     const data = await ClientService.updateClientData(props.user.clientId, {
       pinfl: userPinfl.value,
       phone: userPhone.value,
-      residentType: isResident.value,
+      residentType: selectedResidentTypeId.value,
     });
 
     $q.notify({
       type: "success",
       message: "Данные успешно изменены",
-      position: "bottom-left",
+      position: "bottom",
     });
     onDialogOK();
   } catch (e) {

@@ -6,6 +6,7 @@
       </div>
       <div :class="['dropdown-button']" ref="button" role="button">
         <button
+          id="dropdownButton"
           :class="['dropdown-button-btn', { dense }]"
           :disabled="disableChoise"
           @click.once="handleRequest"
