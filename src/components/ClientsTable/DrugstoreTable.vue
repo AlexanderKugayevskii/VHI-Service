@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableActions>
+    <TableActions @update:search="handleSearch">
       <template #appealBtn>
         <SimpleButton
           type="button"
@@ -116,6 +116,7 @@
                 :client="props.row"
                 @open-modal="openAppealPage(props.row)"
                 @open-modal-limit="openAppealLimit(props.row)"
+                @delete-appeal="deleteAppeal(props.row)"
               ></UserSettings>
             </q-td>
           </q-tr>
@@ -160,16 +161,22 @@ import { storeToRefs } from "pinia";
 const $q = useQuasar();
 
 const router = useRouter();
-const searchProp = defineProps(["search"]);
+// const searchProp = defineProps(["search"]);
 const emit = defineEmits(["createAppeal"]);
 
-const search = computed(() => searchProp.search);
+// const search = computed(() => searchProp.search);
 
 const tableRef = ref(null);
 
 const appealStore = useAppealStore();
 const drugTableStore = useDrugTableStore();
 const { pagination, rows, columns, loading } = storeToRefs(drugTableStore);
+
+const search = ref("");
+
+const handleSearch = (searchValue) => {
+  search.value = searchValue;
+};
 
 //incremenet decrement and change page events
 const incrementPage = () => {
@@ -243,6 +250,11 @@ const openAppealLimit = async (client) => {
       params: { id: appealStore.client.contractClientId },
     })
   );
+};
+
+const deleteAppeal = async (data) => {
+  await appealStore.deleteAppealData(data.appealId);
+  tableRef.value.requestServerInteraction();
 };
 
 onMounted(() => {

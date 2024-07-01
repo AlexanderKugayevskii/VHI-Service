@@ -55,6 +55,10 @@ function changeAppealDrugData(appealId, payload) {
   });
 }
 
+function deleteAppeal(appealId) {
+  return api.delete(`/clinics/applications/${appealId}`);
+}
+
 export default {
   getDrugs,
   getDrugstores,
@@ -67,4 +71,5 @@ export default {
   changeAppealData,
   saveDrugAppeal,
   changeAppealDrugData,
+  deleteAppeal,
 };

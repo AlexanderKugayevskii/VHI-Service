@@ -205,6 +205,7 @@
                 :client="props.row"
                 @open-modal="openAppealPage(props.row)"
                 @open-modal-limit="openAppealLimit(props.row)"
+                @delete-appeal="deleteAppeal(props.row)"
               ></UserSettings>
             </q-td>
           </q-tr>
@@ -285,7 +286,6 @@ const handleFind = () => {
   tableRef.value.requestServerInteraction();
 };
 const handleDelete = () => {
-  console.log(props.filterQuery);
   tableRef.value.requestServerInteraction();
 };
 
@@ -373,6 +373,11 @@ const openAppealLimit = async (client) => {
       params: { id: appealStore.client.contractClientId },
     })
   );
+};
+
+const deleteAppeal = async (data) => {
+  await appealStore.deleteAppealData(data.appealId);
+  tableRef.value.requestServerInteraction();
 };
 
 //only router if needs

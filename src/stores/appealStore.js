@@ -765,6 +765,22 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const deleteAppealData = async (appealId) => {
+    loading.value = true;
+    try {
+      const response = await AppealService.deleteAppeal(appealId);
+      Notify.create({
+        type: "success",
+        message: "Обращение успешно удалено!",
+        position: "bottom-left",
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const fetchMedicalPrograms = async () => {
     loading.value = true;
     const localClient = SessionStorage.getItem("client");
@@ -1219,6 +1235,7 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSelectedDoctors,
     checkSelectedServices,
     postAppealData,
+    deleteAppealData,
     changeAppealData,
     clearAppealData,
     clearClinicData,
