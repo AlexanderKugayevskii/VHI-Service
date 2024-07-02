@@ -54,13 +54,15 @@
         />
       </div>
     </div>
+    <!-- v-if="allClientTableStore.clientInfo.applications.length > 0" -->
     <AppealsTable
-      v-if="allClientTableStore.clientInfo.applications.length > 0"
       :rows="allClientTableStore.applicationsRows"
       :columns="columnsWithoutClientName"
       :loading="allClientTableStore.loading"
+      @createAppeal="openAppealTypeModal"
     />
   </div>
+  <AppealType v-model:="appealTypeFixed" />
 </template>
 
 <script setup>
@@ -78,6 +80,7 @@ import AppealsTable from "../ClientsTable/AppealsTable.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import ClientService from "src/services/ClientService";
 import dayjs from "dayjs";
+import AppealType from "src/pages/AppealType.vue";
 
 const props = defineProps({
   contractClientId: {
@@ -88,6 +91,12 @@ const props = defineProps({
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
+};
+
+// clinic or drugdstore modal ref
+const appealTypeFixed = ref(false);
+const openAppealTypeModal = () => {
+  appealTypeFixed.value = true;
 };
 
 const clientTableStore = useClientTableStore();

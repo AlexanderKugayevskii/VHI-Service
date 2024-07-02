@@ -234,7 +234,8 @@ import { useAppealStore } from "src/stores/appealStore";
 import { useRouter } from "vue-router";
 import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
 import { Collapse } from "vue-collapsed";
-import { nextTick } from "vue";
+import { onBeforeMount } from "vue";
+
 export default defineComponent({
   name: "MainLayout",
   components: {
@@ -262,6 +263,14 @@ export default defineComponent({
       isMenuOpen.value = !isMenuOpen.value;
     };
 
+    onBeforeMount(() => {
+      if (
+        router.hasRoute("appeals-page") ||
+        router.hasRoute("drugstore-page")
+      ) {
+        isMenuOpen.value = true;
+      }
+    });
     return {
       Trans,
       authStore,

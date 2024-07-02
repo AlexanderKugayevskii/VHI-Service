@@ -58,7 +58,7 @@ const { pagination, rows, columns, loading, filterData, total } =
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
 
-onMounted(() => {});
+
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;
 };

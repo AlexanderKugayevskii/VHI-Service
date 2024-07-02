@@ -4,8 +4,10 @@ import ClientService from "src/services/ClientService";
 import formatNumber from "src/helpers/formatNumber";
 import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
+import { useAppealStore } from "./appealStore";
 export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
+  const appealStore = useAppealStore();
 
   // allTable
   const columns = computed(() => [
@@ -158,6 +160,20 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
       setClientInfo(data);
+
+      const clientDataForAppeal = {
+        clientFirstname: data.client.name,
+        clientLastname: data.client.lastname,
+        clientId: data.client_id,
+        dmsCode: data.dms_code,
+        id: data.id,
+        passportNumber: data.client.number,
+        passportSeria: data.client.seria,
+        program: data.program.name,
+        type: "Клиент",
+      };
+
+      appealStore.setClient(clientDataForAppeal);
     } catch (e) {
       console.error(e);
     } finally {

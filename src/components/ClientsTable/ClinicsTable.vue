@@ -41,6 +41,7 @@
           </q-input>
         </div>
       </div>
+      <ReportsByDate />
     </div>
     <div>
       <q-table
@@ -132,6 +133,8 @@ import { onMounted, computed, ref } from "vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+
+import ReportsByDate from "../ReportsByDate.vue";
 
 const { t } = useI18n();
 
@@ -269,7 +272,7 @@ const selectOption = (option) => {
 <style scoped lang="scss">
 .table-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 16px;
 }

@@ -95,7 +95,7 @@
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
-        no-data-label="I didn't find anything for you"
+        no-data-label="Данных нет"
         no-results-label="Данных по вашему запросу не найдено"
         @request="requestData"
       >
@@ -104,8 +104,7 @@
         </template>
         <template v-slot:no-data="{ icon, message, filter }">
           <div class="full-width row flex-center text-accent q-gutter-sm">
-            <q-icon size="2em" name="sentiment_dissatisfied" />
-            <span> {{ message }} </span>
+            <span class = "error-message"> {{ message }} </span>
             <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
           </div>
         </template>
@@ -506,5 +505,8 @@ tr.clickable {
 
 .filter-item {
   padding-bottom: 20px;
+}
+.error-message{
+  font-weight: 500;
 }
 </style>

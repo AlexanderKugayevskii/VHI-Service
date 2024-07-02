@@ -168,9 +168,9 @@ import PaginationTable from "./PaginationTable.vue";
 import { onMounted, ref } from "vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
+import { useAppealStore } from "src/stores/appealStore";
 
 const $q = useQuasar();
-
 const router = useRouter();
 const props = defineProps([
   // "search",
@@ -186,6 +186,9 @@ const props = defineProps([
   "removeFilter",
   "fetchClinics",
 ]);
+
+const appealStore = useAppealStore();
+
 const search = ref("");
 
 const handleSearch = (searchValue) => {
@@ -232,6 +235,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
+  appealStore.setClient(client);
   router.push(
     Trans.i18nRoute({
       name: "clientInfo",

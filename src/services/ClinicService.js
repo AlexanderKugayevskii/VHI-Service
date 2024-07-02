@@ -12,8 +12,14 @@ function getServices(id) {
   return api.get(`/clinics/${id}/services`);
 }
 
+function downloadClinicExcel(dateRange) {
+  return api.post(`/clinics/organizations-excel`, dateRange);
+}
+
 export default {
   getClinics,
   getDoctors,
   getServices,
+
+  downloadClinicExcel
 };

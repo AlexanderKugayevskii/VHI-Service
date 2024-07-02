@@ -109,6 +109,7 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import { ref } from "vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import { useRouter } from "vue-router";
@@ -118,6 +119,7 @@ import Trans from "src/i18n/translation";
 
 const appealStore = useAppealStore();
 const router = useRouter();
+const $q = useQuasar();
 
 const appealTypeModalRef = ref(null);
 const type = ref(null); //clinic or drugstore
@@ -135,11 +137,12 @@ const hideModal = () => {
 
 const goToAppeal = async () => {
   appealTypeModalRef.value.hide();
-
+  const localClient = $q.sessionStorage.getItem("client");
+  console.log(appealStore.client);
   if (type.value === 0) {
     await appealStore.setClinic();
     appealStore.setTypeOfAppeal("NEW");
-    router.replace(
+    router.push(
       Trans.i18nRoute({
         name: "createAppeal",
         params: {
@@ -150,7 +153,7 @@ const goToAppeal = async () => {
   } else if (type.value === 1) {
     appealStore.setTypeOfAppeal("NEW");
 
-    router.replace(
+    router.push(
       Trans.i18nRoute({
         name: "createDrugsAppeal",
         params: {

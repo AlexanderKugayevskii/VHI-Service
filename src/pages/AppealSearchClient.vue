@@ -225,6 +225,7 @@ const hideModal = () => {
 const handleSelectItem = (item) => {
   selectedClient.value = item;
   appealStore.setClient(selectedClient.value);
+  
 };
 
 const openTypeModal = () => {

@@ -70,7 +70,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setClient = (item) => {
     client.value = item;
-    SessionStorage.set("client", item);
+    if(item !== null) {
+      SessionStorage.set("client", item);
+    }
   };
 
   const diagnosis = ref("");
