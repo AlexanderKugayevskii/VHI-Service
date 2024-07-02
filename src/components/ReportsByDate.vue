@@ -55,7 +55,6 @@ const checkActiveButton = computed(() => {
 });
 
 const downloadReport = async () => {
-  console.log("debug");
   try {
     const response = await ClinicService.downloadClinicExcel({
       startDate: startDate.value,
