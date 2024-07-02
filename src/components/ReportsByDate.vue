@@ -55,12 +55,12 @@ const checkActiveButton = computed(() => {
 });
 
 const downloadReport = async () => {
+  console.log("debug");
   try {
     const response = await ClinicService.downloadClinicExcel({
       startDate: startDate.value,
       endDate: endDate.value,
     });
-    console.log(response.data);
 
     const blob = new Blob([response.data], { type: response.data.type });
     const url = window.URL.createObjectURL(blob);
@@ -74,7 +74,6 @@ const downloadReport = async () => {
   } catch (e) {
     console.error(e);
   } finally {
-    
   }
 };
 </script>
