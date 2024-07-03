@@ -70,7 +70,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setClient = (item) => {
     client.value = item;
-    if(item !== null) {
+    if (item !== null) {
       SessionStorage.set("client", item);
     }
   };
@@ -774,10 +774,15 @@ export const useAppealStore = defineStore("appeal", () => {
       Notify.create({
         type: "success",
         message: "Обращение успешно удалено!",
-        position: "bottom-left",
+        position: "bottom",
       });
     } catch (e) {
       console.error(e);
+      Notify.create({
+        type: "error",
+        message: "Произошла ошибка при удалении обращения!",
+        position: "bottom",
+      });
     } finally {
       loading.value = false;
     }

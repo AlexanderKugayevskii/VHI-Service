@@ -157,15 +157,14 @@
 </template>
 
 <script setup>
-import ChangeUserModal from "./ChangeUserModal.vue";
-import { toRef, toRefs } from "vue";
 import { useQuasar } from "quasar";
+import { toRef, toRefs, onMounted, ref } from "vue";
+import ChangeUserModal from "./ChangeUserModal.vue";
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import RowsPerPage from "./RowsPerPage.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
-import { onMounted, ref } from "vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import { useAppealStore } from "src/stores/appealStore";

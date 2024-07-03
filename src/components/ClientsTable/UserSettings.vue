@@ -120,14 +120,12 @@
                 stroke="#E3E8F0"
                 stroke-width="2"
                 stroke-linecap="round"
-
               />
               <path
                 d="M16.8332 6.5L16.3732 13.3991C16.1962 16.054 16.1077 17.3815 15.2427 18.1907C14.3777 19 13.0473 19 10.3865 19H9.6132C6.95235 19 5.62195 19 4.75694 18.1907C3.89194 17.3815 3.80344 16.054 3.62644 13.3991L3.1665 6.5"
                 stroke="#E3E8F0"
                 stroke-width="2"
                 stroke-linecap="round"
-
               />
               <path
                 d="M4.5 4C4.55588 4 4.58382 4 4.60915 3.99936C5.43259 3.97849 6.15902 3.45491 6.43922 2.68032C6.44784 2.65649 6.45667 2.62999 6.47434 2.57697L6.57143 2.28571C6.65431 2.03708 6.69575 1.91276 6.75071 1.8072C6.97001 1.38607 7.37574 1.09364 7.84461 1.01877C7.96213 1 8.0932 1 8.3553 1H11.6447C11.9068 1 12.0379 1 12.1554 1.01877C12.6243 1.09364 13.03 1.38607 13.2493 1.8072C13.3043 1.91276 13.3457 2.03708 13.4286 2.28571L13.5257 2.57697C13.5433 2.62992 13.5522 2.65651 13.5608 2.68032C13.841 3.45491 14.5674 3.97849 15.3909 3.99936C15.4162 4 15.4441 4 15.5 4"
@@ -141,11 +139,16 @@
       </template>
     </DropdownSettings>
   </div>
+  <ConfirmModal />
 </template>
 
 <script setup>
 import DropdownSettings from "../Shared/DropdownSettings.vue";
+import ConfirmModal from "../Shared/ConfirmModal.vue";
+import { useQuasar } from "quasar";
 const emit = defineEmits(["openModal", "openModalLimit", "deleteAppeal"]);
+const props = defineProps(["client"]);
+const $q = useQuasar();
 
 const openAppealPage = async () => {
   emit("openModal");
@@ -153,9 +156,15 @@ const openAppealPage = async () => {
 const openAppealLimit = async () => {
   emit("openModalLimit");
 };
-
 const deleteAppeal = async () => {
-  emit("deleteAppeal");
+  $q.dialog({
+    component: ConfirmModal,
+    componentProps: {
+      title: "Удалить обращение?",
+    },
+  }).onOk(() => {
+    emit("deleteAppeal");
+  });
 };
 </script>
 

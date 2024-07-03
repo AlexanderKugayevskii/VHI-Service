@@ -225,7 +225,6 @@ const hideModal = () => {
 const handleSelectItem = (item) => {
   selectedClient.value = item;
   appealStore.setClient(selectedClient.value);
-  
 };
 
 const openTypeModal = () => {
@@ -236,6 +235,7 @@ const openTypeModal = () => {
 
 const goToAppeal = async () => {
   await appealStore.setClinic();
+  clientStore.$resetSearchClients();
   appealStore.setTypeOfAppeal("NEW");
   router.replace(
     Trans.i18nRoute({
