@@ -13,7 +13,13 @@ function getServices(id) {
 }
 
 function downloadClinicExcel(dateRange) {
-  return api.post(`/clinics/organizations-excel`, dateRange);
+  return api.post(
+    `/clinics/organizations-excel`,
+    {
+      ...dateRange,
+    },
+    { responseType: "blob" }
+  );
 }
 
 export default {
@@ -21,5 +27,5 @@ export default {
   getDoctors,
   getServices,
 
-  downloadClinicExcel
+  downloadClinicExcel,
 };
