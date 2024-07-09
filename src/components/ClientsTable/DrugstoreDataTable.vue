@@ -85,9 +85,9 @@
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
-            <q-td key="clinicName" :props="props" class="appeals-td">
+            <q-td key="drugstoreName" :props="props" class="appeals-td">
               <a class="appeal-link">
-                {{ props.row.clinicName }}
+                {{ props.row.drugstoreName }}
               </a>
             </q-td>
             <q-td key="phone" :props="props" class="appeals-td">
@@ -95,9 +95,9 @@
             </q-td>
             <q-td key="reports" :props="props" class="appeals-td">
               <SimpleButton
+                :disabled="disableButton"
                 label="Скачать отчет"
                 custom-class="appeals-btn reports-btn"
-                :disabled="disableButton"
                 @click="getExcelData(props.row)"
               />
             </q-td>
@@ -134,12 +134,12 @@ import { onMounted, computed, ref } from "vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
-
 import DateRange from "../DateRange.vue";
 
 const { t } = useI18n();
+
 const loading = ref(false);
-const clinics = ref([]);
+const drugs = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -168,10 +168,10 @@ const columns = computed(() => [
     align: "left",
   },
   {
-    name: "clinicName",
+    name: "drugstoreName",
     align: "left",
-    label: t("client_table.clinic"),
-    field: "clinicName",
+    label: t("client_table.drugstore"),
+    field: "drugstoreName",
   },
   {
     name: "phone",
@@ -188,9 +188,9 @@ const columns = computed(() => [
 ]);
 
 const rows = computed(() => {
-  return clinics.value.map((row) => {
+  return drugs.value.map((row) => {
     return {
-      clinicName: row.name,
+      drugstoreName: row.name,
       phone: row.phone,
       reports: "",
       index: row.id,
@@ -201,16 +201,16 @@ const rows = computed(() => {
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
   return rows.value.filter((option) =>
-    regex.test(option.clinicName || option.phone)
+    regex.test(option.drugstoreName || option.phone)
   );
 });
 
-const fetchClinics = async () => {
+const fetchDrugstores = async () => {
   loading.value = true;
   try {
-    const response = await AppealService.getClinics();
+    const response = await AppealService.getDrugstores();
     const data = response.data.data;
-    clinics.value = data;
+    drugs.value = data;
     total.value = data.length;
   } catch (e) {
     console.error(e);
@@ -225,22 +225,19 @@ const getExcelData = async (row) => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getClinicExcelData(row.index, {
+    const response = await ClientService.getDrugstoreExcelData(row.index, {
       startDate: dateRangeData.value.startDate,
       endDate: dateRangeData.value.endDate,
     });
 
-    const fileName = row.clinicName;
+    const fileName = row.drugstoreName;
     const fileDate = dayjs().format("D-MM-YY");
     const blob = new Blob([response.data], { type: response.data.type });
-    console.log(`clinic table`, response);
+
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute(
-      "download",
-      `${fileName}-${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
-    );
+    link.setAttribute("download", `${fileName}-${fileDate}.xlsx`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -254,7 +251,7 @@ const getExcelData = async (row) => {
 };
 
 const handleRequest = (props) => {
-  fetchClinics(props.pagination.page, props.pagination.rowsPerPage);
+  fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
 };
 
 onMounted(() => {

@@ -93,13 +93,60 @@
             :routeTo="Trans.i18nRoute({ name: 'clients' })"
           >
           </RouteLink>
-          <RouteLink
-            class="q-px-sm"
-            caption="Отчеты"
-            v-if="appealStore.isAgent"
-            :routeTo="Trans.i18nRoute({ name: 'reports-page' })"
-          >
-          </RouteLink>
+
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
+            <div class="menu-expand-item-header">
+              <button class="nav-item nav-item-btn q-py-sm" @click="toggleMenu">
+                <span class="nav-item-btn-left">
+                  <q-icon size="20px"> </q-icon>
+                  <span class="flex column">
+                    <span> Отчеты </span>
+                  </span>
+                </span>
+                <q-icon size="20px">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="#7A88A6"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </q-icon>
+              </button>
+            </div>
+            <Collapse :when="isMenuOpen" class="v-collapse">
+              <div class="menu-expand-item-content" ref="menuExpandContent">
+                <RouteLink
+                  caption="По клиникам"
+                  v-if="appealStore.isAgent"
+                  :routeTo="Trans.i18nRoute({ name: 'reports-clinic-page' })"
+                >
+                </RouteLink>
+                <RouteLink
+                  caption="По аптекам"
+                  v-if="appealStore.isAgent"
+                  :routeTo="Trans.i18nRoute({ name: 'reports-drugstore-page' })"
+                >
+                </RouteLink>
+                <RouteLink
+                  caption="По организациям"
+                  v-if="appealStore.isAgent"
+                  :routeTo="
+                    Trans.i18nRoute({ name: 'reports-organizations-page' })
+                  "
+                >
+                </RouteLink>
+              </div>
+            </Collapse>
+          </div>
           <RouteLink
             v-if="appealStore.isClinic"
             class="q-px-sm"

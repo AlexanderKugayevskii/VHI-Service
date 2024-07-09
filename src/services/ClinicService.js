@@ -12,7 +12,7 @@ function getServices(id) {
   return api.get(`/clinics/${id}/services`);
 }
 
-function downloadClinicExcel(dateRange) {
+function downloadOrganizationsExcel(dateRange) {
   return api.post(
     `/clinics/organizations-excel`,
     {
@@ -27,5 +27,5 @@ export default {
   getDoctors,
   getServices,
 
-  downloadClinicExcel,
+  downloadOrganizationsExcel,
 };

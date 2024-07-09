@@ -169,9 +169,19 @@ const routes = [
             ],
           },
           {
-            path: "reports",
-            name: "reports-page",
-            component: () => import("pages/ReportsPage.vue"),
+            path: "reports-clinic",
+            name: "reports-clinic-page",
+            component: () => import("src/pages/ReportsClinicsPage.vue"),
+          },
+          {
+            path: "reports-drugstore",
+            name: "reports-drugstore-page",
+            component: () => import("src/pages/ReportsDrugstorePage.vue"),
+          },
+          {
+            path: "reports-organizations",
+            name: "reports-organizations-page",
+            component: () => import("src/pages/ReportsOrganizationsPage.vue"),
           },
         ],
       },

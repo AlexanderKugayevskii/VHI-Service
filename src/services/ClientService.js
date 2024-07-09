@@ -34,8 +34,14 @@ function getClientExcelData(contract_client_id) {
   });
 }
 
-function getClinicExcelData(clinic_id) {
-  return api.get(`/clinics/hospital-excel/${clinic_id}`, {
+function getClinicExcelData(clinic_id, dateRange) {
+  return api.post(`/clinics/hospital-excel/${clinic_id}`, dateRange, {
+    responseType: "blob",
+  });
+}
+
+function getDrugstoreExcelData(drugstore_id, dateRange) {
+  return api.post(`/clinics/drugstore-excel/${drugstore_id}`, dateRange, {
     responseType: "blob",
   });
 }
@@ -87,5 +93,6 @@ export default {
   getClientsByPassport,
   getClientExcelData,
   getClinicExcelData,
+  getDrugstoreExcelData,
   updateClientData,
 };

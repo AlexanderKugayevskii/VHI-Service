@@ -10,21 +10,14 @@
       placeholder="01-01-2024"
       v-model="endDate"
     />
-
-    <SimpleButton
-      custom-class="appeals-btn"
-      label="Сформировать отчет"
-      :disabled="checkActiveButton"
-      @click="downloadReport"
-    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import ClinicService from "src/services/ClinicService";
+import { ref, computed, watch } from "vue";
 import DateInput_new from "./Shared/DateInput_new.vue";
-import SimpleButton from "./Shared/SimpleButton.vue";
+
+const emit = defineEmits(["getRange"]);
 
 const startDate = ref("");
 const endDate = ref("");
@@ -54,27 +47,13 @@ const checkActiveButton = computed(() => {
   return false;
 });
 
-const downloadReport = async () => {
-  try {
-    const response = await ClinicService.downloadOrganizationsExcel({
-      startDate: startDate.value,
-      endDate: endDate.value,
-    });
-    console.log(response);
-    const blob = new Blob([response.data], { type: response.data.type });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `report_by_organization.xlsx`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  } catch (e) {
-    console.error(e);
-  } finally {
-  }
-};
+watch([startDate, endDate], () => {
+  emit("getRange", {
+    startDate: startDate.value,
+    endDate: endDate.value,
+    checkActiveButton: checkActiveButton.value,
+  });
+});
 </script>
 
 <style scoped lang="scss">
