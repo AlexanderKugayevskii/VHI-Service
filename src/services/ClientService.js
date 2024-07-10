@@ -41,10 +41,16 @@ function getClinicExcelData(clinic_id, dateRange) {
 }
 
 function getDrugstoreExcelData(drugstore_ids, dateRange) {
-  return api.post(`/clinics/drugstore-excel`, {
-    ...dateRange,
-    ids: drugstore_ids,
-  });
+  return api.post(
+    `/clinics/drugstore-excel`,
+    {
+      ...dateRange,
+      ids: drugstore_ids,
+    },
+    {
+      responseType: "blob",
+    }
+  );
 }
 
 function getClientInfo(id) {

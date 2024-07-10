@@ -261,11 +261,13 @@ const getExcelData = async (row) => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getDrugstoreExcelData({
-      ids: checkedDrugsIds.value,
-      startDate: dateRangeData.value.startDate,
-      endDate: dateRangeData.value.endDate,
-    });
+    const response = await ClientService.getDrugstoreExcelData(
+      checkedDrugsIds.value,
+      {
+        startDate: dateRangeData.value.startDate,
+        endDate: dateRangeData.value.endDate,
+      }
+    );
 
     // const fileName = row.drugstoreName;
     const fileDate = dayjs().format("D-MM-YY");

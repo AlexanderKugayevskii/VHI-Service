@@ -11,7 +11,7 @@
       v-model="endDate"
     />
     <SimpleButton
-      :disabled="disableButton"
+      :disabled="disabledRule"
       label="Сформировать отчет"
       custom-class="appeals-btn"
       @click="handleClick"
