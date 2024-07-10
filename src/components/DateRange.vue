@@ -10,6 +10,12 @@
       placeholder="01-01-2024"
       v-model="endDate"
     />
+    <SimpleButton
+      :disabled="disableButton"
+      label="Скачать отчет"
+      custom-class="appeals-btn reports-btn"
+      @click="getExcelData(props.row)"
+    />
   </div>
 </template>
 

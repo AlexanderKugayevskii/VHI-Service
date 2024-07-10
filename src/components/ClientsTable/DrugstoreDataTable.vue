@@ -42,6 +42,12 @@
         </div>
       </div>
       <DateRange @get-range="handleDateRange" />
+      <SimpleButton
+        :disabled="disableButton"
+        label="Скачать отчет"
+        custom-class="appeals-btn reports-btn"
+        @click="getExcelData"
+      />
     </div>
     <div>
       <q-table
@@ -85,6 +91,14 @@
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
+            <q-td key="checkbox" :props="props" class="appeals-td">
+              <SimpleCheckbox
+                square
+                :item="props.row"
+                @change="handleCheck"
+                :checked="checkDrug(props.row)"
+              />
+            </q-td>
             <q-td key="drugstoreName" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.drugstoreName }}
@@ -93,14 +107,14 @@
             <q-td key="phone" :props="props" class="appeals-td">
               {{ props.row.phone }}
             </q-td>
-            <q-td key="reports" :props="props" class="appeals-td">
+            <!-- <q-td key="reports" :props="props" class="appeals-td">
               <SimpleButton
                 :disabled="disableButton"
                 label="Скачать отчет"
                 custom-class="appeals-btn reports-btn"
                 @click="getExcelData(props.row)"
               />
-            </q-td>
+            </q-td> -->
           </q-tr>
         </template>
       </q-table>
@@ -135,11 +149,13 @@ import SimpleButton from "../Shared/SimpleButton.vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import DateRange from "../DateRange.vue";
+import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 
 const { t } = useI18n();
 
 const loading = ref(false);
 const drugs = ref([]);
+const checkedDrugs = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -168,6 +184,12 @@ const columns = computed(() => [
     align: "left",
   },
   {
+    name: "checkbox",
+    label: "",
+    field: "checkbox",
+    align: "left",
+  },
+  {
     name: "drugstoreName",
     align: "left",
     label: t("client_table.drugstore"),
@@ -178,12 +200,6 @@ const columns = computed(() => [
     align: "left",
     label: "Телефон",
     field: "phone",
-  },
-  {
-    name: "reports",
-    align: "left",
-    label: "Отчет",
-    field: "organizationName",
   },
 ]);
 
@@ -219,25 +235,50 @@ const fetchDrugstores = async () => {
   }
 };
 
+const handleCheck = (row) => {
+  const findedRow = checkedDrugs.value.findIndex(
+    (drug) => drug.index === row.index
+  );
+  if (findedRow > -1) {
+    checkedDrugs.value.splice(findedRow, 1);
+  } else {
+    checkedDrugs.value.push(row);
+  }
+
+  // if(row === null) return;
+  // checkedDrugs.value.push(row);
+  // console.log(checkedDrugs.value);
+};
+const checkDrug = (row) => {
+  return checkedDrugs.value.some((drug) => drug.index === row.index);
+};
+
+const checkedDrugsIds = computed(() =>
+  checkedDrugs.value.map((drug) => drug.index)
+);
+
 const fileLoad = ref(false);
 const fileError = ref("");
 const getExcelData = async (row) => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getDrugstoreExcelData(row.index, {
-      startDate: dateRangeData.value.startDate,
-      endDate: dateRangeData.value.endDate,
-    });
+    const response = await ClientService.getDrugstoreExcelData(
+      {
+        ids: checkedDrugsIds.value,
+        startDate: dateRangeData.value.startDate,
+        endDate: dateRangeData.value.endDate,
+      }
+    );
 
-    const fileName = row.drugstoreName;
+    // const fileName = row.drugstoreName;
     const fileDate = dayjs().format("D-MM-YY");
     const blob = new Blob([response.data], { type: response.data.type });
 
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `${fileName}-${fileDate}.xlsx`);
+    link.setAttribute("download", `${fileDate}.xlsx`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -312,6 +353,9 @@ const selectOption = (option) => {
 }
 
 .appeals-th:nth-of-type(1) {
+  width: 56px;
+}
+.appeals-th:nth-of-type(2) {
   width: 56px;
 }
 

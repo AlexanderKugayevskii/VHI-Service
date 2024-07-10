@@ -40,10 +40,17 @@ function getClinicExcelData(clinic_id, dateRange) {
   });
 }
 
-function getDrugstoreExcelData(drugstore_id, dateRange) {
-  return api.post(`/clinics/drugstore-excel/${drugstore_id}`, dateRange, {
-    responseType: "blob",
-  });
+function getDrugstoreExcelData(drugstore_ids, dateRange) {
+  return api.post(
+    `/clinics/drugstore-excel`,
+    {
+      ...dateRange,
+      ids: drugstore_ids,
+    },
+    {
+      responseType: "blob",
+    }
+  );
 }
 
 function getClientInfo(id) {
