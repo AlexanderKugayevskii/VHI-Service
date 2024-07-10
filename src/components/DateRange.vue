@@ -12,9 +12,9 @@
     />
     <SimpleButton
       :disabled="disableButton"
-      label="Скачать отчет"
-      custom-class="appeals-btn reports-btn"
-      @click="getExcelData(props.row)"
+      label="Сформировать отчет"
+      custom-class="appeals-btn"
+      @click="handleClick"
     />
   </div>
 </template>
@@ -22,8 +22,13 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import DateInput_new from "./Shared/DateInput_new.vue";
-
-const emit = defineEmits(["getRange"]);
+import SimpleButton from "./Shared/SimpleButton.vue";
+const props = defineProps({
+  disabledRule: {
+    type: Boolean,
+  },
+});
+const emit = defineEmits(["getRange", "getData"]);
 
 const startDate = ref("");
 const endDate = ref("");
@@ -52,6 +57,10 @@ const checkActiveButton = computed(() => {
 
   return false;
 });
+
+const handleClick = () => {
+  emit("getData");
+};
 
 watch([startDate, endDate], () => {
   emit("getRange", {

@@ -41,12 +41,10 @@
           </q-input>
         </div>
       </div>
-      <DateRange @get-range="handleDateRange" />
-      <SimpleButton
-        :disabled="disableButton"
-        label="Скачать отчет"
-        custom-class="appeals-btn reports-btn"
-        @click="getExcelData"
+      <DateRange
+        @get-range="handleDateRange"
+        @get-data="getExcelData"
+        :disabled-rule="disableButton"
       />
     </div>
     <div>
@@ -263,13 +261,11 @@ const getExcelData = async (row) => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getDrugstoreExcelData(
-      {
-        ids: checkedDrugsIds.value,
-        startDate: dateRangeData.value.startDate,
-        endDate: dateRangeData.value.endDate,
-      }
-    );
+    const response = await ClientService.getDrugstoreExcelData({
+      ids: checkedDrugsIds.value,
+      startDate: dateRangeData.value.startDate,
+      endDate: dateRangeData.value.endDate,
+    });
 
     // const fileName = row.drugstoreName;
     const fileDate = dayjs().format("D-MM-YY");
