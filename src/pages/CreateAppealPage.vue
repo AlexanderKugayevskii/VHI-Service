@@ -560,8 +560,14 @@
                     >
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
-                        :checked="appealDoneCheckbox"
-                        :disabled="appealDoneCheckbox"
+                        :checked="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
+                        :disabled="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
                       >
                       </SimpleCheckbox>
                       <span>Сделать завершенным</span>

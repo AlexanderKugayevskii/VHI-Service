@@ -80,7 +80,16 @@
               :props="props"
               class="appeals-th"
             >
-              {{ col.label }}
+              <template v-if="col.name === 'checkbox'">
+                <SimpleCheckbox
+                  square
+                  @change="handleAllDrugs"
+                  :checked="checkAllDrugs"
+                />
+              </template>
+              <template v-else>
+                {{ col.label }}
+              </template>
             </q-th>
           </q-tr>
         </template>
@@ -96,6 +105,7 @@
                 @change="handleCheck"
                 :checked="checkDrug(props.row)"
               />
+              <!-- :checked="checkDrug(props.row)" -->
             </q-td>
             <q-td key="drugstoreName" :props="props" class="appeals-td">
               <a class="appeal-link">
@@ -121,7 +131,7 @@
     <div class="flex q-my-lg">
       <PaginationTable
         :pagination="pagination"
-        :total="total"
+        :total="filteredRows.length"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
@@ -131,7 +141,7 @@
       <RowsPerPage
         @choiceOption="selectOption"
         :pagination="pagination"
-        :total="total"
+        :total="filteredRows.length"
       />
     </div>
   </div>
@@ -143,7 +153,7 @@ import ClientService from "src/services/ClientService";
 import PaginationTable from "./PaginationTable.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
-import SimpleButton from "../Shared/SimpleButton.vue";
+
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import DateRange from "../DateRange.vue";
@@ -247,9 +257,24 @@ const handleCheck = (row) => {
   // checkedDrugs.value.push(row);
   // console.log(checkedDrugs.value);
 };
-const checkDrug = (row) => {
-  return checkedDrugs.value.some((drug) => drug.index === row.index);
+
+const checkDrug = computed(() => {
+  return (row) => {
+    return checkedDrugs.value.some((drug) => drug.index === row.index);
+  };
+});
+// return checkedDrugs.value.some((drug) => drug.index === row.index);
+
+const handleAllDrugs = () => {
+  if (checkAllDrugs.value) {
+    checkedDrugs.value = [];
+  } else {
+    checkedDrugs.value = [...filteredRows.value];
+  }
 };
+const checkAllDrugs = computed(
+  () => checkedDrugs.value.length === filteredRows.value.length
+);
 
 const checkedDrugsIds = computed(() =>
   checkedDrugs.value.map((drug) => drug.index)
