@@ -109,7 +109,7 @@
     <div class="flex q-my-lg">
       <PaginationTable
         :pagination="pagination"
-        :total="total"
+        :total="filteredRows.length"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
@@ -119,7 +119,7 @@
       <RowsPerPage
         @choiceOption="selectOption"
         :pagination="pagination"
-        :total="total"
+        :total="filteredRows.length"
       />
     </div>
   </div>
