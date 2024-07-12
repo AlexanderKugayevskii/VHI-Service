@@ -41,7 +41,11 @@
           </q-input>
         </div>
       </div>
-      <DateRange @get-range="handleDateRange" />
+      <DateRange
+        @get-range="handleDateRange"
+        @get-data="getExcelData"
+        :disabled-rule="disableButton"
+      />
     </div>
     <div>
       <q-table
@@ -76,7 +80,16 @@
               :props="props"
               class="appeals-th"
             >
-              {{ col.label }}
+              <template v-if="col.name === 'checkbox'">
+                <SimpleCheckbox
+                  square
+                  @change="handleAllClinics"
+                  :checked="checkAllClinics"
+                />
+              </template>
+              <template v-else>
+                {{ col.label }}
+              </template>
             </q-th>
           </q-tr>
         </template>
@@ -85,21 +98,23 @@
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
+            <q-td key="checkbox" :props="props" class="appeals-td">
+              <SimpleCheckbox
+                square
+                :item="props.row"
+                @change="handleCheck"
+                :checked="checkClinic(props.row)"
+              />
+              <!-- :checked="checkDrug(props.row)" -->
+            </q-td>
             <q-td key="clinicName" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.clinicName }}
               </a>
             </q-td>
+
             <q-td key="phone" :props="props" class="appeals-td">
               {{ props.row.phone }}
-            </q-td>
-            <q-td key="reports" :props="props" class="appeals-td">
-              <SimpleButton
-                label="Скачать отчет"
-                custom-class="appeals-btn reports-btn"
-                :disabled="disableButton"
-                @click="getExcelData(props.row)"
-              />
             </q-td>
           </q-tr>
         </template>
@@ -131,15 +146,16 @@ import ClientService from "src/services/ClientService";
 import PaginationTable from "./PaginationTable.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
-import SimpleButton from "../Shared/SimpleButton.vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 
 import DateRange from "../DateRange.vue";
 
 const { t } = useI18n();
 const loading = ref(false);
 const clinics = ref([]);
+const checkedClinics = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -168,6 +184,12 @@ const columns = computed(() => [
     align: "left",
   },
   {
+    name: "checkbox",
+    label: "",
+    field: "checkbox",
+    align: "left",
+  },
+  {
     name: "clinicName",
     align: "left",
     label: t("client_table.clinic"),
@@ -178,12 +200,6 @@ const columns = computed(() => [
     align: "left",
     label: "Телефон",
     field: "phone",
-  },
-  {
-    name: "reports",
-    align: "left",
-    label: "Отчет",
-    field: "organizationName",
   },
 ]);
 
@@ -219,18 +235,52 @@ const fetchClinics = async () => {
   }
 };
 
+const handleCheck = (row) => {
+  const findedRow = checkedClinics.value.findIndex(
+    (drug) => drug.index === row.index
+  );
+  if (findedRow > -1) {
+    checkedClinics.value.splice(findedRow, 1);
+  } else {
+    checkedClinics.value.push(row);
+  }
+};
+
+const checkClinic = computed(() => {
+  return (row) => {
+    return checkedClinics.value.some((clinic) => clinic.index === row.index);
+  };
+});
+
+const handleAllClinics = () => {
+  if (checkAllClinics.value) {
+    checkedClinics.value = [];
+  } else {
+    checkedClinics.value = [...filteredRows.value];
+  }
+};
+const checkAllClinics = computed(
+  () => checkedClinics.value.length === filteredRows.value.length
+);
+
+const checkedClinicIds = computed(() =>
+  checkedClinics.value.map((clinic) => clinic.index)
+);
+
 const fileLoad = ref(false);
 const fileError = ref("");
-const getExcelData = async (row) => {
+const getExcelData = async () => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getClinicExcelData(row.index, {
-      startDate: dateRangeData.value.startDate,
-      endDate: dateRangeData.value.endDate,
-    });
+    const response = await ClientService.getClinicExcelData(
+      checkedClinicIds.value,
+      {
+        startDate: dateRangeData.value.startDate,
+        endDate: dateRangeData.value.endDate,
+      }
+    );
 
-    const fileName = row.clinicName;
     const fileDate = dayjs().format("D-MM-YY");
     const blob = new Blob([response.data], { type: response.data.type });
     console.log(`clinic table`, response);
@@ -239,7 +289,7 @@ const getExcelData = async (row) => {
     link.href = url;
     link.setAttribute(
       "download",
-      `${fileName}-${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
+      `${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
@@ -315,6 +365,9 @@ const selectOption = (option) => {
 }
 
 .appeals-th:nth-of-type(1) {
+  width: 56px;
+}
+.appeals-th:nth-of-type(2) {
   width: 56px;
 }
 

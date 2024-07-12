@@ -489,6 +489,18 @@ export const useAppealStore = defineStore("appeal", () => {
     selectedDrugstore.value = null;
   };
 
+  const clearSelectedItemsData = () => {
+    selectedDoctors.value = [];
+    selectedServices.value = [];
+    suggestedDoctors.value = [];
+    suggestedServices.value = [];
+  };
+
+  const clearSelectedDrugsData = () => {
+    selectedDrugs.value = [];
+    suggestedDrugs.value = [];
+  };
+
   const fetchClinics = async () => {
     loading.value = true;
     try {
@@ -649,9 +661,13 @@ export const useAppealStore = defineStore("appeal", () => {
           type: "success",
           message: "Обращение успешно изменено!",
         });
+
+        return { success: true };
       }
     } catch (e) {
       console.error(e);
+
+      return { success: false };
     } finally {
       loading.value = false;
     }
@@ -719,10 +735,14 @@ export const useAppealStore = defineStore("appeal", () => {
           message: "Обращение успешно создано!",
           position: "bottom-left",
         });
+
+        return { success: true };
         // clearAppealData();
       }
     } catch (e) {
       console.error(e);
+
+      return { success: false };
     } finally {
       loading.value = false;
     }
@@ -794,9 +814,10 @@ export const useAppealStore = defineStore("appeal", () => {
     client.value = localClient;
 
     const currentClient = localClient ? localClient : client.value;
+
     try {
       const response = await ClientService.getMedicalPrograms(
-        currentClient.contractClientId
+        currentClient.contractClientId ?? currentClient.id
       );
       const data = response.data;
       medicalLimits.value = data.data;
@@ -838,6 +859,8 @@ export const useAppealStore = defineStore("appeal", () => {
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
+
+      clearSelectedItemsData();
 
       filterItems(
         data.doctors,
@@ -945,6 +968,8 @@ export const useAppealStore = defineStore("appeal", () => {
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
+
+      clearSelectedDrugsData();
 
       filterItems(
         data.drugs,

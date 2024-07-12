@@ -29,7 +29,6 @@ import SimpleButton from "../Shared/SimpleButton.vue";
 const props = defineProps({
   title: {
     type: String,
-    required: true,
     default: "Подтвердить",
   },
 });

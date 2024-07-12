@@ -34,10 +34,17 @@ function getClientExcelData(contract_client_id) {
   });
 }
 
-function getClinicExcelData(clinic_id, dateRange) {
-  return api.post(`/clinics/hospital-excel/${clinic_id}`, dateRange, {
-    responseType: "blob",
-  });
+function getClinicExcelData(clinic_ids, dateRange) {
+  return api.post(
+    `/clinics/hospital-excel`,
+    {
+      ...dateRange,
+      ids: clinic_ids,
+    },
+    {
+      responseType: "blob",
+    }
+  );
 }
 
 function getDrugstoreExcelData(drugstore_ids, dateRange) {

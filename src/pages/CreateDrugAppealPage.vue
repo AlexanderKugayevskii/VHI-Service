@@ -467,8 +467,9 @@ import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
-import { format } from "quasar";
-import { onMounted } from "vue";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -501,9 +502,24 @@ const handleDrugPrice = (value) => {
   drugPrice.formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
-const handleCreateAppeal = () => {
-  appealStore.postAppealDrugData();
+const handleCreateAppeal = async () => {
+  const result = await appealStore.postAppealDrugData();
   appealStore.setTypeOfAppeal("CHANGE");
+
+  $q.loading.show({
+    delay: 500,
+  });
+
+  await appealStore.fetchMedicalPrograms();
+  await appealStore.fetchApplicantDrugData();
+
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppealDrugLimit",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealDrugData();

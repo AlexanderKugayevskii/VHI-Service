@@ -252,10 +252,6 @@ const handleCheck = (row) => {
   } else {
     checkedDrugs.value.push(row);
   }
-
-  // if(row === null) return;
-  // checkedDrugs.value.push(row);
-  // console.log(checkedDrugs.value);
 };
 
 const checkDrug = computed(() => {
@@ -282,7 +278,7 @@ const checkedDrugsIds = computed(() =>
 
 const fileLoad = ref(false);
 const fileError = ref("");
-const getExcelData = async (row) => {
+const getExcelData = async () => {
   fileLoad.value = true;
   fileError.value = "";
   try {
@@ -301,7 +297,10 @@ const getExcelData = async (row) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `${fileDate}.xlsx`);
+    link.setAttribute(
+      "download",
+      `${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

@@ -726,9 +726,26 @@ const handleRemoveService = (service) => {
   appealStore.removeService(service);
 };
 
-const handleCreateAppeal = () => {
-  appealStore.postAppealData();
+const handleCreateAppeal = async () => {
+  const result = await appealStore.postAppealData();
+  console.log(result);
   appealStore.setTypeOfAppeal("CHANGE");
+
+  $q.loading.show({
+    delay: 500,
+  });
+
+  await appealStore.fetchMedicalPrograms();
+  await appealStore.fetchApplicantData();
+  await appealStore.fetchHospitalData();
+
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppealLimit",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
 };
 
 const handleChangeAppeal = () => {
