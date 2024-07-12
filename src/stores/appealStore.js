@@ -850,6 +850,7 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
+      client.value.applicant = data.contract_client.contract.applicant;
 
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
@@ -961,6 +962,8 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
+      
+      client.value.applicant = data.contract_client.contract.applicant;
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
       client.value.appealStatus = data.status;

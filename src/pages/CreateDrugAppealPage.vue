@@ -44,9 +44,9 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
 
-                  <!-- <span
-                      >Родственник: <b>{{ clientData.clientName }} </b></span
-                    > -->
+                  <span
+                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                  >
                 </div>
 
                 <div class="create-appeal-client-action">
@@ -635,8 +635,9 @@ watch(
 .create-appeal-client-text {
   flex-grow: 1;
   display: flex;
+  flex-wrap: wrap; 
   column-gap: 16px;
-
+  row-gap: 8px;
   span {
     font-size: 15px;
     color: #404f6f;

@@ -49,9 +49,9 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
 
-                  <!-- <span
-                    >Родственник: <b>{{ clientData.clientName }} </b></span
-                  > -->
+                  <span
+                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                  >
                 </div>
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
@@ -773,8 +773,7 @@ watch(
 );
 
 onMounted(() => {
-  console.log(route);
-  console.log(route.redirectedFrom);
+  console.log(`client`, clientData.value);
 });
 
 const hideModal = () => {
@@ -904,7 +903,8 @@ const handleStatusService = (item, isSuggested) => {
   flex-grow: 1;
   display: flex;
   column-gap: 16px;
-
+  row-gap: 8px;
+  flex-wrap: wrap;
   span {
     font-size: 15px;
     color: #404f6f;
