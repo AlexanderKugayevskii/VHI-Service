@@ -15,7 +15,7 @@
         :checkSelectedOption="clientTableStore.checkSelectedOption"
         :removeFilter="clientTableStore.removeFilter"
         :fetchClinics="clientTableStore.fetchClinics"
-        :total = "total"
+        :total="total"
       />
     </div>
     <AppealSearchClient
@@ -57,7 +57,6 @@ const { pagination, rows, columns, loading, filterData, total } =
 
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
-
 
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;

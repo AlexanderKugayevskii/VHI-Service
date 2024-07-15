@@ -268,9 +268,12 @@ const handleAllDrugs = () => {
     checkedDrugs.value = [...filteredRows.value];
   }
 };
-const checkAllDrugs = computed(
-  () => checkedDrugs.value.length === filteredRows.value.length
-);
+const checkAllDrugs = computed(() => {
+  if (filteredRows.value.length === 0) {
+    return false;
+  }
+  return checkedDrugs.value.length === filteredRows.value.length;
+});
 
 const checkedDrugsIds = computed(() =>
   checkedDrugs.value.map((drug) => drug.index)
