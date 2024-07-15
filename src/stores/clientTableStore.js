@@ -94,14 +94,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       .then((response) => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
-        
-        // router.push({
-        //   name: "appeals-page",
-        //   query: {
-        //     page,
-        //     limit,
-        //   },
-        // });
+
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -150,6 +143,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
+
+  // fetch clinics for filter table clinic
   const clinics = ref([]);
   const fetchClinics = async () => {
     loading.value = true;
@@ -163,6 +158,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
     }
   };
 
+
+  // filterQuery constructor 
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
@@ -239,6 +236,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     ];
   });
 
+  // method for 
   const selectFilterData = (option, type, multiple) => {
     let optionItem = option;
     if (!filterQuery.value[type]) {

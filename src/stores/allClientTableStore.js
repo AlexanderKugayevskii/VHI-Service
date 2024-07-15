@@ -5,6 +5,7 @@ import formatNumber from "src/helpers/formatNumber";
 import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
 import { useAppealStore } from "./appealStore";
+import ClinicService from "src/services/ClinicService";
 export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
   const appealStore = useAppealStore();
@@ -198,8 +199,17 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     }
   };
 
+  const fetchClinicApplications = async (id) => {
+    try {
+      const response = await ClientService.getClinicApplications(id);
+      const data = response.data;
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const applicationsRows = computed(() => {
-    console.log(clientInfo.value.applications);
     return clientInfo.value.applications.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
@@ -239,5 +249,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     fetchMedicalPrograms,
     applicationsRows,
     medicalLimits,
+
+    fetchClinicApplications,
   };
 });

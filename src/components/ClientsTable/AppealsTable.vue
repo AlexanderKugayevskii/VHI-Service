@@ -3,7 +3,7 @@
     <TableActions
       @update:search="handleSearch"
       @update:find="handleFind"
-      @delete:option="handleDelete"
+      z@delete:option="handleDelete"
       :filter-options="filterQuery"
       :removeFilter="removeFilter"
     >
@@ -104,7 +104,7 @@
         </template>
         <template v-slot:no-data="{ icon, message, filter }">
           <div class="full-width row flex-center text-accent q-gutter-sm">
-            <span class = "error-message"> {{ message }} </span>
+            <span class="error-message"> {{ message }} </span>
             <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
           </div>
         </template>
@@ -250,15 +250,13 @@ import DateInput from "../Shared/DateInput.vue";
 import { onMounted, ref, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
-import { storeToRefs } from "pinia";
+
 import { toRefs } from "vue";
 import { toRef } from "vue";
 
 const $q = useQuasar();
-
-// table modal
-
 const router = useRouter();
+const emit = defineEmits(["createAppeal"]);
 const props = defineProps([
   // "search",
   "pagination",
@@ -274,7 +272,11 @@ const props = defineProps([
   "fetchClinics",
   "total",
 ]);
-const emit = defineEmits(["createAppeal"]);
+const appealStore = useAppealStore();
+const tableRef = ref(null);
+
+const reactiveProps = toRefs(props);
+const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
 
@@ -287,12 +289,6 @@ const handleFind = () => {
 const handleDelete = () => {
   tableRef.value.requestServerInteraction();
 };
-
-const tableRef = ref(null);
-const appealStore = useAppealStore();
-
-const reactiveProps = toRefs(props);
-const reactivePagination = toRef(reactiveProps, "pagination");
 
 // const clientTableStore = useClientTableStore();
 // const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
@@ -506,7 +502,7 @@ tr.clickable {
 .filter-item {
   padding-bottom: 20px;
 }
-.error-message{
+.error-message {
   font-weight: 500;
 }
 </style>

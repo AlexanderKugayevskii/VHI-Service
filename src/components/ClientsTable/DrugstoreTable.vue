@@ -159,17 +159,17 @@ import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 
 const $q = useQuasar();
-
 const router = useRouter();
-// const searchProp = defineProps(["search"]);
 const emit = defineEmits(["createAppeal"]);
+
+// const searchProp = defineProps(["search"]);
 
 // const search = computed(() => searchProp.search);
 
 const tableRef = ref(null);
-
 const appealStore = useAppealStore();
 const drugTableStore = useDrugTableStore();
+
 const { pagination, rows, columns, loading } = storeToRefs(drugTableStore);
 
 const search = ref("");

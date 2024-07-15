@@ -64,6 +64,13 @@ function getClientInfo(id) {
   return api.get(`/clinics/clients/${id}`);
 }
 
+function getClinicApplications(id) {
+  return api.get(`/clinics/clients/clinic-applications/${id}`);
+}
+function getDrugstoreApplications(id) {
+  return api.get(`/clinics/clients/drugstore-applications/${id}`);
+}
+
 function getClientByAppealId(appealId) {
   return api.get(`/clinics/applications/${appealId}`);
 }
@@ -109,4 +116,7 @@ export default {
   getClinicExcelData,
   getDrugstoreExcelData,
   updateClientData,
+
+  getClinicApplications,
+  getDrugstoreApplications,
 };

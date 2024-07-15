@@ -39,6 +39,7 @@ const allClientTableStore = useFullClientTableStore();
 onBeforeMount(() => {
   allClientTableStore.getClientInfo(props.id);
   allClientTableStore.fetchMedicalPrograms(props.id);
+  allClientTableStore.fetchClinicApplications(props.id);
 });
 onMounted(() => {
   $q.loading.show({ delay: 20 });
