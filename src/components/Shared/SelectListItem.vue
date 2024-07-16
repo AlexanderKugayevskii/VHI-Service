@@ -184,7 +184,7 @@ const removeItem = () => {
 }
 .selected-item-left {
   // width: 450px;
-  flex-grow: 1;
+flex-grow: 1;
   
 }
 .selected-item-label {

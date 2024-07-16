@@ -49,7 +49,7 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props">
+          <q-tr :props="props" class="clickable">
             <q-td key="checkbox" :props="props" class="appeals-td">
               <SimpleCheckbox
                 square
@@ -67,17 +67,34 @@
               <a
                 class="appeal-link"
                 @click="() => (props.row.expandTable = !props.row.expandTable)"
-                >{{ props.row.date }}</a
-              >
+                >{{ props.row.date }}
+                <q-icon size="20px">
+                  <svg
+                    :class="[{ rotate: props.row.expandTable }]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="#7A88A6"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg> </q-icon
+              ></a>
             </q-td>
             <q-td key="appealsAmount" :props="props" class="appeals-td">
               {{ props.row.appealsAmount }}
             </q-td>
             <q-td key="invoice" :props="props" class="appeals-td">
-              {{ props.row.invoice }}
+              <StatusSwitcher :progress="props.row.invoice" />
             </q-td>
             <q-td key="completionCertificate" :props="props" class="appeals-td">
-              {{ props.row.completionCertificate }}
+              <StatusSwitcher :progress="props.row.completionCertificate" />
             </q-td>
 
             <q-td key="payAmount" :props="props" class="text-right appeals-td">
@@ -145,6 +162,7 @@ import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 import AppealsTable from "./AppealsTable.vue";
 import { Collapse } from "vue-collapsed";
+import StatusSwitcher from "../Shared/StatusSwitcher.vue";
 
 const { t } = useI18n();
 
@@ -212,7 +230,7 @@ const columnsAppeal = computed(() => [
 const loading = ref(false);
 const billingData = ref([
   {
-    index: 1, 
+    index: 1,
     agent: "Profmed",
     date: "Июль 2024",
     appealsAmount: "25",
@@ -258,7 +276,7 @@ const billingData = ref([
     ],
   },
   {
-    index: 2, 
+    index: 2,
     agent: "Profmed",
     date: "Июль 2024",
     appealsAmount: "25",
@@ -287,7 +305,7 @@ const billingData = ref([
     ],
   },
   {
-    index: 3, 
+    index: 3,
     agent: "Profmed",
     date: "Июль 2024",
     appealsAmount: "25",
@@ -600,8 +618,28 @@ tbody tr td:last-child {
   cursor: pointer;
   padding: 0;
 }
+
 tr.clickable {
   cursor: pointer;
+
+  :hover {
+    .appeal-link {
+      color: #219e9f;
+
+      svg path {
+        stroke: #219e9f;
+      }
+    }
+  }
+
+  .appeal-link {
+    svg {
+      transition: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    svg.rotate {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 .v-collapse {
