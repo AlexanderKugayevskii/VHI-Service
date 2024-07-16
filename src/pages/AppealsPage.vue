@@ -8,7 +8,7 @@
         :rows="rows"
         :columns="columns"
         :loading="loading"
-        :filterData="filterData"
+        :filterData="filterData"  
         :requestData="clientTableStore.handleRequest"
         :select-filter-data="clientTableStore.selectFilterData"
         :filter-query="clientTableStore.filterQuery"

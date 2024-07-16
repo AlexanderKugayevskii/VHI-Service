@@ -183,6 +183,11 @@ const routes = [
             name: "reports-organizations-page",
             component: () => import("src/pages/ReportsOrganizationsPage.vue"),
           },
+          {
+            path: "billing",
+            name: "billing-page",
+            component: () => import("src/pages/BillingPage.vue"),
+          },
         ],
       },
       {

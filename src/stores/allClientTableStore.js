@@ -10,7 +10,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
   const appealStore = useAppealStore();
 
-  // allTable
+  // allClientsTable
   const columns = computed(() => [
     {
       name: "index",
@@ -90,21 +90,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const loading = ref(true);
   const users = ref([]);
-  const medicalLimits = ref([]);
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
     ClientService.getFullClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
-
-        // router.push({
-        //   name: "appeals-page",
-        //   query: {
-        //     page,
-        //     limit,
-        //   },
-        // });
 
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
@@ -154,7 +145,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const setClientInfo = (item) => {
     clientInfo.value = item;
   };
-
   const getClientInfo = async (id) => {
     loading.value = true;
     try {
@@ -182,6 +172,9 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     }
   };
 
+
+
+  const medicalLimits = ref([]);
   const fetchMedicalPrograms = async (id) => {
     try {
       const response = await ClientService.getMedicalPrograms(id);
@@ -198,6 +191,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       console.error(e);
     }
   };
+
+
 
   const fetchClinicApplications = async (id) => {
     try {
@@ -238,6 +233,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     });
   });
 
+
+
   return {
     pagination,
     loading,
@@ -249,7 +246,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     fetchMedicalPrograms,
     applicationsRows,
     medicalLimits,
-
     fetchClinicApplications,
   };
 });
