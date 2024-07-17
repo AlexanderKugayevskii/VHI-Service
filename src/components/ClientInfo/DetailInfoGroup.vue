@@ -55,18 +55,62 @@
       </div>
     </div>
     <!-- v-if="allClientTableStore.clientInfo.applications.length > 0" -->
-    <AppealsTable
-      :rows="allClientTableStore.applicationsClinicRows"
-      :columns="columnsWithoutClientName"
-      :loading="allClientTableStore.loading"
-      @createAppeal="openAppealTypeModal"
-    />
-    <DrugstoreTable
-      :rows="allClientTableStore.applicationsDrugstoreRows"
-      :columns="drugColumnsWithoutClientName"
-      :loading="allClientTableStore.loading"
-      @createAppeal="openAppealTypeModal"
-    />
+
+    <div class="tabs-container">
+      <div class="tabs-header q-mb-md">
+        <q-tabs
+          dense
+          active-class="tab-active"
+          v-model="tab"
+          content-class="details-tabs-header"
+          align="left"
+        >
+          <q-tab
+            name="clinics"
+            label="Клиники"
+            :ripple="false"
+            class="tabs--no-hover"
+          >
+          </q-tab>
+          <q-tab
+            name="drugstore"
+            label="Аптеки"
+            :ripple="false"
+            class="tabs--no-hover"
+          >
+          </q-tab>
+        </q-tabs>
+      </div>
+      <div class="tabs-content">
+        <q-tab-panels
+          v-model="tab"
+          animated
+          transition-prev="jump-up"
+          transition-next="jump-down"
+        >
+          <q-tab-panel name="clinics" key="clinics">
+            <div class="tab-header">
+              <AppealsTable
+                :rows="allClientTableStore.applicationsClinicRows"
+                :columns="columnsWithoutClientName"
+                :loading="allClientTableStore.loading"
+                @createAppeal="openAppealTypeModal"
+              />
+            </div>
+          </q-tab-panel>
+          <q-tab-panel name="drugstore" key="drugstore">
+            <div class="tab-header">
+              <DrugstoreTable
+                :rows="allClientTableStore.applicationsDrugstoreRows"
+                :columns="drugColumnsWithoutClientName"
+                :loading="allClientTableStore.loading"
+                @createAppeal="openAppealTypeModal"
+              />
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+    </div>
   </div>
   <AppealType v-model:="appealTypeFixed" />
 </template>
@@ -96,6 +140,7 @@ const props = defineProps({
     required: true,
   },
 });
+const tab = ref("clinics");
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
@@ -219,5 +264,13 @@ const getExcelData = async () => {
 
 .v-collapse {
   transition: opacity 300ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.tabs-header {
+  background: transparent;
+}
+
+.q-tab-panels {
+  background: none;
 }
 </style>
