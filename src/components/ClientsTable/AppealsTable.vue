@@ -96,7 +96,7 @@
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
-        no-data-label="Данных нет"
+        no-data-label="Обращений нет"
         no-results-label="Данных по вашему запросу не найдено"
         @request="requestData"
       >
@@ -290,7 +290,6 @@ const props = defineProps({
     default: true,
   },
 });
-
 
 const appealStore = useAppealStore();
 const tableRef = ref(null);

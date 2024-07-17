@@ -21,8 +21,8 @@
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
-        no-data-label="I didn't find anything for you"
-        no-results-label="The filter didn't uncover any results"
+        no-data-label="Обращений нет"
+        no-results-label="Данных по вашему запросу не найдено"
         @request="requestData"
       >
         <template v-slot:loading>
