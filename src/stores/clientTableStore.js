@@ -143,7 +143,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
-
   // fetch clinics for filter table clinic
   const clinics = ref([]);
   const fetchClinics = async () => {
@@ -158,8 +157,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     }
   };
 
-
-  // filterQuery constructor 
+  // filterQuery constructor
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
@@ -236,7 +234,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     ];
   });
 
-  // method for 
+  // method for
   const selectFilterData = (option, type, multiple) => {
     let optionItem = option;
     if (!filterQuery.value[type]) {
