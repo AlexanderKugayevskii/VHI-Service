@@ -8,7 +8,7 @@
         :rows="rows"
         :columns="columns"
         :loading="loading"
-        :filterData="filterData"  
+        :filterData="filterData"
         :requestData="clientTableStore.handleRequest"
         :select-filter-data="clientTableStore.selectFilterData"
         :filter-query="clientTableStore.filterQuery"
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import AppealsTable from "src/components/ClientsTable/AppealsTable.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import AppealType from "./AppealType.vue";
@@ -39,7 +39,6 @@ import AppealType from "./AppealType.vue";
 // const page = computed(() => props.page);
 import { storeToRefs } from "pinia";
 import { useClientTableStore } from "src/stores/clientTableStore";
-import { onBeforeRouteLeave } from "vue-router";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();

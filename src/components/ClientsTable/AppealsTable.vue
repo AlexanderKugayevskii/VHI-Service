@@ -290,6 +290,8 @@ const props = defineProps({
     default: true,
   },
 });
+
+
 const appealStore = useAppealStore();
 const tableRef = ref(null);
 

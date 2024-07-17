@@ -56,8 +56,14 @@
     </div>
     <!-- v-if="allClientTableStore.clientInfo.applications.length > 0" -->
     <AppealsTable
-      :rows="allClientTableStore.applicationsRows"
+      :rows="allClientTableStore.applicationsClinicRows"
       :columns="columnsWithoutClientName"
+      :loading="allClientTableStore.loading"
+      @createAppeal="openAppealTypeModal"
+    />
+    <DrugstoreTable
+      :rows="allClientTableStore.applicationsDrugstoreRows"
+      :columns="drugColumnsWithoutClientName"
       :loading="allClientTableStore.loading"
       @createAppeal="openAppealTypeModal"
     />
@@ -67,16 +73,18 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useFullClientTableStore } from "src/stores/allClientTableStore";
+import { useClientTableStore } from "src/stores/clientTableStore";
+import { useDrugTableStore } from "src/stores/drugTableStore";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 import ExpandBtn from "src/components/ClientInfo/ExpandBtn.vue";
 import PolisInfo from "src/components/ClientInfo/PolisInfo.vue";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 import ClientCard from "src/components/ClientInfo/ClientCard.vue";
 import ClientTab from "src/components/ClientInfo/ClientTab.vue";
-import { storeToRefs } from "pinia";
-import { useFullClientTableStore } from "src/stores/allClientTableStore";
-import { useClientTableStore } from "src/stores/clientTableStore";
 import AppealsTable from "../ClientsTable/AppealsTable.vue";
+import DrugstoreTable from "../ClientsTable/DrugstoreTable.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import ClientService from "src/services/ClientService";
 import dayjs from "dayjs";
@@ -92,21 +100,24 @@ const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
 };
-
 // clinic or drugdstore modal ref
 const appealTypeFixed = ref(false);
 const openAppealTypeModal = () => {
   appealTypeFixed.value = true;
 };
 
-const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
-
 const allClientTableStore = useFullClientTableStore();
+const clientTableStore = useClientTableStore();
+const drugTableStore = useDrugTableStore();
+const { pagination, rows, columns } = storeToRefs(clientTableStore);
+const { columns: drugColumngs } = storeToRefs(drugTableStore);
 
 const columnsWithoutClientName = computed(() => {
   return columns.value.filter((column) => column.name !== "client");
 });
+const drugColumnsWithoutClientName = computed(() =>
+  drugColumngs.value.filter((col) => col.name !== "client")
+);
 
 const clientInfo = computed(() => allClientTableStore.clientInfo);
 const medicalLimits = computed(() => allClientTableStore.medicalLimits);
@@ -123,7 +134,6 @@ const client = computed(() => {
   return clientInfo.value?.client;
 });
 const subClients = computed(() => clientInfo.value?.sub_clients);
-
 
 const fileLoad = ref(false);
 const fileError = ref("");

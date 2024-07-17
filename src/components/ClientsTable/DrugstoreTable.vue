@@ -20,10 +20,10 @@
         hide-pagination
         ref="tableRef"
         row-key="index"
-        v-model:pagination="pagination"
+        v-model:pagination="reactivePagination"
         no-data-label="I didn't find anything for you"
         no-results-label="The filter didn't uncover any results"
-        @request="drugTableStore.handleRequest"
+        @request="requestData"
       >
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -126,15 +126,20 @@
     <div class="flex q-my-lg">
       <!-- <PaginationTable :pagination="pagination" @change-page="updatePage" /> -->
       <PaginationTable
-        v-if="pagination.rowsNumber >= 10"
-        :pagination="pagination"
+        v-if="reactivePagination"
+        :pagination="reactivePagination"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
       />
 
       <q-space></q-space>
-      <RowsPerPage @choiceOption="selectOption" :pagination="pagination" />
+      <RowsPerPage
+        v-if="reactivePagination"
+        @choiceOption="selectOption"
+        :pagination="reactivePagination"
+        :total="total"
+      />
     </div>
   </div>
 </template>
@@ -152,30 +157,63 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 
 import PaginationTable from "./PaginationTable.vue";
 import UserSettings from "./UserSettings.vue";
-import { onMounted, computed, ref, watch } from "vue";
+import { onMounted, computed, ref, toRef, toRefs, watch } from "vue";
 
 import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 
+const props = defineProps({
+  pagination: {
+    type: Object,
+  },
+  rows: {
+    type: Object,
+  },
+  columns: {
+    type: Object,
+  },
+  loading: {
+    type: Boolean,
+  },
+  filterData: {},
+  requestData: {},
+  selectFilterData: {},
+  filterQuery: {},
+  checkSelectedOption: {},
+  removeFilter: {},
+  fetchClinics: {},
+  total: {},
+  showTableActions: {
+    type: Boolean,
+    default: true,
+  },
+  showPagination: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 const $q = useQuasar();
 const router = useRouter();
 const emit = defineEmits(["createAppeal"]);
 
-// const searchProp = defineProps(["search"]);
-
-// const search = computed(() => searchProp.search);
-
 const tableRef = ref(null);
 const appealStore = useAppealStore();
-const drugTableStore = useDrugTableStore();
 
-const { pagination, rows, columns, loading } = storeToRefs(drugTableStore);
+const reactiveProps = toRefs(props);
+const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
 
 const handleSearch = (searchValue) => {
   search.value = searchValue;
+};
+const handleFind = () => {
+  tableRef.value.requestServerInteraction();
+};
+const handleDelete = () => {
+  tableRef.value.requestServerInteraction();
 };
 
 //incremenet decrement and change page events
@@ -292,9 +330,9 @@ onMounted(() => {
 // .appeals-th:nth-of-type(2) {
 //   width: 200px;
 // }
-// .appeals-th:nth-of-type(3) {
-//   width: 150px;
-// }
+.appeals-th:nth-of-type(3) {
+  width: 150px;
+}
 .appeals-th:nth-of-type(4) {
   width: 120px;
 }
