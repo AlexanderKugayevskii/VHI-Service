@@ -1,9 +1,10 @@
 <template>
   <div>
     <TableActions
+      v-if="showTableActions"
       @update:search="handleSearch"
       @update:find="handleFind"
-      z@delete:option="handleDelete"
+      @delete:option="handleDelete"
       :filter-options="filterQuery"
       :removeFilter="removeFilter"
     >
@@ -212,7 +213,7 @@
       </q-table>
     </div>
     <!-- pagination -->
-    <div class="flex q-my-lg">
+    <div class="flex q-my-lg" v-if="showPagination">
       <PaginationTable
         v-if="reactivePagination"
         :pagination="reactivePagination"
@@ -253,25 +254,44 @@ import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
+import { tryOnBeforeUnmount } from "@vueuse/core";
 
 const $q = useQuasar();
 const router = useRouter();
 const emit = defineEmits(["createAppeal"]);
-const props = defineProps([
-  // "search",
-  "pagination",
-  "rows",
-  "columns",
-  "loading",
-  "filterData",
-  "requestData",
-  "selectFilterData",
-  "filterQuery",
-  "checkSelectedOption",
-  "removeFilter",
-  "fetchClinics",
-  "total",
-]);
+
+const props = defineProps({
+  pagination: {
+    type: Object,
+  },
+  rows: {
+    type: Object,
+  },
+  columns: {
+    type: Object,
+  },
+  loading: {
+    type: Boolean,
+  },
+  filterData: {},
+  requestData: {},
+  selectFilterData: {},
+  filterQuery: {},
+  checkSelectedOption: {},
+  removeFilter: {},
+  fetchClinics: {},
+  total: {},
+  showTableActions: {
+    type: Boolean,
+    default: true,
+  },
+  showPagination: {
+    type: Boolean,
+    default: true,
+  },
+});
+
+
 const appealStore = useAppealStore();
 const tableRef = ref(null);
 

@@ -57,6 +57,10 @@ body {
   border-radius: 12px;
   background-color: #fff;
   border-collapse: collapse;
+
+  .inner-table-td {
+    padding: 0;
+  }
 }
 
 .full-client-table .q-table {
@@ -400,4 +404,8 @@ button[class^="btn"] {
     background-color: hsl(294, 100%, 96%);
     color: hsl(294, 60%, 50%);
   }
+}
+
+.details-tabs-header {
+  column-gap: 2px;
 }

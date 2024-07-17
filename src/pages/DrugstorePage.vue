@@ -3,7 +3,20 @@
     <div class="col page-container">
       <h2 class="page-title q-my-none q-mb-md">Аптеки</h2>
 
-      <DrugstoreTable @createAppeal="openSearchClient" />
+      <DrugstoreTable
+        @createAppeal="openSearchClient"
+        :pagination="pagination"
+        :rows="rows"
+        :columns="columns"
+        :loading="loading"
+        :filterData="filterData"
+        :request-data="drugTableStore.handleRequest"
+        :select-filter-data="drugTableStore.selectFilterData"
+        :filter-query="drugTableStore.filterQuery"
+        :checkSelectedOption="drugTableStore.checkSelectedOption"
+        :remove-filter="drugTableStore.removeFilter"
+        :total="total"
+      />
     </div>
 
     <AppealSearchClient
@@ -24,8 +37,16 @@ import { ref } from "vue";
 import DrugstoreTable from "src/components/ClientsTable/DrugstoreTable.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import AppealType from "./AppealType.vue";
+import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 
-import CreateAppeal from "./CreateAppealPage.vue";
+import { useDrugTableStore } from "src/stores/drugTableStore";
+import ClientsTable from "src/components/ClientsTable/ClientsTable.vue";
+
+const drugTableStore = useDrugTableStore();
+
+const { pagination, rows, columns, loading, filterData, total } =
+  storeToRefs(drugTableStore);
 
 const modalFilterFixed = ref(false);
 const appealTypeFixed = ref(false);

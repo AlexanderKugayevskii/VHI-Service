@@ -10,7 +10,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const { t } = useI18n();
   const appealStore = useAppealStore();
 
-  // allTable
+  // allClientsTable
   const columns = computed(() => [
     {
       name: "index",
@@ -79,7 +79,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       field: "change",
     },
   ]);
-
   const pagination = ref({
     sortBy: "desc",
     descending: false,
@@ -87,24 +86,14 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     rowsNumber: 0,
     page: 1,
   });
-
   const loading = ref(true);
   const users = ref([]);
-  const medicalLimits = ref([]);
 
   function fetchClients(page = 1, limit = 10, search) {
     loading.value = true;
     ClientService.getFullClients(page, limit, search)
       .then((response) => {
         users.value = response.data.data.data;
-
-        // router.push({
-        //   name: "appeals-page",
-        //   query: {
-        //     page,
-        //     limit,
-        //   },
-        // });
 
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
@@ -150,11 +139,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     });
   });
 
+  // selected client info
   const clientInfo = ref(null);
   const setClientInfo = (item) => {
     clientInfo.value = item;
   };
-
   const getClientInfo = async (id) => {
     loading.value = true;
     try {
@@ -182,6 +171,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     }
   };
 
+  // medical limits for client
+  const medicalLimits = ref([]);
   const fetchMedicalPrograms = async (id) => {
     try {
       const response = await ClientService.getMedicalPrograms(id);
@@ -199,18 +190,35 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     }
   };
 
+  // applications clinic for client
+  const clinicClientApplications = ref([]);
   const fetchClinicApplications = async (id) => {
     try {
       const response = await ClientService.getClinicApplications(id);
-      const data = response.data;
-      console.log(data);
+      const data = response.data.data;
+
+      clinicClientApplications.value = data;
+      console.log(clinicClientApplications.value);
     } catch (e) {
       console.error(e);
     }
   };
 
-  const applicationsRows = computed(() => {
-    return clientInfo.value.applications.map((row, index) => {
+  const drugstoreClientApplications = ref([]);
+  const fetchDrugstoreApplications = async (id) => {
+    try {
+      const response = await ClientService.getDrugstoreApplications(id);
+      const data = response.data.data;
+
+      drugstoreClientApplications.value = data;
+      console.log(drugstoreClientApplications.value);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const applicationsClinicRows = computed(() => {
+    return clinicClientApplications.value.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
       return {
@@ -218,7 +226,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client.lastname,
-
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         clinicName: row.hospital?.name,
@@ -229,15 +236,31 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program.name,
         userSettings: "",
-        // index:
-        //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
-        //   index +
-        //   1,
         index: row.id,
       };
     });
   });
 
+  const applicationsDrugstoreRows = computed(() => {
+    return drugstoreClientApplications.value.map((row, index) => {
+      const medicines = row.drugs.map((drug) => drug.name).join(", ");
+      return {
+        contractClientId: row.contract_client_id,
+        appealId: row.id,
+        clientFirstname: clientInfo.value.client.name,
+        clientLastname: clientInfo.value.client,
+        appealDate: formatDate(row.created_at),
+        appealStatus: row.status,
+        drugstore: row.drugstore.name ?? "",
+        medicines: medicines,
+        expenseAmount: row.total_amount ?? "",
+        dmsCode: clientInfo.value.dms_code,
+        program: clientInfo.value.program.name,
+        userSettings: "",
+        index: row.id,
+      };
+    });
+  });
   return {
     pagination,
     loading,
@@ -247,9 +270,10 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     clientInfo,
     getClientInfo,
     fetchMedicalPrograms,
-    applicationsRows,
+    applicationsClinicRows,
+    applicationsDrugstoreRows,
     medicalLimits,
-
     fetchClinicApplications,
+    fetchDrugstoreApplications,
   };
 });

@@ -40,6 +40,7 @@ onBeforeMount(() => {
   allClientTableStore.getClientInfo(props.id);
   allClientTableStore.fetchMedicalPrograms(props.id);
   allClientTableStore.fetchClinicApplications(props.id);
+  allClientTableStore.fetchDrugstoreApplications(props.id);
 });
 onMounted(() => {
   $q.loading.show({ delay: 20 });

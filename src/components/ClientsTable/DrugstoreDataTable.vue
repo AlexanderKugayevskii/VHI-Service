@@ -243,6 +243,8 @@ const fetchDrugstores = async () => {
   }
 };
 
+
+// MULTISELECTION
 const handleCheck = (row) => {
   const findedRow = checkedDrugs.value.findIndex(
     (drug) => drug.index === row.index
@@ -259,14 +261,13 @@ const checkDrug = computed(() => {
     return checkedDrugs.value.some((drug) => drug.index === row.index);
   };
 });
-// return checkedDrugs.value.some((drug) => drug.index === row.index);
 
 const handleAllDrugs = () => {
   if (checkAllDrugs.value) {
     checkedDrugs.value = [];
   } else {
     checkedDrugs.value = [...filteredRows.value];
-  }
+  } 
 };
 const checkAllDrugs = computed(() => {
   if (filteredRows.value.length === 0) {
