@@ -19,7 +19,7 @@
       <template #filters>
         <div
           class="filter-item"
-          v-for="filterItem in filterData"
+          v-for="filterItem in filterData.filter((item) => item.meta)"
           :key="filterItem.name"
         >
           <SimpleInput
@@ -248,13 +248,14 @@ import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DateInput from "../Shared/DateInput.vue";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
 import { tryOnBeforeUnmount } from "@vueuse/core";
+import { filter } from "lodash";
 
 const $q = useQuasar();
 const router = useRouter();

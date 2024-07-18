@@ -65,6 +65,7 @@
           clickable
           v-close-popup
           class="item--no-hover"
+          v-if="!isClinic"
           @click.prevent.stop="openAppealLimit"
         >
           <q-icon>
@@ -91,6 +92,7 @@
           v-close-popup
           class="item--no-hover"
           @click.prevent.stop="deleteAppeal"
+          v-if="!isClinic"
         >
           <q-icon>
             <!-- <svg
@@ -146,9 +148,12 @@
 import DropdownSettings from "../Shared/DropdownSettings.vue";
 import ConfirmModal from "../Shared/ConfirmModal.vue";
 import { useQuasar } from "quasar";
+import { useAppealStore } from "src/stores/appealStore";
 const emit = defineEmits(["openModal", "openModalLimit", "deleteAppeal"]);
 const props = defineProps(["client"]);
 const $q = useQuasar();
+
+const { isClinic } = useAppealStore();
 
 const openAppealPage = async () => {
   emit("openModal");

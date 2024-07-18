@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch, watchEffect } from "vue";
+import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
-import formatDate from "src/helpers/formatDate";
 import { useI18n } from "vue-i18n";
+import { useAppealStore } from "./appealStore";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
+
+  const { isClinic } = useAppealStore();
 
   const statuses = computed(() => {
     return {
@@ -164,6 +166,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.client"),
         type: "client",
+        meta: true,
         placeholder: "Фамилия и имя клиента",
         multiple: false,
         component: "SimpleInput",
@@ -172,6 +175,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
+        meta: true,
         placeholder: "01.01.1990",
         multiple: false,
         component: "DateInput",
@@ -180,6 +184,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.appeal_status"),
         type: "appeal_status",
+        meta: true,
         placeholder: "Выберите статус",
         multiple: false,
         component: "DropdownSelectNew",
@@ -191,6 +196,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.clinic"),
         type: "clinic",
+        meta: !isClinic,
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
         component: "DropdownSelectNew",
@@ -204,6 +210,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.doctor"),
         type: "doctors",
+        meta: true,
         placeholder: t("create_appeal.dropdowns.doctors"),
         multiple: true,
         component: "SimpleInput",
@@ -219,16 +226,11 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.service"),
         type: "services",
+        meta: true,
         placeholder: t("create_appeal.dropdowns.services"),
         multiple: true,
         component: "SimpleInput",
-        // item: [
-        //   ...new Set(
-        //     users.value
-        //       .flatMap((row) => row.services)
-        //       .map((service) => service.name)
-        //   ),
-        // ],
+
         item: "",
       },
     ];
