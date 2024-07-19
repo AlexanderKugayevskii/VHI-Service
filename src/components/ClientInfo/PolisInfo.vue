@@ -5,12 +5,12 @@
         <span>ID:</span>
         <span>{{ data.dmsCode }}</span>
       </p>
-      <p>
+      <p v-if="data.programName">
         <span>Программа:</span>
         <span>{{ data.programName }}</span>
       </p>
     </div>
-    <div class="polis-info__right">
+    <div class="polis-info__right" v-if="hasMedicalPrograms">
       <div class="polis-info__remainder">
         <span>Общий остаток</span>
         <span>{{ formatPrice(data.remaind) }}</span>
@@ -28,6 +28,10 @@ import { onMounted } from "vue";
 const allClientTableStore = useFullClientTableStore();
 const clientInfo = computed(() => allClientTableStore.clientInfo);
 const medicalPrograms = computed(() => allClientTableStore.medicalLimits);
+
+const hasMedicalPrograms = computed(() =>
+  medicalPrograms.value.every((p) => p.name !== null)
+);
 
 const data = computed(() => {
   return {
