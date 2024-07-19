@@ -13,9 +13,17 @@
       />
     </div>
     <PolisInfo />
-    <div class="details-main">
-      <DetailCard v-for="item in mainPrograms" :key="item.id" :rate="item" />
+    <div
+      class="details-main"
+      v-if="mainPrograms.every((program) => program.name !== null)"
+    >
+      <DetailCard
+        v-for="item in mainPrograms.filter((program) => program.name !== null)"
+        :key="item.id"
+        :rate="item"
+      />
     </div>
+    <div v-else class="details-error">Лимитов нет</div>
     <ExpandBtn
       :text="`Показать еще (${extraPrograms.length})`"
       @btn-click="handleShowDetailsExtra"
@@ -25,7 +33,7 @@
     <div class="details-extra" v-show="showDetailsExtra">
       <DetailCard
         class="details-extra-card"
-        v-for="item in extraPrograms"
+        v-for="item in extraPrograms.filter((program) => program.name !== null)"
         :key="item.id"
         :rate="item"
       />
@@ -225,6 +233,11 @@ const getExcelData = async () => {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
+  &-error {
+    font-size: 16px;
+    text-align: center;
+    color: $negative;
   }
   &-extra {
     display: flex;

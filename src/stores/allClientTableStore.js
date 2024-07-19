@@ -149,6 +149,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
+      console.log(data);
       setClientInfo(data);
 
       const clientDataForAppeal = {
@@ -159,7 +160,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         id: data.id,
         passportNumber: data.client.number,
         passportSeria: data.client.seria,
-        program: data.program.name,
+        program: data?.program.name,
         type: "Клиент",
       };
 
@@ -234,7 +235,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         diagnosisName: row.diagnosis ?? "",
         expenseAmount: row.total_amount ?? "",
         dmsCode: clientInfo.value.dms_code,
-        program: clientInfo.value.program.name,
+        program: clientInfo.value.program?.name,
 
         userSettings: "",
         index: row.id,

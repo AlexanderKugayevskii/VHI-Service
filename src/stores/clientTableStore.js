@@ -128,7 +128,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const services = row.services.map((service) => service.name).join(", ");
       const appliedDate = row.applied_date.split("-").reverse().join("-");
       const finishedDate = row.finished_date
-        ? row.finishedDate.split("-").reverse().join("-")
+        ? row.finished_date.split("-").reverse().join("-")
         : null;
       return {
         contractClientId: row.contract_client_id,
