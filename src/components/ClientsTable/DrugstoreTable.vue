@@ -31,7 +31,7 @@
         <template v-slot:no-data="{ icon, message, filter }">
           <div class="full-width row flex-center text-accent q-gutter-sm">
             <q-icon size="2em" name="sentiment_dissatisfied" />
-            <span> Well this is sad... {{ message }} </span>
+            <span> {{ message }} </span>
             <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
           </div>
         </template>
@@ -331,7 +331,7 @@ onMounted(() => {
   width: 56px;
 }
 .appeals-th:nth-of-type(2) {
-  width: 250px
+  width: 250px;
 }
 .appeals-th:nth-of-type(3) {
   width: 150px;
