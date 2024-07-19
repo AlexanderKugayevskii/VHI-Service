@@ -27,6 +27,12 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       field: "appealDate",
     },
     {
+      name: "finishedDate",
+      align: "left",
+      label: "Дата завершения",
+      field: "finishedDate",
+    },
+    {
       name: "appealStatus",
       align: "left",
       label: t("client_table.appeal_status"),
@@ -101,13 +107,16 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   const rows = computed(() => {
     return users.value.map((row, index) => {
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
-
+      const finishedDate = row.finished_date
+        ? row.finished_date.split("-").reverse().join("-")
+        : null;
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
         appealDate: formatDate(row.created_at),
+        finishedDate: finishedDate,
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
         medicines: medicines,
