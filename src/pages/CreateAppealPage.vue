@@ -163,16 +163,27 @@
                               class="dropdown-space"
                               label="Диагноз"
                               placeholder="Введите диагноз"
+                              :disableInput="clientData.appealStatus === 2"
                               @update:model-value="appealStore.setDiagnosis"
                               :modelValue="appealStore.diagnosis"
                             ></SimpleInput>
 
                             <DateInput
+                              class="dropdown-space"
+                              :disableInput="clientData.appealStatus === 2"
                               number
                               label="Дата обращения"
                               placeholder="Введите дату (10-05-2024)"
                               @update:model-value="appealStore.setAppealDate"
                               :modelValue="appealStore.appealDate"
+                            ></DateInput>
+
+                            <DateInput
+                              v-if="clientData.finishedDate"
+                              :disableInput="clientData.appealStatus === 2"
+                              number
+                              label="Дата завершения"
+                              :modelValue="clientData.finishedDate"
                             ></DateInput>
                           </div>
                         </q-tab-panel>
@@ -187,6 +198,7 @@
                               :options="appealStore.doctors"
                               :selected-options="appealStore.selectedDoctors"
                               @select-option="appealStore.selectDoctors"
+                              :disable-choise="clientData.appealStatus === 2"
                             >
                               <template #placeholder>
                                 {{ $t("create_appeal.dropdowns.doctors") }}
@@ -358,6 +370,7 @@
                               :options="appealStore.services"
                               :selected-options="appealStore.selectedServices"
                               @select-option="appealStore.selectServices"
+                              :disable-choise="clientData.appealStatus === 2"
                             >
                               <template #placeholder>
                                 {{ $t("create_appeal.dropdowns.services") }}

@@ -123,11 +123,21 @@
                           <div class="tab-body">
                             <div class="q-mb-sm">
                               <DateInput
+                                class="dropdown-space"
                                 number
                                 label="Дата обращения"
                                 placeholder="Введите дату (10-05-2024)"
                                 @update:model-value="appealStore.setAppealDate"
                                 :modelValue="appealStore.appealDate"
+                                :disable-input="clientData.appealStatus === 2"
+                              ></DateInput>
+
+                              <DateInput
+                                v-if="clientData.finishedDate"
+                                :disableInput="clientData.appealStatus === 2"
+                                number
+                                label="Дата завершения"
+                                :modelValue="clientData.finishedDate"
                               ></DateInput>
                             </div>
 
@@ -145,6 +155,7 @@
                                 @request="appealStore.fetchDrugs"
                                 @request-by-search="handleSearchDrugs"
                                 @select-option="handleSelectDrug"
+                                :disable-choise="clientData.appealStatus === 2"
                               >
                                 <template #top-label> Лекарство </template>
                                 <template #placeholder>
@@ -635,7 +646,7 @@ watch(
 .create-appeal-client-text {
   flex-grow: 1;
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   column-gap: 16px;
   row-gap: 8px;
   span {

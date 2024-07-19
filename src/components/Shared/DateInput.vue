@@ -7,6 +7,7 @@
       <div :class="['input-field__wrapper', { error: isError }]">
         <input
           maxlength="10"
+          :disabled="disableInput"
           :type="type"
           :placeholder="placeholder"
           class="input-field__text-input"
@@ -73,6 +74,10 @@ const props = defineProps({
     default: false,
   },
   isError: {
+    type: Boolean,
+    default: false,
+  },
+  disableInput: {
     type: Boolean,
     default: false,
   },
