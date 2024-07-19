@@ -319,11 +319,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     delete filterQuery.value[filterKey];
   };
 
-  watch(
-    () => filterQuery.value,
-    () => {}
-  );
-
   return {
     loading,
     total,
