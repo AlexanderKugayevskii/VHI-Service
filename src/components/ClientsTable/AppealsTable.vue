@@ -166,6 +166,12 @@
                 {{ props.row.appealDate }}
               </TableTooltip>
             </q-td>
+            <q-td key="finishedDate" :props="props" class="appeals-td">
+              {{ props.row.finishedDate }}
+              <TableTooltip>
+                {{ props.row.finishedDate }}
+              </TableTooltip>
+            </q-td>
             <q-td key="appealStatus" :props="props" class="appeals-td">
               <AppealStatus :status="props.row.appealStatus" />
             </q-td>
@@ -460,14 +466,17 @@ onMounted(() => {});
 .appeals-th:nth-of-type(1) {
   width: 56px;
 }
-// .appeals-th:nth-of-type(2) {
-//   width: 200px;
-// }
+.appeals-th:nth-of-type(2) {
+  // width: 150px;
+}
 .appeals-th:nth-of-type(3) {
   width: 150px;
 }
 .appeals-th:nth-of-type(4) {
-  width: 120px;
+  width: 150px;
+}
+.appeals-th:nth-of-type(5) {
+  width: 150px;
 }
 .q-table thead th:last-of-type {
   width: 52px;

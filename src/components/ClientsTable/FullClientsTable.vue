@@ -90,8 +90,11 @@
               {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
             </TableTooltip>
           </q-td>
-          <q-td key="clientType" :props="props" class="appeals-td">
-            {{ props.row.clientType }}
+          <q-td key="residentType" :props="props" class="appeals-td">
+            {{
+              residentTypes.find((type) => type.id === props.row.residentType)
+                ?.name
+            }}
           </q-td>
           <q-td key="passport" :props="props" class="appeals-td">
             {{ props.row.passport }}
@@ -168,6 +171,7 @@ import PaginationTable from "./PaginationTable.vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import { useAppealStore } from "src/stores/appealStore";
+import useResidentTypes from "src/composables/useResidentTypes";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -187,6 +191,7 @@ const props = defineProps([
 ]);
 
 const appealStore = useAppealStore();
+const residentTypes = useResidentTypes();
 
 const search = ref("");
 

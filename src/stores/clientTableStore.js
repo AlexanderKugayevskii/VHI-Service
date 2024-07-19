@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
+import { useI18n } from "vue-i18n";
+import { useAppealStore } from "./appealStore";
 import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
-import { useI18n } from "vue-i18n";
-import { useAppealStore } from "./appealStore";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
@@ -35,6 +35,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
       align: "left",
       label: t("client_table.date_of_appeal"),
       field: "appealDate",
+    },
+    {
+      name: "finishedDate",
+      align: "left",
+      label: "Дата завершения",
+      fitler: "finishedDate",
     },
     {
       name: "appealStatus",
@@ -121,12 +127,16 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
       const appliedDate = row.applied_date.split("-").reverse().join("-");
+      const finishedDate = row.finished_date
+        ? row.finishedDate.split("-").reverse().join("-")
+        : null;
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
         appealDate: appliedDate,
+        finishedDate: finishedDate,
         appealStatus: row.status,
         clinicName: row.hospital.name,
         doctorName: doctors,

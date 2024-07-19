@@ -24,12 +24,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       label: t("client_table.clients"),
       field: "clientName",
     },
-    // {
-    //   name: "clientType",
-    //   align: "left",
-    //   label: "Тип",
-    //   field: "clientType",
-    // },
+    {
+      name: "residentType",
+      align: "left",
+      label: "Тип",
+      field: "residentType",
+    },
     {
       name: "passport",
       align: "left",
@@ -235,6 +235,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         expenseAmount: row.total_amount ?? "",
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program.name,
+
         userSettings: "",
         index: row.id,
       };

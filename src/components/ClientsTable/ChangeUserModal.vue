@@ -64,6 +64,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { useDialogPluginComponent } from "quasar";
+import useResidentTypes from "../../composables/useResidentTypes";
 import { ref, computed, onMounted, watchEffect } from "vue";
 import ClientService from "src/services/ClientService";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
@@ -72,7 +73,6 @@ import SimpleInput from "../Shared/SimpleInput.vue";
 import PhoneInput from "../Shared/PhoneInput.vue";
 import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
-
 const props = defineProps({
   user: {
     required: true,
@@ -84,32 +84,8 @@ defineEmits([...useDialogPluginComponent.emits]);
 const $q = useQuasar();
 const { dialogRef, onDialogOK, onDialogHide } = useDialogPluginComponent();
 
-const residentsTypes = ref([
-  {
-    id: 1,
-    name: "Гражданин",
-  },
-  {
-    id: 2,
-    name: "Иностранец",
-  },
-  {
-    id: 3,
-    name: "ЛБГ",
-  },
-  {
-    id: 4,
-    name: "Военный",
-  },
-  {
-    id: 5,
-    name: "Иностранный резидент",
-  },
-  {
-    id: 6,
-    name: "Ребёнок",
-  },
-]);
+
+const residentsTypes = useResidentTypes();
 const selectedResidentTypeId = ref(props.user.residentType ?? null);
 
 const selectedResidentType = computed(() => {
