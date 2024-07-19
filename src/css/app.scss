@@ -57,7 +57,20 @@ body {
   border-radius: 12px;
   background-color: #fff;
   border-collapse: collapse;
+
+  .inner-table-td {
+    padding: 0;
+  }
 }
+
+.full-client-table .q-table {
+  table-layout: fixed;
+}
+
+// .full-client-table .q-table tr th:last-child,
+// .full-client-table .q-table tr td:last-child {
+//   position: static;
+// }
 
 .q-table__middle {
   background: none;
@@ -297,6 +310,10 @@ button[class^="btn"] {
   }
 }
 
+.reports-btn {
+  height: 24px;
+}
+
 .appeal-content {
   .q-panel {
     height: calc(100vh - 380px);
@@ -387,4 +404,8 @@ button[class^="btn"] {
     background-color: hsl(294, 100%, 96%);
     color: hsl(294, 60%, 50%);
   }
+}
+
+.details-tabs-header {
+  column-gap: 2px;
 }

@@ -17,7 +17,7 @@
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
           <div class="label-row">
-            <span class="title-label green">Клиника</span>
+            <span class="title-label green">Аптека</span>
             <span class="title-label violet">Лимиты</span>
           </div>
         </div>
@@ -44,54 +44,48 @@
                   >
                 </div>
                 <!-- <div class="create-appeal-client-action">
-                  <q-btn dense flat :ripple="false" class="btn--no-hover">
-                    <q-icon size="20px">
-                      <svg
-                        width="20"
-                        height="21"
-                        viewBox="0 0 20 21"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M9.16675 10.5C9.16675 10.721 9.25455 10.933 9.41083 11.0892C9.56711 11.2455 9.77907 11.3333 10.0001 11.3333C10.2211 11.3333 10.4331 11.2455 10.5893 11.0892C10.7456 10.933 10.8334 10.721 10.8334 10.5C10.8334 10.279 10.7456 10.067 10.5893 9.91073C10.4331 9.75445 10.2211 9.66666 10.0001 9.66666C9.77907 9.66666 9.56711 9.75445 9.41083 9.91073C9.25455 10.067 9.16675 10.279 9.16675 10.5Z"
-                          stroke="#7A88A6"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M9.16675 16.3333C9.16675 16.5543 9.25455 16.7663 9.41083 16.9226C9.56711 17.0789 9.77907 17.1667 10.0001 17.1667C10.2211 17.1667 10.4331 17.0789 10.5893 16.9226C10.7456 16.7663 10.8334 16.5543 10.8334 16.3333C10.8334 16.1123 10.7456 15.9004 10.5893 15.7441C10.4331 15.5878 10.2211 15.5 10.0001 15.5C9.77907 15.5 9.56711 15.5878 9.41083 15.7441C9.25455 15.9004 9.16675 16.1123 9.16675 16.3333Z"
-                          stroke="#7A88A6"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M9.16675 4.66668C9.16675 4.88769 9.25455 5.09965 9.41083 5.25593C9.56711 5.41221 9.77907 5.50001 10.0001 5.50001C10.2211 5.50001 10.4331 5.41221 10.5893 5.25593C10.7456 5.09965 10.8334 4.88769 10.8334 4.66668C10.8334 4.44566 10.7456 4.2337 10.5893 4.07742C10.4331 3.92114 10.2211 3.83334 10.0001 3.83334C9.77907 3.83334 9.56711 3.92114 9.41083 4.07742C9.25455 4.2337 9.16675 4.44566 9.16675 4.66668Z"
-                          stroke="#7A88A6"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </q-icon>
-                  </q-btn>
-                </div> -->
+                    <q-btn dense flat :ripple="false" class="btn--no-hover">
+                      <q-icon size="20px">
+                        <svg
+                          width="20"
+                          height="21"
+                          viewBox="0 0 20 21"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M9.16675 10.5C9.16675 10.721 9.25455 10.933 9.41083 11.0892C9.56711 11.2455 9.77907 11.3333 10.0001 11.3333C10.2211 11.3333 10.4331 11.2455 10.5893 11.0892C10.7456 10.933 10.8334 10.721 10.8334 10.5C10.8334 10.279 10.7456 10.067 10.5893 9.91073C10.4331 9.75445 10.2211 9.66666 10.0001 9.66666C9.77907 9.66666 9.56711 9.75445 9.41083 9.91073C9.25455 10.067 9.16675 10.279 9.16675 10.5Z"
+                            stroke="#7A88A6"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M9.16675 16.3333C9.16675 16.5543 9.25455 16.7663 9.41083 16.9226C9.56711 17.0789 9.77907 17.1667 10.0001 17.1667C10.2211 17.1667 10.4331 17.0789 10.5893 16.9226C10.7456 16.7663 10.8334 16.5543 10.8334 16.3333C10.8334 16.1123 10.7456 15.9004 10.5893 15.7441C10.4331 15.5878 10.2211 15.5 10.0001 15.5C9.77907 15.5 9.56711 15.5878 9.41083 15.7441C9.25455 15.9004 9.16675 16.1123 9.16675 16.3333Z"
+                            stroke="#7A88A6"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M9.16675 4.66668C9.16675 4.88769 9.25455 5.09965 9.41083 5.25593C9.56711 5.41221 9.77907 5.50001 10.0001 5.50001C10.2211 5.50001 10.4331 5.41221 10.5893 5.25593C10.7456 5.09965 10.8334 4.88769 10.8334 4.66668C10.8334 4.44566 10.7456 4.2337 10.5893 4.07742C10.4331 3.92114 10.2211 3.83334 10.0001 3.83334C9.77907 3.83334 9.56711 3.92114 9.41083 4.07742C9.25455 4.2337 9.16675 4.44566 9.16675 4.66668Z"
+                            stroke="#7A88A6"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </q-icon>
+                    </q-btn>
+                  </div> -->
               </div>
               <div class="create-appeal-form">
                 <div class="tabs-container">
                   <div class="tabs-header q-mb-md">
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
-                        name="doctors"
-                        :label="$t('create_appeal.tabs.doctors')"
-                        :ripple="false"
-                        class="tab--no-hover"
-                      />
-                      <q-tab
-                        name="services"
-                        :label="$t('create_appeal.tabs.services')"
+                        name="drugs"
+                        :label="$t('create_appeal.tabs.drugstore')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
@@ -105,24 +99,24 @@
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
-                        <q-tab-panel name="doctors" key="doctors">
+                        <q-tab-panel name="drugs" key="drugs">
                           <div class="tab-header"></div>
                           <div class="tab-body">
                             <SelectListItem
-                              v-for="doctor in appealStore.selectedDoctors"
+                              v-for="drug in appealStore.selectedDrugs"
                               :removable="false"
-                              :item="doctor"
-                              :key="doctor.id"
+                              :item="drug"
+                              :key="drug.id"
                               :isAgent="appealStore.isAgent"
                               :showProgressSwitcher="false"
                               :allow-handle-status="false"
                               :disableQuantity="true"
                             >
                               <template #label>
-                                {{ doctor.name }}
+                                {{ drug.name }}
                               </template>
                               <template #price>
-                                {{ formatPrice(Number(doctor.pivot.price)) }}
+                                {{ formatPrice(parseFloat(drug.pivot.price)) }}
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
@@ -130,10 +124,9 @@
                                   style="min-width: 300px"
                                   :searchInput="false"
                                   :options="appealStore.medicalLimits"
-                                  :selected-options="doctor.pivot.limit"
+                                  :selected-options="drug.pivot.limit"
                                   @select-option="
-                                    (item) =>
-                                      selectLimitDoctor(item, doctor, false)
+                                    (item) => selectLimitDrug(item, drug, false)
                                   "
                                 >
                                   <template #placeholder
@@ -158,32 +151,32 @@
                             </SelectListItem>
                             <div
                               class=""
-                              v-if="appealStore.suggestedDoctors.length > 0"
+                              v-if="appealStore.suggestedDrugs.length > 0"
                             >
                               <p
                                 class="added-by-title"
-                                v-if="!appealStore.isClinic"
+                                v-if="!appealStore.isDrugstore"
                               >
-                                Добавлено клиникой
+                                Добавлено аптекой
                               </p>
                               <p class="added-by-title" v-else>
                                 Добавлено компанией
                               </p>
                               <SelectListItem
-                                v-for="doctor in appealStore.suggestedDoctors"
-                                :item="doctor"
+                                v-for="drug in appealStore.suggestedDrugs"
+                                :item="drug"
                                 :removable="false"
-                                :key="doctor.id"
+                                :key="drug.id"
                                 :isAgent="appealStore.isAgent"
                                 :showProgressSwitcher="false"
                                 :allow-handle-status="false"
                                 :disableQuantity="true"
                               >
                                 <template #label>
-                                  {{ doctor.name }}
+                                  {{ drug.name }}
                                 </template>
                                 <template #price>
-                                  {{ formatPrice(Number(doctor.pivot.price)) }}
+                                  {{ formatPrice(Number(drug.pivot.price)) }}
                                 </template>
                                 <template #dropdown>
                                   <DropdownSelectNew
@@ -191,127 +184,10 @@
                                     style="min-width: 300px"
                                     :searchInput="false"
                                     :options="appealStore.medicalLimits"
-                                    :selected-options="doctor.pivot.limit"
+                                    :selected-options="drug.pivot.limit"
                                     @select-option="
                                       (item) =>
-                                        selectLimitDoctor(item, doctor, true)
-                                    "
-                                  >
-                                    <template #placeholder
-                                      >Выберите лимит</template
-                                    >
-                                    <template
-                                      v-slot:selected-options-once="props"
-                                    >
-                                      <div style="font-size: 15px">
-                                        {{ props.option.name }}
-                                      </div>
-                                    </template>
-                                    <template v-slot:option-content="props">
-                                      <div style="font-size: 15px">
-                                        <span>
-                                          {{ props.option.name }}
-                                        </span>
-                                      </div>
-                                    </template>
-                                  </DropdownSelectNew>
-                                </template>
-                              </SelectListItem>
-                            </div>
-                          </div>
-                        </q-tab-panel>
-
-                        <q-tab-panel name="services" key="services">
-                          <div class="tab-header"></div>
-                          <div class="tab-body">
-                            <SelectListItem
-                              v-for="service in appealStore.selectedServices"
-                              :item="service"
-                              :removable="false"
-                              :key="service.id"
-                              :isAgent="appealStore.isAgent"
-                              :showProgressSwitcher="false"
-                              :allow-handle-status="false"
-                              :disableQuantity="true"
-                            >
-                              <template #label>
-                                {{ service.name }}
-                              </template>
-                              <template #price>
-                                {{ formatPrice(Number(service.pivot.price)) }}
-                              </template>
-                              <template #dropdown>
-                                <DropdownSelectNew
-                                  dense
-                                  style="min-width: 300px"
-                                  :searchInput="false"
-                                  :options="appealStore.medicalLimits"
-                                  :selected-options="service.pivot.limit"
-                                  @select-option="
-                                    (item) =>
-                                      selectLimitService(item, service, false)
-                                  "
-                                >
-                                  <template #placeholder
-                                    >Выберите лимит</template
-                                  >
-                                  <template
-                                    v-slot:selected-options-once="props"
-                                  >
-                                    <div style="font-size: 15px">
-                                      {{ props.option.name }}
-                                    </div>
-                                  </template>
-                                  <template v-slot:option-content="props">
-                                    <div style="font-size: 15px">
-                                      <span>
-                                        {{ props.option.name }}
-                                      </span>
-                                    </div>
-                                  </template>
-                                </DropdownSelectNew>
-                              </template>
-                            </SelectListItem>
-
-                            <div
-                              class=""
-                              v-if="appealStore.suggestedServices.length > 0"
-                            >
-                              <p
-                                class="added-by-title"
-                                v-if="!appealStore.isClinic"
-                              >
-                                Добавлено клиникой
-                              </p>
-                              <p class="added-by-title" v-else>
-                                Добавлено компанией
-                              </p>
-                              <SelectListItem
-                                v-for="service in appealStore.suggestedServices"
-                                :item="service"
-                                :removable="false"
-                                :key="service.id"
-                                :isAgent="appealStore.isAgent"
-                                :showProgressSwitcher="false"
-                                :allow-handle-status="false"
-                                :disableQuantity="true"
-                              >
-                                <template #label>
-                                  {{ service.name }}
-                                </template>
-                                <template #price>
-                                  {{ formatPrice(Number(service.pivot.price)) }}
-                                </template>
-                                <template #dropdown>
-                                  <DropdownSelectNew
-                                    dense
-                                    style="min-width: 300px"
-                                    :searchInput="false"
-                                    :options="appealStore.medicalLimits"
-                                    :selected-options="service.pivot.limit"
-                                    @select-option="
-                                      (item) =>
-                                        selectLimitService(item, service, true)
+                                        selectLimitDrug(item, drug, true)
                                     "
                                   >
                                     <template #placeholder
@@ -450,7 +326,6 @@
 <script setup>
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
-import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import { ref, watch } from "vue";
@@ -476,7 +351,7 @@ const createAppealModalFixed = ref(true);
 const router = useRouter();
 const route = useRoute();
 
-const tab = ref("doctors");
+const tab = ref("drugs");
 
 const createAppealModalRef = ref(null);
 
@@ -485,7 +360,7 @@ const handleCreateAppeal = () => {
   appealStore.setTypeOfAppeal("CHANGE");
 };
 const handleChangeAppeal = () => {
-  appealStore.changeAppealData();
+  appealStore.changeAppealDrugData();
 };
 watch(
   () => appealStore.successAppeal,
@@ -515,6 +390,16 @@ const selectLimitService = (item, service, isSuggested) => {
     {
       medical_program: item,
       item: service,
+    },
+    isSuggested
+  );
+};
+
+const selectLimitDrug = (item, drug, isSuggested) => {
+  appealStore.changeStatusDrugs(
+    {
+      medical_program: item,
+      item: drug,
     },
     isSuggested
   );
@@ -581,7 +466,6 @@ const selectLimitService = (item, service, isSuggested) => {
     }
   }
 }
-
 .create-appeal-client-wrapper {
   height: calc(100vh - 180px);
   overflow: auto;
@@ -602,9 +486,8 @@ const selectLimitService = (item, service, isSuggested) => {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 16px;
-  // flex-grow: 1;
+  flex-grow: 1;
 }
-
 .create-appeal-client-content-limits {
   flex-grow: 1;
 }

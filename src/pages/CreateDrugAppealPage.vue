@@ -16,6 +16,7 @@
             {{ $t("create_appeal.title") }}
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
+
           <StatusBar
             :status="clientData.appealStatus"
             :label="true"
@@ -43,10 +44,11 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
 
-                  <!-- <span
-                      >Родственник: <b>{{ clientData.clientName }} </b></span
-                    > -->
+                  <span
+                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                  >
                 </div>
+
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
                     <q-icon size="20px">
@@ -119,6 +121,16 @@
                             ></UploadImage>
                           </div>
                           <div class="tab-body">
+                            <div class="q-mb-sm">
+                              <DateInput
+                                number
+                                label="Дата обращения"
+                                placeholder="Введите дату (10-05-2024)"
+                                @update:model-value="appealStore.setAppealDate"
+                                :modelValue="appealStore.appealDate"
+                              ></DateInput>
+                            </div>
+
                             <div class="drugstore-form q-mb-sm">
                               <DropdownSelectNew
                                 ref="drugstoreDropdownRef"
@@ -166,7 +178,8 @@
                                 label="Цена"
                                 placeholder="0"
                                 number
-                                v-model:model-value="drugPrice"
+                                @update:model-value="handleDrugPrice"
+                                :model-value="drugPrice.formattedValue"
                               ></SimpleInput>
                               <SimpleButton
                                 label="Добавить"
@@ -179,6 +192,7 @@
                             </div>
 
                             <SelectListItem
+                              :hasQuantity="false"
                               v-for="drug in appealStore.selectedDrugs"
                               :item="drug"
                               :key="drug.id"
@@ -321,6 +335,24 @@
                       customClass="btn-cancel"
                       @click="hideModal"
                     ></SimpleButton>
+                    <div
+                      class="create-appeal-done-action"
+                      v-if="appealStore.isAgent"
+                    >
+                      <SimpleCheckbox
+                        @change="handleAppealDoneCheckbox"
+                        :checked="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
+                        :disabled="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
+                      >
+                      </SimpleCheckbox>
+                      <span>Сделать завершенным</span>
+                    </div>
                   </div>
                   <div
                     class="create-appeal-action-expences"
@@ -421,21 +453,23 @@ import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import UploadImage from "src/components/Shared/UploadImage.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
-import SelectedItem from "src/components/Shared/SelectedItem.vue";
+import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
+import DateInput from "src/components/Shared/DateInput.vue";
 
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
-import { format } from "quasar";
-import { onMounted } from "vue";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -453,17 +487,39 @@ const createAppealModalRef = ref(null);
 
 const selectedDrug = ref(null);
 const drugAmount = ref(null);
-const drugPrice = ref(null);
+const drugPrice = reactive({
+  rawValue: "",
+  formattedValue: "",
+});
 
 const disableAddButton = computed(
-  () => !selectedDrug.value || !drugAmount.value || !drugPrice.value
+  () => !selectedDrug.value || !drugAmount.value || !drugPrice.rawValue
 );
 
 const handleSelectDrug = (drug) => (selectedDrug.value = drug);
+const handleDrugPrice = (value) => {
+  drugPrice.rawValue = value;
+  drugPrice.formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 
-const handleCreateAppeal = () => {
-  appealStore.postAppealDrugData();
+const handleCreateAppeal = async () => {
+  const result = await appealStore.postAppealDrugData();
   appealStore.setTypeOfAppeal("CHANGE");
+
+  $q.loading.show({
+    delay: 500,
+  });
+
+  await appealStore.fetchMedicalPrograms();
+  await appealStore.fetchApplicantDrugData();
+
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppealDrugLimit",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
 };
 const handleChangeAppeal = () => {
   appealStore.changeAppealDrugData();
@@ -485,13 +541,14 @@ const handleAddDrugData = () => {
     id: selectedDrug.value.id,
     name: selectedDrug.value.name,
     quantity: +drugAmount.value,
-    price: +drugPrice.value,
+    price: parseFloat(drugPrice.rawValue),
   };
 
   appealStore.selectDrugs(drugData);
   selectedDrug.value = null;
   drugAmount.value = null;
-  drugPrice.value = null;
+  drugPrice.rawValue = null;
+  drugPrice.formattedValue = null;
 };
 
 const handleImage = (image) => {
@@ -509,6 +566,13 @@ const handleStatusDrugs = (item, isSuggested) => {
 const handleRemoveItem = (item) => {
   appealStore.removeDrug(item);
 };
+
+const appealDoneCheckbox = ref(false);
+const handleAppealDoneCheckbox = () => {
+  appealDoneCheckbox.value = !appealDoneCheckbox.value;
+  appealStore.makeAppealDrugDone(appealDoneCheckbox.value);
+};
+
 watch(
   () => appealStore.successAppeal,
   (newVal) => {
@@ -571,8 +635,9 @@ watch(
 .create-appeal-client-text {
   flex-grow: 1;
   display: flex;
+  flex-wrap: wrap; 
   column-gap: 16px;
-
+  row-gap: 8px;
   span {
     font-size: 15px;
     color: #404f6f;
@@ -731,5 +796,16 @@ watch(
   font-size: 40px;
   color: hsla(221, 27%, 34%, 0.158);
   user-select: none;
+}
+
+.create-appeal-done-action {
+  margin-left: 16px;
+  span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 </style>

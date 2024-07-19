@@ -49,9 +49,9 @@
                     >Программа: <b>{{ clientData.program }} </b></span
                   >
 
-                  <!-- <span
-                    >Родственник: <b>{{ clientData.clientName }} </b></span
-                  > -->
+                  <span
+                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                  >
                 </div>
                 <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
@@ -286,7 +286,7 @@
                           <div class="tab-body">
                             <SelectListItem
                               v-for="doctor in appealStore.selectedDoctors"
-                              :removable="false"
+                              :removable="true"
                               :item="doctor"
                               :key="doctor.id"
                               :isAgent="appealStore.isAgent"
@@ -299,6 +299,7 @@
                               @update:quantity="
                                 (item) => handleStatusDoctor(item, false)
                               "
+                              @remove:item="(item) => handleRemoveDoctor(item)"
                             >
                               <template #label>
                                 {{ doctor.name }}
@@ -457,7 +458,7 @@
                             <SelectListItem
                               v-for="service in appealStore.selectedServices"
                               :item="service"
-                              :removable="false"
+                              :removable="true"
                               :key="service.id"
                               :isAgent="appealStore.isAgent"
                               @update:status="
@@ -469,6 +470,7 @@
                               @update:quantity="
                                 (item) => handleStatusService(item, false)
                               "
+                              @remove:item="(item) => handleRemoveService(item)"
                             >
                               <template #label>
                                 {{ service.name }}
@@ -558,8 +560,14 @@
                     >
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
-                        :checked="appealDoneCheckbox"
-                        :disabled="appealDoneCheckbox"
+                        :checked="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
+                        :disabled="
+                          appealStore.finishedAppeal ||
+                          clientData.appealStatus === 2
+                        "
                       >
                       </SimpleCheckbox>
                       <span>Сделать завершенным</span>
@@ -711,9 +719,33 @@ const disabledServiceButton = computed(
   () => serviceCustomPrice.rawValue.length === 0
 );
 
-const handleCreateAppeal = () => {
-  appealStore.postAppealData();
+const handleRemoveDoctor = (doctor) => {
+  appealStore.removeDoctor(doctor);
+};
+const handleRemoveService = (service) => {
+  appealStore.removeService(service);
+};
+
+const handleCreateAppeal = async () => {
+  const result = await appealStore.postAppealData();
+
   appealStore.setTypeOfAppeal("CHANGE");
+
+  $q.loading.show({
+    delay: 500,
+  });
+
+  await appealStore.fetchMedicalPrograms();
+  await appealStore.fetchApplicantData();
+  await appealStore.fetchHospitalData();
+
+  $q.loading.hide();
+  router.replace(
+    Trans.i18nRoute({
+      name: "createAppealLimit",
+      params: { id: appealStore.client.contractClientId },
+    })
+  );
 };
 
 const handleChangeAppeal = () => {
@@ -741,8 +773,7 @@ watch(
 );
 
 onMounted(() => {
-  console.log(route);
-  console.log(route.redirectedFrom);
+  // console.log(`client`, clientData.value);
 });
 
 const hideModal = () => {
@@ -762,6 +793,7 @@ const handleDoctorCustomPrice = (value) => {
     " "
   );
 };
+
 const addCustomDoctor = () => {
   const doctor = {
     name: doctorDropdownRef.value.searchValue,
@@ -871,7 +903,8 @@ const handleStatusService = (item, isSuggested) => {
   flex-grow: 1;
   display: flex;
   column-gap: 16px;
-
+  row-gap: 8px;
+  flex-wrap: wrap;
   span {
     font-size: 15px;
     color: #404f6f;

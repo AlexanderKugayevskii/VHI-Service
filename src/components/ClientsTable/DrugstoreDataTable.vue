@@ -83,8 +83,8 @@
               <template v-if="col.name === 'checkbox'">
                 <SimpleCheckbox
                   square
-                  @change="handleAllClinics"
-                  :checked="checkAllClinics"
+                  @change="handleAllDrugs"
+                  :checked="checkAllDrugs"
                 />
               </template>
               <template v-else>
@@ -103,19 +103,26 @@
                 square
                 :item="props.row"
                 @change="handleCheck"
-                :checked="checkClinic(props.row)"
+                :checked="checkDrug(props.row)"
               />
               <!-- :checked="checkDrug(props.row)" -->
             </q-td>
-            <q-td key="clinicName" :props="props" class="appeals-td">
+            <q-td key="drugstoreName" :props="props" class="appeals-td">
               <a class="appeal-link">
-                {{ props.row.clinicName }}
+                {{ props.row.drugstoreName }}
               </a>
             </q-td>
-
             <q-td key="phone" :props="props" class="appeals-td">
               {{ props.row.phone }}
             </q-td>
+            <!-- <q-td key="reports" :props="props" class="appeals-td">
+              <SimpleButton
+                :disabled="disableButton"
+                label="Скачать отчет"
+                custom-class="appeals-btn reports-btn"
+                @click="getExcelData(props.row)"
+              />
+            </q-td> -->
           </q-tr>
         </template>
       </q-table>
@@ -146,16 +153,17 @@ import ClientService from "src/services/ClientService";
 import PaginationTable from "./PaginationTable.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
+
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 
-import DateRange from "../DateRange.vue";
-
 const { t } = useI18n();
+
 const loading = ref(false);
-const clinics = ref([]);
-const checkedClinics = ref([]);
+const drugs = ref([]);
+const checkedDrugs = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -190,10 +198,10 @@ const columns = computed(() => [
     align: "left",
   },
   {
-    name: "clinicName",
+    name: "drugstoreName",
     align: "left",
-    label: t("client_table.clinic"),
-    field: "clinicName",
+    label: t("client_table.drugstore"),
+    field: "drugstoreName",
   },
   {
     name: "phone",
@@ -204,9 +212,9 @@ const columns = computed(() => [
 ]);
 
 const rows = computed(() => {
-  return clinics.value.map((row) => {
+  return drugs.value.map((row) => {
     return {
-      clinicName: row.name,
+      drugstoreName: row.name,
       phone: row.phone,
       reports: "",
       index: row.id,
@@ -217,16 +225,16 @@ const rows = computed(() => {
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
   return rows.value.filter((option) =>
-    regex.test(option.clinicName || option.phone)
+    regex.test(option.drugstoreName || option.phone)
   );
 });
 
-const fetchClinics = async () => {
+const fetchDrugstores = async () => {
   loading.value = true;
   try {
-    const response = await AppealService.getClinics();
+    const response = await AppealService.getDrugstores();
     const data = response.data.data;
-    clinics.value = data;
+    drugs.value = data;
     total.value = data.length;
   } catch (e) {
     console.error(e);
@@ -235,36 +243,41 @@ const fetchClinics = async () => {
   }
 };
 
+
+// MULTISELECTION
 const handleCheck = (row) => {
-  const findedRow = checkedClinics.value.findIndex(
+  const findedRow = checkedDrugs.value.findIndex(
     (drug) => drug.index === row.index
   );
   if (findedRow > -1) {
-    checkedClinics.value.splice(findedRow, 1);
+    checkedDrugs.value.splice(findedRow, 1);
   } else {
-    checkedClinics.value.push(row);
+    checkedDrugs.value.push(row);
   }
 };
 
-const checkClinic = computed(() => {
+const checkDrug = computed(() => {
   return (row) => {
-    return checkedClinics.value.some((clinic) => clinic.index === row.index);
+    return checkedDrugs.value.some((drug) => drug.index === row.index);
   };
 });
 
-const handleAllClinics = () => {
-  if (checkAllClinics.value) {
-    checkedClinics.value = [];
+const handleAllDrugs = () => {
+  if (checkAllDrugs.value) {
+    checkedDrugs.value = [];
   } else {
-    checkedClinics.value = [...filteredRows.value];
-  }
+    checkedDrugs.value = [...filteredRows.value];
+  } 
 };
-const checkAllClinics = computed(
-  () => checkedClinics.value.length === filteredRows.value.length
-);
+const checkAllDrugs = computed(() => {
+  if (filteredRows.value.length === 0) {
+    return false;
+  }
+  return checkedDrugs.value.length === filteredRows.value.length;
+});
 
-const checkedClinicIds = computed(() =>
-  checkedClinics.value.map((clinic) => clinic.index)
+const checkedDrugsIds = computed(() =>
+  checkedDrugs.value.map((drug) => drug.index)
 );
 
 const fileLoad = ref(false);
@@ -273,17 +286,18 @@ const getExcelData = async () => {
   fileLoad.value = true;
   fileError.value = "";
   try {
-    const response = await ClientService.getClinicExcelData(
-      checkedClinicIds.value,
+    const response = await ClientService.getDrugstoreExcelData(
+      checkedDrugsIds.value,
       {
         startDate: dateRangeData.value.startDate,
         endDate: dateRangeData.value.endDate,
       }
     );
 
+    // const fileName = row.drugstoreName;
     const fileDate = dayjs().format("D-MM-YY");
     const blob = new Blob([response.data], { type: response.data.type });
-    console.log(`clinic table`, response);
+
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -304,7 +318,7 @@ const getExcelData = async () => {
 };
 
 const handleRequest = (props) => {
-  fetchClinics(props.pagination.page, props.pagination.rowsPerPage);
+  fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
 };
 
 onMounted(() => {

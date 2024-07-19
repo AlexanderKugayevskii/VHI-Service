@@ -65,6 +65,7 @@
           clickable
           v-close-popup
           class="item--no-hover"
+          v-if="!isClinic"
           @click.prevent.stop="openAppealLimit"
         >
           <q-icon>
@@ -85,22 +86,90 @@
           </q-icon>
           <span class="option-text">Лимиты</span>
         </q-item>
+
+        <q-item
+          clickable
+          v-close-popup
+          class="item--no-hover"
+          @click.prevent.stop="deleteAppeal"
+          v-if="!isClinic"
+        >
+          <q-icon>
+            <!-- <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="12"
+              viewBox="0 0 18 12"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M16.6083 7.78919C17.0732 7.30958 17.3331 6.66791 17.3331 6.00002C17.3331 5.33213 17.0732 4.69046 16.6083 4.21085C14.9783 2.49585 12.18 0.166687 9 0.166687C5.82 0.166687 3.02084 2.49585 1.39167 4.21085C0.926854 4.69046 0.666931 5.33213 0.666931 6.00002C0.666931 6.66791 0.926854 7.30958 1.39167 7.78919C3.02084 9.50419 5.82 11.8334 9 11.8334C12.18 11.8334 14.9783 9.50419 16.6083 7.78919ZM9 8.50002C9.66304 8.50002 10.2989 8.23663 10.7678 7.76779C11.2366 7.29895 11.5 6.66306 11.5 6.00002C11.5 5.33698 11.2366 4.70109 10.7678 4.23225C10.2989 3.76341 9.66304 3.50002 9 3.50002C8.33696 3.50002 7.70108 3.76341 7.23224 4.23225C6.76339 4.70109 6.5 5.33698 6.5 6.00002C6.5 6.66306 6.76339 7.29895 7.23224 7.76779C7.70108 8.23663 8.33696 8.50002 9 8.50002Z"
+                fill="#E3E8F0"
+              />
+            </svg> -->
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M18.5001 4H1.5"
+                stroke="#E3E8F0"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M16.8332 6.5L16.3732 13.3991C16.1962 16.054 16.1077 17.3815 15.2427 18.1907C14.3777 19 13.0473 19 10.3865 19H9.6132C6.95235 19 5.62195 19 4.75694 18.1907C3.89194 17.3815 3.80344 16.054 3.62644 13.3991L3.1665 6.5"
+                stroke="#E3E8F0"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M4.5 4C4.55588 4 4.58382 4 4.60915 3.99936C5.43259 3.97849 6.15902 3.45491 6.43922 2.68032C6.44784 2.65649 6.45667 2.62999 6.47434 2.57697L6.57143 2.28571C6.65431 2.03708 6.69575 1.91276 6.75071 1.8072C6.97001 1.38607 7.37574 1.09364 7.84461 1.01877C7.96213 1 8.0932 1 8.3553 1H11.6447C11.9068 1 12.0379 1 12.1554 1.01877C12.6243 1.09364 13.03 1.38607 13.2493 1.8072C13.3043 1.91276 13.3457 2.03708 13.4286 2.28571L13.5257 2.57697C13.5433 2.62992 13.5522 2.65651 13.5608 2.68032C13.841 3.45491 14.5674 3.97849 15.3909 3.99936C15.4162 4 15.4441 4 15.5 4"
+                stroke="#E3E8F0"
+                stroke-width="2"
+              />
+            </svg>
+          </q-icon>
+          <span class="option-text">Удалить</span>
+        </q-item>
       </template>
     </DropdownSettings>
   </div>
+  <ConfirmModal />
 </template>
 
 <script setup>
 import DropdownSettings from "../Shared/DropdownSettings.vue";
-const emit = defineEmits(["openModal", "openModalLimit"]);
+import ConfirmModal from "../Shared/ConfirmModal.vue";
+import { useQuasar } from "quasar";
+import { useAppealStore } from "src/stores/appealStore";
+const emit = defineEmits(["openModal", "openModalLimit", "deleteAppeal"]);
+const props = defineProps(["client"]);
+const $q = useQuasar();
+
+const { isClinic } = useAppealStore();
 
 const openAppealPage = async () => {
-  emit("openModal"); 
-
+  emit("openModal");
 };
 const openAppealLimit = async () => {
   emit("openModalLimit");
-
+};
+const deleteAppeal = async () => {
+  $q.dialog({
+    component: ConfirmModal,
+    componentProps: {
+      title: "Удалить обращение?",
+    },
+  }).onOk(() => {
+    emit("deleteAppeal");
+  });
 };
 </script>
 

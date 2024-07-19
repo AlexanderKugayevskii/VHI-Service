@@ -235,6 +235,7 @@ const openTypeModal = () => {
 
 const goToAppeal = async () => {
   await appealStore.setClinic();
+  clientStore.$resetSearchClients();
   appealStore.setTypeOfAppeal("NEW");
   router.replace(
     Trans.i18nRoute({

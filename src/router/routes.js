@@ -2,6 +2,7 @@ import Trans from "src/i18n/translation";
 import { RouterView } from "vue-router";
 import { useAuthStore } from "src/stores/authStore";
 import { useAppealStore } from "src/stores/appealStore";
+import { SessionStorage } from "quasar";
 
 const routes = [
   {
@@ -39,10 +40,13 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
-                  console.log(from.name);
+                  const appealType =
+                    SessionStorage.getItem("typeOfAppeal") ||
+                    appealStore.typeOfAppeal;
+
                   if (from.name) {
                     next();
-                  } else if (appealStore.typeOfAppeal === 1) {
+                  } else if (appealType === 1) {
                     await appealStore.fetchApplicantData();
                     await appealStore.fetchHospitalData();
                     next();
@@ -101,11 +105,37 @@ const routes = [
                 component: () => import("pages/CreateDrugAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const appealType =
+                    SessionStorage.getItem("typeOfAppeal") ||
+                    appealStore.typeOfAppeal;
+
+                  if (from.name) {
+                    next();
+                  } else if (appealType === 1) {
+                    await appealStore.fetchApplicantDrugData();
+                    next();
+                  } else {
+                    next({ name: "drugstore-page" });
+                  }
+                },
+              },
+              {
+                path: "create-appeal-drug-limit/:id",
+                name: "createAppealDrugLimit",
+                props: (route) => {
+                  return {
+                    id: route.params.id,
+                    key: route.params.id,
+                  };
+                },
+                component: () => import("pages/CreateAppealDrugLimit.vue"),
+                beforeEnter: async (to, from, next) => {
+                  const appealStore = useAppealStore();
                   if (from.name) {
                     next();
                   } else {
+                    await appealStore.fetchMedicalPrograms();
                     await appealStore.fetchApplicantDrugData();
-
                     next();
                   }
                 },
@@ -139,9 +169,24 @@ const routes = [
             ],
           },
           {
-            path: "reports",
-            name: "reports-page",
-            component: () => import("pages/ReportsPage.vue"),
+            path: "reports-clinic",
+            name: "reports-clinic-page",
+            component: () => import("src/pages/ReportsClinicsPage.vue"),
+          },
+          {
+            path: "reports-drugstore",
+            name: "reports-drugstore-page",
+            component: () => import("src/pages/ReportsDrugstorePage.vue"),
+          },
+          {
+            path: "reports-organizations",
+            name: "reports-organizations-page",
+            component: () => import("src/pages/ReportsOrganizationsPage.vue"),
+          },
+          {
+            path: "billing",
+            name: "billing-page",
+            component: () => import("src/pages/BillingPage.vue"),
           },
         ],
       },

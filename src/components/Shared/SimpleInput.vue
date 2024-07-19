@@ -9,6 +9,7 @@
         :style="wrapperStyle"
       >
         <input
+          :maxlength="maxlength"
           :disabled="disableInput"
           :type="type"
           :placeholder="placeholder"
@@ -52,6 +53,9 @@ import debounce from "lodash/debounce";
 
 const props = defineProps({
   wrapperStyle: {},
+  maxlength: {
+    type: [String, Number],
+  },
   label: {
     type: String,
     default: "",
@@ -100,7 +104,7 @@ const debounceEmit = debounce((value) => {
 
 const onInput = (e) => {
   if (props.number) {
-    e.target.value = e.target.value.replace(/\D/g, "");
+    e.target.value = e.target.value.replace(/[^\d.]+|(?<=\..*)\./g, "");
   }
   debounceInput.value = e.target.value;
 

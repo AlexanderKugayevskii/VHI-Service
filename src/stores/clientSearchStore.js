@@ -80,6 +80,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
+        applicant: item.contract.applicant,
         type: "Клиент",
       };
     });

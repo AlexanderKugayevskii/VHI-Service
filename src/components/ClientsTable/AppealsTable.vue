@@ -1,6 +1,7 @@
 <template>
   <div>
     <TableActions
+      v-if="showTableActions"
       @update:search="handleSearch"
       @update:find="handleFind"
       @delete:option="handleDelete"
@@ -18,7 +19,7 @@
       <template #filters>
         <div
           class="filter-item"
-          v-for="filterItem in filterData"
+          v-for="filterItem in filterData.filter((item) => item.meta)"
           :key="filterItem.name"
         >
           <SimpleInput
@@ -95,7 +96,7 @@
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
-        no-data-label="I didn't find anything for you"
+        no-data-label="Обращений нет"
         no-results-label="Данных по вашему запросу не найдено"
         @request="requestData"
       >
@@ -104,8 +105,7 @@
         </template>
         <template v-slot:no-data="{ icon, message, filter }">
           <div class="full-width row flex-center text-accent q-gutter-sm">
-            <q-icon size="2em" name="sentiment_dissatisfied" />
-            <span> {{ message }} </span>
+            <span class="error-message"> {{ message }} </span>
             <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
           </div>
         </template>
@@ -166,6 +166,12 @@
                 {{ props.row.appealDate }}
               </TableTooltip>
             </q-td>
+            <q-td key="finishedDate" :props="props" class="appeals-td">
+              {{ props.row.finishedDate }}
+              <TableTooltip>
+                {{ props.row.finishedDate }}
+              </TableTooltip>
+            </q-td>
             <q-td key="appealStatus" :props="props" class="appeals-td">
               <AppealStatus :status="props.row.appealStatus" />
             </q-td>
@@ -205,6 +211,7 @@
                 :client="props.row"
                 @open-modal="openAppealPage(props.row)"
                 @open-modal-limit="openAppealLimit(props.row)"
+                @delete-appeal="deleteAppeal(props.row)"
               ></UserSettings>
             </q-td>
           </q-tr>
@@ -212,7 +219,7 @@
       </q-table>
     </div>
     <!-- pagination -->
-    <div class="flex q-my-lg">
+    <div class="flex q-my-lg" v-if="showPagination">
       <PaginationTable
         v-if="reactivePagination"
         :pagination="reactivePagination"
@@ -247,34 +254,55 @@ import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DateInput from "../Shared/DateInput.vue";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
-import { storeToRefs } from "pinia";
+
 import { toRefs } from "vue";
 import { toRef } from "vue";
+import { tryOnBeforeUnmount } from "@vueuse/core";
+import { filter } from "lodash";
 
 const $q = useQuasar();
-
-// table modal
-
 const router = useRouter();
-const props = defineProps([
-  // "search",
-  "pagination",
-  "rows",
-  "columns",
-  "loading",
-  "filterData",
-  "requestData",
-  "selectFilterData",
-  "filterQuery",
-  "checkSelectedOption",
-  "removeFilter",
-  "fetchClinics",
-  "total",
-]);
 const emit = defineEmits(["createAppeal"]);
+
+const props = defineProps({
+  pagination: {
+    type: Object,
+  },
+  rows: {
+    type: Object,
+  },
+  columns: {
+    type: Object,
+  },
+  loading: {
+    type: Boolean,
+  },
+  filterData: {},
+  requestData: {},
+  selectFilterData: {},
+  filterQuery: {},
+  checkSelectedOption: {},
+  removeFilter: {},
+  fetchClinics: {},
+  total: {},
+  showTableActions: {
+    type: Boolean,
+    default: true,
+  },
+  showPagination: {
+    type: Boolean,
+    default: true,
+  },
+});
+
+const appealStore = useAppealStore();
+const tableRef = ref(null);
+
+const reactiveProps = toRefs(props);
+const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
 
@@ -285,15 +313,8 @@ const handleFind = () => {
   tableRef.value.requestServerInteraction();
 };
 const handleDelete = () => {
-  console.log(props.filterQuery);
   tableRef.value.requestServerInteraction();
 };
-
-const tableRef = ref(null);
-const appealStore = useAppealStore();
-
-const reactiveProps = toRefs(props);
-const reactivePagination = toRef(reactiveProps, "pagination");
 
 // const clientTableStore = useClientTableStore();
 // const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
@@ -375,6 +396,11 @@ const openAppealLimit = async (client) => {
   );
 };
 
+const deleteAppeal = async (data) => {
+  await appealStore.deleteAppealData(data.appealId);
+  tableRef.value.requestServerInteraction();
+};
+
 //only router if needs
 //if query page or limit will changes, pagination will changes
 // watch(
@@ -440,14 +466,17 @@ onMounted(() => {});
 .appeals-th:nth-of-type(1) {
   width: 56px;
 }
-// .appeals-th:nth-of-type(2) {
-//   width: 200px;
-// }
+.appeals-th:nth-of-type(2) {
+  // width: 150px;
+}
 .appeals-th:nth-of-type(3) {
   width: 150px;
 }
 .appeals-th:nth-of-type(4) {
-  width: 120px;
+  width: 150px;
+}
+.appeals-th:nth-of-type(5) {
+  width: 150px;
 }
 .q-table thead th:last-of-type {
   width: 52px;
@@ -501,5 +530,8 @@ tr.clickable {
 
 .filter-item {
   padding-bottom: 20px;
+}
+.error-message {
+  font-weight: 500;
 }
 </style>

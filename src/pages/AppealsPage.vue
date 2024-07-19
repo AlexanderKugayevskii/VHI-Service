@@ -15,7 +15,7 @@
         :checkSelectedOption="clientTableStore.checkSelectedOption"
         :removeFilter="clientTableStore.removeFilter"
         :fetchClinics="clientTableStore.fetchClinics"
-        :total = "total"
+        :total="total"
       />
     </div>
     <AppealSearchClient
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import AppealsTable from "src/components/ClientsTable/AppealsTable.vue";
 import AppealSearchClient from "./AppealSearchClient.vue";
 import AppealType from "./AppealType.vue";
@@ -39,7 +39,6 @@ import AppealType from "./AppealType.vue";
 // const page = computed(() => props.page);
 import { storeToRefs } from "pinia";
 import { useClientTableStore } from "src/stores/clientTableStore";
-import { onBeforeRouteLeave } from "vue-router";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();
@@ -58,7 +57,6 @@ const { pagination, rows, columns, loading, filterData, total } =
 const searchFilterFixed = ref(false);
 const appealTypeFixed = ref(false);
 
-onMounted(() => {});
 const handleMoveBackToAppealSearch = (val) => {
   searchFilterFixed.value = val;
 };

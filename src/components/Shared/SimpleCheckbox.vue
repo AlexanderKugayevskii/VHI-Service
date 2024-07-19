@@ -2,9 +2,10 @@
   <div class="checkbox-wrapper">
     <label
       class="checkbox-label"
-      :class="{
-        'checkbox-label--checked': checked,
-      }"
+      :class="[
+        { 'checkbox-label--checked': checked },
+        { 'checkbox-label_square': square },
+      ]"
     >
       <input
         type="checkbox"
@@ -14,7 +15,7 @@
         :checked="checked"
         :disabled="disabled"
         @change="emitChange"
-      />
+        />
       <q-icon size="16px" class="check-icon" v-if="checked">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -51,6 +52,9 @@ const props = defineProps({
   disabled: {
     type: Boolean,
   },
+  square: {
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(["change"]);
@@ -59,7 +63,7 @@ const emitChange = (event) => {
   if (event.target.checked) {
     emit("change", props.item);
   } else {
-    emit("change", null);
+    emit("change", props.item);
   }
 };
 </script>
@@ -76,6 +80,10 @@ const emitChange = (event) => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &_square {
+    border-radius: 4px;
+  }
 }
 .checkbox-input {
   position: absolute;

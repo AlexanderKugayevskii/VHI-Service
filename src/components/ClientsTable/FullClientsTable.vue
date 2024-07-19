@@ -14,6 +14,7 @@
       </template>
     </TableActions>
     <q-table
+      class="full-client-table"
       flat
       :rows="rows"
       :columns="columns"
@@ -72,15 +73,16 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr
-          :props="props"
-          @mouseup="cancelOpenWhenSelect(props.row)"
-          class="clickable"
-        >
+        <q-tr :props="props" class="clickable">
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
-          <q-td key="clientName" :props="props" class="appeals-td">
+          <q-td
+            key="clientName"
+            :props="props"
+            class="appeals-td"
+            @mouseup="cancelOpenWhenSelect(props.row)"
+          >
             <a class="appeal-link">
               {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
             </a>
@@ -88,8 +90,11 @@
               {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
             </TableTooltip>
           </q-td>
-          <q-td key="clientType" :props="props" class="appeals-td">
-            {{ props.row.clientType }}
+          <q-td key="residentType" :props="props" class="appeals-td">
+            {{
+              residentTypes.find((type) => type.id === props.row.residentType)
+                ?.name
+            }}
           </q-td>
           <q-td key="passport" :props="props" class="appeals-td">
             {{ props.row.passport }}
@@ -130,6 +135,13 @@
               {{ props.row.organizationName }}
             </TableTooltip>
           </q-td>
+          <q-td key="change" :props="props" class="appeals-td">
+            <SimpleButton
+              label="изменить"
+              custom-class="appeals-btn reports-btn"
+              @click="openChangeUserModal(props.row)"
+            />
+          </q-td>
         </q-tr>
       </template>
     </q-table>
@@ -148,19 +160,20 @@
 </template>
 
 <script setup>
-import { toRef, toRefs } from "vue";
 import { useQuasar } from "quasar";
-
+import { toRef, toRefs, onMounted, ref } from "vue";
+import ChangeUserModal from "./ChangeUserModal.vue";
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import RowsPerPage from "./RowsPerPage.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
-import { onMounted, computed, ref, watch } from "vue";
 import TableActions from "./TableActions.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
+import { useAppealStore } from "src/stores/appealStore";
+import useResidentTypes from "src/composables/useResidentTypes";
 
 const $q = useQuasar();
-
 const router = useRouter();
 const props = defineProps([
   // "search",
@@ -176,6 +189,10 @@ const props = defineProps([
   "removeFilter",
   "fetchClinics",
 ]);
+
+const appealStore = useAppealStore();
+const residentTypes = useResidentTypes();
+
 const search = ref("");
 
 const handleSearch = (searchValue) => {
@@ -183,6 +200,7 @@ const handleSearch = (searchValue) => {
 };
 
 const tableRef = ref(null);
+const user = ref(null);
 
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
@@ -221,6 +239,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
+  appealStore.setClient(client);
   router.push(
     Trans.i18nRoute({
       name: "clientInfo",
@@ -235,12 +254,22 @@ const openClientInfo = async (client) => {
 onMounted(() => {
   tableRef.value.requestServerInteraction();
 });
+
+const openChangeUserModal = (user) => {
+  // user.value = user;
+
+  $q.dialog({
+    component: ChangeUserModal,
+    componentProps: {
+      user: user,
+    },
+  }).onOk(() => {
+    tableRef.value.requestServerInteraction();
+  });
+};
 </script>
 
 <style lang="scss" scoped>
-.fullClientTable {
-  table-layout: auto;
-}
 .appeal-link {
   font-size: 14px;
   line-height: 20px;
@@ -263,29 +292,32 @@ onMounted(() => {
 .appeals-th:nth-of-type(3) {
   width: 120px;
 }
-.appeals-th:nth-of-type(4) {
-  width: 150px;
-}
-.appeals-th:nth-of-type(5) {
-  width: 140px;
-}
+// .appeals-th:nth-of-type(4) {
+//   width: 150px;
+// }
+// .appeals-th:nth-of-type(5) {
+//   width: 140px;
+// }
 .appeals-th:nth-of-type(6) {
-  width: 120px;
+  width: 100px;
 }
-.appeals-th:nth-of-type(7) {
-  width: 120px;
-}
-.appeals-th:nth-of-type(8) {
-  width: 195px;
-}
-// .q-table thead th:last-of-type {
+// .appeals-th:nth-of-type(7) {
+//   width: 120px;
+// }
+// .appeals-th:nth-of-type(8) {
+//   width: 195px;
+// }
+// .appeals-th:nth-of-type(9) {
+//   width: 100px;
+// }
+// .q-table
+//  thead th:last-of-type {
 //   width: 52px;
 // }
 .appeals-td {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   color: $primary;
-
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -308,22 +340,22 @@ tbody tr:last-child td:last-child {
 thead tr:first-child th {
   top: 0;
 }
-thead tr:first-child th:last-child {
-  right: 0;
-  background-color: #fff;
-}
+// thead tr:first-child th:last-child {
+//   right: 0;
+//   background-color: #fff;
+// }
 
-tbody tr td:last-child {
-  position: sticky;
-  right: 0;
-  background-color: #fff;
-}
+// tbody tr td:last-child {
+//   position: sticky;
+//   right: 0;
+//   background-color: #fff;
+// }
 
-.user-settings-btn {
-  background: none;
-  cursor: pointer;
-  padding: 0;
-}
+// .user-settings-btn {
+//   background: none;
+//   cursor: pointer;
+//   padding: 0;
+// }
 tr.clickable {
   cursor: pointer;
 }

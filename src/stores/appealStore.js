@@ -65,11 +65,14 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setTypeOfAppeal = (type) => {
     typeOfAppeal.value = TYPE_OF_APPEALS[type];
+    SessionStorage.set("typeOfAppeal", typeOfAppeal.value);
   };
 
   const setClient = (item) => {
     client.value = item;
-    SessionStorage.set("client", item);
+    if (item !== null) {
+      SessionStorage.set("client", item);
+    }
   };
 
   const diagnosis = ref("");
@@ -83,6 +86,8 @@ export const useAppealStore = defineStore("appeal", () => {
       ...suggestedDoctors.value,
       ...selectedServices.value,
       ...suggestedServices.value,
+      ...selectedDrugs.value,
+      ...suggestedDrugs.value,
     ];
     return medicalLimits.value.map((limit) => {
       const findItemsSumm = allData.reduce((acc, curr) => {
@@ -148,7 +153,6 @@ export const useAppealStore = defineStore("appeal", () => {
         serviceData.name = service.name;
         serviceData.price = service.pivot.price;
       }
-
       return serviceData;
     })
   );
@@ -165,14 +169,22 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const allDrugsStatus = computed(() =>
     selectedDrugs.value.concat(suggestedDrugs.value).map((drug) => {
-      return {
+      const drugData = {
         id: drug.id,
         name: drug.name,
         price: drug.pivot.price,
-        quantity: drug.quantity ?? drug.pivot.quantity,
         status: drug.pivot.status ?? 0,
+        quantity: drug.quantity ?? drug.pivot.quantity,
         progress: drug.pivot.progress ?? 0,
+        program_item_id: drug.pivot.program_item_id ?? 0,
       };
+
+      if (drugData.id === null) {
+        drugData.name = drug.name;
+        drugData.price = drug.pivot.price;
+      }
+
+      return drugData;
     })
   );
 
@@ -186,7 +198,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
-        return acc + Number(curr.pivot.price) * Number(curr.pivot.quantity);
+        return (
+          acc + parseFloat(curr.pivot.price) * parseFloat(curr.pivot.quantity)
+        );
       }
       return acc;
     }, 0);
@@ -197,7 +211,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     return allData.reduce((acc, curr) => {
       if (curr.pivot.status === 1) {
-        return acc + Number(curr.pivot.price);
+        return (
+          acc + parseFloat(curr.pivot.price) * parseFloat(curr.pivot.quantity)
+        );
       }
       return acc;
     }, 0);
@@ -368,18 +384,75 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const checkSuggestedDrugs = (drug) => {
+    return suggestedDrugs.value.some((item) => drug.id === item.id);
+  };
+  const cantRemoveFromSelectedDrugs = (drug) => {
+    return selectedDrugs.value.some((item) => {
+      if (drug.id === item.id) {
+        return (
+          (item.pivot.progress >= 1 &&
+            isAgent.value &&
+            !finishedAppeal.value) ||
+          (item.pivot.status !== 0 && !isAgent.value)
+        );
+      }
+    });
+  };
   const selectDrugs = (drug) => {
-    selectedDrugs.value.push({
+    if (checkSuggestedDrugs(drug)) {
+      return;
+    }
+    if (cantRemoveFromSelectedDrugs(drug)) {
+      return;
+    }
+
+    if (finishedAppeal.value) {
+      selectedDrugs.value.push({
+        ...drug,
+        pivot: {
+          ...drug?.pivot,
+          quantity: drug.quantity,
+          price: drug.price,
+          status: 1,
+          progress: 2,
+        },
+        isNew: true,
+      });
+    } else {
+      selectedDrugs.value.push({
+        ...drug,
+        pivot: {
+          ...drug?.pivot,
+          quantity: drug.quantity,
+          price: drug.price,
+          status: 0,
+          progress: 0,
+        },
+        isNew: true,
+      });
+    }
+
+    copyDrugs.value.push({
       ...drug,
       pivot: {
-        ...drug?.pivot,
-        quantity: drug.quantity,
-        price: drug.price,
+        ...drug.pivot,
         status: 0,
         progress: 0,
       },
-      isNew: true,
     });
+  };
+
+  const removeDoctor = (doctor) => {
+    selectedDoctors.value = selectedDoctors.value.filter(
+      (item) => item.id !== doctor.id
+    );
+  };
+
+  const removeService = (service) => {
+    selectedServices.value = selectedServices.value.filter(
+      (item) => item.id !== service.id
+    );
   };
 
   const removeDrug = (drug) => {
@@ -404,6 +477,7 @@ export const useAppealStore = defineStore("appeal", () => {
     suggestedDrugs.value = [];
     drugAppealImage.value = {};
 
+    finishedAppeal.value = false;
     // hasWatched.value = false;
 
     // client.value = null;
@@ -413,6 +487,18 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const clearDrugstoreData = () => {
     selectedDrugstore.value = null;
+  };
+
+  const clearSelectedItemsData = () => {
+    selectedDoctors.value = [];
+    selectedServices.value = [];
+    suggestedDoctors.value = [];
+    suggestedServices.value = [];
+  };
+
+  const clearSelectedDrugsData = () => {
+    selectedDrugs.value = [];
+    suggestedDrugs.value = [];
   };
 
   const fetchClinics = async () => {
@@ -506,6 +592,7 @@ export const useAppealStore = defineStore("appeal", () => {
       is_hospital: false,
       drugstore_id: selectedDrugstore.value.id,
       drugs: drugsData,
+      applied_date: appealDate.value,
     };
 
     appendFormData(formData, payload);
@@ -523,7 +610,14 @@ export const useAppealStore = defineStore("appeal", () => {
       ) {
         client.value.appealId = data.id;
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+
         setSuccessAppeal(true);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно создано!",
+          position: "bottom-left",
+        });
         // clearAppealData();
       }
     } catch (e) {
@@ -542,8 +636,9 @@ export const useAppealStore = defineStore("appeal", () => {
       client_id: client.value.clientId,
       drugstore_id: selectedDrugstore.value.id,
       drugs: allDrugsStatus.value,
+      applied_date: appealDate.value,
     };
-
+    console.log(payload);
     // appendFormData(formData, payload);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
@@ -561,9 +656,18 @@ export const useAppealStore = defineStore("appeal", () => {
       if (response.status === 200 && response.data.message === "success") {
         setSuccessAppeal(true);
         client.value.appealStatus = data.status;
+        SessionStorage.set("client", client.value);
+        Notify.create({
+          type: "success",
+          message: "Обращение успешно изменено!",
+        });
+
+        return { success: true };
       }
     } catch (e) {
       console.error(e);
+
+      return { success: false };
     } finally {
       loading.value = false;
     }
@@ -586,6 +690,7 @@ export const useAppealStore = defineStore("appeal", () => {
       }
       return serviceData;
     });
+
     const doctors = selectedDoctors.value.map((doctor) => {
       const doctorData = {
         quantity: doctor.pivot.quantity,
@@ -600,6 +705,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
       return doctorData;
     });
+
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
@@ -629,10 +735,14 @@ export const useAppealStore = defineStore("appeal", () => {
           message: "Обращение успешно создано!",
           position: "bottom-left",
         });
+
+        return { success: true };
         // clearAppealData();
       }
     } catch (e) {
       console.error(e);
+
+      return { success: false };
     } finally {
       loading.value = false;
     }
@@ -677,15 +787,37 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
+  const deleteAppealData = async (appealId) => {
+    loading.value = true;
+    try {
+      const response = await AppealService.deleteAppeal(appealId);
+      Notify.create({
+        type: "success",
+        message: "Обращение успешно удалено!",
+        position: "bottom",
+      });
+    } catch (e) {
+      console.error(e);
+      Notify.create({
+        type: "error",
+        message: "Произошла ошибка при удалении обращения!",
+        position: "bottom",
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const fetchMedicalPrograms = async () => {
     loading.value = true;
     const localClient = SessionStorage.getItem("client");
     client.value = localClient;
 
     const currentClient = localClient ? localClient : client.value;
+
     try {
       const response = await ClientService.getMedicalPrograms(
-        currentClient.contractClientId
+        currentClient.contractClientId ?? currentClient.id
       );
       const data = response.data;
       medicalLimits.value = data.data;
@@ -718,6 +850,7 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
+      client.value.applicant = data.contract_client.contract.applicant;
 
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
@@ -727,6 +860,8 @@ export const useAppealStore = defineStore("appeal", () => {
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
+
+      clearSelectedItemsData();
 
       filterItems(
         data.doctors,
@@ -827,12 +962,17 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-
+      
+      client.value.applicant = data.contract_client.contract.applicant;
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
       client.value.appealStatus = data.status;
-
       selectedDrugstore.value = data.drugstore;
+
+      const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
+      appealDate.value = `${ad3}-${ad2}-${ad1}`;
+
+      clearSelectedDrugsData();
 
       filterItems(
         data.drugs,
@@ -842,24 +982,70 @@ export const useAppealStore = defineStore("appeal", () => {
       );
 
       selectedDrugs.value = selectedDrugs.value.map((drug) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === drug.pivot.program_item_id
+        );
+
+        const equalId =
+          medicalLimit !== undefined &&
+          medicalLimit?.id === drug.pivot.program_item_id;
+        console.log(`EQUALID`, equalId);
         return {
           ...drug,
           pivot: {
             ...drug.pivot,
-            price: Number(drug.pivot.price.match(/\d+/)[0]),
-          },
-        };
-      });
-      suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
-        return {
-          ...drug,
-          pivot: {
-            ...drug.pivot,
-            price: Number(drug.pivot.price.match(/\d+/)[0]),
+            price: parseFloat(drug.pivot.price),
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
           },
         };
       });
 
+      suggestedDrugs.value = suggestedDrugs.value.map((drug) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === drug.pivot.program_item_id
+        );
+        const equalId =
+          medicalLimit !== undefined &&
+          medicalLimit?.id === drug.pivot.program_item_id;
+        return {
+          ...drug,
+          pivot: {
+            ...drug.pivot,
+            price: parseFloat(drug.pivot.price),
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
+      const all = [...selectedDrugs.value, ...suggestedDrugs.value];
+      allMedicalLimitsSumm.value = medicalLimits.value.reduce((acc, curr) => {
+        const summ = all.reduce((a, c) => {
+          if (curr.id === c.pivot.program_item_id) {
+            return a + parseFloat(c.pivot.price) * c.pivot.quantity;
+          }
+          return a;
+        }, 0);
+
+        if (acc[curr.name]) {
+          acc[curr.name] += summ;
+        } else {
+          acc[curr.name] = summ;
+        }
+
+        return acc;
+      }, {});
+
+      copyDrugs.value = [...selectedDrugs.value];
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
@@ -952,12 +1138,20 @@ export const useAppealStore = defineStore("appeal", () => {
 
     drugs = drugs.map((drug) => {
       if (selectedItem.item.id === drug.id) {
+        const limit = {
+          name: selectedItem.medical_program?.name,
+          id: selectedItem.medical_program?.id,
+        };
+
         return {
           ...drug,
           pivot: {
             ...drug.pivot,
             status: selectedItem.status ?? drug.pivot.status,
             progress: selectedItem.progress ?? drug.pivot.progress,
+            quantity: selectedItem.quantity ?? drug.pivot.quantity,
+            program_item_id: limit.id === drug.pivot.limit?.id ? 0 : limit.id,
+            limit: limit.id === drug.pivot.limit?.id ? null : limit,
           },
           status: selectedItem.status,
         };
@@ -1008,10 +1202,32 @@ export const useAppealStore = defineStore("appeal", () => {
           status: 1,
         };
       });
+
       finishedAppeal.value = true;
     } else {
       selectedDoctors.value = [...copyDoctors.value];
       selectedServices.value = [...copyServices.value];
+      finishedAppeal.value = false;
+    }
+  };
+
+  const copyDrugs = ref([]);
+  const makeAppealDrugDone = (done) => {
+    if (done) {
+      selectedDrugs.value = selectedDrugs.value.map((drug) => {
+        return {
+          ...drug,
+          pivot: {
+            ...drug.pivot,
+            progress: 2,
+            status: 1,
+          },
+          status: 1,
+        };
+      });
+      finishedAppeal.value = true;
+    } else {
+      selectedDrugs.value = [...copyDrugs.value];
       finishedAppeal.value = false;
     }
   };
@@ -1054,6 +1270,7 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSelectedDoctors,
     checkSelectedServices,
     postAppealData,
+    deleteAppealData,
     changeAppealData,
     clearAppealData,
     clearClinicData,
@@ -1083,11 +1300,14 @@ export const useAppealStore = defineStore("appeal", () => {
     appealTotalDrugConsumption,
     clearDrugstoreData,
     removeDrug,
+    removeDoctor,
+    removeService,
 
     medicalProgram,
     medicalLimits,
 
     makeAppealDone,
+    makeAppealDrugDone,
     finishedAppeal,
     calculateLimits,
   };

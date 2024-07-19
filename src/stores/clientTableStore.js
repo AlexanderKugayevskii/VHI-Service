@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch, watchEffect } from "vue";
+import { useI18n } from "vue-i18n";
+import { useAppealStore } from "./appealStore";
+import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
-import formatDate from "src/helpers/formatDate";
-import { useI18n } from "vue-i18n";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
+
+  const { isClinic } = useAppealStore();
 
   const statuses = computed(() => {
     return {
@@ -33,6 +35,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
       align: "left",
       label: t("client_table.date_of_appeal"),
       field: "appealDate",
+    },
+    {
+      name: "finishedDate",
+      align: "left",
+      label: "Дата завершения",
+      fitler: "finishedDate",
     },
     {
       name: "appealStatus",
@@ -94,14 +102,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       .then((response) => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
-        
-        // router.push({
-        //   name: "appeals-page",
-        //   query: {
-        //     page,
-        //     limit,
-        //   },
-        // });
+
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -126,12 +127,16 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
       const appliedDate = row.applied_date.split("-").reverse().join("-");
+      const finishedDate = row.finished_date
+        ? row.finishedDate.split("-").reverse().join("-")
+        : null;
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
         appealDate: appliedDate,
+        finishedDate: finishedDate,
         appealStatus: row.status,
         clinicName: row.hospital.name,
         doctorName: doctors,
@@ -150,6 +155,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     });
   });
 
+  // fetch clinics for filter table clinic
   const clinics = ref([]);
   const fetchClinics = async () => {
     loading.value = true;
@@ -163,12 +169,14 @@ export const useClientTableStore = defineStore("clientTable", () => {
     }
   };
 
+  // filterQuery constructor
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
       {
         name: t("client_table.client"),
         type: "client",
+        meta: true,
         placeholder: "Фамилия и имя клиента",
         multiple: false,
         component: "SimpleInput",
@@ -177,6 +185,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
+        meta: true,
         placeholder: "01.01.1990",
         multiple: false,
         component: "DateInput",
@@ -185,6 +194,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.appeal_status"),
         type: "appeal_status",
+        meta: true,
         placeholder: "Выберите статус",
         multiple: false,
         component: "DropdownSelectNew",
@@ -196,6 +206,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.clinic"),
         type: "clinic",
+        meta: !isClinic,
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
         component: "DropdownSelectNew",
@@ -209,6 +220,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.doctor"),
         type: "doctors",
+        meta: true,
         placeholder: t("create_appeal.dropdowns.doctors"),
         multiple: true,
         component: "SimpleInput",
@@ -224,21 +236,17 @@ export const useClientTableStore = defineStore("clientTable", () => {
       {
         name: t("client_table.service"),
         type: "services",
+        meta: true,
         placeholder: t("create_appeal.dropdowns.services"),
         multiple: true,
         component: "SimpleInput",
-        // item: [
-        //   ...new Set(
-        //     users.value
-        //       .flatMap((row) => row.services)
-        //       .map((service) => service.name)
-        //   ),
-        // ],
+
         item: "",
       },
     ];
   });
 
+  // method for
   const selectFilterData = (option, type, multiple) => {
     let optionItem = option;
     if (!filterQuery.value[type]) {

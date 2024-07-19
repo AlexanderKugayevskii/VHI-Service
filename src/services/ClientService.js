@@ -24,20 +24,54 @@ function getFullClients(page, limit, search, filterQueries) {
   });
 }
 
+function updateClientData(id, payload) {
+  return api.post(`/clinics/clients/update/${id}`, payload);
+}
+
+
+//clinic excel
 function getClientExcelData(contract_client_id) {
   return api.get(`/clinics/client-excel/${contract_client_id}`, {
     responseType: "blob",
   });
 }
 
-function getClinicExcelData(clinic_id) {
-  return api.get(`/clinics/hospital-excel/${clinic_id}`, {
-    responseType: "blob",
-  });
+//client
+function getClinicExcelData(clinic_ids, dateRange) {
+  return api.post(
+    `/clinics/hospital-excel`,
+    {
+      ...dateRange,
+      ids: clinic_ids,
+    },
+    {
+      responseType: "blob",
+    }
+  );
+}
+
+function getDrugstoreExcelData(drugstore_ids, dateRange) {
+  return api.post(
+    `/clinics/drugstore-excel`,
+    {
+      ...dateRange,
+      ids: drugstore_ids,
+    },
+    {
+      responseType: "blob",
+    }
+  );
 }
 
 function getClientInfo(id) {
   return api.get(`/clinics/clients/${id}`);
+}
+
+function getClinicApplications(id) {
+  return api.get(`/clinics/clients/clinic-applications/${id}`);
+}
+function getDrugstoreApplications(id) {
+  return api.get(`/clinics/clients/drugstore-applications/${id}`);
 }
 
 function getClientByAppealId(appealId) {
@@ -83,4 +117,9 @@ export default {
   getClientsByPassport,
   getClientExcelData,
   getClinicExcelData,
+  getDrugstoreExcelData,
+  updateClientData,
+
+  getClinicApplications,
+  getDrugstoreApplications,
 };

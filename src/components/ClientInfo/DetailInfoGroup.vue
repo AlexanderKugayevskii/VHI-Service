@@ -54,30 +54,85 @@
         />
       </div>
     </div>
-    <AppealsTable
-      v-if="allClientTableStore.clientInfo.applications.length > 0"
-      :rows="allClientTableStore.applicationsRows"
-      :columns="columnsWithoutClientName"
-      :loading="allClientTableStore.loading"
-    />
+    <!-- v-if="allClientTableStore.clientInfo.applications.length > 0" -->
+
+    <div class="tabs-container">
+      <div class="tabs-header q-mb-md">
+        <q-tabs
+          dense
+          active-class="tab-active"
+          v-model="tab"
+          content-class="details-tabs-header"
+          align="left"
+        >
+          <q-tab
+            name="clinics"
+            label="Клиники"
+            :ripple="false"
+            class="tabs--no-hover"
+          >
+          </q-tab>
+          <q-tab
+            name="drugstore"
+            label="Аптеки"
+            :ripple="false"
+            class="tabs--no-hover"
+          >
+          </q-tab>
+        </q-tabs>
+      </div>
+      <div class="tabs-content">
+        <q-tab-panels
+          v-model="tab"
+          animated
+          transition-prev="jump-up"
+          transition-next="jump-down"
+        >
+          <q-tab-panel name="clinics" key="clinics">
+            <div class="tab-header">
+              <AppealsTable
+                :rows="allClientTableStore.applicationsClinicRows"
+                :columns="columnsWithoutClientName"
+                :loading="allClientTableStore.loading"
+                @createAppeal="openAppealTypeModal"
+              />
+            </div>
+          </q-tab-panel>
+          <q-tab-panel name="drugstore" key="drugstore">
+            <div class="tab-header">
+              <DrugstoreTable
+                :rows="allClientTableStore.applicationsDrugstoreRows"
+                :columns="drugColumnsWithoutClientName"
+                :loading="allClientTableStore.loading"
+                @createAppeal="openAppealTypeModal"
+              />
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+    </div>
   </div>
+  <AppealType v-model:="appealTypeFixed" />
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useFullClientTableStore } from "src/stores/allClientTableStore";
+import { useClientTableStore } from "src/stores/clientTableStore";
+import { useDrugTableStore } from "src/stores/drugTableStore";
 import LoadingSpinner from "../Shared/LoadingSpinner.vue";
 import ExpandBtn from "src/components/ClientInfo/ExpandBtn.vue";
 import PolisInfo from "src/components/ClientInfo/PolisInfo.vue";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 import ClientCard from "src/components/ClientInfo/ClientCard.vue";
 import ClientTab from "src/components/ClientInfo/ClientTab.vue";
-import { storeToRefs } from "pinia";
-import { useFullClientTableStore } from "src/stores/allClientTableStore";
-import { useClientTableStore } from "src/stores/clientTableStore";
 import AppealsTable from "../ClientsTable/AppealsTable.vue";
+import DrugstoreTable from "../ClientsTable/DrugstoreTable.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import ClientService from "src/services/ClientService";
 import dayjs from "dayjs";
+import AppealType from "src/pages/AppealType.vue";
 
 const props = defineProps({
   contractClientId: {
@@ -85,19 +140,29 @@ const props = defineProps({
     required: true,
   },
 });
+const tab = ref("clinics");
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
   showDetailsExtra.value = !showDetailsExtra.value;
 };
-
-const clientTableStore = useClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+// clinic or drugdstore modal ref
+const appealTypeFixed = ref(false);
+const openAppealTypeModal = () => {
+  appealTypeFixed.value = true;
+};
 
 const allClientTableStore = useFullClientTableStore();
+const clientTableStore = useClientTableStore();
+const drugTableStore = useDrugTableStore();
+const { pagination, rows, columns } = storeToRefs(clientTableStore);
+const { columns: drugColumngs } = storeToRefs(drugTableStore);
 
 const columnsWithoutClientName = computed(() => {
   return columns.value.filter((column) => column.name !== "client");
 });
+const drugColumnsWithoutClientName = computed(() =>
+  drugColumngs.value.filter((col) => col.name !== "client")
+);
 
 const clientInfo = computed(() => allClientTableStore.clientInfo);
 const medicalLimits = computed(() => allClientTableStore.medicalLimits);
@@ -199,5 +264,13 @@ const getExcelData = async () => {
 
 .v-collapse {
   transition: opacity 300ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.tabs-header {
+  background: transparent;
+}
+
+.q-tab-panels {
+  background: none;
 }
 </style>
