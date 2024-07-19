@@ -40,7 +40,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       name: "finishedDate",
       align: "left",
       label: "Дата завершения",
-      fitler: "finishedDate",
+      field: "finishedDate",
     },
     {
       name: "appealStatus",
