@@ -15,6 +15,7 @@
         :filter-query="drugTableStore.filterQuery"
         :checkSelectedOption="drugTableStore.checkSelectedOption"
         :remove-filter="drugTableStore.removeFilter"
+        :fetchDrugstores="drugTableStore.fetchDrugstores"
         :total="total"
       />
     </div>

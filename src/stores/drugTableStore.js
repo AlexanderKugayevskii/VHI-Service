@@ -1,11 +1,19 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import DrugsService from "src/services/DrugsService";
+import AppealService from "src/services/AppealService";
 import formatDate from "src/helpers/formatDate";
 
 import { useI18n } from "vue-i18n";
 export const useDrugTableStore = defineStore("drugTable", () => {
   const { t } = useI18n();
+  const statuses = computed(() => {
+    return {
+      0: t("statuses.new"),
+      1: t("statuses.in_progress"),
+      2: t("statuses.completed"),
+    };
+  });
 
   const columns = computed(() => [
     {
@@ -100,7 +108,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
-      props.filter
+      props.filter,
+      requestFilterQuery.value
     );
   };
 
@@ -133,5 +142,161 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   //   index +
   //   1,
 
-  return { pagination, loading, rows, columns, handleRequest };
+  const drugstores = ref([]);
+  const fetchDrugstores = async () => {
+    console.log("work");
+    try {
+      const response = await AppealService.getDrugstores();
+      drugstores.value = response.data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+    }
+  };
+
+  const filterQuery = ref({});
+  const filterData = computed(() => {
+    return [
+      {
+        name: t("client_table.client"),
+        type: "client",
+        meta: true,
+        placeholder: "Фамилия и имя клиента",
+        multiple: false,
+        component: "SimpleInput",
+        item: "",
+      },
+      {
+        name: t("client_table.date_of_appeal"),
+        type: "date_of_appeal",
+        meta: true,
+        placeholder: "01.01.1990",
+        multiple: false,
+        component: "DateInput",
+        item: "",
+      },
+      {
+        name: t("client_table.appeal_status"),
+        type: "appeal_status",
+        meta: true,
+        placeholder: "Выберите статус",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: Object.keys(statuses.value).map((key) => ({
+          status: Number(key),
+          name: statuses.value[key],
+        })),
+      },
+      {
+        name: t("client_table.drugstore"),
+        type: "clinic",
+        meta: true,
+        placeholder: t("client_table.drugstore"),
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: drugstores.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
+      },
+      {
+        name: "Лекарства",
+        type: "drugs",
+        meta: true,
+        placeholder: "Выберите лекарства",
+        multiple: true,
+        component: "SimpleInput",
+        item: "",
+      },
+    ];
+  });
+
+  const selectFilterData = (option, type, multiple) => {
+    let optionItem = option;
+    if (!filterQuery.value[type]) {
+      if (multiple) {
+        filterQuery.value[type] = [];
+        filterQuery.value[type].push(optionItem);
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    } else {
+      if (multiple) {
+        const index = filterQuery.value[type].findIndex(
+          (item) => item === optionItem
+        );
+        if (index > -1) {
+          filterQuery.value[type].splice(index, 1);
+        } else {
+          filterQuery.value[type].push(optionItem);
+        }
+        if (filterQuery.value[type].length === 0) {
+          delete filterQuery.value[type];
+        }
+      } else {
+        if (
+          filterQuery.value[type] === optionItem &&
+          type !== "date_of_appeal"
+        ) {
+          delete filterQuery.value[type];
+        } else {
+          filterQuery.value[type] = optionItem;
+        }
+        if (filterQuery.value[type]?.length === 0) {
+          delete filterQuery.value[type];
+        }
+      }
+    }
+  };
+
+  const requestFilterQuery = computed(() => {
+    const query = {
+      full_name: filterQuery.value?.client,
+      applied_date: filterQuery.value?.date_of_appeal,
+      status: filterQuery.value.appeal_status?.status,
+      drugstore_id: filterQuery.value?.drugstore?.id,
+      drugs: filterQuery.value?.drugs,
+    };
+
+    const entries = Object.entries(query);
+    entries.forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    return query;
+  });
+
+  const checkSelectedOption = (option, type, multiple) => {
+    if (multiple) {
+      return filterQuery.value[type]?.some((item) => item === option);
+    } else {
+      if (type === "appeal_status") {
+        return option.status === filterQuery.value[type]?.status;
+      }
+      return option === filterQuery.value[type];
+    }
+  };
+
+  const removeFilter = (filterKey) => {
+    delete filterQuery.value[filterKey];
+  };
+
+  return {
+    pagination,
+    loading,
+    rows,
+    columns,
+    handleRequest,
+    drugstores,
+    fetchDrugstores,
+    selectFilterData,
+    filterData,
+    filterQuery,
+    requestFilterQuery,
+    checkSelectedOption,
+    removeFilter,
+  };
 });

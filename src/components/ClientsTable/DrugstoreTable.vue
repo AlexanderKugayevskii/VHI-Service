@@ -1,6 +1,13 @@
 <template>
   <div>
-    <TableActions @update:search="handleSearch">
+    <TableActions
+      v-if="showTableActions"
+      @update:search="handleSearch"
+      @update:find="handleFind"
+      @delete:option="handleDelete"
+      :filter-options="filterQuery"
+      :removeFilter="removeFilter"
+    >
       <template #appealBtn>
         <SimpleButton
           type="button"
@@ -8,6 +15,72 @@
           :label="$t('create_appeal.buttons.create_appeal')"
           @click="handleClickCreateAppealBtn"
         />
+      </template>
+      <template #filters>
+        <div
+          class="filter-item"
+          v-for="filterItem in filterData.filter((item) => item.meta)"
+          :key="filterItem.name"
+        >
+          <SimpleInput
+            v-if="filterItem.component === 'SimpleInput'"
+            :label="filterItem.name"
+            :placeholder="filterItem.placeholder"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DateInput
+            v-if="filterItem.component === 'DateInput'"
+            :label="filterItem.name"
+            placeholder="10-05-2024"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DropdownSelectNew
+            v-if="filterItem.component === 'DropdownSelectNew'"
+            :label="filterItem.name"
+            :options="filterItem.item"
+            :multiple="filterItem.multiple"
+            :selected-options="filterQuery[filterItem.type]"
+            :search-input="filterItem.type !== 'appeal_status'"
+            @select-option="
+              (option) =>
+                selectFilterData(option, filterItem.type, filterItem.multiple)
+            "
+            @request="fetchDrugstores"
+          >
+            <template #top-label>{{ filterItem.name }}</template>
+            <template #placeholder>{{ filterItem.placeholder }}</template>
+            <template #option-content="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+              <CheckIcon
+                v-if="
+                  checkSelectedOption(
+                    option,
+                    filterItem.type,
+                    filterItem.multiple
+                  )
+                "
+              />
+            </template>
+            <template v-slot:selected-options-once="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+            </template>
+            <template v-slot:selected-options-length="{ length }">
+              {{
+                $t(`create_appeal.dropdowns.${filterItem.type}_choise`, length)
+              }}
+            </template>
+          </DropdownSelectNew>
+        </div>
       </template>
     </TableActions>
     <div>
@@ -157,7 +230,10 @@ import RowsPerPage from "./RowsPerPage.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
-
+import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
+import CheckIcon from "../Shared/CheckIcon.vue";
+import SimpleInput from "../Shared/SimpleInput.vue";
+import DateInput from "../Shared/DateInput.vue";
 import PaginationTable from "./PaginationTable.vue";
 import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref, toRef, toRefs, watch } from "vue";
@@ -185,7 +261,7 @@ const props = defineProps({
   filterQuery: {},
   checkSelectedOption: {},
   removeFilter: {},
-  fetchClinics: {},
+  fetchDrugstores: {},
   total: {},
   showTableActions: {
     type: Boolean,
@@ -393,5 +469,8 @@ tbody tr td:last-child {
 }
 tr.clickable {
   cursor: pointer;
+}
+.filter-item {
+  padding-bottom: 20px;
 }
 </style>
