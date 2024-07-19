@@ -81,9 +81,9 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search) {
+  function fetchClients(page = 1, limit = 10, search, queries) {
     loading.value = true;
-    DrugsService.getClients(page, limit, search)
+    DrugsService.getClients(page, limit, search, queries)
       .then((response) => {
         users.value = response.data.data.data;
         // router.push({
@@ -105,6 +105,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   }
 
   const handleRequest = (props) => {
+    console.log(requestFilterQuery.value);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
@@ -188,10 +189,10 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         })),
       },
       {
-        name: t("client_table.drugstore"),
-        type: "clinic",
+        name: "Аптека",
+        type: "drugstore",
         meta: true,
-        placeholder: t("client_table.drugstore"),
+        placeholder: "Аптека",
         multiple: false,
         component: "DropdownSelectNew",
         item: drugstores.value.map(({ name, id }) => {
@@ -205,7 +206,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         name: "Лекарства",
         type: "drugs",
         meta: true,
-        placeholder: "Выберите лекарства",
+        placeholder: "Введите названия лекарства",
         multiple: true,
         component: "SimpleInput",
         item: "",
