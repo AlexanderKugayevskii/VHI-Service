@@ -32,7 +32,6 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
-
         type: "Клиент",
       };
     });
@@ -41,13 +40,14 @@ export const useSearchClientsStore = defineStore("clients", () => {
   };
   const getClientByName = async (name) => {
     searchClients.value = [];
+
     clients.value = [];
     loading.value = true;
 
     const response = await ClientService.getClientsByName(name);
     clients.value = response.data.data;
-    searchClients.value = clients.value.map((item) => {
-      return {
+    clients.value.forEach((item) => {
+      searchClients.value.push({
         id: item.id,
         clientId: item.client_id,
         clientFirstname: item.client.name,
@@ -57,8 +57,29 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
         type: "Клиент",
-      };
+        type_id: 0,
+        hasSubClient: item.sub_clients.length > 0,
+      });
+
+      if (item.sub_clients.length > 0) {
+        item.sub_clients.forEach((subClient) => {
+          searchClients.value.push({
+            id: subClient.id,
+            clientFirstname: subClient.name,
+            clientLastname: subClient.lastname,
+            dmsCode: item.dms_code,
+            passportSeria: subClient.seria,
+            passportNumber: subClient.number,
+            program: item.program ? item.program.name : "no program",
+            type: "Родственник",
+            type_id: 1,
+            last: index === item.sub_clients.length - 1,
+          });
+        });
+      }
     });
+
+    console.log(searchClients.value);
     loading.value = false;
   };
 
@@ -70,8 +91,8 @@ export const useSearchClientsStore = defineStore("clients", () => {
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
 
-    searchClients.value = clients.value.map((item) => {
-      return {
+    clients.value.forEach((item) => {
+      searchClients.value.push({
         id: item.id,
         clientId: item.client_id,
         clientFirstname: item.client.name,
@@ -80,9 +101,27 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
-        applicant: item.contract.applicant,
         type: "Клиент",
-      };
+        type_id: 0,
+        hasSubClient: item.sub_clients.length > 0,
+      });
+
+      if (item.sub_clients.length > 0) {
+        item.sub_clients.forEach((subClient, index) => {
+          searchClients.value.push({
+            id: subClient.id,
+            clientFirstname: subClient.name,
+            clientLastname: subClient.lastname,
+            dmsCode: item.dms_code,
+            passportSeria: subClient.seria,
+            passportNumber: subClient.number,
+            program: item.program ? item.program.name : "no program",
+            type: "Родственник",
+            type_id: 1,
+            last: index === item.sub_clients.length - 1,
+          });
+        });
+      }
     });
     loading.value = false;
   };
