@@ -36,7 +36,7 @@
                     >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >Клиент:
+                    >{{ clientData.type_id === 0 ? "Клиент" : "Родственник" }}:
                     <b
                       >{{
                         clientData.clientFirstname +
@@ -50,7 +50,7 @@
                   >
 
                   <span
-                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                    >Заявитель: <b>{{ clientData.applicant || "Данных нет" }} </b></span
                   >
                 </div>
                 <div class="create-appeal-client-action">

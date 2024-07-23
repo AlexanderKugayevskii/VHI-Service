@@ -30,7 +30,7 @@
           item.passportSeria + " " + item.passportNumber
         }}</span>
       </div>
-      <div class="client-result-item-info" v-if = "item.type_id === 0">
+      <div class="client-result-item-info" v-if="item.type_id === 0">
         <span class="client-result-item-info-title">ID </span>
         <span class="client-result-item-info-descr">{{ item.dmsCode }}</span>
       </div>
@@ -40,7 +40,7 @@
           item.clientLastname + " " + item.clientFirstname
         }}</span>
       </div>
-      <div class="client-result-item-info" v-if = "item.type_id === 0">
+      <div class="client-result-item-info" v-if="item.type_id === 0">
         <span class="client-result-item-info-title">Программа </span>
         <span class="client-result-item-info-descr">{{ item.program }}</span>
       </div>
