@@ -3,6 +3,7 @@
     <div>
       <!-- v-model:pagination="pagination" -->
       <q-table
+      
         flat
         :rows="billingData"
         :columns="columns"
@@ -93,10 +94,10 @@
               {{ props.row.appealsAmount }}
             </q-td>
             <q-td key="invoice" :props="props" class="appeals-td">
-              <StatusSwitcher :progress="props.row.invoice" />
+              <!-- <StatusSwitcher :progress="props.row.invoice" /> -->
             </q-td>
             <q-td key="completionCertificate" :props="props" class="appeals-td">
-              <StatusSwitcher :progress="props.row.completionCertificate" />
+              <!-- <StatusSwitcher :progress="props.row.completionCertificate" /> -->
             </q-td>
 
             <q-td key="payAmount" :props="props" class="text-right appeals-td">

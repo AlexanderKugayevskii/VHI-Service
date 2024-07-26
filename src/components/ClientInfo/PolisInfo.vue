@@ -11,7 +11,7 @@
           <span>{{ data.programName }}</span>
         </p>
       </div>
-      <div>
+      <div class = "polis-info__dates">
         <p>
           <span>Дата начала страхования:</span>
           <span>{{ data.startDate }}</span>
@@ -21,7 +21,7 @@
           <span>{{ data.endDate }}</span>
         </p>
       </div>
-      <div>
+      <div class = "polis-info__company">
         <p>
           <span>Номер контракта:</span>
           <span>{{ data.contractNumber }}</span>
@@ -35,7 +35,9 @@
     <div class="polis-info__right" v-if="hasMedicalPrograms">
       <div class="polis-info__remainder">
         <span>Общий остаток</span>
-        <span>{{ formatPrice(data.remaind) }}</span>
+        <span>{{
+          formatPrice(parseFloat(clientInfo.program?.liability) - data.remaind)
+        }}</span>
       </div>
     </div>
   </div>
@@ -61,7 +63,7 @@ const data = computed(() => {
     programName: clientInfo.value?.program?.name,
     liability: formatPrice(parseFloat(clientInfo.value.program?.liability)),
     remaind: medicalPrograms.value.reduce((acc, curr) => {
-      return acc + (parseFloat(curr.limit) - parseFloat(curr.spent));
+      return acc + parseFloat(curr.spent);
     }, 0),
     startDate: clientInfo.value.contract.start_date,
     endDate: clientInfo.value.contract.end_date,
@@ -83,18 +85,33 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 20px;
   color: #404f6f;
   font-size: 15px;
 
   &__left {
     display: flex;
-    column-gap: 40px;
+    column-gap: 20px;
 
+
+    div {
+      flex-basis: 25%;
+    }
     div p {
       margin-bottom: 8px;
     }
   }
 
+  &__dates {
+    white-space: nowrap;
+  }
+  &__company {
+    flex-grow: 1;
+  }
+  &__right {
+    flex-grow: 1;
+    white-space: nowrap;
+  }
   .polis-info__remainder {
     background-color: #cff7f8;
     padding: 4px 12px;

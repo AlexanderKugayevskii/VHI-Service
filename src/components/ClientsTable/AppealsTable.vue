@@ -93,6 +93,7 @@
         :loading="loading"
         :filter="search"
         hide-pagination
+        :rows-per-page-options = "reactivePagination === undefined ? [0] : undefined"
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
@@ -255,14 +256,12 @@ import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DateInput from "../Shared/DateInput.vue";
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
-import { tryOnBeforeUnmount } from "@vueuse/core";
-import { filter } from "lodash";
 
 const $q = useQuasar();
 const router = useRouter();
