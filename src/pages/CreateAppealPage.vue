@@ -758,7 +758,7 @@ const handleCreateAppeal = async () => {
   await appealStore.fetchHospitalData();
   $q.loading.hide();
 
-  if(appealStore.isAgent) {
+  if (appealStore.isAgent) {
     router.replace(
       Trans.i18nRoute({
         name: "createAppealLimit",
@@ -771,7 +771,7 @@ const handleCreateAppeal = async () => {
 const handleChangeAppeal = async () => {
   await appealStore.changeAppealData();
 
-  if(appealStore.isAgent) {
+  if (appealStore.isAgent) {
     const appealStatuses = appealStore.allDoctorsStatus
       .concat(appealStore.allServicesStatus)
       .map((status) => status.program_item_id);
@@ -780,7 +780,7 @@ const handleChangeAppeal = async () => {
       await appealStore.fetchMedicalPrograms();
       await appealStore.fetchApplicantData();
       await appealStore.fetchHospitalData();
-  
+
       router.replace(
         Trans.i18nRoute({
           name: "createAppealLimit",
