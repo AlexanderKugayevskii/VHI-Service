@@ -67,6 +67,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         item.sub_clients.forEach((subClient) => {
           searchClients.value.push({
             id: subClient.id,
+            clientId: subClient.id,
             clientFirstname: subClient.name,
             clientLastname: subClient.lastname,
             birthday: item.client.birthday,
@@ -94,7 +95,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
 
-
+    
     clients.value.forEach((item) => {
       searchClients.value.push({
         id: item.id,
@@ -115,6 +116,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         item.sub_clients.forEach((subClient, index) => {
           searchClients.value.push({
             id: subClient.id,
+            clientId: subClient.id,
             clientFirstname: subClient.name,
             clientLastname: subClient.lastname,
             birthday: item.client.birthday,
