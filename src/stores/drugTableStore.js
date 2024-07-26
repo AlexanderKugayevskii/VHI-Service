@@ -134,6 +134,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
+        type_id: row.is_sub_client,
         userSettings: "",
         index: row.id,
       };

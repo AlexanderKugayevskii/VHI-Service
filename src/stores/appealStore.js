@@ -587,7 +587,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
     const payload = {
       contract_client_id: client.value.id,
-      client_type: 0,
+      client_type: client.value.type_id,
       client_id: client.value.clientId,
       is_hospital: false,
       drugstore_id: selectedDrugstore.value.id,
@@ -634,6 +634,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const payload = {
       contract_client_id: client.value.id,
       client_id: client.value.clientId,
+      client_type: client.value.type_id,
       drugstore_id: selectedDrugstore.value.id,
       drugs: allDrugsStatus.value,
       applied_date: appealDate.value,
@@ -709,7 +710,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
-      client_type: 0,
+      client_type: client.value.type_id,
       is_hospital: true,
       client_id: client.value.clientId,
       services,
@@ -753,7 +754,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const payload = {
       hospital_id: selectedClinic.value.id,
       contract_client_id: client.value.id,
-      client_type: 0,
+      client_type: client.value.type_id,
       client_id: client.value.clientId,
       services: allServicesStatus.value,
       doctors: allDoctorsStatus.value,
@@ -962,7 +963,7 @@ export const useAppealStore = defineStore("appeal", () => {
         currentClient.appealId
       );
       const data = response.data.data;
-      
+
       client.value.applicant = data.contract_client.contract.applicant;
       client.value.id = data.contract_client.id;
       client.value.clientId = data.contract_client.client_id;
@@ -1311,8 +1312,8 @@ export const useAppealStore = defineStore("appeal", () => {
     finishedAppeal,
     calculateLimits,
 
-    allDoctorsStatus, 
+    allDoctorsStatus,
     allServicesStatus,
-    allDrugsStatus, 
+    allDrugsStatus,
   };
 });

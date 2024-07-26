@@ -93,7 +93,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
 
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
-    console.log(clients.value);
+
 
     clients.value.forEach((item) => {
       searchClients.value.push({
