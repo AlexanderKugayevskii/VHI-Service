@@ -1310,5 +1310,9 @@ export const useAppealStore = defineStore("appeal", () => {
     makeAppealDrugDone,
     finishedAppeal,
     calculateLimits,
+
+    allDoctorsStatus, 
+    allServicesStatus,
+    allDrugsStatus, 
   };
 });

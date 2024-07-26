@@ -135,6 +135,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
+        birthday: row.client.birthday,
         appealDate: appliedDate,
         finishedDate: finishedDate,
         appealStatus: row.status,

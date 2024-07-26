@@ -84,7 +84,6 @@ defineEmits([...useDialogPluginComponent.emits]);
 const $q = useQuasar();
 const { dialogRef, onDialogOK, onDialogHide } = useDialogPluginComponent();
 
-
 const residentsTypes = useResidentTypes();
 const selectedResidentTypeId = ref(props.user.residentType ?? null);
 

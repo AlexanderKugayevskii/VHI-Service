@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
@@ -61,10 +62,16 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       field: "program",
     },
     {
-      name: "insurancePeriod",
+      name: "endInsurancePeriod",
       align: "left",
-      label: "Период страхования",
-      field: "insurancePeriod",
+      label: "Дата начала страхования",
+      field: "endInsurancePeriod",
+    },
+    {
+      name: "startInsurancePeriod",
+      align: "left",
+      label: "Дата конца страхования",
+      field: "startInsurancePeriod",
     },
     {
       name: "organizationName",
@@ -113,13 +120,27 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     );
   };
 
+  const currentDate = dayjs();
+
   const rows = computed(() => {
     return users.value.map((row, index) => {
-      const insurancePeriod =
-        row.contract.start_date.replace(/-/g, ".") +
-        " - " +
-        row.contract.end_date.replace(/-/g, ".");
+      const startInsurancePeriod = row.contract.start_date.replace(/-/g, ".");
+      const endInsurancePeriod = row.contract.end_date.replace(/-/g, ".");
 
+      // const targetDate = dayjs(row.contract.end_date);
+      const targetDate = dayjs(row.contract.end_date);
+      const daysDifference = targetDate.diff(currentDate, "day");
+
+      const expire = {
+        status: 0,
+      };
+      if (daysDifference < 0) {
+        expire.status = 2;
+      } else if (daysDifference < 30) {
+        expire.status = 1;
+      } else {
+        expire.status = 0;
+      }
       return {
         contractClientId: row.id,
         clientFirstname: row.client.name,
@@ -132,8 +153,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         // clientType: "Клиент",
         dmsId: row.dms_code,
         program: row.program?.name ?? "",
-        insurancePeriod: insurancePeriod,
+        startInsurancePeriod: startInsurancePeriod,
+        // endInsurancePeriod: endInsurancePeriod,
+        endInsurancePeriod: endInsurancePeriod,
         organizationName: row.contract?.applicant ?? "no applicant",
+        expireStatus: expire,
         index: row.id,
       };
     });

@@ -50,7 +50,12 @@
                   >
 
                   <span
-                    >Заявитель: <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                    >Заявитель:
+                    <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                  >
+                  <span
+                    >Дата рождения:
+                    <b>{{ clientData.birthday || "Данных нет" }} </b></span
                   >
                 </div>
                 <div class="create-appeal-client-action">
@@ -751,18 +756,39 @@ const handleCreateAppeal = async () => {
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData();
   await appealStore.fetchHospitalData();
-
   $q.loading.hide();
-  router.replace(
-    Trans.i18nRoute({
-      name: "createAppealLimit",
-      params: { id: appealStore.client.contractClientId },
-    })
-  );
+
+  if(appealStore.isAgent) {
+    router.replace(
+      Trans.i18nRoute({
+        name: "createAppealLimit",
+        params: { id: appealStore.client.contractClientId },
+      })
+    );
+  }
 };
 
-const handleChangeAppeal = () => {
-  appealStore.changeAppealData();
+const handleChangeAppeal = async () => {
+  await appealStore.changeAppealData();
+
+  if(appealStore.isAgent) {
+    const appealStatuses = appealStore.allDoctorsStatus
+      .concat(appealStore.allServicesStatus)
+      .map((status) => status.program_item_id);
+    const programItemIdIsZero = appealStatuses.some((id) => id === 0);
+    if (programItemIdIsZero) {
+      await appealStore.fetchMedicalPrograms();
+      await appealStore.fetchApplicantData();
+      await appealStore.fetchHospitalData();
+  
+      router.replace(
+        Trans.i18nRoute({
+          name: "createAppealLimit",
+          params: { id: appealStore.client.contractClientId },
+        })
+      );
+    }
+  }
 };
 
 const appealDoneCheckbox = ref(false);
@@ -786,7 +812,7 @@ watch(
 );
 
 onMounted(() => {
-  // console.log(`client`, clientData.value);
+  console.log(`client`, clientData.value);
 });
 
 const hideModal = () => {

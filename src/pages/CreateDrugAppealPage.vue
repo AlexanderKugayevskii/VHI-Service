@@ -45,7 +45,11 @@
                   >
 
                   <span
-                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                    >Заявитель:
+                    <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                  >
+                  <span
+                    >Дата рождения: <b>{{ clientData.birthday }} </b></span
                   >
                 </div>
 

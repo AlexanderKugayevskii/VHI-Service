@@ -67,6 +67,9 @@ const routes = [
                 component: () => import("pages/CreateAppealLimit.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  if(appealStore.isClinic || appealStore.isDrugstore) {
+                    return; 
+                  }
                   if (from.name) {
                     next();
                   } else {

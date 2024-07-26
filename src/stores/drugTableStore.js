@@ -125,6 +125,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
+        birthday: row.client.birthday,
         appealDate: formatDate(row.created_at),
         finishedDate: finishedDate,
         appealStatus: row.status,

@@ -1,14 +1,36 @@
 <template>
   <div class="polis-info">
     <div class="polis-info__left">
-      <p>
-        <span>ID:</span>
-        <span>{{ data.dmsCode }}</span>
-      </p>
-      <p v-if="data.programName">
-        <span>Программа:</span>
-        <span>{{ data.programName }}</span>
-      </p>
+      <div>
+        <p>
+          <span>ID:</span>
+          <span>{{ data.dmsCode }}</span>
+        </p>
+        <p v-if="data.programName">
+          <span>Программа:</span>
+          <span>{{ data.programName }}</span>
+        </p>
+      </div>
+      <div>
+        <p>
+          <span>Дата начала страхования:</span>
+          <span>{{ data.startDate }}</span>
+        </p>
+        <p>
+          <span>Дата конца страхования:</span>
+          <span>{{ data.endDate }}</span>
+        </p>
+      </div>
+      <div>
+        <p>
+          <span>Номер контракта:</span>
+          <span>{{ data.contractNumber }}</span>
+        </p>
+        <p>
+          <span>Заявитель:</span>
+          <span>{{ data.applicant }}</span>
+        </p>
+      </div>
     </div>
     <div class="polis-info__right" v-if="hasMedicalPrograms">
       <div class="polis-info__remainder">
@@ -41,10 +63,16 @@ const data = computed(() => {
     remaind: medicalPrograms.value.reduce((acc, curr) => {
       return acc + (parseFloat(curr.limit) - parseFloat(curr.spent));
     }, 0),
+    startDate: clientInfo.value.contract.start_date,
+    endDate: clientInfo.value.contract.end_date,
+    contractNumber: clientInfo.value.contract.contract_number,
+    applicant: clientInfo.value.contract.applicant,
   };
 });
 
-onMounted(() => {});
+onMounted(() => {
+  console.log(clientInfo.value);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -60,7 +88,11 @@ onMounted(() => {});
 
   &__left {
     display: flex;
-    column-gap: 10px;
+    column-gap: 40px;
+
+    div p {
+      margin-bottom: 8px;
+    }
   }
 
   .polis-info__remainder {
