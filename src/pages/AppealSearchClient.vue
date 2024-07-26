@@ -78,8 +78,8 @@
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -103,8 +103,8 @@
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -127,8 +127,8 @@
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>

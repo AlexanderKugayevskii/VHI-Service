@@ -66,7 +66,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
       if (item.sub_clients.length > 0) {
         item.sub_clients.forEach((subClient) => {
           searchClients.value.push({
-            id: subClient.id,
+            id: subClient.pivot.contract_client_id,
             clientId: subClient.id,
             clientFirstname: subClient.name,
             clientLastname: subClient.lastname,
@@ -94,8 +94,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
 
     const response = await ClientService.getClientsByPassport(passport);
     clients.value = response.data.data;
-
-    
+    console.log(clients.value);
     clients.value.forEach((item) => {
       searchClients.value.push({
         id: item.id,
@@ -115,7 +114,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
       if (item.sub_clients.length > 0) {
         item.sub_clients.forEach((subClient, index) => {
           searchClients.value.push({
-            id: subClient.id,
+            id: subClient.pivot.contract_client_id,
             clientId: subClient.id,
             clientFirstname: subClient.name,
             clientLastname: subClient.lastname,

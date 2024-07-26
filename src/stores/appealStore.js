@@ -708,11 +708,11 @@ export const useAppealStore = defineStore("appeal", () => {
     });
 
     const payload = {
-      hospital_id: selectedClinic.value.id,
+      client_id: client.value.clientId,
       contract_client_id: client.value.id,
+      hospital_id: selectedClinic.value.id,
       client_type: client.value.type_id,
       is_hospital: true,
-      client_id: client.value.clientId,
       services,
       doctors,
       diagnosis: diagnosis.value,
