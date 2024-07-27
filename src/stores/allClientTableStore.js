@@ -142,10 +142,10 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         expire.status = 0;
       }
       return {
+        clientId: row.client.id,
         contractClientId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
-        clientId: row.client.id,
         residentType: row.client.residentType,
         passport: `${row.client.seria} ${row.client.number}`,
         pinfl: row.client.pinfl,
@@ -173,20 +173,25 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
-      console.log(data);
+
       setClientInfo(data);
 
       const clientDataForAppeal = {
         clientFirstname: data.client.name,
         clientLastname: data.client.lastname,
         clientId: data.client_id,
-        dmsCode: data.dms_code,
         id: data.id,
+        dmsCode: data.dms_code,
         passportNumber: data.client.number,
         passportSeria: data.client.seria,
         program: data?.program.name,
+        birthday: data.client.birthday,
+        applicant: data.contract.applicant,
+        type_id: 0,
         type: "Клиент",
       };
+
+      console.log(`data`, data);
 
       appealStore.setClient(clientDataForAppeal);
     } catch (e) {
@@ -223,7 +228,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const data = response.data.data;
 
       clinicClientApplications.value = data;
-      console.log(clinicClientApplications.value);
     } catch (e) {
       console.error(e);
     }
@@ -236,7 +240,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const data = response.data.data;
 
       drugstoreClientApplications.value = data;
-      console.log(drugstoreClientApplications.value);
     } catch (e) {
       console.error(e);
     }

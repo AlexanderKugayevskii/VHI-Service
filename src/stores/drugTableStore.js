@@ -105,7 +105,6 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   }
 
   const handleRequest = (props) => {
-    console.log(requestFilterQuery.value);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
@@ -134,7 +133,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
-        type_id: row.is_sub_client,
+        type_id: row.client_type,
         userSettings: "",
         index: row.id,
       };
@@ -147,7 +146,6 @@ export const useDrugTableStore = defineStore("drugTable", () => {
 
   const drugstores = ref([]);
   const fetchDrugstores = async () => {
-    console.log("work");
     try {
       const response = await AppealService.getDrugstores();
       drugstores.value = response.data.data;

@@ -103,7 +103,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
 
-        console.log(users.value);
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -131,6 +130,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const finishedDate = row.finished_date
         ? row.finished_date.split("-").reverse().join("-")
         : null;
+      console.log(row.is_sub_client);
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -147,7 +147,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client?.dms_code ?? "",
         program: row.contract_client?.program?.name ?? "",
-        type_id: row.is_sub_client,
+        type_id: row.client_type,
         userSettings: "",
         // index:
         //   (pagination.value.page - 1) * pagination.value.rowsPerPage +

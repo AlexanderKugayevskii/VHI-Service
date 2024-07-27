@@ -14,7 +14,6 @@ export const useAuthStore = defineStore("auth", () => {
   //   const { t } = useI18n();
   //actions
   const setUser = (payload) => {
-    console.log(payload);
     user.value = payload.user;
     token.value = payload.token;
 

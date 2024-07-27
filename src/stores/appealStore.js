@@ -639,7 +639,6 @@ export const useAppealStore = defineStore("appeal", () => {
       drugs: allDrugsStatus.value,
       applied_date: appealDate.value,
     };
-    console.log(payload);
     // appendFormData(formData, payload);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
@@ -832,7 +831,6 @@ export const useAppealStore = defineStore("appeal", () => {
       });
 
       loading.value = false;
-      console.log(`MEDICAL PROGRAMS`, medicalLimits.value);
     } catch (e) {
       console.error(e);
     }
@@ -990,7 +988,6 @@ export const useAppealStore = defineStore("appeal", () => {
         const equalId =
           medicalLimit !== undefined &&
           medicalLimit?.id === drug.pivot.program_item_id;
-        console.log(`EQUALID`, equalId);
         return {
           ...drug,
           pivot: {

@@ -79,7 +79,9 @@
             'clickable',
             'tbody-table-row',
             { 'tbody-table-row--alert': props.row.expireStatus.status === 1 },
-            { 'tbody-table-row--negative': props.row.expireStatus.status === 2 },
+            {
+              'tbody-table-row--negative': props.row.expireStatus.status === 2,
+            },
           ]"
         >
           <q-td key="index" :props="props" class="appeals-td">
@@ -253,6 +255,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
+  console.log(`CLIENT FROM FULL CLIENTS TABLE`, client);
   appealStore.setClient(client);
   router.push(
     Trans.i18nRoute({

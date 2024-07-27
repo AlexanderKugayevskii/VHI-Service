@@ -59,6 +59,7 @@
           v-for="client in subClients"
           :key="client.id"
           :client="client"
+          @click="() => console.log(client)"
         />
       </div>
     </div>
@@ -183,6 +184,7 @@ const mainPrograms = computed(() => {
 const extraPrograms = computed(() => {
   return medicalLimits.value?.slice(2);
 });
+
 const client = computed(() => {
   return clientInfo.value?.client;
 });
@@ -197,7 +199,6 @@ const getExcelData = async () => {
     const response = await ClientService.getClientExcelData(
       props.contractClientId
     );
-    console.log(`infoclient`, response);
     const fileName = `${client.value.lastname}-${client.value.name}`;
     const fileDate = dayjs().format("D-MM-YY");
 

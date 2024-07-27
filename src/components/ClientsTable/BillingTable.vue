@@ -370,8 +370,6 @@ const fetchBillings = async () => {
         .month(row.month)
         .locale(day.currentLocale.value)
         .format("MMMM");
-      console.log(day.currentLocale.value);
-      console.log();
       return {
         agent: row.hospital_name,
         date: `${monthName}, ${row.year}`,

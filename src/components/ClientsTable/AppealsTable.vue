@@ -357,7 +357,6 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
-  console.log(`client`, client);
 
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
