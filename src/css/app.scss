@@ -64,7 +64,11 @@ body {
 }
 
 .full-client-table .q-table {
-  table-layout: fixed;
+  table-layout: auto;
+
+  tbody td:last-child {
+    background-color: #fff;
+  }
 }
 
 // .full-client-table .q-table tr th:last-child,

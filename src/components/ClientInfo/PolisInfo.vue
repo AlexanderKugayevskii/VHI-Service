@@ -11,7 +11,7 @@
           <span>{{ data.programName }}</span>
         </p>
       </div>
-      <div class = "polis-info__dates">
+      <div class="polis-info__dates">
         <p>
           <span>Дата начала страхования:</span>
           <span>{{ data.startDate }}</span>
@@ -21,7 +21,7 @@
           <span>{{ data.endDate }}</span>
         </p>
       </div>
-      <div class = "polis-info__company">
+      <div class="polis-info__company">
         <p>
           <span>Номер контракта:</span>
           <span>{{ data.contractNumber }}</span>
@@ -92,7 +92,6 @@ onMounted(() => {
   &__left {
     display: flex;
     column-gap: 20px;
-
 
     div {
       flex-basis: 25%;
