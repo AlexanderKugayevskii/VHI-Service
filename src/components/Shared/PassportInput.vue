@@ -102,7 +102,7 @@ const debounceEmit = debounce((value) => {
 }, props.debounceTime);
 
 const onSeriaInput = (e) => {
-  e.target.value = e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase();
+  e.target.value = e.target.value.toUpperCase();
   passportSeria.value = e.target.value;
 
   if (props.debounceTime > 0) {

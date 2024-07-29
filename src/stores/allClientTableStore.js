@@ -146,6 +146,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         contractClientId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
+
         residentType: row.client.residentType,
         passport: `${row.client.seria} ${row.client.number}`,
         pinfl: row.client.pinfl,
@@ -165,6 +166,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   // selected client info
   const clientInfo = ref(null);
+  const clientDataForAppeal = ref(null);
   const setClientInfo = (item) => {
     clientInfo.value = item;
   };
@@ -173,10 +175,10 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
-
+      console.log(data);
       setClientInfo(data);
 
-      const clientDataForAppeal = {
+      clientDataForAppeal.value = {
         clientFirstname: data.client.name,
         clientLastname: data.client.lastname,
         clientId: data.client_id,
@@ -191,14 +193,31 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         type: "Клиент",
       };
 
-      console.log(`data`, data);
-
-      appealStore.setClient(clientDataForAppeal);
+      appealStore.setClient(clientDataForAppeal.value);
     } catch (e) {
       console.error(e);
     } finally {
       loading.value = false;
     }
+  };
+
+  const setClientDataForAppeal = (client) => {
+    clientDataForAppeal.value = {
+      clientFirstname: client.name,
+      clientLastname: client.lastname,
+      clientId: client?.id ?? client.pivot.client_id,
+      id: clientInfo.value.id,
+      dmsCode: clientInfo.value.dms_code,
+      passportNumber: client.number,
+      passportSeria: client.seria,
+      program: clientInfo.value?.program.name,
+      birthday: client.birthday,
+      applicant: clientInfo.value.contract.applicant,
+      type_id: 1,
+      type: "Родственник",
+    };
+
+    appealStore.setClient(clientDataForAppeal.value);
   };
 
   // medical limits for client
@@ -254,6 +273,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client.lastname,
+        birthday: clientInfo.value.client.birthday,
+        type_id: row.client_type,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         clinicName: row.hospital?.name,
@@ -278,6 +299,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client,
+        birthday: clientInfo.value.client.birthday,
+        type_id: row.client_type,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
@@ -304,5 +327,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     medicalLimits,
     fetchClinicApplications,
     fetchDrugstoreApplications,
+
+    clientDataForAppeal,
+    setClientDataForAppeal,
   };
 });

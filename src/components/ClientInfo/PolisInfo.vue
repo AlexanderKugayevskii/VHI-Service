@@ -108,7 +108,6 @@ onMounted(() => {
     flex-grow: 1;
   }
   &__right {
-    flex-grow: 1;
     white-space: nowrap;
   }
   .polis-info__remainder {

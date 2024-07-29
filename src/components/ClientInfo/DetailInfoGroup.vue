@@ -54,12 +54,22 @@
     <div class="details-tabs">
       <p class="details-tabs__title">Обращения</p>
       <div class="details-tabs__items">
-        <ClientTab :isSelected="true" :client="client" />
+        <!-- <ClientTab :isSelected="true" :client="client" />
         <ClientTab
           v-for="client in subClients"
           :key="client.id"
           :client="client"
           @click="() => console.log(client)"
+        /> -->
+        <ClientTab
+          v-for="client in clientAndSubClients"
+          :client="client"
+          :key="client"
+          :isSelected="
+            allClientTableStore.clientDataForAppeal.clientId === client?.id ??
+            client.pivot.client_id
+          "
+          @click="() => allClientTableStore.setClientDataForAppeal(client)"
         />
       </div>
     </div>
@@ -188,7 +198,11 @@ const extraPrograms = computed(() => {
 const client = computed(() => {
   return clientInfo.value?.client;
 });
+
 const subClients = computed(() => clientInfo.value?.sub_clients);
+const clientAndSubClients = computed(() => {
+  return [client.value, ...subClients.value];
+});
 
 const fileLoad = ref(false);
 const fileError = ref("");

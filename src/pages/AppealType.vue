@@ -152,7 +152,6 @@ const goToAppeal = async () => {
     );
   } else if (type.value === 1) {
     appealStore.setTypeOfAppeal("NEW");
-
     router.push(
       Trans.i18nRoute({
         name: "createDrugsAppeal",
