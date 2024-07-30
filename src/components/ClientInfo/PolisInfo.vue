@@ -65,8 +65,11 @@ const data = computed(() => {
     remaind: medicalPrograms.value.reduce((acc, curr) => {
       return acc + parseFloat(curr.spent);
     }, 0),
-    startDate: clientInfo.value.contract.start_date,
-    endDate: clientInfo.value.contract.end_date,
+    startDate: clientInfo.value.contract.start_date
+      .split("-")
+      .reverse()
+      .join("-"),
+    endDate: clientInfo.value.contract.end_date.split("-").reverse().join("-"),
     contractNumber: clientInfo.value.contract.contract_number,
     applicant: clientInfo.value.contract.applicant,
   };

@@ -124,8 +124,14 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const rows = computed(() => {
     return users.value.map((row, index) => {
-      const startInsurancePeriod = row.contract.start_date.replace(/-/g, ".");
-      const endInsurancePeriod = row.contract.end_date.replace(/-/g, ".");
+      const startInsurancePeriod = row.contract.start_date
+        .split("-")
+        .reverse()
+        .join("-");
+      const endInsurancePeriod = row.contract.end_date
+        .split("-")
+        .reverse()
+        .join("-");
 
       // const targetDate = dayjs(row.contract.end_date);
       const targetDate = dayjs(row.contract.end_date);
@@ -175,8 +181,10 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
-      console.log(data);
+
       setClientInfo(data);
+
+      const birthday = data.client.birthday.split("-").reverse().join("-");
 
       clientDataForAppeal.value = {
         clientFirstname: data.client.name,
@@ -187,7 +195,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         passportNumber: data.client.number,
         passportSeria: data.client.seria,
         program: data?.program.name,
-        birthday: data.client.birthday,
+        birthday: birthday,
         applicant: data.contract.applicant,
         type_id: 0,
         type: "Клиент",
@@ -202,6 +210,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const setClientDataForAppeal = (client) => {
+    const birthday = client.birthday.split("-").reverse().join();
+
     clientDataForAppeal.value = {
       clientFirstname: client.name,
       clientLastname: client.lastname,
@@ -211,7 +221,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       passportNumber: client.number,
       passportSeria: client.seria,
       program: clientInfo.value?.program.name,
-      birthday: client.birthday,
+      birthday: birthday,
       applicant: clientInfo.value.contract.applicant,
       type_id: 1,
       type: "Родственник",
@@ -268,6 +278,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     return clinicClientApplications.value.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
