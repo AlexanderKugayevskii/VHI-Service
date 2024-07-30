@@ -19,22 +19,46 @@ export const useSearchClientsStore = defineStore("clients", () => {
     searchClients.value = [];
     clients.value = [];
     loading.value = true;
+
     const response = await ClientService.getClientsByCode(code);
     clients.value = response.data.data;
 
-    searchClients.value = clients.value.map((item) => {
-      return {
-        id: item.id, //contract_client_id
-        clientId: item.client_id, //client_id
+    clients.value.forEach((item) => {
+      searchClients.value.push({
+        id: item.id,
+        clientId: item.client_id,
         clientFirstname: item.client.name,
         clientLastname: item.client.lastname,
         birthday: item.client.birthday,
         dmsCode: item.dms_code,
+        applicant: item.contract.applicant,
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
         type: "Клиент",
-      };
+        type_id: 0,
+        hasSubClient: item.sub_clients.length > 0,
+      });
+
+      if (item.sub_clients.length > 0) {
+        item.sub_clients.forEach((subClient) => {
+          searchClients.value.push({
+            id: subClient.pivot.contract_client_id,
+            clientId: subClient.id,
+            clientFirstname: subClient.name,
+            clientLastname: subClient.lastname,
+            birthday: item.client.birthday,
+            dmsCode: item.dms_code,
+            applicant: item.contract.applicant,
+            passportSeria: subClient.seria,
+            passportNumber: subClient.number,
+            program: item.program ? item.program.name : "no program",
+            type: "Родственник",
+            type_id: 1,
+            last: index === item.sub_clients.length - 1,
+          });
+        });
+      }
     });
 
     loading.value = false;

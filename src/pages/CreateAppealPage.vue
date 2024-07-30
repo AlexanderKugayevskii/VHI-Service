@@ -820,8 +820,11 @@ const hideModal = () => {
   appealStore.clearClinicData();
   appealStore.setClient(null);
 
-  // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
-  router.go(-1);
+  if (appealStore.isClinic) {
+    router.replace(Trans.i18nRoute({ name: "appeals-page" }));
+  } else {
+    router.go(-1);
+  }
   createAppealModalRef.value.hide();
 };
 
