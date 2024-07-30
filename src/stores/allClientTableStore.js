@@ -210,7 +210,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const setClientDataForAppeal = (client) => {
-    const birthday = client.birthday.split("-").reverse().join();
+    const birthday = client.birthday.split("-").reverse().join('-');
 
     clientDataForAppeal.value = {
       clientFirstname: client.name,
