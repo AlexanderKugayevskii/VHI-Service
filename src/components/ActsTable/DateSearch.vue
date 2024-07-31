@@ -1,15 +1,6 @@
 <template>
   <div class="reports">
-    <DateInput_new
-      label="Дата начала"
-      placeholder="01-01-2024"
-      v-model="startDate"
-    />
-    <DateInput_new
-      label="Дата конца"
-      placeholder="01-01-2024"
-      v-model="endDate"
-    />
+    <DateInput_new label="Дата" placeholder="01-01-2024" v-model="endDate" />
     <SimpleButton
       :disabled="disabledRule"
       :label="buttonName"
@@ -21,41 +12,36 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import DateInput_new from "./Shared/DateInput_new.vue";
-import SimpleButton from "./Shared/SimpleButton.vue";
+import DateInput_new from "../Shared/DateInput_new.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
 const props = defineProps({
   disabledRule: {
     type: Boolean,
   },
   buttonName: {
-    type: String, 
-    default: 'Сформировать отчет'
-  }
+    type: String,
+    default: "Поиск",
+  },
 });
 const emit = defineEmits(["getRange", "getData"]);
 
-const startDate = ref("");
 const endDate = ref("");
 
 const checkActiveButton = computed(() => {
   const dateLength = 10;
   const currentYear = new Date().getFullYear();
-  const [startDay, startMonth, startYear] = startDate.value.split("-");
   const [endDay, endMonth, endYear] = endDate.value.split("-");
 
-  if (Number(startYear) > currentYear || Number(endYear) > currentYear) {
+  if (Number(endYear) > currentYear) {
     return true;
   }
-  if (Number(startDay) > 31 || Number(endDay) > 31) {
+  if (Number(endDay) > 31) {
     return true;
   }
-  if (Number(startMonth) > 12 || Number(endMonth) > 12) {
+  if (Number(endMonth) > 12) {
     return true;
   }
-  if (
-    startDate.value.length !== dateLength ||
-    endDate.value.length !== dateLength
-  ) {
+  if (endDate.value.length !== dateLength) {
     return true;
   }
 
@@ -66,9 +52,8 @@ const handleClick = () => {
   emit("getData");
 };
 
-watch([startDate, endDate], () => {
+watch([endDate], () => {
   emit("getRange", {
-    startDate: startDate.value,
     endDate: endDate.value,
     checkActiveButton: checkActiveButton.value,
   });

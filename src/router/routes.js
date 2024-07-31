@@ -67,8 +67,8 @@ const routes = [
                 component: () => import("pages/CreateAppealLimit.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
-                  if(appealStore.isClinic || appealStore.isDrugstore) {
-                    return; 
+                  if (appealStore.isClinic || appealStore.isDrugstore) {
+                    return;
                   }
                   if (from.name) {
                     next();
@@ -190,6 +190,11 @@ const routes = [
             path: "billing",
             name: "billing-page",
             component: () => import("src/pages/BillingPage.vue"),
+          },
+          {
+            path: "acts",
+            name: "acts-page",
+            component: () => import("src/pages/ActsPage.vue"),
           },
         ],
       },
