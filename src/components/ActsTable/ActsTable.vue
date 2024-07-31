@@ -41,104 +41,98 @@
           </q-input>
         </div>
       </div>
-      <DateSearch />
-    </div>
-    <div>
-      <q-table
-        flat
-        :rows="filteredRows"
-        :columns="columns"
-        :loading="loading"
-        v-model:pagination="pagination"
-        hide-pagination
-        ref="tableRef"
-        row-key="index"
-        no-data-label="I didn't find anything for you"
-        no-results-label="The filter didn't uncover any results"
-        @request="handleRequest"
-      >
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary" />
-        </template>
-        <template v-slot:no-data="{ icon, message, filter }">
-          <div class="full-width row flex-center text-accent q-gutter-sm">
-            <q-icon size="2em" name="sentiment_dissatisfied" />
-            <span> Well this is sad... {{ message }} </span>
-            <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
-          </div>
-        </template>
-
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="appeals-th"
+      <div class="table-actions-right">
+        <div class="tabs-container">
+          <div class="tabs-header q-mb-md">
+            <q-tabs
+              dense
+              active-class="tab-active"
+              v-model="tab"
+              content-class="details-tabs-header"
+              align="left"
             >
-              <template v-if="col.name === 'checkbox'">
-                <SimpleCheckbox
-                  square
-                  @change="handleAllDrugs"
-                  :checked="checkAllDrugs"
-                />
-              </template>
-              <template v-else>
-                {{ col.label }}
-              </template>
-            </q-th>
-          </q-tr>
-        </template>
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="index" :props="props" class="appeals-td">
-              {{ props.row.index }}
-            </q-td>
-            <q-td key="checkbox" :props="props" class="appeals-td">
-              <SimpleCheckbox
-                square
-                :item="props.row"
-                @change="handleCheck"
-                :checked="checkDrug(props.row)"
-              />
-              <!-- :checked="checkDrug(props.row)" -->
-            </q-td>
-            <q-td key="drugstoreName" :props="props" class="appeals-td">
-              <a class="appeal-link">
-                {{ props.row.drugstoreName }}
-              </a>
-            </q-td>
-            <q-td key="phone" :props="props" class="appeals-td">
-              {{ props.row.phone }}
-            </q-td>
-            <!-- <q-td key="reports" :props="props" class="appeals-td">
-                <SimpleButton
-                  :disabled="disableButton"
-                  label="Скачать отчет"
-                  custom-class="appeals-btn reports-btn"
-                  @click="getExcelData(props.row)"
-                />
-              </q-td> -->
-          </q-tr>
-        </template>
-      </q-table>
-    </div>
+              <q-tab
+                name="clinics"
+                label="Клиники"
+                :ripple="false"
+                class="tabs--no-hover"
+              >
+              </q-tab>
+              <q-tab
+                name="drugstore"
+                label="Аптеки"
+                :ripple="false"
+                class="tabs--no-hover"
+              >
+              </q-tab>
+            </q-tabs>
+          </div>
+          <div class="tabs-content">
+            <q-tab-panels
+              v-model="tab"
+              animated
+              transition-prev="jump-up"
+              transition-next="jump-down"
+            >
+              <q-tab-panel name="clinics" key="clinics">
+                <div class="tab-header">
+                  <DropdownSelectNew
+                    label="Клиника"
+                    :multiple="false"
+                    :loading="loading"
+                    :options="clinics"
+                    :selected-options="selectedClinic"
+                    @select-option="selectClinic"
+                    @request="fetchClinics"
+                  >
+                    <template #top-label> Клиника </template>
+                    <template #placeholder>
+                      {{ $t("create_appeal.dropdowns.clinic") }}
+                    </template>
+                    <template v-slot:selected-options-once="props">
+                      <div>{{ props.option.name }}</div>
+                    </template>
+                    <template v-slot:option-content="props">
+                      <div>{{ props.option.name }}</div>
+                      <CheckIcon v-if="checkSelectedClinic(props.option)" />
+                    </template>
+                  </DropdownSelectNew>
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="drugstore" key="drugstore">
+                <div class="tab-header">
+                  <DropdownSelectNew
+                    label="Аптека"
+                    :multiple="false"
+                    :loading="loading"
+                    :options="drugstores"
+                    :selected-options="selectedDrugstore"
+                    @select-option="selectDrugstore"
+                    @request="fetchDrugstores"
+                  >
+                    <template #top-label> Аптека </template>
+                    <template #placeholder> Выберите аптеку </template>
+                    <template v-slot:selected-options-once="props">
+                      <div>{{ props.option.name }}</div>
+                    </template>
+                    <template v-slot:option-content="props">
+                      <div>{{ props.option.name }}</div>
+                      <CheckIcon v-if="checkSelectedDrugstore(props.option)" />
+                    </template>
+                  </DropdownSelectNew>
+                </div>
+              </q-tab-panel>
+            </q-tab-panels>
+          </div>
+        </div>
 
-    <div class="flex q-my-lg">
-      <PaginationTable
-        :pagination="pagination"
-        :total="filteredRows.length"
-        @onIncrementPage="incrementPage"
-        @onDecrementPage="decrementPage"
-        @onChangePage="changePage"
-      />
-
-      <q-space></q-space>
-      <RowsPerPage
-        @choiceOption="selectOption"
-        :pagination="pagination"
-        :total="filteredRows.length"
-      />
+        <DateSearch
+          class="table-actions-range"
+          @get-range="handleDateRange"
+          @get-data="searchActData"
+          :disabled-rule="false"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -146,20 +140,22 @@
 <script setup>
 import dayjs from "dayjs";
 import { useI18n } from "vue-i18n";
-import { onMounted, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
+import ActService from "src/services/ActService";
 import PaginationTable from "../ClientsTable/PaginationTable.vue";
 import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
 import DateRange from "../DateRange.vue";
 import DateSearch from "./DateSearch.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
+import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
+import CheckIcon from "../Shared/CheckIcon.vue";
 
 const { t } = useI18n();
+const tab = ref("clinics");
 
 const loading = ref(false);
-const drugs = ref([]);
-const checkedDrugs = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -169,15 +165,6 @@ const pagination = ref({
   descending: false,
   rowsPerPage: 10,
   page: 1,
-});
-
-const dateRangeData = ref(null);
-
-const handleDateRange = (rangeData) => {
-  dateRangeData.value = rangeData;
-};
-const disableButton = computed(() => {
-  return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
 });
 
 const columns = computed(() => [
@@ -225,55 +212,84 @@ const filteredRows = computed(() => {
   );
 });
 
-const fetchDrugstores = async () => {
+// act + esf search logic
+const dateRangeData = ref(null);
+const handleDateRange = (rangeData) => {
+  dateRangeData.value = rangeData;
+};
+const disableButton = computed(() => {
+  return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
+});
+
+const clinics = ref([]);
+const selectedClinic = ref(null);
+const fetchClinics = async () => {
   loading.value = true;
   try {
-    const response = await AppealService.getDrugstores();
-    const data = response.data.data;
-    drugs.value = data;
-    total.value = data.length;
+    const response = await AppealService.getClinics();
+    clinics.value = response.data.data;
   } catch (e) {
     console.error(e);
   } finally {
     loading.value = false;
   }
 };
+const selectClinic = (clinic) => {
+  selectedClinic.value = clinic;
+};
+const checkSelectedClinic = (option) => selectedClinic.value?.id === option.id;
 
-// MULTISELECTION
-const handleCheck = (row) => {
-  const findedRow = checkedDrugs.value.findIndex(
-    (drug) => drug.index === row.index
-  );
-  if (findedRow > -1) {
-    checkedDrugs.value.splice(findedRow, 1);
-  } else {
-    checkedDrugs.value.push(row);
+const drugstores = ref([]);
+const selectedDrugstore = ref(null);
+const fetchDrugstores = async () => {
+  loading.value = true;
+  try {
+    const response = await AppealService.getDrugstores();
+    const data = response.data.data;
+    drugstores.value = data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
   }
 };
+const selectDrugstore = (drugstore) => {
+  selectedDrugstore.value = drugstore;
+};
+const checkSelectedDrugstore = (option) =>
+  selectedDrugstore.value?.id === option.id;
 
-const checkDrug = computed(() => {
-  return (row) => {
-    return checkedDrugs.value.some((drug) => drug.index === row.index);
+const applicationType = computed(() => {
+  const payloadData = {
+    // akt_date: dateRangeData.value?.actDate,
+    // esf_date: dateRangeData.value?.esfDate,
   };
-});
+  if (tab.value === "clinics") {
+    delete payloadData.drugstore_id;
+    payloadData.application_type = 1;
+    payloadData.hospital_id = selectedClinic.value?.id;
+  } else if (tab.value === "drugstore") {
+    delete payloadData.hospital_id;
+    payloadData.application_type = 0;
+    payloadData.drugstore_id = selectedDrugstore.value?.id;
+  }
 
-const handleAllDrugs = () => {
-  if (checkAllDrugs.value) {
-    checkedDrugs.value = [];
-  } else {
-    checkedDrugs.value = [...filteredRows.value];
+  return payloadData;
+});
+//getAct
+const searchActData = async () => {
+  try {
+    // const response = await ActService.getAct(applicationType.value);
+    const response = await ActService.getAct({
+      hospital_id: selectedClinic.value?.id,
+      application_type: 1,
+    });
+    const data = response.data;
+    console.log(data);
+  } catch (e) {
+  } finally {
   }
 };
-const checkAllDrugs = computed(() => {
-  if (filteredRows.value.length === 0) {
-    return false;
-  }
-  return checkedDrugs.value.length === filteredRows.value.length;
-});
-
-const checkedDrugsIds = computed(() =>
-  checkedDrugs.value.map((drug) => drug.index)
-);
 
 const fileLoad = ref(false);
 const fileError = ref("");
@@ -316,9 +332,9 @@ const handleRequest = (props) => {
   fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
 };
 
-onMounted(() => {
-  tableRef.value.requestServerInteraction();
-});
+// onMounted(() => {
+//   tableRef.value.requestServerInteraction();
+// });
 
 const incrementPage = () => {
   tableRef.value.nextPage();
@@ -425,5 +441,29 @@ tbody tr td:last-child {
 }
 tr.clickable {
   cursor: pointer;
+}
+
+.reports {
+}
+.table-actions {
+  column-gap: 20px;
+}
+
+.table-actions-right {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+  column-gap: 12px;
+
+  .tabs-container {
+    flex-basis: 50%;
+  }
+  .table-actions-range {
+    min-width: 400px;
+  }
+}
+
+.q-tab-panels {
+  background: none;
 }
 </style>
