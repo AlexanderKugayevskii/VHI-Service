@@ -1,17 +1,20 @@
 <template>
   <div>
     <div>
+      <!-- v-model:pagination="pagination" -->
       <q-table
+      
         flat
         :rows="billingData"
         :columns="columns"
         :loading="loading"
-        v-model:pagination="pagination"
         hide-pagination
+        v-model:pagination="pagination"
         ref="tableRef"
         row-key="index"
         no-data-label="I didn't find anything for you"
         no-results-label="The filter didn't uncover any results"
+        @request="handleRequest"
       >
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -91,14 +94,14 @@
               {{ props.row.appealsAmount }}
             </q-td>
             <q-td key="invoice" :props="props" class="appeals-td">
-              <StatusSwitcher :progress="props.row.invoice" />
+              <!-- <StatusSwitcher :progress="props.row.invoice" /> -->
             </q-td>
             <q-td key="completionCertificate" :props="props" class="appeals-td">
-              <StatusSwitcher :progress="props.row.completionCertificate" />
+              <!-- <StatusSwitcher :progress="props.row.completionCertificate" /> -->
             </q-td>
 
             <q-td key="payAmount" :props="props" class="text-right appeals-td">
-              {{ props.row.payAmount }}
+              {{ formatPrice(props.row.payAmount, false) }}
             </q-td>
           </q-tr>
           <q-tr
@@ -133,7 +136,7 @@
     <div class="flex q-my-lg">
       <PaginationTable
         :pagination="pagination"
-        :total="filteredRows.length"
+        :total="total"
         @onIncrementPage="incrementPage"
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
@@ -143,28 +146,29 @@
       <RowsPerPage
         @choiceOption="selectOption"
         :pagination="pagination"
-        :total="filteredRows.length"
+        :total="total"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import AppealService from "src/services/AppealService";
+import formatPrice from "src/helpers/formatPrice";
 import ClientService from "src/services/ClientService";
 import PaginationTable from "./PaginationTable.vue";
 import RowsPerPage from "./RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
-
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
-import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 import AppealsTable from "./AppealsTable.vue";
 import { Collapse } from "vue-collapsed";
 import StatusSwitcher from "../Shared/StatusSwitcher.vue";
+import BillingService from "src/services/BillingService";
+import useDay from "src/composables/useDay";
 
 const { t } = useI18n();
+const day = useDay();
 
 const columnsAppeal = computed(() => [
   {
@@ -229,110 +233,110 @@ const columnsAppeal = computed(() => [
 
 const loading = ref(false);
 const billingData = ref([
-  {
-    index: 1,
-    agent: "Profmed",
-    date: "Июль 2024",
-    appealsAmount: "25",
-    invoice: 1,
-    completionCertificate: 1,
-    payAmount: "13 100 000",
-    expandTable: false,
-    applications: [
-      {
-        contractClientId: "1",
-        appealId: "500",
-        clientFirstname: "ivan",
-        clientLastname: "ivanov",
-        appealDate: "24/07/2024",
-        appealStatus: 1,
-        clinicName: "promed",
-        doctorName: "окулист, терапевт",
-        serviceName: "узи",
-        diagnosisName: "разрыв жопы" ?? "",
-        expenseAmount: null ?? "",
-        dmsCode: null ?? "",
-        program: "comfort",
-        userSettings: "",
-        index: "1",
-      },
-      {
-        contractClientId: "1",
-        appealId: "500",
-        clientFirstname: "ivan",
-        clientLastname: "ivanov",
-        appealDate: "24/07/2024",
-        appealStatus: 1,
-        clinicName: "promed",
-        doctorName: "окулист, терапевт",
-        serviceName: "узи",
-        diagnosisName: "разрыв жопы" ?? "",
-        expenseAmount: null ?? "",
-        dmsCode: null ?? "",
-        program: "comfort",
-        userSettings: "",
-        index: "1",
-      },
-    ],
-  },
-  {
-    index: 2,
-    agent: "Profmed",
-    date: "Июль 2024",
-    appealsAmount: "25",
-    invoice: 1,
-    completionCertificate: 1,
-    payAmount: "13 100 000",
-    expandTable: false,
-    applications: [
-      {
-        contractClientId: "1",
-        appealId: "500",
-        clientFirstname: "ivan",
-        clientLastname: "ivanov",
-        appealDate: "24/07/2024",
-        appealStatus: 1,
-        clinicName: "promed",
-        doctorName: "окулист, терапевт",
-        serviceName: "узи",
-        diagnosisName: "разрыв жопы" ?? "",
-        expenseAmount: null ?? "",
-        dmsCode: null ?? "",
-        program: "comfort",
-        userSettings: "",
-        index: "1",
-      },
-    ],
-  },
-  {
-    index: 3,
-    agent: "Profmed",
-    date: "Июль 2024",
-    appealsAmount: "25",
-    invoice: 1,
-    completionCertificate: 1,
-    payAmount: "13 100 000",
-    expandTable: false,
-    applications: [
-      {
-        contractClientId: "1",
-        appealId: "500",
-        clientFirstname: "ivan",
-        clientLastname: "ivanov",
-        appealDate: "24/07/2024",
-        appealStatus: 2,
-        clinicName: "promed",
-        doctorName: "окулист, терапевт",
-        serviceName: "узи",
-        diagnosisName: "разрыв жопы" ?? "",
-        expenseAmount: null ?? "",
-        dmsCode: null ?? "",
-        program: "comfort",
-        userSettings: "",
-        index: "1",
-      },
-    ],
-  },
+  // {
+  //   index: 1,
+  //   agent: "Profmed",
+  //   date: "Июль 2024",
+  //   appealsAmount: "25",
+  //   invoice: 1,
+  //   completionCertificate: 1,
+  //   payAmount: "13 100 000",
+  //   expandTable: false,
+  //   applications: [
+  //     {
+  //       contractClientId: "1",
+  //       appealId: "500",
+  //       clientFirstname: "ivan",
+  //       clientLastname: "ivanov",
+  //       appealDate: "24/07/2024",
+  //       appealStatus: 1,
+  //       clinicName: "promed",
+  //       doctorName: "окулист, терапевт",
+  //       serviceName: "узи",
+  //       diagnosisName: "разрыв жопы" ?? "",
+  //       expenseAmount: null ?? "",
+  //       dmsCode: null ?? "",
+  //       program: "comfort",
+  //       userSettings: "",
+  //       index: "1",
+  //     },
+  //     {
+  //       contractClientId: "1",
+  //       appealId: "500",
+  //       clientFirstname: "ivan",
+  //       clientLastname: "ivanov",
+  //       appealDate: "24/07/2024",
+  //       appealStatus: 1,
+  //       clinicName: "promed",
+  //       doctorName: "окулист, терапевт",
+  //       serviceName: "узи",
+  //       diagnosisName: "разрыв жопы" ?? "",
+  //       expenseAmount: null ?? "",
+  //       dmsCode: null ?? "",
+  //       program: "comfort",
+  //       userSettings: "",
+  //       index: "1",
+  //     },
+  //   ],
+  // },
+  // {
+  //   index: 2,
+  //   agent: "Profmed",
+  //   date: "Июль 2024",
+  //   appealsAmount: "25",
+  //   invoice: 1,
+  //   completionCertificate: 1,
+  //   payAmount: "13 100 000",
+  //   expandTable: false,
+  //   applications: [
+  //     {
+  //       contractClientId: "1",
+  //       appealId: "500",
+  //       clientFirstname: "ivan",
+  //       clientLastname: "ivanov",
+  //       appealDate: "24/07/2024",
+  //       appealStatus: 1,
+  //       clinicName: "promed",
+  //       doctorName: "окулист, терапевт",
+  //       serviceName: "узи",
+  //       diagnosisName: "разрыв жопы" ?? "",
+  //       expenseAmount: null ?? "",
+  //       dmsCode: null ?? "",
+  //       program: "comfort",
+  //       userSettings: "",
+  //       index: "1",
+  //     },
+  //   ],
+  // },
+  // {
+  //   index: 3,
+  //   agent: "Profmed",
+  //   date: "Июль 2024",
+  //   appealsAmount: "25",
+  //   invoice: 1,
+  //   completionCertificate: 1,
+  //   payAmount: "13 100 000",
+  //   expandTable: false,
+  //   applications: [
+  //     {
+  //       contractClientId: "1",
+  //       appealId: "500",
+  //       clientFirstname: "ivan",
+  //       clientLastname: "ivanov",
+  //       appealDate: "24/07/2024",
+  //       appealStatus: 2,
+  //       clinicName: "promed",
+  //       doctorName: "окулист, терапевт",
+  //       serviceName: "узи",
+  //       diagnosisName: "разрыв жопы" ?? "",
+  //       expenseAmount: null ?? "",
+  //       dmsCode: null ?? "",
+  //       program: "comfort",
+  //       userSettings: "",
+  //       index: "1",
+  //     },
+  //   ],
+  // },
 ]);
 const checkedBillings = ref([]);
 const total = ref(0);
@@ -354,6 +358,69 @@ const handleDateRange = (rangeData) => {
 const disableButton = computed(() => {
   return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
 });
+
+const fetchBillings = async () => {
+  loading.value = true;
+  try {
+    const response = await BillingService.getClinicsBilling();
+    const data = response.data.data;
+    total.value = data.length;
+    billingData.value = data.map((row) => {
+      const monthName = dayjs()
+        .month(row.month)
+        .locale(day.currentLocale.value)
+        .format("MMMM");
+      return {
+        agent: row.hospital_name,
+        date: `${monthName}, ${row.year}`,
+        appealsAmount: row.count,
+        invoice: 1,
+        completionCertificate: 1,
+        payAmount: row.total_amount,
+        expandTable: false,
+        applications: row.applications.map((application) => {
+          const doctors = application.doctors
+            .map((doctor) => doctor.name)
+            .join(", ");
+          const services = application.services
+            .map((service) => service.name)
+            .join(", ");
+          const appliedDate = application.applied_date
+            .split("-")
+            .reverse()
+            .join("-");
+          const finishedDate = application.finished_date
+            ? application.finished_date.split("-").reverse().join("-")
+            : null;
+
+          return {
+            contractClientId: application.contract_client_id,
+            appealId: application.id,
+            clientFirstname: application.client_name,
+            clientLastname: application.client_lastname,
+            appealDate: appliedDate,
+            finishedDate: finishedDate,
+            appealStatus: application.status,
+            clinicName: application.hospital_name,
+            doctorName: doctors,
+            serviceName: services,
+            diagnosisName: application.diagnosis ?? "",
+            expenseAmount: application.total_amount ?? "",
+            dmsCode: application.contract_client?.dms_code ?? "",
+            program: application.contract_client?.program?.name ?? "",
+            userSettings: "",
+
+            index: row.id,
+          };
+        }),
+      };
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
+};
 
 //  BILLING TABLE
 const columns = computed(() => [
@@ -402,24 +469,15 @@ const columns = computed(() => [
   },
 ]);
 const rows = computed(() => {
-  return billingData.value.map((row) => {
-    return {
-      agent: row.agent,
-      date: row.date,
-      appealsAmount: row.appealsAmount,
-      invoice: row.invoice,
-      completionCertificate: row.completionCertificate,
-      payAmount: row.payAmount,
-    };
-  });
+  return billingData.value;
 });
 
-const filteredRows = computed(() => {
-  const regex = new RegExp(searchData.value, "i");
-  return rows.value.filter((option) =>
-    regex.test(option.drugstoreName || option.phone)
-  );
-});
+// const filteredRows = computed(() => {
+//   const regex = new RegExp(searchData.value, "i");
+//   return rows.value.filter((option) =>
+//     regex.test(option.drugstoreName || option.phone)
+//   );
+// });
 
 // const fetchDrugstores = async () => {
 //   loading.value = true;
@@ -450,6 +508,7 @@ const checkBil = computed(() => {
     return checkedBillings.value.some((bil) => bil.index === row.index);
   };
 });
+
 // return checkedBillings.value.some((drug) => drug.index === row.index);
 
 const handleAllBillings = () => {
@@ -508,7 +567,7 @@ const getExcelData = async () => {
 };
 
 const handleRequest = (props) => {
-  fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
+  fetchBillings();
 };
 
 onMounted(() => {
@@ -572,7 +631,6 @@ const selectOption = (option) => {
   width: 56px;
 }
 .appeals-th:nth-of-type(2) {
-  width: 112px;
 }
 
 .appeals-td {

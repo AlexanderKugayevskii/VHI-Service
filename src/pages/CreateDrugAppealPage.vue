@@ -45,7 +45,11 @@
                   >
 
                   <span
-                    >Заявитель: <b>{{ clientData.applicant }} </b></span
+                    >Заявитель:
+                    <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                  >
+                  <span
+                    >Дата рождения: <b>{{ clientData.birthday }} </b></span
                   >
                 </div>
 
@@ -525,15 +529,37 @@ const handleCreateAppeal = async () => {
   await appealStore.fetchApplicantDrugData();
 
   $q.loading.hide();
-  router.replace(
-    Trans.i18nRoute({
-      name: "createAppealDrugLimit",
-      params: { id: appealStore.client.contractClientId },
-    })
-  );
+  if (appealStore.isAgent) {
+    router.replace(
+      Trans.i18nRoute({
+        name: "createAppealDrugLimit",
+        params: { id: appealStore.client.contractClientId },
+      })
+    );
+  }
 };
-const handleChangeAppeal = () => {
-  appealStore.changeAppealDrugData();
+const handleChangeAppeal = async () => {
+  await appealStore.changeAppealDrugData();
+
+  if (appealStore.isAgent) {
+    const appealStatuses = appealStore.allDrugsStatus.map(
+      (status) => status.program_item_id
+    );
+
+    const programItemIdIsZero = appealStatuses.some((id) => id === 0);
+
+    if (programItemIdIsZero) {
+      await appealStore.fetchMedicalPrograms();
+      await appealStore.fetchApplicantData();
+
+      router.replace(
+        Trans.i18nRoute({
+          name: "createAppealLimit",
+          params: { id: appealStore.client.contractClientId },
+        })
+      );
+    }
+  }
 };
 const handleSearchDrugs = async (name) => {
   await appealStore.fetchDrugs(name);

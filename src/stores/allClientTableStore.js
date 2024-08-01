@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
 import ClientService from "src/services/ClientService";
@@ -61,10 +62,16 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       field: "program",
     },
     {
-      name: "insurancePeriod",
+      name: "endInsurancePeriod",
       align: "left",
-      label: "Период страхования",
-      field: "insurancePeriod",
+      label: "Дата начала страхования",
+      field: "endInsurancePeriod",
+    },
+    {
+      name: "startInsurancePeriod",
+      align: "left",
+      label: "Дата конца страхования",
+      field: "startInsurancePeriod",
     },
     {
       name: "organizationName",
@@ -113,18 +120,39 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     );
   };
 
+  const currentDate = dayjs();
+
   const rows = computed(() => {
     return users.value.map((row, index) => {
-      const insurancePeriod =
-        row.contract.start_date.replace(/-/g, ".") +
-        " - " +
-        row.contract.end_date.replace(/-/g, ".");
+      const startInsurancePeriod = row.contract.start_date
+        .split("-")
+        .reverse()
+        .join("-");
+      const endInsurancePeriod = row.contract.end_date
+        .split("-")
+        .reverse()
+        .join("-");
 
+      // const targetDate = dayjs(row.contract.end_date);
+      const targetDate = dayjs(row.contract.end_date);
+      const daysDifference = targetDate.diff(currentDate, "day");
+
+      const expire = {
+        status: 0,
+      };
+      if (daysDifference < 0) {
+        expire.status = 2;
+      } else if (daysDifference < 30) {
+        expire.status = 1;
+      } else {
+        expire.status = 0;
+      }
       return {
+        clientId: row.client.id,
         contractClientId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
-        clientId: row.client.id,
+
         residentType: row.client.residentType,
         passport: `${row.client.seria} ${row.client.number}`,
         pinfl: row.client.pinfl,
@@ -132,8 +160,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         // clientType: "Клиент",
         dmsId: row.dms_code,
         program: row.program?.name ?? "",
-        insurancePeriod: insurancePeriod,
+        startInsurancePeriod: startInsurancePeriod,
+        // endInsurancePeriod: endInsurancePeriod,
+        endInsurancePeriod: endInsurancePeriod,
         organizationName: row.contract?.applicant ?? "no applicant",
+        expireStatus: expire,
         index: row.id,
       };
     });
@@ -141,6 +172,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   // selected client info
   const clientInfo = ref(null);
+  const clientDataForAppeal = ref(null);
   const setClientInfo = (item) => {
     clientInfo.value = item;
   };
@@ -149,27 +181,53 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     try {
       const response = await ClientService.getClientInfo(id);
       const data = response.data.data;
-      console.log(data);
+
       setClientInfo(data);
 
-      const clientDataForAppeal = {
+      const birthday = data.client.birthday.split("-").reverse().join("-");
+
+      clientDataForAppeal.value = {
         clientFirstname: data.client.name,
         clientLastname: data.client.lastname,
         clientId: data.client_id,
-        dmsCode: data.dms_code,
         id: data.id,
+        dmsCode: data.dms_code,
         passportNumber: data.client.number,
         passportSeria: data.client.seria,
         program: data?.program.name,
+        birthday: birthday,
+        applicant: data.contract.applicant,
+        type_id: 0,
         type: "Клиент",
       };
 
-      appealStore.setClient(clientDataForAppeal);
+      appealStore.setClient(clientDataForAppeal.value);
     } catch (e) {
       console.error(e);
     } finally {
       loading.value = false;
     }
+  };
+
+  const setClientDataForAppeal = (client) => {
+    const birthday = client.birthday.split("-").reverse().join('-');
+
+    clientDataForAppeal.value = {
+      clientFirstname: client.name,
+      clientLastname: client.lastname,
+      clientId: client?.id ?? client.pivot.client_id,
+      id: clientInfo.value.id,
+      dmsCode: clientInfo.value.dms_code,
+      passportNumber: client.number,
+      passportSeria: client.seria,
+      program: clientInfo.value?.program.name,
+      birthday: birthday,
+      applicant: clientInfo.value.contract.applicant,
+      type_id: 1,
+      type: "Родственник",
+    };
+
+    appealStore.setClient(clientDataForAppeal.value);
   };
 
   // medical limits for client
@@ -199,7 +257,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const data = response.data.data;
 
       clinicClientApplications.value = data;
-      console.log(clinicClientApplications.value);
     } catch (e) {
       console.error(e);
     }
@@ -212,7 +269,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const data = response.data.data;
 
       drugstoreClientApplications.value = data;
-      console.log(drugstoreClientApplications.value);
     } catch (e) {
       console.error(e);
     }
@@ -222,11 +278,14 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     return clinicClientApplications.value.map((row, index) => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client.lastname,
+        birthday: clientInfo.value.client.birthday,
+        type_id: row.client_type,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         clinicName: row.hospital?.name,
@@ -251,6 +310,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealId: row.id,
         clientFirstname: clientInfo.value.client.name,
         clientLastname: clientInfo.value.client,
+        birthday: clientInfo.value.client.birthday,
+        type_id: row.client_type,
         appealDate: formatDate(row.created_at),
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
@@ -277,5 +338,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     medicalLimits,
     fetchClinicApplications,
     fetchDrugstoreApplications,
+
+    clientDataForAppeal,
+    setClientDataForAppeal,
   };
 });

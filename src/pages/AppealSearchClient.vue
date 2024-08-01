@@ -66,7 +66,7 @@
                 <SimpleInput
                   label="ID"
                   :placeholder="$t('appeal_search.id_input')"
-                  debounce-time="300"
+                  debounce-time="500"
                   v-model:model-value="searchId"
                   :show-icon="true"
                 ></SimpleInput>
@@ -78,8 +78,8 @@
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -89,7 +89,7 @@
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.fio_label')"
-                  debounce-time="300"
+                  debounce-time="500"
                   :placeholder="$t('appeal_search.fio_input')"
                   v-model:model-value="searchName"
                   :show-icon="true"
@@ -103,8 +103,8 @@
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -114,7 +114,7 @@
               <div class="tab-header">
                 <PassportInput
                   :label="$t('appeal_search.passport_label')"
-                  debounce-time="300"
+                  debounce-time="500"
                   :placeholder="$t('appeal_search.passport_input')"
                   :show-icon="true"
                   @update:model-value="handleInput"
@@ -123,12 +123,13 @@
               </div>
               <div class="client-results">
                 <LoadingSpinnerCircle v-if="clientStore.loading" />
+
                 <SearchClientResult
                   v-else
                   v-for="client in clientStore.searchClients"
                   :item="client"
-                  :key="client.clientID"
-                  :checked="selectedClient?.id === client.id"
+                  :key="client.clientId"
+                  :checked="selectedClient?.clientId === client.clientId"
                   @update:select-value="handleSelectItem"
                 ></SearchClientResult>
               </div>
@@ -204,7 +205,7 @@ const handleInput = (val) => {
     clientStore.clearClients();
   }
 
-  if (appealStore.isAgent && val.length >= 2) {
+  if (appealStore.isAgent && val.length >= 3) {
     searchPassport.value = val;
   }
 };
@@ -223,6 +224,7 @@ const hideModal = () => {
 };
 
 const handleSelectItem = (item) => {
+  console.log(item)
   selectedClient.value = item;
   appealStore.setClient(selectedClient.value);
 };
@@ -265,7 +267,7 @@ watch([searchId, searchName, searchPassport], (newVal) => {
   if (newSearchName.length > 0) {
     clientStore.getClientByName(newSearchName);
   }
-  if (newSearchPassport.length > 0) {
+  if (newSearchPassport.length > 3) {
     clientStore.getClientByPassport(newSearchPassport);
   }
 });

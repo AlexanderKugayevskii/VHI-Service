@@ -73,7 +73,17 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props" class="clickable">
+        <q-tr
+          :props="props"
+          :class="[
+            'clickable',
+            'tbody-table-row',
+            { 'tbody-table-row--alert': props.row.expireStatus.status === 1 },
+            {
+              'tbody-table-row--negative': props.row.expireStatus.status === 2,
+            },
+          ]"
+        >
           <q-td key="index" :props="props" class="appeals-td">
             {{ props.row.index }}
           </q-td>
@@ -123,10 +133,16 @@
           <q-td key="program" :props="props" class="appeals-td">
             {{ props.row.program }}
           </q-td>
-          <q-td key="insurancePeriod" :props="props" class="appeals-td">
-            {{ props.row.insurancePeriod }}
+          <q-td key="startInsurancePeriod" :props="props" class="appeals-td">
+            {{ props.row.startInsurancePeriod }}
             <TableTooltip>
-              {{ props.row.insurancePeriod }}
+              {{ props.row.startInsurancePeriod }}
+            </TableTooltip>
+          </q-td>
+          <q-td key="endInsurancePeriod" :props="props" class="appeals-td">
+            {{ props.row.endInsurancePeriod }}
+            <TableTooltip>
+              {{ props.row.endInsurancePeriod }}
             </TableTooltip>
           </q-td>
           <q-td key="organizationName" :props="props" class="appeals-td">
@@ -239,6 +255,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
+  console.log(`CLIENT FROM FULL CLIENTS TABLE`, client);
   appealStore.setClient(client);
   router.push(
     Trans.i18nRoute({
@@ -284,7 +301,7 @@ const openChangeUserModal = (user) => {
 }
 
 .appeals-th:nth-of-type(1) {
-  width: 100px;
+  width: 72px;
 }
 // .appeals-th:nth-of-type(2) {
 //   width: 150px;
@@ -292,18 +309,18 @@ const openChangeUserModal = (user) => {
 .appeals-th:nth-of-type(3) {
   width: 120px;
 }
-// .appeals-th:nth-of-type(4) {
-//   width: 150px;
-// }
+.appeals-th:nth-of-type(4) {
+  width: 120px;
+}
 // .appeals-th:nth-of-type(5) {
 //   width: 140px;
 // }
 .appeals-th:nth-of-type(6) {
   width: 100px;
 }
-// .appeals-th:nth-of-type(7) {
-//   width: 120px;
-// }
+.appeals-th:nth-of-type(7) {
+  width: 100px;
+}
 // .appeals-th:nth-of-type(8) {
 //   width: 195px;
 // }

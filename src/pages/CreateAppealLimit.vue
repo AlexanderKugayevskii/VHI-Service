@@ -30,7 +30,7 @@
                     >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >Клиент:
+                    >{{ clientData.type_id === 0 ? "Клиент" : "Родственник" }}:
                     <b
                       >{{
                         clientData.clientFirstname +

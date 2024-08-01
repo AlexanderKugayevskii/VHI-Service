@@ -1,5 +1,19 @@
 <template>
-  <div class="client-results__item" @click="selectItem">
+  <div
+    :class="[
+      'client-results__item',
+      {
+        'client-results__item--gap': item.type_id === 1,
+      },
+      {
+        'client-results__item--last': item.type_id === 1 && item.last,
+      },
+      {
+        'client-results__item--margin': item.hasSubClient,
+      },
+    ]"
+    @click="selectItem"
+  >
     <div class="client-results__item-check">
       <SimpleCheckbox
         :item="item"
@@ -16,7 +30,7 @@
           item.passportSeria + " " + item.passportNumber
         }}</span>
       </div>
-      <div class="client-result-item-info">
+      <div class="client-result-item-info" v-if="item.type_id === 0">
         <span class="client-result-item-info-title">ID </span>
         <span class="client-result-item-info-descr">{{ item.dmsCode }}</span>
       </div>
@@ -26,7 +40,7 @@
           item.clientLastname + " " + item.clientFirstname
         }}</span>
       </div>
-      <div class="client-result-item-info">
+      <div class="client-result-item-info" v-if="item.type_id === 0">
         <span class="client-result-item-info-title">Программа </span>
         <span class="client-result-item-info-descr">{{ item.program }}</span>
       </div>
@@ -64,6 +78,18 @@ const selectItem = () => {
   margin-bottom: 20px;
   cursor: pointer;
 }
+.client-results__item--margin {
+  margin-bottom: 8px;
+}
+.client-results__item--gap {
+  margin-bottom: 8px;
+  margin-left: 24px;
+  box-shadow: -4px 0 0 0 rgba(19, 183, 186, 0.247);
+}
+.client-results__item--last {
+  margin-bottom: 20px;
+}
+
 .client-results__item-check {
 }
 .client-result-item-content {

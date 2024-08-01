@@ -130,11 +130,13 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const finishedDate = row.finished_date
         ? row.finished_date.split("-").reverse().join("-")
         : null;
+      console.log(row.is_sub_client);
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
+        birthday: row.client.birthday,
         appealDate: appliedDate,
         finishedDate: finishedDate,
         appealStatus: row.status,
@@ -145,6 +147,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         expenseAmount: row.total_amount ?? "",
         dmsCode: row.contract_client?.dms_code ?? "",
         program: row.contract_client?.program?.name ?? "",
+        type_id: row.client_type,
         userSettings: "",
         // index:
         //   (pagination.value.page - 1) * pagination.value.rowsPerPage +

@@ -60,7 +60,6 @@ const downloadReport = async () => {
       startDate: startDate.value,
       endDate: endDate.value,
     });
-    console.log(response);
     const blob = new Blob([response.data], { type: response.data.type });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");

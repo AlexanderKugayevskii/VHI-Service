@@ -1,3 +1,7 @@
-export default function formatPrice(price) {
-  return `${price.toLocaleString("ru-UZ")} UZS`;
+export default function formatPrice(price, withCurrency = true) {
+  let formatted = `${price.toLocaleString("ru-UZ")}`;
+  if (withCurrency) {
+    formatted += " UZS";
+  }
+  return formatted;
 }

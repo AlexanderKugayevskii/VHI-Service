@@ -64,7 +64,11 @@ body {
 }
 
 .full-client-table .q-table {
-  table-layout: fixed;
+  table-layout: auto;
+
+  tbody td:last-child {
+    background-color: #fff;
+  }
 }
 
 // .full-client-table .q-table tr th:last-child,
@@ -104,10 +108,60 @@ body {
 .q-table tr {
   height: 44px;
 }
+.q-table tbody tr.tbody-table-row {
+  &--alert {
+    background-color: #f2c0379c;
+    .appeals-td {
+      color: #fff;
+    }
+    .appeal-link {
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #fce6a945;
+      .appeals-td {
+        color: #2c3955;
+      }
+      .appeal-link {
+        color: #13b8ba;
+      }
+
+      td:last-child {
+        background-color: #fce6a945;
+      }
+    }
+  }
+  &--negative {
+    background-color: #c100176d;
+
+    .appeals-td {
+      color: #fff;
+    }
+    .appeal-link {
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #b3777e6d;
+      .appeals-td {
+        color: #2c3955;
+      }
+      .appeal-link {
+        color: #13b8ba;
+      }
+
+      td:last-child {
+        background-color: #b3777e6d;
+      }
+    }
+  }
+}
 .q-table tbody tr:hover,
 .q-table tbody tr:hover td:last-child {
   background-color: #f7f9fc;
 }
+
 .q-btn.btn--no-hover .q-focus-helper {
   display: none;
 }

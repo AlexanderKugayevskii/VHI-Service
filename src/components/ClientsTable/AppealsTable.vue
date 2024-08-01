@@ -93,6 +93,7 @@
         :loading="loading"
         :filter="search"
         hide-pagination
+        :rows-per-page-options = "reactivePagination === undefined ? [0] : undefined"
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
@@ -200,7 +201,7 @@
               </TableTooltip>
             </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
-              {{ props.row.expenseAmount }}
+              {{ formatPrice(props.row.expenseAmount, false) }}
             </q-td>
             <q-td
               key="userSettings"
@@ -241,6 +242,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
+import formatPrice from "src/helpers/formatPrice";
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
 import AppealStatus from "./AppealStatus.vue";
@@ -254,14 +256,12 @@ import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DateInput from "../Shared/DateInput.vue";
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
-import { tryOnBeforeUnmount } from "@vueuse/core";
-import { filter } from "lodash";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -357,8 +357,7 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
-  console.log(`client`, client);
-
+  console.log(client)
   appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
