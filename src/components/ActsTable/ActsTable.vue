@@ -79,7 +79,7 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props">
+          <q-tr :props="props" @mouseup="cancelOpenWhenSelect(props.row)">
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
@@ -91,6 +91,17 @@
             </q-td>
             <q-td key="amount" :props="props" class="appeals-td">
               {{ formatPrice(parseFloat(props.row.amount)) }}
+            </q-td>
+            <q-td key="downloadAct" :props="props" class="appeals-td">
+              <SimpleButton
+                label="скачать акт"
+                custom-class="appeals-btn reports-btn"
+                @click="
+                  () => {
+                    handleDownloadAct(props.row);
+                  }
+                "
+              />
             </q-td>
           </q-tr>
         </template>
@@ -127,6 +138,7 @@ import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
 import formatPrice from "src/helpers/formatPrice";
 
 const { t } = useI18n();
@@ -136,6 +148,8 @@ const props = defineProps({
     type: Array,
   },
 });
+
+const emit = defineEmits(["showFields", "downloadAct"]);
 
 const loading = ref(false);
 const data = ref([]);
@@ -175,6 +189,12 @@ const columns = computed(() => [
     align: "left",
     field: "amount",
   },
+  {
+    name: "downloadAct",
+    label: "",
+    align: "left",
+    field: "downloadAct",
+  },
 ]);
 
 const rows = computed(() => {
@@ -195,6 +215,19 @@ const filteredRows = computed(() => {
     return regex.test(option.date) || regex.test(option.esfDate);
   });
 });
+
+const cancelOpenWhenSelect = (row) => {
+  const selection = window.getSelection().toString();
+  if (!selection) {
+    emit("showFields", row.index);
+  } else {
+    return;
+  }
+};
+
+const handleDownloadAct = (row) => {
+  emit("downloadAct", row.index);
+};
 
 const handleRequest = (props) => {
   fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);

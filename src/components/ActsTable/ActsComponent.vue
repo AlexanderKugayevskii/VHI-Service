@@ -3,7 +3,7 @@
     <div class="table-actions">
       <div class="table-actions-right">
         <!-- is agent -->
-        <div class="tabs-container" v-if="isAgent">
+        <!-- <div class="tabs-container" v-if="isAgent">
           <div class="tabs-header q-mb-md">
             <q-tabs
               dense
@@ -85,7 +85,7 @@
               </q-tab-panel>
             </q-tab-panels>
           </div>
-        </div>
+        </div> -->
 
         <!-- is clinic -->
 
@@ -112,6 +112,7 @@
         </DropdownSelectNew>
 
         <DateSearch
+          v-if="isClinic"
           class="table-actions-range"
           @get-range="handleDateRange"
           @get-data="requestGetFields"
@@ -121,7 +122,11 @@
     </div>
 
     <div class="acts-result q-mb-lg" v-if="actsData">
-      <ActsTable :dataRows="actsData" />
+      <ActsTable
+        :dataRows="actsData"
+        @show-fields="handleShowFields"
+        @downloadAct="downloadAct"
+      />
     </div>
 
     <div class="fields-result" v-if="fieldsData">
@@ -132,13 +137,18 @@
         <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
         <ServiceTable :dataRows="fieldsData.services" />
       </div>
-      <div v-else></div>
+      <div v-else>
+        <h3 class="page-title text-center">Сервисы не найдены</h3>
+      </div>
       <div
         class="fields-result-group q-mb-lg"
         v-if="fieldsData.doctors.length > 0"
       >
         <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
         <DoctorsTable :dataRows="fieldsData.doctors" />
+      </div>
+      <div v-else>
+        <h3 class="page-title text-center">Врачи не найдены</h3>
       </div>
       <div
         class="fields-result-group--amount"
@@ -325,8 +335,9 @@ const actsData = ref(null);
 const getActByAgent = async () => {
   try {
     const response = await ActService.getAct();
-    const data = response.data;
-    console.log(data);
+    const data = response.data.data.data;
+
+    actsData.value = data;
   } catch (e) {
     console.error(e);
   }
@@ -390,11 +401,54 @@ const createActByClinic = async () => {
   }
 };
 
+//show fields by act id
+
+const handleShowFields = async (id) => {
+  console.log(id);
+  try {
+    const response = await ActService.showActFields(id);
+    const data = response.data;
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+//download act
+const fileLoad = ref(false);
+const fileError = ref("");
+const downloadAct = async (id) => {
+  try {
+    const response = await ActService.getPdfAct(id);
+
+    // const fileName = row.drugstoreName;
+    // const fileDate = dayjs().format("D-MM-YY");
+    const blob = new Blob([response.data], { type: response.data.type });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `act.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+    fileError.value = `Ошибка при скачивании файла`;
+  } finally {
+    fileLoad.value = false;
+  }
+};
+
 //request before mounting page
 onBeforeMount(async () => {
   setDefaultClinicIfIsClinic();
   if (isClinic.value) {
     await getActByClinic();
+  }
+  if (isAgent.value) {
+    await getActByAgent();
   }
 });
 

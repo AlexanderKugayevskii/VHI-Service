@@ -12,8 +12,26 @@ function createAct(payload) {
   return api.post("/clinics/akt-create", payload);
 }
 
+function showActFields(id) {
+  return api.get(`/clinics/akt-show/${id}`);
+}
+
+function getPdfAct(id) {
+  return api.get(
+    `/clinics/akt-pdf/${id}`,
+    {},
+    {
+      responseType: "blob",
+    }
+  );
+}
+
 export default {
   getAct,
   getFields,
   createAct,
+
+  showActFields,
+
+  getPdfAct,
 };
