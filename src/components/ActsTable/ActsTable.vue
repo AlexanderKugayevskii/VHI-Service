@@ -41,8 +41,10 @@
           </q-input>
         </div>
       </div>
+
       <div class="table-actions-right">
-        <div class="tabs-container">
+        <!-- is agent -->
+        <div class="tabs-container" v-if="isAgent">
           <div class="tabs-header q-mb-md">
             <q-tabs
               dense
@@ -126,10 +128,30 @@
           </div>
         </div>
 
+        <!-- is clinic -->
+
+        <DropdownSelectNew
+          v-if="isClinic"
+          label="Клиника"
+          :multiple="false"
+          :loading="loading"
+          :options="clinics"
+          :disable-choise="isClinic"
+          :selected-options="selectedClinic"
+        >
+          <template #top-label> Клиника </template>
+          <template #placeholder>
+            {{ $t("create_appeal.dropdowns.clinic") }}
+          </template>
+          <template v-slot:selected-options-once="props">
+            <div>{{ props.option.name }}</div>
+          </template>
+        </DropdownSelectNew>
+
         <DateSearch
           class="table-actions-range"
           @get-range="handleDateRange"
-          @get-data="searchActData"
+          @get-data="requestGetFields"
           :disabled-rule="false"
         />
       </div>
@@ -151,8 +173,17 @@ import DateSearch from "./DateSearch.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
+import { useAppealStore } from "src/stores/appealStore";
+import { useAuthStore } from "src/stores/authStore";
+import { storeToRefs } from "pinia";
+import { onBeforeMount } from "vue";
 
 const { t } = useI18n();
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+const appealStore = useAppealStore();
+const isClinic = computed(() => appealStore.isClinic);
+const isAgent = computed(() => appealStore.isAgent);
 const tab = ref("clinics");
 
 const loading = ref(false);
@@ -221,6 +252,7 @@ const disableButton = computed(() => {
   return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
 });
 
+// clinics
 const clinics = ref([]);
 const selectedClinic = ref(null);
 const fetchClinics = async () => {
@@ -237,8 +269,18 @@ const fetchClinics = async () => {
 const selectClinic = (clinic) => {
   selectedClinic.value = clinic;
 };
+const setDefaultClinicIfIsClinic = () => {
+  if (isClinic.value) {
+    selectedClinic.value = user.value.hospital;
+  }
+};
 const checkSelectedClinic = (option) => selectedClinic.value?.id === option.id;
+onBeforeMount(() => {
+  setDefaultClinicIfIsClinic();
+  console.log(selectedClinic.value);
+});
 
+// drugstore
 const drugstores = ref([]);
 const selectedDrugstore = ref(null);
 const fetchDrugstores = async () => {
@@ -277,65 +319,34 @@ const applicationType = computed(() => {
   return payloadData;
 });
 //getAct
-const searchActData = async () => {
+const requestGetFields = async () => {
   try {
     // const response = await ActService.getAct(applicationType.value);
-    const response = await ActService.getAct({
-      hospital_id: selectedClinic.value?.id,
-      application_type: 1,
-    });
-    const data = response.data;
-    console.log(data);
+    if (isClinic.value) {
+      const response = await ActService.getFields({
+        hospital_id: selectedClinic.value?.id,
+        application_type: 1,
+        akt_date: dateRangeData.value.aktDate,
+        esf_date: dateRangeData.value.esfDate,
+      });
+      const data = response.data;
+      console.log(data);
+    }
   } catch (e) {
   } finally {
+    
   }
 };
 
-const fileLoad = ref(false);
-const fileError = ref("");
-const getExcelData = async () => {
-  fileLoad.value = true;
-  fileError.value = "";
-  try {
-    const response = await ClientService.getDrugstoreExcelData(
-      checkedDrugsIds.value,
-      {
-        startDate: dateRangeData.value.startDate,
-        endDate: dateRangeData.value.endDate,
-      }
-    );
-
-    // const fileName = row.drugstoreName;
-    const fileDate = dayjs().format("D-MM-YY");
-    const blob = new Blob([response.data], { type: response.data.type });
-
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute(
-      "download",
-      `${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  } catch (e) {
-    console.error(e);
-    fileError.value = `Ошибка при скачивании файла`;
-  } finally {
-    fileLoad.value = false;
-  }
-};
-
+//request table
 const handleRequest = (props) => {
   fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
 };
-
 // onMounted(() => {
 //   tableRef.value.requestServerInteraction();
 // });
 
+//pagination logic
 const incrementPage = () => {
   tableRef.value.nextPage();
 };
@@ -351,7 +362,6 @@ const changePage = (pageNum) => {
     });
   }
 };
-
 const selectOption = (option) => {
   tableRef.value.setPagination({
     rowsPerPage: option,

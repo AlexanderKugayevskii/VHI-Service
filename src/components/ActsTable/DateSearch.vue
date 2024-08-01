@@ -68,7 +68,7 @@ const handleClick = () => {
 
 watch([startDate, endDate], () => {
   emit("getRange", {
-    actDate: startDate.value,
+    aktDate: startDate.value,
     esfDate: endDate.value,
     checkActiveButton: checkActiveButton.value,
   });
