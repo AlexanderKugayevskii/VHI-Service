@@ -62,7 +62,9 @@ body {
     padding: 0;
   }
 }
-
+.act-service-table .q-table {
+  table-layout: auto;
+}
 .full-client-table .q-table {
   table-layout: auto;
 

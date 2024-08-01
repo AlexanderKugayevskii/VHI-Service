@@ -5,10 +5,15 @@ function getAct(payload) {
 }
 
 function getFields(payload) {
-  return api.post('/clinics/akt-get-fields', payload)
-} 
+  return api.post("/clinics/akt-get-fields", payload);
+}
+
+function createAct(payload) {
+  return api.post("/clinics/akt-create", payload);
+}
 
 export default {
   getAct,
-  getFields
+  getFields,
+  createAct,
 };

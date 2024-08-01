@@ -1,47 +1,6 @@
 <template>
   <div>
     <div class="table-actions">
-      <div class="appeals-filter">
-        <div class="appeals-search-input">
-          <q-input
-            rounded
-            dense
-            borderless
-            class="search-input q-px-sm"
-            :placeholder="$t('search')"
-            debounce="300"
-            v-model="searchData"
-          >
-            <template v-slot:prepend>
-              <q-icon>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9.16659 15C12.3882 15 14.9999 12.3883 14.9999 9.16665C14.9999 5.94499 12.3882 3.33331 9.16659 3.33331C5.94492 3.33331 3.33325 5.94499 3.33325 9.16665C3.33325 12.3883 5.94492 15 9.16659 15Z"
-                    stroke="#B8C2D1"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M16.6666 16.6666L13.3333 13.3333"
-                    stroke="#B8C2D1"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-      </div>
-
       <div class="table-actions-right">
         <!-- is agent -->
         <div class="tabs-container" v-if="isAgent">
@@ -146,13 +105,40 @@
           <template v-slot:selected-options-once="props">
             <div>{{ props.option.name }}</div>
           </template>
+          <template v-slot:option-content="props">
+            <div>{{ props.option.name }}</div>
+            <CheckIcon v-if="checkSelectedClinic(props.option)" />
+          </template>
         </DropdownSelectNew>
 
         <DateSearch
           class="table-actions-range"
           @get-range="handleDateRange"
           @get-data="requestGetFields"
-          :disabled-rule="false"
+          :disabled-rule="disableButton"
+        />
+      </div>
+    </div>
+    <div class="fields-result" v-if="fieldsData">
+      <div class="fields-result-group q-mb-lg">
+        <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
+        <ServiceTable :dataRows="fieldsData.services" />
+      </div>
+      <div class="fields-result-group q-mb-lg">
+        <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
+        <DoctorsTable :dataRows="fieldsData.doctors" />
+      </div>
+      <div class="fields-result-group--amount">
+        <p>
+          Общая сумма: {{ formatPrice(parseFloat(fieldsData.total_amount)) }}
+        </p>
+      </div>
+      <div class="fields-result-action flex flex-center">
+        <SimpleButton
+          type="button"
+          customClass="appeals-btn"
+          label="Создать акт"
+          @click="createActByClinic"
         />
       </div>
     </div>
@@ -160,23 +146,23 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs";
 import { useI18n } from "vue-i18n";
 import { computed, ref } from "vue";
 import AppealService from "src/services/AppealService";
-import ClientService from "src/services/ClientService";
 import ActService from "src/services/ActService";
-import PaginationTable from "../ClientsTable/PaginationTable.vue";
-import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
-import DateRange from "../DateRange.vue";
 import DateSearch from "./DateSearch.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
 import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import { useAppealStore } from "src/stores/appealStore";
 import { useAuthStore } from "src/stores/authStore";
 import { storeToRefs } from "pinia";
 import { onBeforeMount } from "vue";
+import ServiceTable from "./ServiceTable.vue";
+import DoctorsTable from "./DoctorsTable.vue";
+import { formatTimeAgo } from "@vueuse/core";
+import formatPrice from "src/helpers/formatPrice";
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -319,6 +305,8 @@ const applicationType = computed(() => {
   return payloadData;
 });
 //getAct
+
+const fieldsData = ref(null);
 const requestGetFields = async () => {
   try {
     // const response = await ActService.getAct(applicationType.value);
@@ -330,11 +318,35 @@ const requestGetFields = async () => {
         esf_date: dateRangeData.value.esfDate,
       });
       const data = response.data;
-      console.log(data);
+      fieldsData.value = data;
     }
   } catch (e) {
   } finally {
-    
+  }
+};
+
+const createActByClinic = async () => {
+  const servicesIds = fieldsData.value.services.map((service) => service.id);
+  const doctorsIds = fieldsData.value.doctors.map((doctor) => doctor.id);
+
+  const payload = {
+    akt_date: dateRangeData.value.aktDate,
+    sent_date: dateRangeData.value.esfDate,
+    hospital_id: selectedClinic.value?.id,
+    application_type: 1,
+    service_ids: servicesIds,
+    doctor_ids: doctorsIds,
+    amount: fieldsData.value.total_amount,
+  };
+
+  console.log(payload);
+
+  try {
+    const response = await ActService.createAct(payload);
+    const data = response.data;
+    console.log(data);
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -374,7 +386,7 @@ const selectOption = (option) => {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 .search-input {
   background-color: #fff;
@@ -475,5 +487,13 @@ tr.clickable {
 
 .q-tab-panels {
   background: none;
+}
+
+.fields-result-group--amount {
+  p {
+    text-align: right;
+    font-weight: 700;
+    font-size: 24px;
+  }
 }
 </style>
