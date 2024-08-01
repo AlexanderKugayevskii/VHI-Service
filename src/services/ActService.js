@@ -17,13 +17,9 @@ function showActFields(id) {
 }
 
 function getPdfAct(id) {
-  return api.get(
-    `/clinics/akt-pdf/${id}`,
-    {},
-    {
-      responseType: "blob",
-    }
-  );
+  return api.get(`/clinics/akt-pdf/${id}`, {
+    responseType: "blob",
+  });
 }
 
 export default {
