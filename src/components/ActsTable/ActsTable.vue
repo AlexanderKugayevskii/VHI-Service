@@ -1,178 +1,144 @@
 <template>
   <div>
     <div class="table-actions">
-      <div class="table-actions-right">
-        <!-- is agent -->
-        <div class="tabs-container" v-if="isAgent">
-          <div class="tabs-header q-mb-md">
-            <q-tabs
-              dense
-              active-class="tab-active"
-              v-model="tab"
-              content-class="details-tabs-header"
-              align="left"
-            >
-              <q-tab
-                name="clinics"
-                label="Клиники"
-                :ripple="false"
-                class="tabs--no-hover"
-              >
-              </q-tab>
-              <q-tab
-                name="drugstore"
-                label="Аптеки"
-                :ripple="false"
-                class="tabs--no-hover"
-              >
-              </q-tab>
-            </q-tabs>
-          </div>
-          <div class="tabs-content">
-            <q-tab-panels
-              v-model="tab"
-              animated
-              transition-prev="jump-up"
-              transition-next="jump-down"
-            >
-              <q-tab-panel name="clinics" key="clinics">
-                <div class="tab-header">
-                  <DropdownSelectNew
-                    label="Клиника"
-                    :multiple="false"
-                    :loading="loading"
-                    :options="clinics"
-                    :selected-options="selectedClinic"
-                    @select-option="selectClinic"
-                    @request="fetchClinics"
-                  >
-                    <template #top-label> Клиника </template>
-                    <template #placeholder>
-                      {{ $t("create_appeal.dropdowns.clinic") }}
-                    </template>
-                    <template v-slot:selected-options-once="props">
-                      <div>{{ props.option.name }}</div>
-                    </template>
-                    <template v-slot:option-content="props">
-                      <div>{{ props.option.name }}</div>
-                      <CheckIcon v-if="checkSelectedClinic(props.option)" />
-                    </template>
-                  </DropdownSelectNew>
-                </div>
-              </q-tab-panel>
-              <q-tab-panel name="drugstore" key="drugstore">
-                <div class="tab-header">
-                  <DropdownSelectNew
-                    label="Аптека"
-                    :multiple="false"
-                    :loading="loading"
-                    :options="drugstores"
-                    :selected-options="selectedDrugstore"
-                    @select-option="selectDrugstore"
-                    @request="fetchDrugstores"
-                  >
-                    <template #top-label> Аптека </template>
-                    <template #placeholder> Выберите аптеку </template>
-                    <template v-slot:selected-options-once="props">
-                      <div>{{ props.option.name }}</div>
-                    </template>
-                    <template v-slot:option-content="props">
-                      <div>{{ props.option.name }}</div>
-                      <CheckIcon v-if="checkSelectedDrugstore(props.option)" />
-                    </template>
-                  </DropdownSelectNew>
-                </div>
-              </q-tab-panel>
-            </q-tab-panels>
-          </div>
+      <div class="appeals-filter">
+        <div class="appeals-search-input">
+          <q-input
+            rounded
+            dense
+            borderless
+            class="search-input q-px-sm"
+            :placeholder="$t('search')"
+            debounce="300"
+            v-model="searchData"
+          >
+            <template v-slot:prepend>
+              <q-icon>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.16659 15C12.3882 15 14.9999 12.3883 14.9999 9.16665C14.9999 5.94499 12.3882 3.33331 9.16659 3.33331C5.94492 3.33331 3.33325 5.94499 3.33325 9.16665C3.33325 12.3883 5.94492 15 9.16659 15Z"
+                    stroke="#B8C2D1"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M16.6666 16.6666L13.3333 13.3333"
+                    stroke="#B8C2D1"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </q-icon>
+            </template>
+          </q-input>
         </div>
-
-        <!-- is clinic -->
-
-        <DropdownSelectNew
-          v-if="isClinic"
-          label="Клиника"
-          :multiple="false"
-          :loading="loading"
-          :options="clinics"
-          :disable-choise="isClinic"
-          :selected-options="selectedClinic"
-        >
-          <template #top-label> Клиника </template>
-          <template #placeholder>
-            {{ $t("create_appeal.dropdowns.clinic") }}
-          </template>
-          <template v-slot:selected-options-once="props">
-            <div>{{ props.option.name }}</div>
-          </template>
-          <template v-slot:option-content="props">
-            <div>{{ props.option.name }}</div>
-            <CheckIcon v-if="checkSelectedClinic(props.option)" />
-          </template>
-        </DropdownSelectNew>
-
-        <DateSearch
-          class="table-actions-range"
-          @get-range="handleDateRange"
-          @get-data="requestGetFields"
-          :disabled-rule="disableButton"
-        />
       </div>
     </div>
-    <div class="fields-result" v-if="fieldsData">
-      <div class="fields-result-group q-mb-lg">
-        <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
-        <ServiceTable :dataRows="fieldsData.services" />
-      </div>
-      <div class="fields-result-group q-mb-lg">
-        <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
-        <DoctorsTable :dataRows="fieldsData.doctors" />
-      </div>
-      <div class="fields-result-group--amount">
-        <p>
-          Общая сумма: {{ formatPrice(parseFloat(fieldsData.total_amount)) }}
-        </p>
-      </div>
-      <div class="fields-result-action flex flex-center">
-        <SimpleButton
-          type="button"
-          customClass="appeals-btn"
-          label="Создать акт"
-          @click="createActByClinic"
-        />
-      </div>
+    <div class="act-service-table">
+      <q-table
+        flat
+        :rows="filteredRows"
+        :columns="columns"
+        :loading="loading"
+        v-model:pagination="pagination"
+        hide-pagination
+        ref="tableRef"
+        row-key="index"
+        no-data-label="I didn't find anything for you"
+        no-results-label="The filter didn't uncover any results"
+      >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary" />
+        </template>
+        <template v-slot:no-data="{ icon, message, filter }">
+          <div class="full-width row flex-center text-accent q-gutter-sm">
+            <q-icon size="2em" name="sentiment_dissatisfied" />
+            <span> Well this is sad... {{ message }} </span>
+            <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon" />
+          </div>
+        </template>
+
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+              class="appeals-th"
+            >
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="index" :props="props" class="appeals-td">
+              {{ props.row.index }}
+            </q-td>
+            <q-td key="date" :props="props" class="appeals-td">
+              {{ props.row.date }}
+            </q-td>
+            <q-td key="esfDate" :props="props" class="appeals-td">
+              {{ props.row.esfDate }}
+            </q-td>
+            <q-td key="amount" :props="props" class="appeals-td">
+              {{ formatPrice(parseFloat(props.row.amount)) }}
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
     </div>
+
+    <!-- <div class="flex q-my-lg">
+          <PaginationTable
+            :pagination="pagination"
+            :total="filteredRows.length"
+            @onIncrementPage="incrementPage"
+            @onDecrementPage="decrementPage"
+            @onChangePage="changePage"
+          />
+    
+          <q-space></q-space>
+          <RowsPerPage
+            @choiceOption="selectOption"
+            :pagination="pagination"
+            :total="filteredRows.length"
+          />
+        </div> -->
   </div>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import { computed, ref } from "vue";
 import AppealService from "src/services/AppealService";
-import ActService from "src/services/ActService";
-import DateSearch from "./DateSearch.vue";
+import ClientService from "src/services/ClientService";
+import PaginationTable from "../ClientsTable/PaginationTable.vue";
+import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
+import { onMounted, computed, ref } from "vue";
+
+import { useI18n } from "vue-i18n";
+import dayjs from "dayjs";
+import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
-import SimpleButton from "../Shared/SimpleButton.vue";
-import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
-import CheckIcon from "../Shared/CheckIcon.vue";
-import { useAppealStore } from "src/stores/appealStore";
-import { useAuthStore } from "src/stores/authStore";
-import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
-import ServiceTable from "./ServiceTable.vue";
-import DoctorsTable from "./DoctorsTable.vue";
-import { formatTimeAgo } from "@vueuse/core";
 import formatPrice from "src/helpers/formatPrice";
 
 const { t } = useI18n();
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
-const appealStore = useAppealStore();
-const isClinic = computed(() => appealStore.isClinic);
-const isAgent = computed(() => appealStore.isAgent);
-const tab = ref("clinics");
+
+const props = defineProps({
+  dataRows: {
+    type: Array,
+  },
+});
 
 const loading = ref(false);
+const data = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -187,178 +153,57 @@ const pagination = ref({
 const columns = computed(() => [
   {
     name: "index",
-    label: "№",
     field: "index",
+    label: "№",
     align: "left",
   },
   {
-    name: "checkbox",
-    label: "",
-    field: "checkbox",
+    name: "date",
+    field: "date",
+    label: "Дата акта",
     align: "left",
   },
   {
-    name: "drugstoreName",
+    name: "esfDate",
+    field: "esfDate",
+    label: "Дата ЭСФ",
     align: "left",
-    label: t("client_table.drugstore"),
-    field: "drugstoreName",
   },
   {
-    name: "phone",
+    name: "amount",
+    label: "Сумма",
     align: "left",
-    label: "Телефон",
-    field: "phone",
+    field: "amount",
   },
 ]);
 
 const rows = computed(() => {
-  return drugs.value.map((row) => {
+  console.log(props.dataRows);
+  return props.dataRows.map((row) => {
     return {
-      drugstoreName: row.name,
-      phone: row.phone,
-      reports: "",
+      date: row.date,
+      esfDate: row.esf_date,
       index: row.id,
+      amount: row.amount,
     };
   });
 });
 
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
-  return rows.value.filter((option) =>
-    regex.test(option.drugstoreName || option.phone)
-  );
+  return rows.value.filter((option) => {
+    return regex.test(option.date) || regex.test(option.esfDate);
+  });
 });
 
-// act + esf search logic
-const dateRangeData = ref(null);
-const handleDateRange = (rangeData) => {
-  dateRangeData.value = rangeData;
-};
-const disableButton = computed(() => {
-  return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
-});
-
-// clinics
-const clinics = ref([]);
-const selectedClinic = ref(null);
-const fetchClinics = async () => {
-  loading.value = true;
-  try {
-    const response = await AppealService.getClinics();
-    clinics.value = response.data.data;
-  } catch (e) {
-    console.error(e);
-  } finally {
-    loading.value = false;
-  }
-};
-const selectClinic = (clinic) => {
-  selectedClinic.value = clinic;
-};
-const setDefaultClinicIfIsClinic = () => {
-  if (isClinic.value) {
-    selectedClinic.value = user.value.hospital;
-  }
-};
-const checkSelectedClinic = (option) => selectedClinic.value?.id === option.id;
-onBeforeMount(() => {
-  setDefaultClinicIfIsClinic();
-  
-});
-
-// drugstore
-const drugstores = ref([]);
-const selectedDrugstore = ref(null);
-const fetchDrugstores = async () => {
-  loading.value = true;
-  try {
-    const response = await AppealService.getDrugstores();
-    const data = response.data.data;
-    drugstores.value = data;
-  } catch (e) {
-    console.error(e);
-  } finally {
-    loading.value = false;
-  }
-};
-const selectDrugstore = (drugstore) => {
-  selectedDrugstore.value = drugstore;
-};
-const checkSelectedDrugstore = (option) =>
-  selectedDrugstore.value?.id === option.id;
-
-const applicationType = computed(() => {
-  const payloadData = {
-    // akt_date: dateRangeData.value?.actDate,
-    // esf_date: dateRangeData.value?.esfDate,
-  };
-  if (tab.value === "clinics") {
-    delete payloadData.drugstore_id;
-    payloadData.application_type = 1;
-    payloadData.hospital_id = selectedClinic.value?.id;
-  } else if (tab.value === "drugstore") {
-    delete payloadData.hospital_id;
-    payloadData.application_type = 0;
-    payloadData.drugstore_id = selectedDrugstore.value?.id;
-  }
-
-  return payloadData;
-});
-//getAct
-
-const fieldsData = ref(null);
-const requestGetFields = async () => {
-  try {
-    // const response = await ActService.getAct(applicationType.value);
-    if (isClinic.value) {
-      const response = await ActService.getFields({
-        hospital_id: selectedClinic.value?.id,
-        application_type: 1,
-        akt_date: dateRangeData.value.aktDate,
-        esf_date: dateRangeData.value.esfDate,
-      });
-      const data = response.data;
-      fieldsData.value = data;
-    }
-  } catch (e) {
-  } finally {
-  }
-};
-
-const createActByClinic = async () => {
-  const servicesIds = fieldsData.value.services.map((service) => service.id);
-  const doctorsIds = fieldsData.value.doctors.map((doctor) => doctor.id);
-
-  const payload = {
-    akt_date: dateRangeData.value.aktDate,
-    sent_date: dateRangeData.value.esfDate,
-    hospital_id: selectedClinic.value?.id,
-    application_type: 1,
-    service_ids: servicesIds,
-    doctor_ids: doctorsIds,
-    amount: fieldsData.value.total_amount,
-  };
-
-  console.log(payload);
-
-  try {
-    const response = await ActService.createAct(payload);
-    const data = response.data;
-    console.log(data);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-//request table
 const handleRequest = (props) => {
   fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
 };
+
 // onMounted(() => {
 //   tableRef.value.requestServerInteraction();
 // });
 
-//pagination logic
 const incrementPage = () => {
   tableRef.value.nextPage();
 };
@@ -381,12 +226,12 @@ const selectOption = (option) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .table-actions {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 }
 .search-input {
   background-color: #fff;
@@ -395,15 +240,12 @@ const selectOption = (option) => {
   font-size: 15px;
   color: #7a88a6;
 }
-:global(.reports-btn) {
-  height: 24px;
-}
-
-.q-table {
-  table-layout: fixed;
-  border-radius: 12px;
-  background-color: #fff;
-  border-collapse: collapse;
+.appeal-link {
+  font-size: 14px;
+  line-height: 20px;
+  color: #13b8ba;
+  text-decoration: none;
+  cursor: pointer;
 }
 .appeals-th {
   color: #404f6f;
@@ -415,7 +257,11 @@ const selectOption = (option) => {
   width: 56px;
 }
 .appeals-th:nth-of-type(2) {
-  width: 56px;
+  width: 250px;
+}
+
+.q-table thead th:last-of-type {
+  width: 52px;
 }
 
 .appeals-td {
@@ -463,37 +309,5 @@ tbody tr td:last-child {
 }
 tr.clickable {
   cursor: pointer;
-}
-
-.reports {
-}
-.table-actions {
-  column-gap: 20px;
-}
-
-.table-actions-right {
-  flex-grow: 1;
-  display: flex;
-  align-items: flex-end;
-  column-gap: 12px;
-
-  .tabs-container {
-    flex-basis: 50%;
-  }
-  .table-actions-range {
-    min-width: 400px;
-  }
-}
-
-.q-tab-panels {
-  background: none;
-}
-
-.fields-result-group--amount {
-  p {
-    text-align: right;
-    font-weight: 700;
-    font-size: 24px;
-  }
 }
 </style>

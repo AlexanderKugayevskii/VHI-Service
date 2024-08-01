@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-import ActsTable from "src/components/ActsTable/ActsTable.vue";
+import ActsTable from "src/components/ActsTable/ActsComponent.vue";
 </script>
