@@ -96,7 +96,7 @@
               <SimpleButton
                 label="скачать акт"
                 custom-class="appeals-btn reports-btn"
-                @click="
+                @mouseup.stop="
                   () => {
                     handleDownloadAct(props.row);
                   }
