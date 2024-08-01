@@ -263,7 +263,7 @@ const setDefaultClinicIfIsClinic = () => {
 const checkSelectedClinic = (option) => selectedClinic.value?.id === option.id;
 onBeforeMount(() => {
   setDefaultClinicIfIsClinic();
-  console.log(selectedClinic.value);
+  
 });
 
 // drugstore
