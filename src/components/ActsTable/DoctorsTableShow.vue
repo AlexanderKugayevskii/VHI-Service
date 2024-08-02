@@ -54,6 +54,7 @@
         row-key="index"
         no-data-label="I didn't find anything for you"
         no-results-label="The filter didn't uncover any results"
+        @request="handleRequest"
       >
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -95,6 +96,16 @@
             <q-td key="amount" :props="props" class="appeals-td">
               {{ formatPrice(parseFloat(props.row.amount)) }}
             </q-td>
+            <q-td
+              key="userSettings"
+              :props="props"
+              class="appeals-td text-right"
+            >
+              <ActsUserSettings
+                :client="props.row"
+                @deleteAppeal="deleteDoctor"
+              ></ActsUserSettings>
+            </q-td>
           </q-tr>
         </template>
       </q-table>
@@ -122,22 +133,22 @@
 <script setup>
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
+import ActsUserSettings from "./ActsUserSettings.vue";
 import PaginationTable from "../ClientsTable/PaginationTable.vue";
 import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
+import UserSettings from "../ClientsTable/UserSettings.vue";
 import { onMounted, computed, ref } from "vue";
-
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
 import formatPrice from "src/helpers/formatPrice";
+import ActService from "src/services/ActService.js";
 
 const { t } = useI18n();
 
 const props = defineProps({
-  dataRows: {
-    type: Object,
-  },
+  id: String,
 });
 
 const loading = ref(false);
@@ -145,6 +156,43 @@ const data = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
+
+const fieldsData = ref(null);
+const clinics = ref(null);
+
+const showActFields = async () => {
+  try {
+    await fetchClinics();
+
+    const response = await ActService.showActFields(props.id);
+    const data = response.data.data;
+
+    fieldsData.value = data;
+    console.log(fieldsData.value);
+
+    fieldsData.value.hospital = findClinic(data.hospital_id);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+///////////////
+const fetchClinics = async () => {
+  try {
+    const response = await AppealService.getClinics();
+    clinics.value = response.data.data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+  }
+};
+const findClinic = (hospitalId) => {
+  return clinics.value.find((hospital) => hospital.id === hospitalId);
+};
+///////////////
+const deleteDoctor = () => {
+  
+};
 
 const pagination = ref({
   sortBy: "desc",
@@ -184,36 +232,43 @@ const columns = computed(() => [
     label: "Сумма",
     field: "amount",
   },
+  {
+    name: "userSettings",
+    align: "left",
+  },
 ]);
 
 const rows = computed(() => {
-  return props.dataRows.doctors.map((row) => {
+  return fieldsData.value?.doctors.map((row) => {
     return {
       fullName:
         row.application.client.name + " " + row.application.client.lastname,
       serviceName: row.doctor.name,
+      serviceId: row.doctor.doctor_id,
       amount: parseFloat(row.price) * row.quantity,
       index: row.id,
-      clinicName: props.dataRows.hospital.name,
+      clinicName: fieldsData.value.hospital.name,
       application_id: row.application_id,
+      userSettings: "",
     };
   });
 });
 
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
-  return rows.value.filter((option) => {
+  return rows.value?.filter((option) => {
     return regex.test(option.serviceName) || regex.test(option.fullName);
   });
 });
 
 const handleRequest = (props) => {
-  fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
+  showActFields(props.pagination.page, props.pagination.rowsPerPage);
 };
 
-// onMounted(() => {
-//   tableRef.value.requestServerInteraction();
-// });
+onMounted(() => {
+  console.log(props.id);
+  tableRef.value.requestServerInteraction();
+});
 
 const incrementPage = () => {
   tableRef.value.nextPage();
