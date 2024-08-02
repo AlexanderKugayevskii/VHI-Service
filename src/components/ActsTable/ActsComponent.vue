@@ -122,11 +122,7 @@
     </div>
 
     <div class="acts-result q-mb-lg" v-if="actsData">
-      <ActsTable
-        :dataRows="actsData"
-        @show-fields="handleShowFields"
-        @downloadAct="downloadAct"
-      />
+      <ActsTable :dataRows="actsData" @show-fields="handleShowFields" />
     </div>
 
     <div class="fields-result" v-if="fieldsData">
@@ -194,7 +190,6 @@ import { formatTimeAgo } from "@vueuse/core";
 import formatPrice from "src/helpers/formatPrice";
 import Trans from "src/i18n/translation";
 import { useRouter } from "vue-router";
-
 
 const router = useRouter();
 const { t } = useI18n();

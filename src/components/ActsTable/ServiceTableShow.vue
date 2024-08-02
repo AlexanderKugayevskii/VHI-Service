@@ -152,7 +152,6 @@ const props = defineProps({
 });
 
 const loading = ref(false);
-const data = ref([]);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
@@ -166,7 +165,6 @@ const showActFields = async () => {
 
     const response = await ActService.showActFields(props.id);
     const data = response.data.data;
-
     fieldsData.value = data;
 
     fieldsData.value.hospital = findClinic(data.hospital_id);
@@ -191,13 +189,15 @@ const findClinic = (hospitalId) => {
 ///////////////
 
 const deleteService = async (row) => {
+  console.log(row);
   try {
     const response = await ActService.aktDelete(props.id, {
       type: 0,
-      doctor_id: row.serviceId,
+      service_id: row.serviceId,
     });
     const data = response.data;
-    console.log(data);
+
+    tableRef.value.requestServerInteraction();
   } catch (e) {
     console.error(e);
   }
@@ -253,7 +253,7 @@ const rows = computed(() => {
       fullName:
         row.application.client.name + " " + row.application.client.lastname,
       serviceName: row.service.name,
-      serviceId: row.service.service_id,
+      serviceId: row.id,
       amount: parseFloat(row.price) * row.quantity,
       index: row.id,
       clinicName: fieldsData.value.hospital.name,
@@ -265,13 +265,15 @@ const rows = computed(() => {
 
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
-  return rows.value?.filter((option) => {
-    return regex.test(option.serviceName) || regex.test(option.fullName);
-  });
+  return (
+    rows.value?.filter((option) => {
+      return regex.test(option.serviceName) || regex.test(option.fullName);
+    }) ?? []
+  );
 });
 
 const handleRequest = (props) => {
-  showActFields(props.pagination.page, props.pagination.rowsPerPage);
+  showActFields();
 };
 
 onMounted(() => {

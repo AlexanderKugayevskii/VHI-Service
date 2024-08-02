@@ -40,36 +40,51 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, getCurrentInstance } from "vue";
+import blobToBase64 from "src/helpers/blobToBase64";
 import formatPrice from "src/helpers/formatPrice.js";
 import ActService from "src/services/ActService.js";
 import AppealService from "src/services/AppealService.js";
 import ServiceTableShow from "src/components/ActsTable/ServiceTableShow.vue";
 import DoctorsTableShow from "src/components/ActsTable/DoctorsTableShow.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
+import { useAuthStore } from "src/stores/authStore";
+import { storeToRefs } from "pinia";
+
+import { onMounted } from "vue";
 const props = defineProps({
   id: String,
 });
 
+const { appContext } = getCurrentInstance();
+const vueEimzo = appContext.config.globalProperties.$eimzo;
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+const isClinic = computed(() => user.role.id === 8);
+//eimzo data
+const eimzoKey = ref(null);
+
+onMounted(async () => {
+  await getEimzoKey();
+});
+
+const getEimzoKey = async () => {
+  await vueEimzo.install();
+  const certs = await vueEimzo.listAllUserKeys();
+
+  if (isClinic.value) {
+    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+  }
+};
 
 const fileLoad = ref(false);
 const fileError = ref("");
 const downloadAct = async () => {
   try {
     const response = await ActService.getPdfAct(props.id);
-
-    // const fileName = row.drugstoreName;
-    // const fileDate = dayjs().format("D-MM-YY");
+    console.log(response.data);
     const blob = new Blob([response.data], { type: response.data.type });
-
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `act.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    const base64File = await blobToBase64(blob);
   } catch (e) {
     console.error(e);
     fileError.value = `Ошибка при скачивании файла`;

@@ -162,9 +162,8 @@ const clinics = ref(null);
 
 const showActFields = async () => {
   try {
-    await fetchClinics();
-
     const response = await ActService.showActFields(props.id);
+    await fetchClinics();
     const data = response.data.data;
 
     fieldsData.value = data;
@@ -198,9 +197,10 @@ const deleteDoctor = async (row) => {
       doctor_id: row.serviceId,
     });
     const data = response.data;
-    console.log(data)
+    console.log(data);
+    tableRef.value.requestServerInteraction();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 };
 
@@ -254,7 +254,7 @@ const rows = computed(() => {
       fullName:
         row.application.client.name + " " + row.application.client.lastname,
       serviceName: row.doctor.name,
-      serviceId: row.doctor_id,
+      serviceId: row.id,
       amount: parseFloat(row.price) * row.quantity,
       index: row.id,
       clinicName: fieldsData.value.hospital.name,
@@ -266,9 +266,11 @@ const rows = computed(() => {
 
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
-  return rows.value?.filter((option) => {
-    return regex.test(option.serviceName) || regex.test(option.fullName);
-  });
+  return (
+    rows.value?.filter((option) => {
+      return regex.test(option.serviceName) || regex.test(option.fullName);
+    }) ?? []
+  );
 });
 
 const handleRequest = (props) => {

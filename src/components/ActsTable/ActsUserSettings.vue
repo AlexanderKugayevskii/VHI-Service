@@ -99,7 +99,7 @@ const deleteAppeal = async () => {
   $q.dialog({
     component: ConfirmModal,
     componentProps: {
-      title: "Удалить врача?",
+      title: "Удалить?",
     },
   }).onOk(() => {
     emit("deleteAppeal");
