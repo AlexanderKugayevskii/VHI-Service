@@ -96,6 +96,16 @@
             <q-td key="amount" :props="props" class="appeals-td">
               {{ formatPrice(parseFloat(props.row.amount)) }}
             </q-td>
+            <q-td
+              key="userSettings"
+              :props="props"
+              class="appeals-td text-right"
+            >
+              <ActsUserSettings
+                :client="props.row"
+                @deleteAppeal="deleteService(props.row)"
+              ></ActsUserSettings>
+            </q-td>
           </q-tr>
         </template>
       </q-table>
@@ -123,6 +133,8 @@
 <script setup>
 import AppealService from "src/services/AppealService";
 import ClientService from "src/services/ClientService";
+import ActsUserSettings from "./ActsUserSettings.vue";
+
 import PaginationTable from "../ClientsTable/PaginationTable.vue";
 import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
@@ -178,6 +190,19 @@ const findClinic = (hospitalId) => {
 };
 ///////////////
 
+const deleteService = async (row) => {
+  try {
+    const response = await ActService.aktDelete(props.id, {
+      type: 0,
+      doctor_id: row.serviceId,
+    });
+    const data = response.data;
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 const pagination = ref({
   sortBy: "desc",
   descending: false,
@@ -216,6 +241,10 @@ const columns = computed(() => [
     label: "Сумма",
     field: "amount",
   },
+  {
+    name: "userSettings",
+    align: "left",
+  },
 ]);
 
 const rows = computed(() => {
@@ -224,10 +253,12 @@ const rows = computed(() => {
       fullName:
         row.application.client.name + " " + row.application.client.lastname,
       serviceName: row.service.name,
+      serviceId: row.service.service_id,
       amount: parseFloat(row.price) * row.quantity,
       index: row.id,
       clinicName: fieldsData.value.hospital.name,
       application_id: row.application_id,
+      userSettings: "",
     };
   });
 });

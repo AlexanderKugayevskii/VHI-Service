@@ -143,6 +143,19 @@ const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
 
+const deleteDoctor = async (row) => {
+  try {
+    const response = await ActService.aktDelete(props.id, {
+      type: 1,
+      doctor_id: row.serviceId,
+    });
+    const data = response.data;
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 const pagination = ref({
   sortBy: "desc",
   descending: false,
@@ -184,6 +197,7 @@ const rows = computed(() => {
       serviceName: row.name,
       amount: row.amount,
       index: row.id,
+      
     };
   });
 });

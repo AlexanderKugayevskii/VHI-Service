@@ -103,7 +103,7 @@
             >
               <ActsUserSettings
                 :client="props.row"
-                @deleteAppeal="deleteDoctor"
+                @deleteAppeal="deleteDoctor(props.row)"
               ></ActsUserSettings>
             </q-td>
           </q-tr>
@@ -189,9 +189,19 @@ const fetchClinics = async () => {
 const findClinic = (hospitalId) => {
   return clinics.value.find((hospital) => hospital.id === hospitalId);
 };
+
 ///////////////
-const deleteDoctor = () => {
-  
+const deleteDoctor = async (row) => {
+  try {
+    const response = await ActService.aktDelete(props.id, {
+      type: 1,
+      doctor_id: row.serviceId,
+    });
+    const data = response.data;
+    console.log(data)
+  } catch (e) {
+    console.error(e)
+  }
 };
 
 const pagination = ref({
@@ -244,7 +254,7 @@ const rows = computed(() => {
       fullName:
         row.application.client.name + " " + row.application.client.lastname,
       serviceName: row.doctor.name,
-      serviceId: row.doctor.doctor_id,
+      serviceId: row.doctor_id,
       amount: parseFloat(row.price) * row.quantity,
       index: row.id,
       clinicName: fieldsData.value.hospital.name,

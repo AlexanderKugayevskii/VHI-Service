@@ -22,9 +22,14 @@ function getPdfAct(id) {
   });
 }
 
+function aktDelete(id, payload) {
+  return api.post(`/clinics/akt-delete/${id}`, payload);
+}
+
 export default {
   getAct,
   getFields,
+  aktDelete, 
   createAct,
 
   showActFields,
