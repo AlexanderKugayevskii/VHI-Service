@@ -192,7 +192,11 @@ import DoctorsTable from "./DoctorsTable.vue";
 import ActsTable from "./ActsTable.vue";
 import { formatTimeAgo } from "@vueuse/core";
 import formatPrice from "src/helpers/formatPrice";
+import Trans from "src/i18n/translation";
+import { useRouter } from "vue-router";
 
+
+const router = useRouter();
 const { t } = useI18n();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -404,42 +408,10 @@ const createActByClinic = async () => {
 //show fields by act id
 
 const handleShowFields = async (id) => {
-  console.log(id);
-  try {
-    const response = await ActService.showActFields(id);
-    const data = response.data;
-    console.log(data);
-  } catch (e) {
-    console.error(e);
-  }
+  router.push(Trans.i18nRoute({ name: "acts-details-page", params: { id } }));
 };
 
 //download act
-const fileLoad = ref(false);
-const fileError = ref("");
-const downloadAct = async (id) => {
-  try {
-    const response = await ActService.getPdfAct(id);
-
-    // const fileName = row.drugstoreName;
-    // const fileDate = dayjs().format("D-MM-YY");
-    const blob = new Blob([response.data], { type: response.data.type });
-
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `act.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  } catch (e) {
-    console.error(e);
-    fileError.value = `Ошибка при скачивании файла`;
-  } finally {
-    fileLoad.value = false;
-  }
-};
 
 //request before mounting page
 onBeforeMount(async () => {

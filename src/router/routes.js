@@ -196,6 +196,12 @@ const routes = [
             name: "acts-page",
             component: () => import("src/pages/ActsPage.vue"),
           },
+          {
+            path: "acts-details/:id",
+            name: "acts-details-page",
+            component: () => import("src/pages/ActsDetailsPage.vue"),
+            props: true,
+          },
         ],
       },
       {

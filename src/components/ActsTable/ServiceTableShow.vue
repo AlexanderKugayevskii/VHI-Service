@@ -79,15 +79,18 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @mouseup="cancelOpenWhenSelect(props.row)">
+          <q-tr :props="props">
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
-            <q-td key="date" :props="props" class="appeals-td">
-              {{ props.row.date }}
+            <q-td key="fullName" :props="props" class="appeals-td">
+              {{ props.row.fullName }}
             </q-td>
-            <q-td key="esfDate" :props="props" class="appeals-td">
-              {{ props.row.esfDate }}
+            <q-td key="serviceName" :props="props" class="appeals-td">
+              {{ props.row.serviceName }}
+            </q-td>
+            <q-td key="clinicName" :props="props" class="appeals-td">
+              {{ props.row.clinicName }}
             </q-td>
             <q-td key="amount" :props="props" class="appeals-td">
               {{ formatPrice(parseFloat(props.row.amount)) }}
@@ -98,21 +101,21 @@
     </div>
 
     <!-- <div class="flex q-my-lg">
-          <PaginationTable
-            :pagination="pagination"
-            :total="filteredRows.length"
-            @onIncrementPage="incrementPage"
-            @onDecrementPage="decrementPage"
-            @onChangePage="changePage"
-          />
-    
-          <q-space></q-space>
-          <RowsPerPage
-            @choiceOption="selectOption"
-            :pagination="pagination"
-            :total="filteredRows.length"
-          />
-        </div> -->
+            <PaginationTable
+              :pagination="pagination"
+              :total="filteredRows.length"
+              @onIncrementPage="incrementPage"
+              @onDecrementPage="decrementPage"
+              @onChangePage="changePage"
+            />
+      
+            <q-space></q-space>
+            <RowsPerPage
+              @choiceOption="selectOption"
+              :pagination="pagination"
+              :total="filteredRows.length"
+            />
+          </div> -->
   </div>
 </template>
 
@@ -127,18 +130,15 @@ import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import DateRange from "../DateRange.vue";
 import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
-import SimpleButton from "../Shared/SimpleButton.vue";
 import formatPrice from "src/helpers/formatPrice";
 
 const { t } = useI18n();
 
 const props = defineProps({
   dataRows: {
-    type: Array,
+    type: Object,
   },
 });
-
-const emit = defineEmits(["showFields", "downloadAct"]);
 
 const loading = ref(false);
 const data = ref([]);
@@ -156,38 +156,46 @@ const pagination = ref({
 const columns = computed(() => [
   {
     name: "index",
-    field: "index",
     label: "№",
+    field: "index",
     align: "left",
   },
   {
-    name: "date",
-    field: "date",
-    label: "Дата акта",
+    name: "fullName",
+    label: "Имя Фамилия",
+    field: "fullName",
     align: "left",
   },
   {
-    name: "esfDate",
-    field: "esfDate",
-    label: "Дата ЭСФ",
+    name: "serviceName",
     align: "left",
+    label: "Сервис",
+    field: "serviceName",
+  },
+  {
+    name: "clinicName",
+    align: "left",
+    label: "Клиника",
+    field: "clinicName",
   },
   {
     name: "amount",
-    label: "Сумма",
     align: "left",
+    label: "Сумма",
     field: "amount",
   },
 ]);
 
 const rows = computed(() => {
-  console.log(props.dataRows);
-  return props.dataRows.map((row) => {
+  return props.dataRows.services.map((row) => {
     return {
-      date: row.date,
-      esfDate: row.esf_date,
+      fullName:
+        row.application.client.name + " " + row.application.client.lastname,
+      serviceName: row.service.name,
+      amount: parseFloat(row.price) * row.quantity,
       index: row.id,
-      amount: row.amount,
+      clinicName: props.dataRows.hospital.name,
+      application_id: row.application_id,
     };
   });
 });
@@ -195,22 +203,9 @@ const rows = computed(() => {
 const filteredRows = computed(() => {
   const regex = new RegExp(searchData.value, "i");
   return rows.value.filter((option) => {
-    return regex.test(option.date) || regex.test(option.esfDate);
+    return regex.test(option.serviceName) || regex.test(option.fullName);
   });
 });
-
-const cancelOpenWhenSelect = (row) => {
-  const selection = window.getSelection().toString();
-  if (!selection) {
-    emit("showFields", row.index);
-  } else {
-    return;
-  }
-};
-
-const handleDownloadAct = (row) => {
-  emit("downloadAct", row.index);
-};
 
 const handleRequest = (props) => {
   fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
@@ -274,6 +269,9 @@ const selectOption = (option) => {
 }
 .appeals-th:nth-of-type(2) {
   width: 250px;
+}
+.appeals-th:nth-of-type(3) {
+  width: 350px;
 }
 
 .q-table thead th:last-of-type {
