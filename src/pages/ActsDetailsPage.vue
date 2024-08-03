@@ -282,8 +282,8 @@ const downloadAct = async () => {
 
 const confirmAct = async () => {
   try {
-    const status = await ActService.aktSent(props.id);
-    console.log(`status by agent`, status);
+    const status = await ActService.aktUpdate(props.id);
+    console.log(`status by agent 111`, status);
   } catch (e) {
     console.error(e);
   }

@@ -26,8 +26,12 @@ function aktDelete(id, payload) {
   return api.post(`/clinics/akt-delete/${id}`, payload);
 }
 
+//statuses
 function aktSent(id) {
   return api.post(`/clinics/akt-sent/${id}`);
+}
+function aktUpdate(id) {
+  return api.post(`/clinics/akt-update/${id}`);
 }
 
 export default {
@@ -40,4 +44,5 @@ export default {
 
   getPdfAct,
   aktSent,
+  aktUpdate,
 };
