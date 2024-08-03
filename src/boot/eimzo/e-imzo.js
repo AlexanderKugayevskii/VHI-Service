@@ -221,8 +221,8 @@
 })(typeof window !== "undefined" ? window : global);
 
 window.CAPIWS =
-  typeof EIMZOEXT !== "undefined"
-    ? EIMZOEXT
+  typeof window.EIMZOEXT !== "undefined"
+    ? window.EIMZOEXT
     : {
         URL:
           (window.location.protocol.toLowerCase() === "https:"

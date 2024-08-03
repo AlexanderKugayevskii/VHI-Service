@@ -121,10 +121,6 @@
       </div>
     </div>
 
-    <div class="acts-result q-mb-lg" v-if="actsData">
-      <ActsTable :dataRows="actsData" @show-fields="handleShowFields" />
-    </div>
-
     <div class="fields-result" v-if="fieldsData">
       <div
         class="fields-result-group q-mb-lg"
@@ -165,6 +161,11 @@
           @click="createActByClinic"
         />
       </div>
+    </div>
+
+    <div class="acts-result q-mb-lg" v-if="actsData">
+      <h3 class="page-title q-my-none q-mb-md">Существующие акты</h3>
+      <ActsTable :dataRows="actsData" @show-fields="handleShowFields" />
     </div>
   </div>
 </template>
@@ -368,6 +369,7 @@ const requestGetFields = async () => {
         esf_date: dateRangeData.value.esfDate,
       });
       const data = response.data;
+      console.log(data)
       fieldsData.value = data;
     }
   } catch (e) {
@@ -394,7 +396,7 @@ const createActByClinic = async () => {
   try {
     const response = await ActService.createAct(payload);
     const data = response.data;
-    console.log(data);
+    console.log(`created_act`, data);
   } catch (e) {
     console.error(e);
   }

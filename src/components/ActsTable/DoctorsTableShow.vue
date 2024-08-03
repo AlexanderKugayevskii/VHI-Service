@@ -151,6 +151,8 @@ const props = defineProps({
   id: String,
 });
 
+const emit = defineEmits(["getDataFromTable"]);
+
 const loading = ref(false);
 const data = ref([]);
 const total = ref(0);
@@ -165,9 +167,9 @@ const showActFields = async () => {
     const response = await ActService.showActFields(props.id);
     await fetchClinics();
     const data = response.data.data;
-
     fieldsData.value = data;
-    console.log(fieldsData.value);
+
+    emit("getDataFromTable", data);
 
     fieldsData.value.hospital = findClinic(data.hospital_id);
   } catch (e) {

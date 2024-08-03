@@ -151,6 +151,8 @@ const props = defineProps({
   id: String,
 });
 
+const emit = defineEmits(["getDataFromTable"]);
+
 const loading = ref(false);
 const total = ref(0);
 const tableRef = ref(null);
@@ -167,6 +169,7 @@ const showActFields = async () => {
     const data = response.data.data;
     fieldsData.value = data;
 
+    emit("getDataFromTable", data);
     fieldsData.value.hospital = findClinic(data.hospital_id);
   } catch (e) {
     console.error(e);

@@ -97,7 +97,7 @@
       </q-table>
     </div>
 
-    <!-- <div class="flex q-my-lg">
+    <div class="flex q-my-lg">
       <PaginationTable
         :pagination="pagination"
         :total="filteredRows.length"
@@ -112,7 +112,7 @@
         :pagination="pagination"
         :total="filteredRows.length"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -197,7 +197,6 @@ const rows = computed(() => {
       serviceName: row.name,
       amount: row.amount,
       index: row.id,
-      
     };
   });
 });

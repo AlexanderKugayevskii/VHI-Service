@@ -26,13 +26,18 @@ function aktDelete(id, payload) {
   return api.post(`/clinics/akt-delete/${id}`, payload);
 }
 
+function aktSent(id) {
+  return api.post(`/clinics/akt-sent/${id}`);
+}
+
 export default {
   getAct,
   getFields,
-  aktDelete, 
+  aktDelete,
   createAct,
 
   showActFields,
 
   getPdfAct,
+  aktSent,
 };

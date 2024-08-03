@@ -376,6 +376,7 @@ export const EIMZOClient = {
     isDataBase64Encoded
   ) {
     var data64;
+
     if (isDataBase64Encoded === true) {
       data64 = data;
     } else {
@@ -386,6 +387,7 @@ export const EIMZOClient = {
     } else {
       detached = "no";
     }
+
     CAPIWS.callFunction(
       {
         plugin: "pkcs7",
@@ -395,6 +397,7 @@ export const EIMZOClient = {
       function (event, data) {
         if (data.success) {
           var pkcs7 = data.pkcs7_64;
+
           if (timestamper) {
             var sn = data.signer_serial_number;
             timestamper(

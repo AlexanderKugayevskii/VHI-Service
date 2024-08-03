@@ -97,22 +97,22 @@
       </q-table>
     </div>
 
-    <!-- <div class="flex q-my-lg">
-        <PaginationTable
-          :pagination="pagination"
-          :total="filteredRows.length"
-          @onIncrementPage="incrementPage"
-          @onDecrementPage="decrementPage"
-          @onChangePage="changePage"
-        />
-  
-        <q-space></q-space>
-        <RowsPerPage
-          @choiceOption="selectOption"
-          :pagination="pagination"
-          :total="filteredRows.length"
-        />
-      </div> -->
+    <div class="flex q-my-lg">
+      <PaginationTable
+        :pagination="pagination"
+        :total="filteredRows.length"
+        @onIncrementPage="incrementPage"
+        @onDecrementPage="decrementPage"
+        @onChangePage="changePage"
+      />
+
+      <q-space></q-space>
+      <RowsPerPage
+        @choiceOption="selectOption"
+        :pagination="pagination"
+        :total="filteredRows.length"
+      />
+    </div>
   </div>
 </template>
 
