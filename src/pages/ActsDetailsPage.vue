@@ -40,7 +40,8 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, getCurrentInstance } from "vue";
+import { onBeforeMount, ref, getCurrentInstance, computed } from "vue";
+import { didox } from "src/boot/eimzo";
 import blobToBase64 from "src/helpers/blobToBase64";
 import formatPrice from "src/helpers/formatPrice.js";
 import ActService from "src/services/ActService.js";
@@ -52,6 +53,7 @@ import { useAuthStore } from "src/stores/authStore";
 import { storeToRefs } from "pinia";
 
 import { onMounted } from "vue";
+import { forAliasRE } from "@vue/compiler-core";
 const props = defineProps({
   id: String,
 });
@@ -60,29 +62,63 @@ const { appContext } = getCurrentInstance();
 const vueEimzo = appContext.config.globalProperties.$eimzo;
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
-const isClinic = computed(() => user.role.id === 8);
+const isClinic = computed(() => user.value.role.id === 8);
 //eimzo data
 const eimzoKey = ref(null);
 
 onMounted(async () => {
   await getEimzoKey();
+  await getDidoxToken();
 });
 
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-
+  const certForTest = certs[0];
   if (isClinic.value) {
-    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    eimzoKey.value = certForTest;
   }
 };
 
+const getDidoxToken = async () => {
+  await getEimzoKey();
+  let ckeck;
+  if (eimzoKey.value) {
+    let loadKey = await vueEimzo.loadKey(eimzoKey.value);
+    let text = eimzoKey.value.TIN;
+    let check = 1;
+
+    const result = await vueEimzo
+      .createPkcs7(loadKey.id, text, getTimeStamp)
+      .catch((e) => {
+        check = 0;
+      });
+
+    console.log(result);
+  }
+};
+
+const getTimeStamp = async (hex, fun, fail) => {
+  await didox
+    .post("v1/dsvs/gettimestamp", {
+      signatureHex: hex,
+    })
+    .then(async (res) => {
+      console.log(res);
+      await fun(res.data.timestampTokenB64);
+    })
+    .catch(async (e) => {
+      await fail(e);
+    });
+};
+
+//download act
 const fileLoad = ref(false);
 const fileError = ref("");
 const downloadAct = async () => {
   try {
     const response = await ActService.getPdfAct(props.id);
-    console.log(response.data);
     const blob = new Blob([response.data], { type: response.data.type });
     const base64File = await blobToBase64(blob);
   } catch (e) {
