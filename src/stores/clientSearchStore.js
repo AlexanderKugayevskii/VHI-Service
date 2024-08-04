@@ -41,7 +41,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
       });
 
       if (item.sub_clients.length > 0) {
-        item.sub_clients.forEach((subClient) => {
+        item.sub_clients.forEach((subClient, index) => {
           searchClients.value.push({
             id: subClient.pivot.contract_client_id,
             clientId: subClient.id,
