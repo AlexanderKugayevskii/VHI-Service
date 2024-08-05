@@ -23,7 +23,7 @@ function getPdfAct(id) {
 }
 
 function getFactura(id) {
-  return api.get(`/clinics/faktuda-data/${id}`);
+  return api.get(`/clinics/faktura-data/${id}`);
 }
 
 function aktDelete(id, payload) {
