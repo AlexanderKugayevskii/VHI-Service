@@ -27,27 +27,53 @@
         </div>
         <div class="fields-result-action flex flex-center">
           <!-- v-if="fieldsData.services.length > 0 && fieldsData.doctors.length > 0" -->
-          <SimpleButton
-            v-if="isClinic"
-            type="button"
-            customClass="appeals-btn"
-            label="Отправить акт"
-            :loading="loadingSendAct"
-            @click="downloadAct"
-          >
-            <template #loading-spinner>
-              <LoadingSpinner />
-            </template>
-          </SimpleButton>
+          <div v-if="dataFields">
+            <SimpleButton
+              v-if="isClinic && dataFields.status === 1"
+              type="button"
+              customClass="appeals-btn"
+              label="Отправить акт"
+              :loading="loadingSendAct"
+              @click="downloadAct"
+            >
+              <template #loading-spinner>
+                <LoadingSpinner />
+              </template>
+            </SimpleButton>
+            <SimpleButton
+              v-if="isClinic && dataFields.status === 2"
+              type="button"
+              customClass="appeals-btn"
+              label="Отправить счёт фактуру"
+              :loading="loadingSendInvoice"
+              @click="getFacturaData"
+            >
+              <template #loading-spinner>
+                <LoadingSpinner />
+              </template>
+            </SimpleButton>
+          </div>
 
-          <SimpleButton
-            v-if="isAgent"
-            type="button"
-            customClass="appeals-btn"
-            label="Подтвердить акт"
-            @click="confirmAct"
-          >
-          </SimpleButton>
+          <div v-if="dataFields">
+            <SimpleButton
+              v-if="isAgent && dataFields.status === 0"
+              type="button"
+              customClass="appeals-btn"
+              :label="isActConfirmed ? 'Подтверждено' : 'Подтвердить'"
+              :disabled="isActConfirmed"
+              @click="confirmAct"
+            >
+            </SimpleButton>
+            <SimpleButton
+              v-if="isAgent && dataFields.status === 1"
+              type="button"
+              customClass="appeals-btn"
+              :label="isActSentConfirmed ? 'Акт подтвержен' : 'Подтвердить акт'"
+              :disabled="isActSentConfirmed"
+              @click="confirmActSent"
+            >
+            </SimpleButton>
+          </div>
         </div>
       </div>
     </div>
@@ -89,16 +115,13 @@ const loadingSendAct = ref(false);
 
 const dataFields = ref(null);
 
-onMounted(async () => {
-  console.log(user.value);
-});
+onMounted(async () => {});
 
 const getDataFromTable = (data) => {
   dataFields.value = data;
 };
 
 const getTimeStamp = async (hex, fun, fail) => {
-  console.log(`hex`, hex);
   await didox
     .post("v1/dsvs/gettimestamp", {
       signatureHex: hex,
@@ -115,9 +138,7 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  console.log(certs);
   const certForTest = certs[1];
-
   if (isClinic.value) {
     // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
     eimzoKey.value = certForTest;
@@ -130,12 +151,9 @@ const getDidoxToken = async () => {
     await getEimzoKey();
     let check;
     if (eimzoKey.value) {
-      console.log(`eimzoVAlue`, eimzoKey.value);
       let loadKey = await vueEimzo.loadKey(eimzoKey.value);
       let tin = eimzoKey.value.TIN;
       try {
-        console.log(loadKey.id);
-        console.log(tin);
         const result = await vueEimzo.createPkcs7(
           loadKey.id,
           tin,
@@ -188,7 +206,6 @@ const signDidox = async (res) => {
           signature: signatureResponse,
         }
       );
-      console.log(signResponse);
     } catch (e) {
       console.error("не удалось подписать документ");
     }
@@ -246,10 +263,9 @@ const sendAct = async (base64File) => {
       await signDidox(createDocumentResponse);
 
       const status = await ActService.aktSent(props.id);
-      console.log(`act-status`, status);
       $q.notify({
         type: "success",
-        message: "Документ успешно отправлен в DIDOX",
+        message: "Акт выполненных работ успешно отправлен в DIDOX",
         position: "center",
       });
     } catch (e) {
@@ -263,7 +279,155 @@ const sendAct = async (base64File) => {
   }
 };
 
+const loadingSendInvoice = ref(false);
+const sendInvoice = async (data) => {
+  try {
+    const responseSeller = await didox.get("v1/profile");
 
+    const seller = responseSeller.data;
+    const sellerNew = {
+      Name: seller.name ?? seller.company,
+      BranchCode: "",
+      BranchName: "",
+      Account: seller.account,
+      BankId: seller.bankCode,
+      Address: seller.address,
+      Director: seller.director,
+      Accountant: seller.accountant,
+      VatRegCode: seller.VATRegCode,
+      VatRegStatus: seller.VATRegStatus,
+    };
+
+    const invoicePayload = {
+      isValid: true,
+      Version: 1,
+      posTransaction: {
+        terminalId: "",
+        transactionId: "",
+      },
+      didoxcontractid: "",
+      WaybillIds: [],
+      HasMarking: false,
+      reverse_calc: false,
+      FacturaType: 0,
+      FacturaDoc: {
+        FacturaNo: data.id,
+        FacturaDate: data.esf_date,
+      },
+      ContractDoc: {
+        ContractNo: user.value.hospital.contract_ID,
+        ContractDate: user.value.hospital.date_of_contract,
+      },
+      ContractId: "0",
+      LotId: "",
+      OldFacturaDoc: {
+        OldFacturaDate: "",
+        OldFacturaNo: "",
+        OldFacturaId: "",
+      },
+      ItemReleasedDoc: {
+        ItemReleasedFio: "",
+      },
+      FacturaInvestmentObjectDoc: {
+        ObjectId: "",
+        ObjectName: "",
+      },
+      FacturaEmpowermentDoc: {
+        EmpowermentNo: "",
+        EmpowermentDateOfIssue: "",
+        AgentFio: "",
+        AgentTin: "",
+      },
+      Expansion: {
+        OrderNumber: "",
+      },
+      ForeignCompany: {
+        CountryId: "",
+        Name: "",
+        Address: "",
+        Bank: "",
+        Account: "",
+      },
+      SellerTin: eimzoKey.value.PINFL,
+      Seller: sellerNew,
+      BuyerTin: "310491216",
+      Buyer: {
+        Name: '"NEO INSURANCE CORP" AJ',
+        BranchCode: "",
+        BranchName: "",
+        VatRegCode: "303010223700",
+        Account: "20216000605651575001",
+        BankId: "00401",
+        Address: "Hamid Sulaymon MFY, Mirobod ko'chasi, 9-a-uy",
+        Director: "SHIRINOV JA'FAR ESANBAYEVICH",
+        Accountant: "MAMATKULOVA ZULFIYA SHUKURULLAYEVNA",
+        VatRegStatus: 20,
+      },
+      ProductList: {
+        HasCommittent: false,
+        HasLgota: sellerNew.VatRegStatus != 20 ? false : true,
+        HasExcise: false,
+        HasVat: false,
+        Tin: eimzoKey.value.PINFL,
+        Products: [
+          {
+            OrdNo: 1,
+            id: "",
+            LgotaId: sellerNew.VatRegStatus != 20 ? "" : 103282,
+            CommittentName: "",
+            CommittentTin: "",
+            CommittentVatRegCode: "",
+            CommittentVatRegStatus: "",
+            Name: "Услуги страхования",
+            CatalogCode: "10402001002000000",
+            CatalogName:
+              "Суғурта агенти хизматлари (суғурта мукофотлари бўйича коммиссиялар)",
+            Marks: "",
+            Barcode: "",
+            MeasureId: null,
+            PackageCode: "1505867",
+            PackageName: "услуга (сум)",
+            Count: "1",
+            Summa: dataFields.value.amount,
+            DeliverySum: dataFields.value.amount,
+            VatRate: 0,
+            VatSum: 0,
+            ExciseRate: 0,
+            ExciseSum: 0,
+            DeliverySumWithVat: dataFields.value.amount,
+            WithoutVat: true,
+            WithoutExcise: true,
+            WarehouseId: null,
+            Origin: 3,
+          },
+        ],
+      },
+    };
+
+    try {
+      const response = await didox.post(
+        "v1/documents/002/create",
+        invoicePayload
+      );
+      await signDidox(response);
+      $q.notify({
+        type: "success",
+        message: "Счет-фактура успешно отправлена в DIDOX",
+        position: "bottom",
+      });
+    } catch (e) {
+      $q.notify({
+        type: "error",
+        message: "Ошибка при отправке счет фактуры",
+        position: "bottom",
+      });
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loadingSendInvoice.value = false;
+  }
+};
 
 //download act
 const fileLoad = ref(false);
@@ -277,6 +441,8 @@ const downloadAct = async () => {
     await getEimzoKey();
     await getDidoxToken();
     await sendAct(base64File);
+  } catch (e) {
+    console.error(e);
   } finally {
     fileLoad.value = false;
   }
@@ -284,25 +450,47 @@ const downloadAct = async () => {
 
 const getFacturaData = async () => {
   try {
-    const response = await ActService.getFactura(props.id); 
-    const data = response.data; 
-    console.log(data)
-  }catch(e) {
-    console.error(e)
+    loadingSendInvoice.value = true;
+
+    const response = await ActService.getFactura(props.id);
+    const data = response.data.data;
+
+    await getEimzoKey();
+    await getDidoxToken();
+    await sendInvoice(data);
+  } catch (e) {
+    console.error(e);
+  } finally {
   }
-}
+};
 
 onMounted(async () => {
-  await getFacturaData()
-})
+  // await getFacturaData();
+});
 
+const isActConfirmed = ref(false);
 const confirmAct = async () => {
   try {
     const status = await ActService.aktUpdate(props.id);
-    console.log(`status by agent 111`, status);
+
+    $q.notify({
+      type: "success",
+      message: "Акт успешно подтвержден",
+      position: "bottom",
+    });
+
+    isActConfirmed.value = true;
   } catch (e) {
     console.error(e);
   }
+};
+
+const isActSentConfirmed = ref(false);
+const confirmActSent = async () => {
+  try {
+    const status = await ActService.aktSent(props.id);
+    isActSentConfirmed.value = true;
+  } catch (e) {}
 };
 </script>
 

@@ -152,13 +152,14 @@
       </div>
       <div
         class="fields-result-action flex flex-center"
-        v-if="fieldsData.services.length > 0 && fieldsData.doctors.length > 0"
+        v-if="fieldsData.services.length > 0 || fieldsData.doctors.length > 0"
       >
         <SimpleButton
           type="button"
           customClass="appeals-btn"
           label="Создать акт"
           @click="createActByClinic"
+          v-if="!actIsCreated"
         />
       </div>
     </div>
@@ -369,7 +370,7 @@ const requestGetFields = async () => {
         esf_date: dateRangeData.value.esfDate,
       });
       const data = response.data;
-      console.log(data)
+      console.log(data);
       fieldsData.value = data;
     }
   } catch (e) {
@@ -377,6 +378,7 @@ const requestGetFields = async () => {
   }
 };
 
+const actIsCreated = ref(false);
 const createActByClinic = async () => {
   const servicesIds = fieldsData.value.services.map((service) => service.id);
   const doctorsIds = fieldsData.value.doctors.map((doctor) => doctor.id);
@@ -397,6 +399,13 @@ const createActByClinic = async () => {
     const response = await ActService.createAct(payload);
     const data = response.data;
     console.log(`created_act`, data);
+
+    actIsCreated.value = true;
+    $q.notify({
+      type: "success",
+      message: "Акт успешно создан",
+      position: "bottom",
+    });
   } catch (e) {
     console.error(e);
   }

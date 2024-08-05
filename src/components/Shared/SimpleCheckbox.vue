@@ -15,7 +15,7 @@
         :checked="checked"
         :disabled="disabled"
         @change="emitChange"
-        />
+      />
       <q-icon size="16px" class="check-icon" v-if="checked">
         <svg
           xmlns="http://www.w3.org/2000/svg"
