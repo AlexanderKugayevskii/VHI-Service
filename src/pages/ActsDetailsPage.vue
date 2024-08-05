@@ -263,6 +263,8 @@ const sendAct = async (base64File) => {
   }
 };
 
+
+
 //download act
 const fileLoad = ref(false);
 const fileError = ref("");
@@ -279,6 +281,20 @@ const downloadAct = async () => {
     fileLoad.value = false;
   }
 };
+
+const getFacturaData = async () => {
+  try {
+    const response = await ActService.getFactura(props.id); 
+    const data = response.data; 
+    console.log(data)
+  }catch(e) {
+    console.error(e)
+  }
+}
+
+onMounted(async () => {
+  await getFacturaData()
+})
 
 const confirmAct = async () => {
   try {

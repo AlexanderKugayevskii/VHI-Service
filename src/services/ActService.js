@@ -22,6 +22,10 @@ function getPdfAct(id) {
   });
 }
 
+function getFactura(id) {
+  return api.get(`/clinics/faktuda-data/${id}`);
+}
+
 function aktDelete(id, payload) {
   return api.post(`/clinics/akt-delete/${id}`, payload);
 }
@@ -39,7 +43,7 @@ export default {
   getFields,
   aktDelete,
   createAct,
-
+  getFactura,
   showActFields,
 
   getPdfAct,
