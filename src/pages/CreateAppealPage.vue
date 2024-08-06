@@ -791,6 +791,8 @@ const handleChangeAppeal = async () => {
           params: { id: appealStore.client.contractClientId },
         })
       );
+    } else {
+      hideModal()
     }
   }
 };
