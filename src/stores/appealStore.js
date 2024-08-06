@@ -1182,7 +1182,7 @@ export const useAppealStore = defineStore("appeal", () => {
       if (selectedItem.item.id === drug.id) {
         const limit = {
           name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          limit: limit.id === drug.pivot.limit?.id ? null : limit,
         };
 
         return {
