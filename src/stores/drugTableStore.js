@@ -119,6 +119,11 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       const finishedDate = row.finished_date
         ? row.finished_date.split("-").reverse().join("-")
         : null;
+
+      const totalAmount = row.drugs.reduce((prev, curr) => {
+        return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
+      }, 0);
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -130,7 +135,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
         medicines: medicines,
-        expenseAmount: row.total_amount ?? "",
+        expenseAmount: totalAmount ?? "",
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
         type_id: row.client_type,

@@ -81,7 +81,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, getCurrentInstance, computed } from "vue";
+import {
+  onBeforeMount,
+  ref,
+  getCurrentInstance,
+  computed,
+  registerRuntimeCompiler,
+} from "vue";
 import { didox } from "src/boot/eimzo";
 import blobToBase64 from "src/helpers/blobToBase64";
 import formatPrice from "src/helpers/formatPrice.js";
@@ -138,10 +144,10 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  const certForTest = certs[1];
+  // const certForTest = certs[1];
   if (isClinic.value) {
-    // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
-    eimzoKey.value = certForTest;
+    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    // eimzoKey.value = certForTest;
   }
 };
 
@@ -177,6 +183,7 @@ const getDidoxToken = async () => {
       } catch (e) {
         check = 0;
         console.error(e);
+        return;
       }
     } else {
       console.error("У вас нет ключа E-imzo");
@@ -266,9 +273,14 @@ const sendAct = async (base64File) => {
       $q.notify({
         type: "success",
         message: "Акт выполненных работ успешно отправлен в DIDOX",
-        position: "center",
+        position: "bottom",
       });
     } catch (e) {
+      $q.notify({
+        type: "error",
+        message: "Акт выполненных работ не был отправлен",
+        position: "bottom",
+      });
       console.error(e);
       console.error("Не удалось отправить файл в DIDOX");
     }
@@ -423,6 +435,11 @@ const sendInvoice = async (data) => {
       });
     }
   } catch (e) {
+    $q.notify({
+      type: "error",
+      message: "Ошибка при отправке счет фактуры",
+      position: "bottom",
+    });
     console.error(e);
   } finally {
     loadingSendInvoice.value = false;
