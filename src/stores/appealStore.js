@@ -896,7 +896,47 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
+      suggestedDoctors.value = suggestedDoctors.value.map((doctor) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === doctor.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === doctor.pivot.program_item_id;
+
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
       selectedServices.value = selectedServices.value.map((service) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === service.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === service.pivot.program_item_id;
+
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
+      suggestedServices.value = suggestedServices.value.map((service) => {
         const medicalLimit = medicalLimits.value.find(
           (limit) => limit.id === service.pivot.program_item_id
         );
