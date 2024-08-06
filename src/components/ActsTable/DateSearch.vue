@@ -1,12 +1,12 @@
 <template>
   <div class="reports">
     <DateInput_new
-      label="Дата начала"
+      label="Дата акта"
       placeholder="01-01-2024"
       v-model="startDate"
     />
     <DateInput_new
-      label="Дата конца"
+      label="Дата ЭСФ"
       placeholder="01-01-2024"
       v-model="endDate"
     />
@@ -21,16 +21,16 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import DateInput_new from "./Shared/DateInput_new.vue";
-import SimpleButton from "./Shared/SimpleButton.vue";
+import DateInput_new from "../Shared/DateInput_new.vue";
+import SimpleButton from "../Shared/SimpleButton.vue";
 const props = defineProps({
   disabledRule: {
     type: Boolean,
   },
   buttonName: {
-    type: String, 
-    default: 'Сформировать отчет'
-  }
+    type: String,
+    default: "Поиск",
+  },
 });
 const emit = defineEmits(["getRange", "getData"]);
 
@@ -68,8 +68,8 @@ const handleClick = () => {
 
 watch([startDate, endDate], () => {
   emit("getRange", {
-    startDate: startDate.value,
-    endDate: endDate.value,
+    aktDate: startDate.value,
+    esfDate: endDate.value,
     checkActiveButton: checkActiveButton.value,
   });
 });

@@ -172,6 +172,12 @@
               </q-icon>
             </template>
           </RouteLink>
+          <RouteLink
+            class="q-px-sm"
+            caption="АКТ И ЭСФ"
+            :routeTo="Trans.i18nRoute({ name: 'acts-page' })"
+          >
+          </RouteLink>
         </q-list>
         <div class="q-px-sm">
           <q-item class="q-pa-xs user justify-between">

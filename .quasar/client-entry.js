@@ -166,7 +166,9 @@ createQuasarApp(createApp, quasarUserOptions)
       
       import('boot/chat'),
       
-      import('boot/notify')
+      import('boot/notify'),
+      
+      import('boot/eimzo')
       
     ]).then(bootFiles => {
       const boot = mapFn(bootFiles).filter(entry => typeof entry === 'function')
