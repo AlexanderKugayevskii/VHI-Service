@@ -1136,7 +1136,6 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = doctors;
     }
-
   };
 
   const changeStatusService = (selectedItem, isSuggested = true) => {
