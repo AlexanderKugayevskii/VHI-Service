@@ -1,15 +1,24 @@
 <template>
   <div class="reports">
-    <DateInput_new
-      label="Дата акта"
-      placeholder="01-01-2024"
+    <VueDatePicker
       v-model="startDate"
+      :flow="datePickerFlow"
+      auto-apply
+      partial-flow
+      :enable-time-picker="false"
+      :format="'yyyy-MM-dd'"
+      placeholder="Дата акта"
     />
-    <DateInput_new
-      label="Дата ЭСФ"
-      placeholder="01-01-2024"
-      v-model="endDate"
+    <VueDatePicker
+      v-model="startDate"
+      :flow="datePickerFlow"
+      auto-apply
+      partial-flow
+      :enable-time-picker="false"
+      :format="'yyyy-MM-dd'"
+      placeholder="Дата ЕСФ"
     />
+
     <SimpleButton
       :disabled="disabledRule"
       :label="buttonName"
@@ -23,6 +32,7 @@
 import { ref, computed, watch } from "vue";
 import DateInput_new from "../Shared/DateInput_new.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
 const props = defineProps({
   disabledRule: {
     type: Boolean,
@@ -34,45 +44,46 @@ const props = defineProps({
 });
 const emit = defineEmits(["getRange", "getData"]);
 
+const datePickerFlow = ref(["year", "month", "calendar"]);
 const startDate = ref("");
 const endDate = ref("");
 
-const checkActiveButton = computed(() => {
-  const dateLength = 10;
-  const currentYear = new Date().getFullYear();
-  const [startDay, startMonth, startYear] = startDate.value.split("-");
-  const [endDay, endMonth, endYear] = endDate.value.split("-");
+// const checkActiveButton = computed(() => {
+//   const dateLength = 10;
+//   const currentYear = new Date().getFullYear();
+//   const [startDay, startMonth, startYear] = startDate.value.split("-");
+//   const [endDay, endMonth, endYear] = endDate.value.split("-");
 
-  if (Number(startYear) > currentYear || Number(endYear) > currentYear) {
-    return true;
-  }
-  if (Number(startDay) > 31 || Number(endDay) > 31) {
-    return true;
-  }
-  if (Number(startMonth) > 12 || Number(endMonth) > 12) {
-    return true;
-  }
-  if (
-    startDate.value.length !== dateLength ||
-    endDate.value.length !== dateLength
-  ) {
-    return true;
-  }
+//   if (Number(startYear) > currentYear || Number(endYear) > currentYear) {
+//     return true;
+//   }
+//   if (Number(startDay) > 31 || Number(endDay) > 31) {
+//     return true;
+//   }
+//   if (Number(startMonth) > 12 || Number(endMonth) > 12) {
+//     return true;
+//   }
+//   if (
+//     startDate.value.length !== dateLength ||
+//     endDate.value.length !== dateLength
+//   ) {
+//     return true;
+//   }
 
-  return false;
-});
+//   return false;
+// });
 
 const handleClick = () => {
   emit("getData");
 };
 
-watch([startDate, endDate], () => {
-  emit("getRange", {
-    aktDate: startDate.value,
-    esfDate: endDate.value,
-    checkActiveButton: checkActiveButton.value,
-  });
-});
+// watch([startDate, endDate], () => {
+//   emit("getRange", {
+//     aktDate: startDate.value,
+//     esfDate: endDate.value,
+//     checkActiveButton: checkActiveButton.value,
+//   });
+// });
 </script>
 
 <style scoped lang="scss">

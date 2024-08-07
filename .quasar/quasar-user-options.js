@@ -11,7 +11,7 @@
  * Boot files are your "main.js"
  **/
 
-import iconSet from 'quasar/icon-set/material-icons'
+import iconSet from 'quasar/icon-set/material-icons.js'
 
 
 

@@ -88,28 +88,29 @@
         </div> -->
 
         <!-- is clinic -->
-
-        <DropdownSelectNew
-          v-if="isClinic"
-          label="Клиника"
-          :multiple="false"
-          :loading="loading"
-          :options="clinics"
-          :disable-choise="isClinic"
-          :selected-options="selectedClinic"
-        >
-          <template #top-label> Клиника </template>
-          <template #placeholder>
-            {{ $t("create_appeal.dropdowns.clinic") }}
-          </template>
-          <template v-slot:selected-options-once="props">
-            <div>{{ props.option.name }}</div>
-          </template>
-          <template v-slot:option-content="props">
-            <div>{{ props.option.name }}</div>
-            <CheckIcon v-if="checkSelectedClinic(props.option)" />
-          </template>
-        </DropdownSelectNew>
+        <div class = "table-actions-dropdown-wrapper">
+          <DropdownSelectNew
+            v-if="isClinic"
+            label="Клиника"
+            :multiple="false"
+            :loading="loading"
+            :options="clinics"
+            :disable-choise="isClinic"
+            :selected-options="selectedClinic"
+          >
+            <template #top-label> Клиника </template>
+            <template #placeholder>
+              {{ $t("create_appeal.dropdowns.clinic") }}
+            </template>
+            <template v-slot:selected-options-once="props">
+              <div>{{ props.option.name }}</div>
+            </template>
+            <template v-slot:option-content="props">
+              <div>{{ props.option.name }}</div>
+              <CheckIcon v-if="checkSelectedClinic(props.option)" />
+            </template>
+          </DropdownSelectNew>
+        </div>
 
         <DateSearch
           v-if="isClinic"
@@ -561,8 +562,11 @@ tr.clickable {
     flex-basis: 50%;
   }
   .table-actions-range {
-    min-width: 400px;
+    flex-basis: 50%;
   }
+}
+.table-actions-dropdown-wrapper {
+  flex-basis: 50%;
 }
 
 .q-tab-panels {
