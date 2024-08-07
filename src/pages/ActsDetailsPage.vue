@@ -144,10 +144,10 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  // const certForTest = certs[1];
+  const certForTest = certs[1];
   if (isClinic.value) {
-    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
-    // eimzoKey.value = certForTest;
+    // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    eimzoKey.value = certForTest;
   }
 };
 
@@ -155,6 +155,7 @@ const getEimzoKey = async () => {
 const getDidoxToken = async () => {
   if (!didoxAuth.value) {
     await getEimzoKey();
+
     let check;
     if (eimzoKey.value) {
       let loadKey = await vueEimzo.loadKey(eimzoKey.value);
@@ -177,17 +178,18 @@ const getDidoxToken = async () => {
             didoxAuth.value = true;
           } catch (e) {
             didoxAuth.value = false;
-            console.error(e);
+
+            return `DIDOX_NOT_AUTH`;
           }
         }
       } catch (e) {
         check = 0;
         console.error(e);
-        return;
+        return `CANCEL_PASSWORD`;
       }
     } else {
       console.error("У вас нет ключа E-imzo");
-      return;
+      return `KEY_NOT_FOUND`;
     }
   }
 };
@@ -283,9 +285,11 @@ const sendAct = async (base64File) => {
       });
       console.error(e);
       console.error("Не удалось отправить файл в DIDOX");
+      return;
     }
   } catch (e) {
     console.error(e);
+    return;
   } finally {
     loadingSendAct.value = false;
   }
@@ -457,8 +461,34 @@ const downloadAct = async () => {
     const blob = new Blob([response.data], { type: "application/pdf" });
     const base64File = await blobToBase64(blob);
 
-    await getEimzoKey();
-    await getDidoxToken();
+    const result = await getDidoxToken();
+    if (result === "KEY_NOT_FOUND") {
+      $q.notify({
+        type: "error",
+        message: "У вас нет ключа E-imzo",
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (result === "DIDOX_NOT_AUTH") {
+      $q.notify({
+        type: "error",
+        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (result === "CANCEL_PASSWORD") {
+      $q.notify({
+        type: "error",
+        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        position: "bottom",
+      });
+      return;
+    }
+
     await sendAct(base64File);
   } catch (e) {
     console.error(e);
