@@ -88,7 +88,7 @@
         </div> -->
 
         <!-- is clinic -->
-        <div class = "table-actions-dropdown-wrapper">
+        <div class="table-actions-dropdown-wrapper">
           <DropdownSelectNew
             v-if="isClinic"
             label="Клиника"
@@ -117,7 +117,6 @@
           class="table-actions-range"
           @get-range="handleDateRange"
           @get-data="requestGetFields"
-          :disabled-rule="disableButton"
         />
       </div>
     </div>
@@ -130,9 +129,11 @@
         <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
         <ServiceTable :dataRows="fieldsData.services" />
       </div>
-      <div v-else>
-        <h3 class="page-title text-center">Сервисы не найдены</h3>
-      </div>
+      <Transition name="fade" v-else>
+        <div v-show="notFoundVisible" class="fields-result-not-found">
+          <h3 class="page-title text-center">Сервисы не найдены</h3>
+        </div>
+      </Transition>
       <div
         class="fields-result-group q-mb-lg"
         v-if="fieldsData.doctors.length > 0"
@@ -140,9 +141,11 @@
         <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
         <DoctorsTable :dataRows="fieldsData.doctors" />
       </div>
-      <div v-else>
-        <h3 class="page-title text-center">Врачи не найдены</h3>
-      </div>
+      <Transition name="fade" v-else>
+        <div v-show="notFoundVisible" class="fields-result-not-found">
+          <h3 class="page-title text-center">Врачи не найдены</h3>
+        </div>
+      </Transition>
       <div
         class="fields-result-group--amount"
         v-if="fieldsData.services.length > 0 && fieldsData.doctors.length > 0"
@@ -207,6 +210,7 @@ const loading = ref(false);
 const total = ref(0);
 const tableRef = ref(null);
 const searchData = ref("");
+const notFoundVisible = ref(false);
 
 const pagination = ref({
   sortBy: "desc",
@@ -265,9 +269,6 @@ const dateRangeData = ref(null);
 const handleDateRange = (rangeData) => {
   dateRangeData.value = rangeData;
 };
-const disableButton = computed(() => {
-  return dateRangeData.value === null || dateRangeData.value.checkActiveButton;
-});
 
 // clinics
 const clinics = ref([]);
@@ -361,7 +362,9 @@ const getActByClinic = async () => {
 
 //get Fields Services Doctors Drugs By Clinic
 const fieldsData = ref(null);
+const timeoutNotFound = ref(null);
 const requestGetFields = async () => {
+  clearTimeout(timeoutNotFound.value);
   try {
     if (isClinic.value) {
       const response = await ActService.getFields({
@@ -371,7 +374,14 @@ const requestGetFields = async () => {
         esf_date: dateRangeData.value.esfDate,
       });
       const data = response.data;
-      console.log(data);
+
+      if (data.doctors.length === 0 && data.services.length === 0) {
+        notFoundVisible.value = true;
+        timeoutNotFound.value = setTimeout(() => {
+          notFoundVisible.value = false;
+        }, 5000);
+      }
+
       fieldsData.value = data;
     }
   } catch (e) {
@@ -579,5 +589,11 @@ tr.clickable {
     font-weight: 700;
     font-size: 24px;
   }
+}
+.fields-result-not-found {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
 }
 </style>
