@@ -1110,9 +1110,11 @@ export const useAppealStore = defineStore("appeal", () => {
     doctors = doctors.map((doctor) => {
       if (selectedItem.item.id === doctor.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          id: selectedItem.medical_program?.id ?? doctor.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
         return {
           ...doctor,
           pivot: {
@@ -1134,6 +1136,7 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = doctors;
     }
+
   };
 
   const changeStatusService = (selectedItem, isSuggested = true) => {
@@ -1143,9 +1146,11 @@ export const useAppealStore = defineStore("appeal", () => {
     services = services.map((service) => {
       if (selectedItem.item.id === service.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          id: selectedItem.medical_program?.id ?? service.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
 
         return {
           ...service,
@@ -1178,7 +1183,7 @@ export const useAppealStore = defineStore("appeal", () => {
       if (selectedItem.item.id === drug.id) {
         const limit = {
           name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          limit: limit.id === drug.pivot.limit?.id ? null : limit,
         };
 
         return {

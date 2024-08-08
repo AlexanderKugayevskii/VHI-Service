@@ -542,11 +542,11 @@ const handleChangeAppeal = async () => {
   await appealStore.changeAppealDrugData();
 
   if (appealStore.isAgent) {
-    const appealStatuses = appealStore.allDrugsStatus.map(
-      (status) => status.program_item_id
-    );
+    const appealStatuses = appealStore.allDrugsStatus;
 
-    const programItemIdIsZero = appealStatuses.some((id) => id === 0);
+    const programItemIdIsZero = appealStatuses.some(
+      (pivot) => pivot.program_item_id === 0 && pivot.status !== 2
+    );
 
     if (programItemIdIsZero) {
       await appealStore.fetchMedicalPrograms();

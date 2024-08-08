@@ -17,4 +17,12 @@ export default boot(() => {
     icon: "img:/icons/reject-icon.svg",
     group: false,
   });
+
+  Notify.registerType("alert", {
+    classes: "notify notify-alert",
+    timeout: 3500,
+    position: "bottom-left",
+    icon: "img:/icons/alert-icon.svg",
+    group: false,
+  });
 });
