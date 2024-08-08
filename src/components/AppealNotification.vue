@@ -22,7 +22,9 @@
             fill="#7A88A6"
           />
         </svg>
-        <q-badge class="notification-badge" floating rounded>4</q-badge>
+        <q-badge class="notification-badge" floating rounded>{{
+          notifications.length
+        }}</q-badge>
       </q-btn>
     </div>
 
@@ -63,19 +65,18 @@
           ></div> -->
 
           <!-- has notifications -->
-          <!-- <q-virtual-scroll -->
-          <!-- class="dropdown-select-list-virtual-scroll"
-          scroll-target="#virtual-scroll-target" > -->
-          <!-- </q-virtual-scroll> -->
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
-          <NotificationItem />
+          <!-- <q-virtual-scroll
+            class="dropdown-select-list-virtual-scroll"
+            scroll-target="#virtual-scroll-target"
+          >
+          
+          </q-virtual-scroll> -->
+          <NotificationItem
+            v-for="notification in notifications"
+            :key="notification"
+            :notification="notification"
+            @open="(id) => openAppealPage(id)"
+          />
         </div>
       </div>
     </Transition>
@@ -85,7 +86,14 @@
 <script>
 import clickOutSide from "@mahdikhashan/vue3-click-outside";
 import { ref, onMounted } from "vue";
+import useNotifications from "src/composables/useNotifications";
 import NotificationItem from "./Shared/NotificationItem.vue";
+import { onBeforeUnmount } from "vue";
+import { watchEffect } from "vue";
+import { useAppealStore } from "src/stores/appealStore";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+import Trans from "src/i18n/translation";
 
 export default {
   name: "appealNotification",
@@ -104,15 +112,45 @@ export default {
   },
 
   setup() {
+    const $q = useQuasar();
+    const appealStore = useAppealStore();
+    const router = useRouter();
     const scrollTarget = ref(null);
     const virtualListScrollTargetRef = ref(null);
+    const { notifications, startPolling, stopPolling } = useNotifications();
 
     onMounted(() => {
       scrollTarget.value = virtualListScrollTargetRef.value;
+      startPolling();
     });
+    onBeforeUnmount(() => {
+      stopPolling();
+    });
+
+    const openAppealPage = async (id) => {
+      appealStore.setTypeOfAppeal("CHANGE");
+
+      $q.loading.show({
+        delay: 500,
+      });
+
+      await appealStore.fetchApplicantData(id);
+      await appealStore.fetchHospitalData();
+
+      $q.loading.hide();
+      router.push(
+        Trans.i18nRoute({
+          name: "createAppeal",
+          params: { id: id },
+        })
+      );
+    };
+
     return {
       virtualListScrollTargetRef,
       scrollTarget,
+      notifications,
+      openAppealPage,
     };
   },
 
@@ -126,7 +164,6 @@ export default {
         this.searchValue = "";
       }
     },
-
     handleDropdown() {
       this.showDropdown = !this.showDropdown;
       this.dropdownActive = true;
@@ -178,8 +215,11 @@ export default {
 .dropdown-select-scroll {
   padding: 0 4px 0 4px;
   max-height: 600px;
-  height: 600px; //temp
+  // height: 600px; //temp
   overflow-y: auto;
+}
+.dropdown-select-list-virtual-scroll {
+  height: 100%;
 }
 .dropdown-select-scroll::-webkit-scrollbar {
   width: 8px;

@@ -754,7 +754,7 @@ const handleCreateAppeal = async () => {
   });
 
   await appealStore.fetchMedicalPrograms();
-  await appealStore.fetchApplicantData();
+  await appealStore.fetchApplicantData(appealStore.client.appealId);
   await appealStore.fetchHospitalData();
   $q.loading.hide();
 
@@ -762,7 +762,7 @@ const handleCreateAppeal = async () => {
     router.replace(
       Trans.i18nRoute({
         name: "createAppealLimit",
-        params: { id: appealStore.client.contractClientId },
+        params: { id: appealStore.client.appealId },
       })
     );
   }
@@ -782,17 +782,17 @@ const handleChangeAppeal = async () => {
 
     if (programItemIdIsZero) {
       await appealStore.fetchMedicalPrograms();
-      await appealStore.fetchApplicantData();
+      await appealStore.fetchApplicantData(appealStore.client.appealId);
       await appealStore.fetchHospitalData();
 
       router.replace(
         Trans.i18nRoute({
           name: "createAppealLimit",
-          params: { id: appealStore.client.contractClientId },
+          params: { id: appealStore.client.appealId },
         })
       );
     } else {
-      hideModal()
+      hideModal();
     }
   }
 };

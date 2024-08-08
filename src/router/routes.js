@@ -40,6 +40,8 @@ const routes = [
                 component: () => import("pages/CreateAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const client = SessionStorage.getItem("client");
+
                   const appealType =
                     SessionStorage.getItem("typeOfAppeal") ||
                     appealStore.typeOfAppeal;
@@ -47,7 +49,7 @@ const routes = [
                   if (from.name) {
                     next();
                   } else if (appealType === 1) {
-                    await appealStore.fetchApplicantData();
+                    await appealStore.fetchApplicantData(client.appealId);
                     await appealStore.fetchHospitalData();
                     next();
                   } else {
@@ -67,6 +69,8 @@ const routes = [
                 component: () => import("pages/CreateAppealLimit.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const client = SessionStorage.getItem("client");
+
                   if (appealStore.isClinic || appealStore.isDrugstore) {
                     return;
                   }
@@ -74,7 +78,7 @@ const routes = [
                     next();
                   } else {
                     await appealStore.fetchMedicalPrograms();
-                    await appealStore.fetchApplicantData();
+                    await appealStore.fetchApplicantData(client.appealId);
                     await appealStore.fetchHospitalData();
                     next();
                   }
@@ -108,6 +112,8 @@ const routes = [
                 component: () => import("pages/CreateDrugAppealPage.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const client = SessionStorage.getItem("client");
+
                   const appealType =
                     SessionStorage.getItem("typeOfAppeal") ||
                     appealStore.typeOfAppeal;
@@ -115,7 +121,7 @@ const routes = [
                   if (from.name) {
                     next();
                   } else if (appealType === 1) {
-                    await appealStore.fetchApplicantDrugData();
+                    await appealStore.fetchApplicantDrugData(client.appealId);
                     next();
                   } else {
                     next({ name: "drugstore-page" });
@@ -134,11 +140,13 @@ const routes = [
                 component: () => import("pages/CreateAppealDrugLimit.vue"),
                 beforeEnter: async (to, from, next) => {
                   const appealStore = useAppealStore();
+                  const client = SessionStorage.getItem("client");
+
                   if (from.name) {
                     next();
                   } else {
                     await appealStore.fetchMedicalPrograms();
-                    await appealStore.fetchApplicantDrugData();
+                    await appealStore.fetchApplicantDrugData(client.appealId);
                     next();
                   }
                 },

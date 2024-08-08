@@ -147,10 +147,10 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  // const certForTest = certs[1];
+  const certForTest = certs[1];
   if (isClinic.value) {
-    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
-    // eimzoKey.value = certForTest;
+    // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    eimzoKey.value = certForTest;
   }
 };
 
@@ -410,7 +410,7 @@ const sendInvoice = async (data, ikpuData) => {
             Count: ikpuData.selectedIkpu.usePackage,
             Summa: dataFields.value.amount,
             DeliverySum: dataFields.value.amount,
-            VatRate: 0,
+            VatRate: 12,
             VatSum: 0,
             ExciseRate: 0,
             ExciseSum: 0,
