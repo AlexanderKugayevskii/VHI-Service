@@ -205,6 +205,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    searchKey: {
+      type: String,
+      default: "",
+    },
   },
 
   data() {
@@ -305,7 +309,9 @@ export default {
       if (this.localSearch) {
         const regex = new RegExp(this.searchValue, "i");
         return this.options.filter((option) =>
-          regex.test(option.name || option.user?.name || option)
+          regex.test(
+            option.name || option.user?.name || option[this.searchKey] || option
+          )
         );
       }
       return this.options;

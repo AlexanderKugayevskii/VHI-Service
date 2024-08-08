@@ -89,6 +89,8 @@ import {
   registerRuntimeCompiler,
 } from "vue";
 import { didox } from "src/boot/eimzo";
+import axios from "axios";
+
 import blobToBase64 from "src/helpers/blobToBase64";
 import formatPrice from "src/helpers/formatPrice.js";
 import ActService from "src/services/ActService.js";
@@ -101,6 +103,7 @@ import { useAuthStore } from "src/stores/authStore";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { useQuasar } from "quasar";
+import ProductClassModal from "src/components/ActsTable/ProductClassModal.vue";
 
 const $q = useQuasar();
 
@@ -144,10 +147,11 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  // const certForTest = certs[1];
+  console.log(certs);
+  const certForTest = certs[0];
   if (isClinic.value) {
-    eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
-    // eimzoKey.value = certForTest;
+    // eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
+    eimzoKey.value = certForTest;
   }
 };
 
@@ -292,7 +296,7 @@ const sendAct = async (base64File) => {
 };
 
 const loadingSendInvoice = ref(false);
-const sendInvoice = async (data) => {
+const sendInvoice = async (data, ikpuData) => {
   try {
     const responseSeller = await didox.get("v1/profile");
 
@@ -392,16 +396,15 @@ const sendInvoice = async (data) => {
             CommittentTin: "",
             CommittentVatRegCode: "",
             CommittentVatRegStatus: "",
-            Name: "Услуги страхования",
-            CatalogCode: "10402001002000000",
-            CatalogName:
-              "Суғурта агенти хизматлари (суғурта мукофотлари бўйича коммиссиялар)",
+            Name: ikpuData.selectedIkpu.className,
+            CatalogCode: ikpuData.selectedIkpu.classCode,
+            CatalogName: ikpuData.selectedIkpu.className,
             Marks: "",
             Barcode: "",
             MeasureId: null,
-            PackageCode: "1505867",
-            PackageName: "услуга (сум)",
-            Count: "1",
+            PackageCode: ikpuData.selectedPackage.code,
+            PackageName: ikpuData.selectedPackage.name,
+            Count: ikpuData.selectedIkpu.usePackage,
             Summa: dataFields.value.amount,
             DeliverySum: dataFields.value.amount,
             VatRate: 0,
@@ -459,6 +462,7 @@ const downloadAct = async () => {
 
     await getEimzoKey();
     await getDidoxToken();
+
     await sendAct(base64File);
   } catch (e) {
     console.error(e);
@@ -476,9 +480,35 @@ const getFacturaData = async () => {
 
     await getEimzoKey();
     await getDidoxToken();
-    await sendInvoice(data);
+    const responseVatProducts = await didox.get("v1/profile/productClasses/ru");
+    const vatProductsData = responseVatProducts.data;
+
+    $q.dialog({
+      component: ProductClassModal,
+      componentProps: {
+        ikpuData: vatProductsData,
+      },
+    })
+      .onOk(async (payload) => {
+        await sendInvoice(data, payload);
+      })
+      .onCancel(() => {
+        try {
+          throw new Error("ikpu_cancel");
+        } catch (err) {
+          $q.notify({
+            type: "error",
+            message: "Выбор ИКПУ отменен. Попробуйте еще раз",
+            position: "bottom",
+          });
+
+          return;
+        }
+      });
   } catch (e) {
     console.error(e);
+
+    return;
   } finally {
   }
 };
