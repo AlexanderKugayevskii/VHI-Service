@@ -16,6 +16,7 @@
   "dependencies": {
     "@mahdikhashan/vue3-click-outside": "^0.1.2",
     "@quasar/extras": "^1.16.4",
+    "@vuepic/vue-datepicker": "^9.0.1",
     "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.2.1",

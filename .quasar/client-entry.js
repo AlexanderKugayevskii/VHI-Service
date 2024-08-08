@@ -37,6 +37,8 @@ import 'quasar/dist/quasar.sass'
 
 
 
+import '@vuepic/vue-datepicker/dist/main.css'
+
 import 'src/css/app.scss'
 
 
