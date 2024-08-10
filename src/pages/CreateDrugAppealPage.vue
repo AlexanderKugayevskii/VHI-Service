@@ -550,14 +550,16 @@ const handleChangeAppeal = async () => {
 
     if (programItemIdIsZero) {
       await appealStore.fetchMedicalPrograms();
-      await appealStore.fetchApplicantData();
+      await appealStore.fetchApplicantDrugData(appealStore.client.appealId);
 
       router.replace(
         Trans.i18nRoute({
-          name: "createAppealLimit",
-          params: { id: appealStore.client.contractClientId },
+          name: "createAppealDrugLimit",
+          params: { id: appealStore.client.appealId },
         })
       );
+    } else {
+      hideModal();
     }
   }
 };

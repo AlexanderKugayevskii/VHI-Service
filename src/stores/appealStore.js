@@ -1218,9 +1218,11 @@ export const useAppealStore = defineStore("appeal", () => {
     drugs = drugs.map((drug) => {
       if (selectedItem.item.id === drug.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          limit: limit.id === drug.pivot.limit?.id ? null : limit,
+          id: selectedItem.medical_program?.id ?? drug.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
 
         return {
           ...drug,
