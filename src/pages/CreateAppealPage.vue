@@ -100,22 +100,36 @@
                     <q-tabs dense active-class="tab-active" v-model="tab">
                       <q-tab
                         name="clinics"
-                        :label="$t('create_appeal.tabs.clinic')"
                         :ripple="false"
                         class="tab--no-hover"
-                      />
+                      >
+                        {{ $t("create_appeal.tabs.clinic") }}
+                      </q-tab>
                       <q-tab
                         name="doctors"
-                        :label="$t('create_appeal.tabs.doctors')"
                         :ripple="false"
                         class="tab--no-hover"
-                      />
+                      >
+                        <span>{{ $t("create_appeal.tabs.doctors") }}</span>
+                        <q-badge
+                          v-if="appealStore.actionDoctorStatusCount > 0"
+                          :label="appealStore.actionDoctorStatusCount"
+                          class="appeal-count-badge"
+                        />
+                      </q-tab>
                       <q-tab
                         name="services"
-                        :label="$t('create_appeal.tabs.services')"
                         :ripple="false"
                         class="tab--no-hover"
-                      />
+                      >
+                        <span>
+                          {{ $t("create_appeal.tabs.services") }}
+                        </span>
+                        <q-badge
+                          :label="appealStore.actionServiceStatusCount"
+                          class="appeal-count-badge"
+                        />
+                      </q-tab>
                     </q-tabs>
                   </div>
                   <div class="tabs-content appeal-content">
@@ -1119,5 +1133,16 @@ const handleStatusService = (item, isSuggested) => {
   display: flex;
   align-items: center;
   column-gap: 8px;
+}
+
+:global(.create-appeal-form .q-tab__content) {
+  flex-direction: row;
+  column-gap: 8px;
+}
+.appeal-count-badge {
+  background-color: $accent;
+  color: #fff;
+  padding: 2px 5px;
+  font-weight: 500;
 }
 </style>

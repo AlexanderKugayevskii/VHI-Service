@@ -219,6 +219,59 @@ export const useAppealStore = defineStore("appeal", () => {
     }, 0);
   });
 
+  const actionDoctorStatusCount = computed(() => {
+    let count = 0;
+    if (isAgent.value) {
+      count = suggestedDoctors.value
+        .concat(selectedDoctors.value)
+        .filter(
+          (doctor) =>
+            doctor.pivot.progress === 1 ||
+            (doctor.pivot.created_by_clinic === 1 && doctor.pivot.status === 0)
+        ).length;
+    }
+
+    if (isClinic.value) {
+      count = suggestedDoctors.value
+        .concat(selectedDoctors.value)
+        .filter(
+          (doctor) =>
+            doctor.pivot.created_by_clinic === 0 &&
+            (doctor.pivot.status === 0 || doctor.pivot.status === 1) &&
+            doctor.pivot.progress !== 1
+        ).length;
+    }
+
+    return count;
+  });
+
+  const actionServiceStatusCount = computed(() => {
+    let count = 0;
+    if (isAgent.value) {
+      count = suggestedServices.value
+        .concat(selectedServices.value)
+        .filter(
+          (service) =>
+            service.pivot.progress === 1 ||
+            (service.pivot.created_by_clinic === 1 &&
+              service.pivot.status === 0)
+        ).length;
+    }
+
+    if (isClinic.value) {
+      count = suggestedServices.value
+        .concat(selectedServices.value)
+        .filter(
+          (service) =>
+            service.pivot.created_by_clinic === 0 &&
+            (service.pivot.status === 0 || service.pivot.status === 1) &&
+            service.pivot.progress !== 1
+        ).length;
+    }
+
+    return count;
+  });
+
   const setDrugAppealImage = (file) => {
     drugAppealImage.value = file;
   };
@@ -1395,5 +1448,7 @@ export const useAppealStore = defineStore("appeal", () => {
     allDoctorsStatus,
     allServicesStatus,
     allDrugsStatus,
+    actionDoctorStatusCount,
+    actionServiceStatusCount,
   };
 });

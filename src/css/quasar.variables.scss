@@ -14,29 +14,71 @@
 @use "quasar/src/css/variables" as q;
 @use "sass:map";
 
+$primary: #2c3955;
+$secondary: #26a69a;
+$lightgray: #e3e8f0;
+$negative: #cb3333;
+$hover: #e3e8f0;
+$accent: #13b8ba;
+$nav-bg: #f7f9fc;
+$body-bg: #edf0f5;
 
-$primary   : #2C3955;   
-$secondary : #26A69A;
-$lightgray: #E3E8F0;
-$negative: #CB3333; 
-$hover: #E3E8F0;  
-$accent    : #13B8BA;
-$nav-bg: #F7F9FC;
-$body-bg: #EDF0F5;
+$space-base: 16px !default;
+$space-x-base: $space-base !default;
+$space-y-base: $space-base !default;
 
-
-$space-base   : 16px !default;
-$space-x-base : $space-base !default;
-$space-y-base : $space-base !default;
-
-$space-none : (x: 0, y: 0) !default;
-$space-xxs   : (x: 4px, y: 4px) !default;
-$space-xs   : (x: ($space-x-base * 0.5), y: ($space-y-base * 0.5)) !default;
-$space-sm   : (x: 12px, y: 12px) !default;
-$space-md   : (x: ($space-x-base), y: ($space-y-base)) !default;
-$space-lg   : (x: ($space-x-base * 1.5), y: ($space-y-base * 1.5)) !default;
-$space-xl   : (x: ($space-x-base * 2), y: ($space-y-base * 2)) !default;
-$space-xxl   : (x: ($space-x-base * 3), y: ($space-y-base * 3)) ;
+$space-none: (
+  x: 0,
+  y: 0,
+) !default;
+$space-xxs: (
+  x: 4px,
+  y: 4px,
+) !default;
+$space-xs: (
+  x: (
+    $space-x-base * 0.5,
+  ),
+  y: (
+    $space-y-base * 0.5,
+  ),
+) !default;
+$space-sm: (
+  x: 12px,
+  y: 12px,
+) !default;
+$space-md: (
+  x: (
+    $space-x-base,
+  ),
+  y: (
+    $space-y-base,
+  ),
+) !default;
+$space-lg: (
+  x: (
+    $space-x-base * 1.5,
+  ),
+  y: (
+    $space-y-base * 1.5,
+  ),
+) !default;
+$space-xl: (
+  x: (
+    $space-x-base * 2,
+  ),
+  y: (
+    $space-y-base * 2,
+  ),
+) !default;
+$space-xxl: (
+  x: (
+    $space-x-base * 3,
+  ),
+  y: (
+    $space-y-base * 3,
+  ),
+);
 
 $custom-spaces: (
   xxs: $space-xxs,
@@ -50,10 +92,10 @@ $custom-spaces: (
 
 $spaces: map.merge(q.$spaces, $custom-spaces);
 
-$dark      : #1D1D1D;
-$dark-page : #121212;
+$dark: #1d1d1d;
+$dark-page: #121212;
 
-$positive  : #21BA45;
-$negative  : #C10015;
-$info      : #31CCEC;
-$warning   : #F2C037;
+$positive: #21ba45;
+$negative: #c10015;
+$info: #31ccec;
+$warning: #f2c037;
