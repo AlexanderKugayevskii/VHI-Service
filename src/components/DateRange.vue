@@ -12,7 +12,7 @@
     />
     <SimpleButton
       :disabled="disabledRule"
-      label="Сформировать отчет"
+      :label="buttonName"
       custom-class="appeals-btn"
       @click="handleClick"
     />
@@ -27,6 +27,10 @@ const props = defineProps({
   disabledRule: {
     type: Boolean,
   },
+  buttonName: {
+    type: String, 
+    default: 'Сформировать отчет'
+  }
 });
 const emit = defineEmits(["getRange", "getData"]);
 

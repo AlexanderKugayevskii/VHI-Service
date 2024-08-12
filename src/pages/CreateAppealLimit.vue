@@ -126,6 +126,7 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
+                                  v-if="doctor.pivot.status === 1"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
@@ -187,6 +188,7 @@
                                 </template>
                                 <template #dropdown>
                                   <DropdownSelectNew
+                                    v-if="doctor.pivot.status === 1"
                                     dense
                                     style="min-width: 300px"
                                     :searchInput="false"
@@ -242,6 +244,7 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
+                                  v-if="service.pivot.status === 1"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
@@ -304,6 +307,7 @@
                                 </template>
                                 <template #dropdown>
                                   <DropdownSelectNew
+                                    v-if="service.pivot.status === 1"
                                     dense
                                     style="min-width: 300px"
                                     :searchInput="false"
@@ -453,15 +457,17 @@ import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppealStore } from "src/stores/appealStore.js";
 import { useAuthStore } from "src/stores/authStore";
+import { useQuasar } from "quasar";
 import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 
+const $q = useQuasar();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
@@ -519,6 +525,26 @@ const selectLimitService = (item, service, isSuggested) => {
     isSuggested
   );
 };
+
+onMounted(() => {
+  if (appealStore.isAgent) {
+    const appealStatuses = appealStore.allDoctorsStatus.concat(
+      appealStore.allServicesStatus
+    );
+    const programItemIdIsZero = appealStatuses.some(
+      (pivot) => pivot.program_item_id === 0 && pivot.status !== 2
+    );
+
+    if (programItemIdIsZero) {
+      $q.notify({
+        type: "alert",
+        message:
+          "Некоторые лимиты не были выбраны. Пожалуйста проверьте еще раз!",
+        position: "bottom",
+      });
+    }
+  }
+});
 </script>
 
 <style lang="scss" scoped>

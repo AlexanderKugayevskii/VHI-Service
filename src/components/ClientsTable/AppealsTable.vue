@@ -93,7 +93,9 @@
         :loading="loading"
         :filter="search"
         hide-pagination
-        :rows-per-page-options = "reactivePagination === undefined ? [0] : undefined"
+        :rows-per-page-options="
+          reactivePagination === undefined ? [0] : undefined
+        "
         ref="tableRef"
         row-key="index"
         v-model:pagination="reactivePagination"
@@ -357,41 +359,41 @@ const selectOption = (option) => {
 };
 
 const openAppealPage = async (client) => {
-  console.log(client)
-  appealStore.setClient(client);
+  // appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
+
   $q.loading.show({
     delay: 500,
   });
 
-  await appealStore.fetchApplicantData();
+  await appealStore.fetchApplicantData(client.appealId);
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
   router.push(
     Trans.i18nRoute({
       name: "createAppeal",
-      params: { id: appealStore.client.contractClientId },
+      params: { id: client.appealId },
     })
   );
 };
 
 const openAppealLimit = async (client) => {
-  appealStore.setClient(client);
+  // appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
     delay: 500,
   });
 
   await appealStore.fetchMedicalPrograms();
-  await appealStore.fetchApplicantData();
+  await appealStore.fetchApplicantData(client.appealId);
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
   router.push(
     Trans.i18nRoute({
       name: "createAppealLimit",
-      params: { id: appealStore.client.contractClientId },
+      params: { id: client.appealId },
     })
   );
 };

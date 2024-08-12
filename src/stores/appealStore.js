@@ -836,20 +836,38 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
-  const fetchApplicantData = async () => {
+  const fetchApplicantData = async (id) => {
     setTypeOfAppeal("CHANGE");
     loading.value = true;
-    const localClient = SessionStorage.getItem("client");
-    client.value = localClient;
-
-    const currentClient = localClient ? localClient : client.value;
-
+    // const localClient = SessionStorage.getItem("client");
+    // client.value = localClient;
+    // const currentClient = localClient ? localClient : client.value;
+    // console.log(`current client`, currentClient);
     try {
-      const response = await ClientService.getClientByAppealId(
-        currentClient.appealId
-      );
+      const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
-      client.value.applicant = data.contract_client.contract.applicant;
+      const clientData = {
+        contractClientId: data.contract_client_id,
+        appealId: data.id,
+        clientFirstname: data.client.name,
+        clientLastname: data.client.lastname,
+        birthday: data.client.birthday,
+        appealDate: data.applied_date
+          ? data.applied_date.split("-").reverse().join("-")
+          : "",
+        finishedDate: data.finished_date
+          ? data.finished_date.split("-").reverse().join("-")
+          : "",
+        appealStatus: data.status,
+        clinicName: data.hospital.name,
+        diagnosisName: data.diagnosis ?? "",
+        expenseAmount: data.total_amount ?? "",
+        dmsCode: data.contract_client.dms_code,
+        program: data.contract_client.program.name,
+        type_id: data.client_type,
+        applicant: data.contract_client.contract.applicant,
+      };
+      setClient(clientData);
 
       // client.value.id = data.contract_client.id;
       // client.value.clientId = data.contract_client.client_id;
@@ -896,7 +914,47 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       });
 
+      suggestedDoctors.value = suggestedDoctors.value.map((doctor) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === doctor.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === doctor.pivot.program_item_id;
+
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
       selectedServices.value = selectedServices.value.map((service) => {
+        const medicalLimit = medicalLimits.value.find(
+          (limit) => limit.id === service.pivot.program_item_id
+        );
+        const equalId = medicalLimit?.id === service.pivot.program_item_id;
+
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            limit: !equalId
+              ? null
+              : {
+                  name: medicalLimit.name,
+                  id: medicalLimit.id,
+                },
+          },
+        };
+      });
+
+      suggestedServices.value = suggestedServices.value.map((service) => {
         const medicalLimit = medicalLimits.value.find(
           (limit) => limit.id === service.pivot.program_item_id
         );
@@ -949,24 +1007,43 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
-  const fetchApplicantDrugData = async () => {
+  const fetchApplicantDrugData = async (id) => {
     setTypeOfAppeal("CHANGE");
     loading.value = true;
-    const localClient = SessionStorage.getItem("client");
-    client.value = localClient;
-    const currentClient = localClient ? localClient : client.value;
+    // const localClient = SessionStorage.getItem("client");
+    // client.value = localClient;
+    // const currentClient = localClient ? localClient : client.value;
 
     try {
-      const response = await ClientService.getClientByAppealId(
-        currentClient.appealId
-      );
+      const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
+      console.log(`drugstore`, data);
+      const clientData = {
+        contractClientId: data.contract_client_id,
+        appealId: data.id,
+        clientFirstname: data.client.name,
+        clientLastname: data.client.lastname,
+        birthday: data.client.birthday,
+        appealDate: data.applied_date
+          ? data.applied_date.split("-").reverse().join("-")
+          : "",
+        finishedDate: data.finished_date
+          ? data.finished_date.split("-").reverse().join("-")
+          : "",
+        appealStatus: data.status,
+        clinicName: data.drugstore.name,
+        diagnosisName: data.diagnosis ?? "",
+        expenseAmount: data.total_amount ?? "",
+        dmsCode: data.contract_client.dms_code,
+        program: data.contract_client.program.name,
+        type_id: data.client_type,
+        applicant: data.contract_client.contract.applicant,
+      };
 
-      client.value.applicant = data.contract_client.contract.applicant;
-      client.value.id = data.contract_client.id;
-      client.value.clientId = data.contract_client.client_id;
-      client.value.appealStatus = data.status;
+      clientData.id = data.contract_client.id;
+      clientData.clientId = data.contract_client.client_id;
       selectedDrugstore.value = data.drugstore;
+      setClient(clientData);
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -1070,9 +1147,11 @@ export const useAppealStore = defineStore("appeal", () => {
     doctors = doctors.map((doctor) => {
       if (selectedItem.item.id === doctor.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          id: selectedItem.medical_program?.id ?? doctor.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
         return {
           ...doctor,
           pivot: {
@@ -1103,9 +1182,11 @@ export const useAppealStore = defineStore("appeal", () => {
     services = services.map((service) => {
       if (selectedItem.item.id === service.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          id: selectedItem.medical_program?.id ?? service.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
 
         return {
           ...service,
@@ -1137,9 +1218,11 @@ export const useAppealStore = defineStore("appeal", () => {
     drugs = drugs.map((drug) => {
       if (selectedItem.item.id === drug.id) {
         const limit = {
-          name: selectedItem.medical_program?.name,
-          id: selectedItem.medical_program?.id,
+          id: selectedItem.medical_program?.id ?? drug.pivot.program_item_id,
         };
+        if (selectedItem.medical_program?.name) {
+          limit.name = selectedItem.medical_program?.name;
+        }
 
         return {
           ...drug,

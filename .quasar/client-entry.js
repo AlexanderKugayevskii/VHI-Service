@@ -37,6 +37,8 @@ import 'quasar/dist/quasar.sass'
 
 
 
+import '@vuepic/vue-datepicker/dist/main.css'
+
 import 'src/css/app.scss'
 
 
@@ -166,7 +168,9 @@ createQuasarApp(createApp, quasarUserOptions)
       
       import('boot/chat'),
       
-      import('boot/notify')
+      import('boot/notify'),
+      
+      import('boot/eimzo')
       
     ]).then(bootFiles => {
       const boot = mapFn(bootFiles).filter(entry => typeof entry === 'function')

@@ -1,5 +1,5 @@
 <template>
-  <div class="notification-item">
+  <div class="notification-item" @click="open">
     <div class="notification-item-icon">
       <q-icon size="24px">
         <svg
@@ -22,21 +22,60 @@
       <div class="notification-item-body">
         <div class="notification-item-message">
           <div class="notification-item-message__text">
-            Новое сообщение в обращении № 23
-            <span class="notification-item-message__owner">(Клиника)</span>
+            {{ message }}
+            <!-- <span class="notification-item-message__owner">(Клиника)</span> -->
           </div>
           <div class="notification-item-status"></div>
         </div>
         <div class="notification-item-time">
-          <span class="notification-item-time__left"> Создано в 14:30 </span>
-          <span class="notification-item-time__right"> 3 мин назад </span>
+          <!-- <span class="notification-item-time__left"> Создано в 14:30 </span>
+          <span class="notification-item-time__right"> 3 мин назад </span> -->
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+import { computed, ref } from "vue";
+
+const props = defineProps({
+  notification: {
+    type: Object,
+  },
+});
+const emit = defineEmits(["open"]);
+
+const types = {
+  PROGRESS_ACTION_REQUIRED: "PROGRESS_ACTION_REQUIRED",
+  STATUS_ACTION_REQUIRED: "STATUS_ACTION_REQUIRED",
+};
+
+const open = () => {
+  emit("open", props.notification.application_id);
+};
+
+onMounted(() => {
+  console.log(props.notification);
+});
+
+const message = computed(() => {
+  let msg = `Обращение № ${props.notification.application_id} требует обновления `;
+
+  switch (props.notification.notification_type) {
+    case types.PROGRESS_ACTION_REQUIRED: {
+      msg += "прогреса";
+      return msg;
+    }
+    case types.STATUS_ACTION_REQUIRED: {
+      msg += "статуса";
+      return msg;
+    }
+  }
+  return "";
+});
+</script>
 
 <style scoped lang="scss">
 .notification-item {

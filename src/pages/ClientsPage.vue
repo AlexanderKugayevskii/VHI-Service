@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center column body-bg" v-if="!isClientInfoRoute">
-    <div class="col page-container">
+    <div class="col page-container clients-container">
       <h2 class="page-title q-my-none q-mb-md">Клиенты</h2>
       <FullClientsTable
         :pagination="pagination"
@@ -28,4 +28,8 @@ const route = useRoute();
 const isClientInfoRoute = computed(() => route.name === "clientInfo");
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.clients-container {
+  width: 100% !important;
+}
+</style>

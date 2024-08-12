@@ -333,19 +333,19 @@ const handleClickCreateAppealBtn = () => {
 };
 
 const openAppealPage = async (client) => {
-  appealStore.setClient(client);
+  // appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
     delay: 500,
   });
 
-  await appealStore.fetchApplicantDrugData();
+  await appealStore.fetchApplicantDrugData(client.appealId);
 
   $q.loading.hide();
   router.push(
     Trans.i18nRoute({
       name: "createDrugsAppeal",
-      params: { id: appealStore.client.contractClientId },
+      params: { id: client.appealId },
     })
   );
 };
@@ -358,13 +358,13 @@ const openAppealLimit = async (client) => {
   });
 
   await appealStore.fetchMedicalPrograms();
-  await appealStore.fetchApplicantDrugData();
+  await appealStore.fetchApplicantDrugData(client.appealId);
 
   $q.loading.hide();
   router.push(
     Trans.i18nRoute({
       name: "createAppealDrugLimit",
-      params: { id: appealStore.client.contractClientId },
+      params: { id: client.appealId },
     })
   );
 };

@@ -130,7 +130,15 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const finishedDate = row.finished_date
         ? row.finished_date.split("-").reverse().join("-")
         : null;
-      console.log(row.is_sub_client);
+
+      const totalAmount = row.doctors
+        .concat(row.services)
+        .reduce((prev, curr) => {
+          return curr.pivot.status !== 2
+            ? prev + curr.pivot.quantity * parseFloat(curr.pivot.price)
+            : 0;
+        }, 0);
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -144,7 +152,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         doctorName: doctors,
         serviceName: services,
         diagnosisName: row.diagnosis ?? "",
-        expenseAmount: row.total_amount ?? "",
+        expenseAmount: totalAmount ?? "",
         dmsCode: row.contract_client?.dms_code ?? "",
         program: row.contract_client?.program?.name ?? "",
         type_id: row.client_type,
