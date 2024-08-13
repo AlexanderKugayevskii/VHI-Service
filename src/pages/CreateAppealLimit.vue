@@ -242,7 +242,6 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
-                                  v-if="service.pivot.status === 1"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
