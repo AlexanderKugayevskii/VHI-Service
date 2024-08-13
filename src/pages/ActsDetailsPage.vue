@@ -507,7 +507,34 @@ const getFacturaData = async () => {
     const data = response.data.data;
 
     await getEimzoKey();
-    await getDidoxToken();
+    const result = await getDidoxToken();
+    if (result === "KEY_NOT_FOUND") {
+      $q.notify({
+        type: "error",
+        message: "У вас нет ключа E-imzo",
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (result === "DIDOX_NOT_AUTH") {
+      $q.notify({
+        type: "error",
+        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (result === "CANCEL_PASSWORD") {
+      $q.notify({
+        type: "error",
+        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        position: "bottom",
+      });
+      return;
+    }
+
     const responseVatProducts = await didox.get("v1/profile/productClasses/ru");
     const vatProductsData = responseVatProducts.data;
 
