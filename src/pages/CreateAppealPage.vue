@@ -103,7 +103,12 @@
                         :ripple="false"
                         class="tab--no-hover"
                       >
-                        {{ $t("create_appeal.tabs.clinic") }}
+                        <span>{{ $t("create_appeal.tabs.clinic") }}</span>
+                        <!-- <q-badge
+                          v-if="appealStore.checkStatusIfRejected"
+                          label="требуется комментарий"
+                          class="appeal-count-badge appeal-count-badge--negative"
+                        /> -->
                       </q-tab>
                       <q-tab
                         name="doctors"
@@ -199,12 +204,18 @@
                             ></DateInput>
 
                             <DateInput
+                              class="dropdown-space"
                               v-if="clientData.finishedDate"
                               :disableInput="clientData.appealStatus === 2"
                               number
                               label="Дата завершения"
                               :modelValue="clientData.finishedDate"
                             ></DateInput>
+
+                            <TextAreaInput
+                              label="Комментарий"
+                              placeholder="укажите комментарий"
+                            />
                           </div>
                         </q-tab-panel>
 
@@ -705,6 +716,7 @@ import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
 import SimpleInput from "src/components/Shared/SimpleInput.vue";
+import TextAreaInput from "src/components/Shared/TextAreaInput.vue";
 import DateInput from "src/components/Shared/DateInput.vue";
 import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
@@ -1145,5 +1157,9 @@ const handleStatusService = (item, isSuggested) => {
   color: #fff;
   padding: 2px 5px;
   font-weight: 500;
+
+  &--negative {
+    background-color: $negative;
+  }
 }
 </style>

@@ -126,6 +126,7 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
+                                  v-if="doctor.pivot.status !== 2"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
@@ -187,6 +188,7 @@
                                 </template>
                                 <template #dropdown>
                                   <DropdownSelectNew
+                                    v-if="doctor.pivot.status !== 2"
                                     dense
                                     style="min-width: 300px"
                                     :searchInput="false"
@@ -242,6 +244,7 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
+                                  v-if="service.pivot.status !== 2"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
@@ -304,7 +307,7 @@
                                 </template>
                                 <template #dropdown>
                                   <DropdownSelectNew
-                                    v-if="service.pivot.status === 1"
+                                    v-if="service.pivot.status !== 2"
                                     dense
                                     style="min-width: 300px"
                                     :searchInput="false"

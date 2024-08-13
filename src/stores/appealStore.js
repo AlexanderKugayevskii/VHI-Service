@@ -236,9 +236,12 @@ export const useAppealStore = defineStore("appeal", () => {
         .concat(selectedDoctors.value)
         .filter(
           (doctor) =>
-            doctor.pivot.created_by_clinic === 0 &&
-            (doctor.pivot.status === 0 || doctor.pivot.status === 1) &&
-            doctor.pivot.progress !== 1
+            (doctor.pivot.created_by_clinic === 0 &&
+              (doctor.pivot.status === 0 || doctor.pivot.status === 1) &&
+              doctor.pivot.progress !== 1) ||
+            (doctor.pivot.created_by_clinic === 1 &&
+              doctor.pivot.status === 1 &&
+              doctor.pivot.progress === 0)
         ).length;
     }
 
@@ -263,13 +266,25 @@ export const useAppealStore = defineStore("appeal", () => {
         .concat(selectedServices.value)
         .filter(
           (service) =>
-            service.pivot.created_by_clinic === 0 &&
-            (service.pivot.status === 0 || service.pivot.status === 1) &&
-            service.pivot.progress !== 1
+            (service.pivot.created_by_clinic === 0 &&
+              (service.pivot.status === 0 || service.pivot.status === 1) &&
+              service.pivot.progress !== 1) ||
+            (service.pivot.created_by_clinic === 1 &&
+              service.pivot.status === 1 &&
+              service.pivot.progress === 0)
         ).length;
     }
-
     return count;
+  });
+
+  const checkStatusIfRejected = computed(() => {
+    return suggestedDoctors.value
+      .concat(
+        selectedDoctors.value,
+        suggestedServices.value,
+        selectedServices.value
+      )
+      .some((item) => item.pivot.status === 2);
   });
 
   const setDrugAppealImage = (file) => {
@@ -1471,5 +1486,6 @@ export const useAppealStore = defineStore("appeal", () => {
     allDrugsStatus,
     actionDoctorStatusCount,
     actionServiceStatusCount,
+    checkStatusIfRejected,
   };
 });
