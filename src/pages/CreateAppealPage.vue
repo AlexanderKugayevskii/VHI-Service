@@ -126,6 +126,7 @@
                           {{ $t("create_appeal.tabs.services") }}
                         </span>
                         <q-badge
+                          v-if="appealStore.actionServiceStatusCount > 0"
                           :label="appealStore.actionServiceStatusCount"
                           class="appeal-count-badge"
                         />
