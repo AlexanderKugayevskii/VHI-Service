@@ -179,7 +179,10 @@
           >
           </RouteLink>
         </q-list>
-        <div class="q-px-sm">
+        <div class="q-px-sm drawer-bottom">
+          <div class = "drawer-neoshka">
+            <img src="/neoshka.svg" />
+          </div>
           <q-item class="q-pa-xs user justify-between">
             <q-item-section avatar class="q-pr-xs">
               <q-avatar size="47px">

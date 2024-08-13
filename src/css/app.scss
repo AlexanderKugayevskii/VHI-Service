@@ -11,6 +11,15 @@ body {
   color: $primary;
   line-height: 1;
 }
+.drawer-bottom {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+.drawer-neoshka {
+  display: flex;
+  justify-content: center;
+}
 .q-table__middle::-webkit-scrollbar {
   width: 8px;
   height: 8px;

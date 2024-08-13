@@ -242,7 +242,6 @@
                               </template>
                               <template #dropdown>
                                 <DropdownSelectNew
-                                  v-if="service.pivot.status === 1"
                                   dense
                                   style="min-width: 300px"
                                   :searchInput="false"
@@ -511,7 +510,8 @@ const hideModal = () => {
 const selectLimitDoctor = (item, doctor, isSuggested) => {
   appealStore.changeStatusDoctor(
     { medical_program: item, item: doctor },
-    isSuggested
+    isSuggested,
+    { type: "limit" }
   );
 };
 const selectLimitService = (item, service, isSuggested) => {
@@ -520,7 +520,8 @@ const selectLimitService = (item, service, isSuggested) => {
       medical_program: item,
       item: service,
     },
-    isSuggested
+    isSuggested,
+    { type: "limit" }
   );
 };
 
