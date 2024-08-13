@@ -212,10 +212,10 @@
                               :modelValue="clientData.finishedDate"
                             ></DateInput>
 
-                            <TextAreaInput
+                            <!-- <TextAreaInput
                               label="Комментарий"
                               placeholder="укажите комментарий"
-                            />
+                            /> -->
                           </div>
                         </q-tab-panel>
 
