@@ -45,7 +45,7 @@
     <div class="act-service-table">
       <q-table
         flat
-        :rows="filteredRows"
+        :rows="rows ?? []"
         :columns="columns"
         :loading="loading"
         v-model:pagination="pagination"
@@ -54,6 +54,7 @@
         row-key="index"
         no-data-label="I didn't find anything for you"
         no-results-label="The filter didn't uncover any results"
+        @request="handleRequest"
       >
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -97,61 +98,57 @@
       </q-table>
     </div>
 
-    <!-- <div class="flex q-my-lg">
-          <PaginationTable
-            :pagination="pagination"
-            :total="filteredRows.length"
-            @onIncrementPage="incrementPage"
-            @onDecrementPage="decrementPage"
-            @onChangePage="changePage"
-          />
-    
-          <q-space></q-space>
-          <RowsPerPage
-            @choiceOption="selectOption"
-            :pagination="pagination"
-            :total="filteredRows.length"
-          />
-        </div> -->
+    <div class="flex q-my-lg">
+      <PaginationTable
+        :pagination="pagination"
+        :total="total"
+        @onIncrementPage="incrementPage"
+        @onDecrementPage="decrementPage"
+        @onChangePage="changePage"
+      />
+
+      <q-space></q-space>
+      <!-- <RowsPerPage
+        @choiceOption="selectOption"
+        :pagination="pagination"
+        :total="total"
+      /> -->
+    </div>
   </div>
 </template>
 
 <script setup>
-import AppealService from "src/services/AppealService";
-import ClientService from "src/services/ClientService";
 import PaginationTable from "../ClientsTable/PaginationTable.vue";
 import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
+import { useAppealStore } from "src/stores/appealStore";
 
 import { useI18n } from "vue-i18n";
-import dayjs from "dayjs";
-import DateRange from "../DateRange.vue";
-import SimpleCheckbox from "../Shared/SimpleCheckbox.vue";
-import SimpleButton from "../Shared/SimpleButton.vue";
+import ActService from "src/services/ActService";
 import formatPrice from "src/helpers/formatPrice";
+import formatDate from "src/helpers/formatDate";
 
 const { t } = useI18n();
 
-const props = defineProps({
-  dataRows: {
-    type: Array,
-  },
-});
-
-
+const props = defineProps({});
 
 const emit = defineEmits(["showFields", "downloadAct"]);
+const appealStore = useAppealStore();
 
 const loading = ref(false);
-const data = ref([]);
-const total = ref(0);
+const total = ref(12);
 const tableRef = ref(null);
 const searchData = ref("");
+const actsData = ref(null);
+
+const isClinic = computed(() => appealStore.isClinic);
+const isAgent = computed(() => appealStore.isAgent);
 
 const pagination = ref({
   sortBy: "desc",
   descending: false,
   rowsPerPage: 10,
+  rowsNumber: 0,
   page: 1,
 });
 
@@ -183,23 +180,44 @@ const columns = computed(() => [
 ]);
 
 const rows = computed(() => {
-  console.log(props.dataRows);
-  return props.dataRows.map((row) => {
+  return actsData.value?.map((row) => {
     return {
-      date: row.date,
-      esfDate: row.esf_date,
+      date: formatDate(row.date, { withHours: false }),
+      esfDate: formatDate(row.esf_date, { withHours: false }),
       index: row.id,
       amount: row.amount,
     };
   });
 });
 
-const filteredRows = computed(() => {
-  const regex = new RegExp(searchData.value, "i");
-  return rows.value.filter((option) => {
-    return regex.test(option.date) || regex.test(option.esfDate);
-  });
-});
+const getAct = async (page, limit) => {
+  try {
+    const response = isClinic.value
+      ? await ActService.getAct(page, limit, {
+          application_type: 1,
+          hospital_id: selectedClinic.value.id,
+        })
+      : await ActService.getAct(page, limit);
+    const data = response.data.data.data;
+
+    pagination.value.page = page;
+    pagination.value.rowsPerPage = 10;
+    pagination.value.rowsNumber = response.data.data.total;
+
+    actsData.value = data;
+
+    console.log(actsData.value);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+// const filteredRows = computed(() => {
+//   const regex = new RegExp(searchData.value, "i");
+//   return rows.value?.filter((option) => {
+//     return regex.test(option.date) || regex.test(option.esfDate);
+//   });
+// });
 
 const cancelOpenWhenSelect = (row) => {
   const selection = window.getSelection().toString();
@@ -215,12 +233,12 @@ const handleDownloadAct = (row) => {
 };
 
 const handleRequest = (props) => {
-  fetchDrugstores(props.pagination.page, props.pagination.rowsPerPage);
+  getAct(props.pagination.page, props.pagination.rowsPerPage);
 };
 
-// onMounted(() => {
-//   tableRef.value.requestServerInteraction();
-// });
+onMounted(() => {
+  tableRef.value.requestServerInteraction();
+});
 
 const incrementPage = () => {
   tableRef.value.nextPage();

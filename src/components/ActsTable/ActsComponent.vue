@@ -168,9 +168,9 @@
       </div>
     </div>
 
-    <div class="acts-result q-mb-lg" v-if="actsData">
+    <div class="acts-result q-mb-lg">
       <h3 class="page-title q-my-none q-mb-md">Существующие акты</h3>
-      <ActsTable :dataRows="actsData" @show-fields="handleShowFields" />
+      <ActsTable @show-fields="handleShowFields" />
     </div>
   </div>
 </template>
@@ -217,44 +217,6 @@ const pagination = ref({
   descending: false,
   rowsPerPage: 10,
   page: 1,
-});
-
-const columns = computed(() => [
-  {
-    name: "index",
-    label: "№",
-    field: "index",
-    align: "left",
-  },
-  {
-    name: "checkbox",
-    label: "",
-    field: "checkbox",
-    align: "left",
-  },
-  {
-    name: "drugstoreName",
-    align: "left",
-    label: t("client_table.drugstore"),
-    field: "drugstoreName",
-  },
-  {
-    name: "phone",
-    align: "left",
-    label: "Телефон",
-    field: "phone",
-  },
-]);
-
-const rows = computed(() => {
-  return drugs.value.map((row) => {
-    return {
-      drugstoreName: row.name,
-      phone: row.phone,
-      reports: "",
-      index: row.id,
-    };
-  });
 });
 
 const filteredRows = computed(() => {
@@ -334,32 +296,6 @@ const applicationType = computed(() => {
 });
 //getAct
 
-const actsData = ref(null);
-const getActByAgent = async () => {
-  try {
-    const response = await ActService.getAct();
-    const data = response.data.data.data;
-
-    actsData.value = data;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const getActByClinic = async () => {
-  try {
-    const response = await ActService.getAct({
-      application_type: 1,
-      hospital_id: selectedClinic.value.id,
-    });
-    const data = response.data.data.data;
-
-    actsData.value = data;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 //get Fields Services Doctors Drugs By Clinic
 const fieldsData = ref(null);
 const timeoutNotFound = ref(null);
@@ -433,12 +369,6 @@ const handleShowFields = async (id) => {
 //request before mounting page
 onBeforeMount(async () => {
   setDefaultClinicIfIsClinic();
-  if (isClinic.value) {
-    await getActByClinic();
-  }
-  if (isAgent.value) {
-    await getActByAgent();
-  }
 });
 
 //request table
