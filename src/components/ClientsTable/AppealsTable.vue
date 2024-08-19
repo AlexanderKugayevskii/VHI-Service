@@ -466,7 +466,7 @@ onMounted(() => {});
 }
 
 .appeals-th:nth-of-type(1) {
-  width: 56px;
+  width: 64px;
 }
 .appeals-th:nth-of-type(2) {
   // width: 150px;

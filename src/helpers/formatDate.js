@@ -1,6 +1,6 @@
 export default function formatDate(
   inputDate,
-  settings = { withHours: true, withDate: true }
+  settings = { withHours: true, withDate: true, separator: "-" }
 ) {
   const date = new Date(inputDate);
 
@@ -15,7 +15,7 @@ export default function formatDate(
   }
   const formattedTime = new Intl.DateTimeFormat("ru-uz", options)
     .format(date)
-    .replace(",", " - ");
+    .replace(/[,\.]/g, "-");
 
   return formattedTime;
 }

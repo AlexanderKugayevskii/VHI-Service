@@ -1,7 +1,7 @@
 import { api } from "../boot/axios";
 
-function getAct(payload) {
-  return api.post("/clinics/akt-get", payload);
+function getAct(page, limit, payload) {
+  return api.post(`/clinics/akt-get?_limit=${limit}&page=${page}`, payload);
 }
 
 function getFields(payload) {
