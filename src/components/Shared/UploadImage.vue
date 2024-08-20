@@ -16,11 +16,16 @@
       <p v-if="!image" class="drop-area-text">
         <span>Перетащите фото сюда</span>
         <label class="file-upload-link" for="fileInput">{{
-          'Или загрузите файл'
+          "Или загрузите файл"
         }}</label>
       </p>
       <div v-else class="drop-area-image">
-        <img :src="image" alt="Dropped Image" class="dropped-image" />
+        <img
+          :src="image"
+          alt="Dropped Image"
+          class="dropped-image"
+          @click="showFullImage"
+        />
         <label class="file-upload-link" for="fileInput">{{
           "Изменить фото"
         }}</label>
@@ -52,6 +57,9 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import FullImageDialog from "./FullImageDialog.vue";
+import { useQuasar } from "quasar";
 import Compressor from "compressorjs";
 import isHEIC from "../../helpers/isHeicFile";
 import heic2any from "heic2any";
@@ -67,6 +75,21 @@ export default {
       isMobile: null,
       image: this.value,
     };
+  },
+
+  setup(props, { expose }) {
+    const $q = useQuasar();
+    const imageFromSetup = ref(props.value);
+    const showFullImage = () => {
+      $q.dialog({
+        component: FullImageDialog,
+        componentProps: {
+          imageSrc: imageFromSetup.value,
+        },
+      });
+    };
+
+    return { showFullImage, imageFromSetup };
   },
   methods: {
     async processImageFile(file) {
@@ -90,6 +113,7 @@ export default {
 
         reader.onload = () => {
           this.image = reader.result;
+          this.imageFromSetup = reader.result;
 
           new Compressor(jpegFile, {
             quality: 0.4,
@@ -203,6 +227,7 @@ export default {
   height: auto;
   object-fit: cover;
   border-radius: 12px;
+  cursor: pointer;
 }
 .make-photo-btn {
   padding: 12px 32px;
