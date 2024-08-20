@@ -332,6 +332,7 @@
                               :removable="true"
                               :item="doctor"
                               :key="doctor.id"
+                              :commonStatus = "clientData.appealStatus"
                               :isAgent="appealStore.isAgent"
                               @update:status="
                                 (item) => handleStatusDoctor(item, false)
@@ -504,6 +505,7 @@
                               :item="service"
                               :removable="true"
                               :key="service.id"
+                              :commonStatus = "clientData.appealStatus"
                               :isAgent="appealStore.isAgent"
                               @update:status="
                                 (item) => handleStatusService(item, false)
@@ -543,6 +545,7 @@
                                 :removable="false"
                                 :key="service.id"
                                 :isAgent="appealStore.isAgent"
+                                :commonStatus = "clientData.appealStatus"
                                 @update:status="
                                   (item) => handleStatusService(item, true)
                                 "

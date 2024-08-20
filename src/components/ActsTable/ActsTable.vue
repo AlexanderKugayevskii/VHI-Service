@@ -80,7 +80,11 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @mouseup="cancelOpenWhenSelect(props.row)">
+          <q-tr
+            :props="props"
+            @mouseup="cancelOpenWhenSelect(props.row)"
+            class="clickable"
+          >
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
