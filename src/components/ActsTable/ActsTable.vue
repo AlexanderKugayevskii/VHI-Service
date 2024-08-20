@@ -94,6 +94,9 @@
             <q-td key="esfDate" :props="props" class="appeals-td">
               {{ props.row.esfDate }}
             </q-td>
+            <q-td key="hospitalName" :props="props" class="appeals-td">
+              {{ props.row.hospitalName }}
+            </q-td>
             <q-td key="amount" :props="props" class="appeals-td">
               {{ formatPrice(parseFloat(props.row.amount)) }}
             </q-td>
@@ -180,6 +183,12 @@ const columns = computed(() => [
     align: "left",
   },
   {
+    name: "hospitalName",
+    field: "hospitalName",
+    label: "Название клиники",
+    align: "left",
+  },
+  {
     name: "amount",
     label: "Сумма",
     align: "left",
@@ -192,6 +201,7 @@ const rows = computed(() => {
     return {
       date: formatDate(row.date, { withHours: false }),
       esfDate: formatDate(row.esf_date, { withHours: false }),
+      hospitalName: row.hospital.name,
       index: row.id,
       amount: row.amount,
     };
