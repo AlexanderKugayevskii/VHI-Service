@@ -118,6 +118,9 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  commonStatus: {
+    type: Number,
+  },
 });
 
 const emit = defineEmits([
@@ -135,6 +138,7 @@ const disabledRule = computed(() => {
     !props.allowHandleStatus ||
     props.item.isNew ||
     props.item.pivot.progress >= 1 ||
+    props.commonStatus === 2 ||
     (!props.isAgent &&
       props.item.pivot.status !== 0 &&
       props.item.pivot.progress >= 1 &&
@@ -184,8 +188,7 @@ const removeItem = () => {
 }
 .selected-item-left {
   // width: 450px;
-flex-grow: 1;
-  
+  flex-grow: 1;
 }
 .selected-item-label {
   color: #404f6f;

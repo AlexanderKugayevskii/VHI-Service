@@ -80,7 +80,11 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @mouseup="cancelOpenWhenSelect(props.row)">
+          <q-tr
+            :props="props"
+            @mouseup="cancelOpenWhenSelect(props.row)"
+            class="clickable"
+          >
             <q-td key="index" :props="props" class="appeals-td">
               {{ props.row.index }}
             </q-td>
@@ -130,7 +134,11 @@ import formatDate from "src/helpers/formatDate";
 
 const { t } = useI18n();
 
-const props = defineProps({});
+const props = defineProps({
+  selectedClinic: {
+    type: Object,
+  },
+});
 
 const emit = defineEmits(["showFields", "downloadAct"]);
 const appealStore = useAppealStore();
@@ -195,7 +203,7 @@ const getAct = async (page, limit) => {
     const response = isClinic.value
       ? await ActService.getAct(page, limit, {
           application_type: 1,
-          hospital_id: selectedClinic.value.id,
+          hospital_id: props.selectedClinic.id,
         })
       : await ActService.getAct(page, limit);
     const data = response.data.data.data;
