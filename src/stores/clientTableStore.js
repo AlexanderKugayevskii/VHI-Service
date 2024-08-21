@@ -23,6 +23,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       label: "№",
       field: "index",
       align: "left",
+      sortable: true,
     },
     {
       name: "client",
@@ -35,18 +36,21 @@ export const useClientTableStore = defineStore("clientTable", () => {
       align: "left",
       label: t("client_table.date_of_appeal"),
       field: "appealDate",
+      sortable: true,
     },
     {
       name: "finishedDate",
       align: "left",
       label: "Дата завершения",
       field: "finishedDate",
+      sortable: true,
     },
     {
       name: "appealStatus",
       align: "left",
       label: t("client_table.appeal_status"),
       field: "appealStatus",
+      sortable: true,
     },
     {
       name: "clinicName",
@@ -71,6 +75,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
       align: "left",
       label: t("client_table.diagnosis"),
       field: "diagnosisName",
+      sortable: true,
     },
     {
       name: "expenseAmount",
@@ -85,8 +90,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   ]);
 
   const pagination = ref({
-    sortBy: "desc",
-    descending: false,
+    descending: true,
     rowsPerPage: 10,
     rowsNumber: 0,
     page: 1,
@@ -114,6 +118,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   }
 
   const handleRequest = (props) => {
+    console.log(props);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,

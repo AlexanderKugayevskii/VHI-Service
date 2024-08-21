@@ -178,6 +178,10 @@
                                     customClass="btn-action"
                                     @click="handleAddCustomDrug"
                                     full-width
+                                    :disabled="
+                                      drugstoreDropdownRef.searchValue
+                                        .length === 0
+                                    "
                                   ></SimpleButton>
                                 </template>
                               </DropdownSelectNew>
@@ -567,12 +571,14 @@ const handleSearchDrugs = async (name) => {
   await appealStore.fetchDrugs(name);
 };
 
-const handleAddCustomDrug = () => {
+const handleAddCustomDrug = async () => {
   selectedDrug.value = {
     name: drugstoreDropdownRef.value.searchValue,
     id: null,
   };
+
   drugstoreDropdownRef.value.closeModal();
+  await appealStore.fetchDrugs();
 };
 
 const handleAddDrugData = () => {
