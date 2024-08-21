@@ -94,6 +94,9 @@
             <q-td key="esfDate" :props="props" class="appeals-td">
               {{ props.row.esfDate }}
             </q-td>
+            <q-td key="actStatus" :props="props" class="appeals-td">
+              <ActStatus :status="props.row.status" />
+            </q-td>
             <q-td key="hospitalName" :props="props" class="appeals-td">
               {{ props.row.hospitalName }}
             </q-td>
@@ -125,6 +128,7 @@
 </template>
 
 <script setup>
+import ActStatus from "./ActStatus.vue";
 import PaginationTable from "../ClientsTable/PaginationTable.vue";
 import RowsPerPage from "../ClientsTable/RowsPerPage.vue";
 import { onMounted, computed, ref } from "vue";
@@ -183,6 +187,12 @@ const columns = computed(() => [
     align: "left",
   },
   {
+    name: "actStatus",
+    field: "actStatus",
+    label: "Статус Акта",
+    align: "left",
+  },
+  {
     name: "hospitalName",
     field: "hospitalName",
     label: "Название клиники",
@@ -204,6 +214,7 @@ const rows = computed(() => {
       hospitalName: row.hospital.name,
       index: row.id,
       amount: row.amount,
+      status: row.status,
     };
   });
 });

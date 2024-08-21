@@ -405,7 +405,8 @@ const selectLimitDrug = (item, drug, isSuggested) => {
       medical_program: item,
       item: drug,
     },
-    isSuggested
+    isSuggested,
+    { type: "limit" }
   );
 };
 
