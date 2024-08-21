@@ -4,6 +4,7 @@ import { useAppealStore } from "./appealStore";
 import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
+import { sortBy } from "lodash";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
@@ -90,6 +91,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   ]);
 
   const pagination = ref({
+    sortBy: "index",
     descending: true,
     rowsPerPage: 10,
     rowsNumber: 0,
@@ -100,9 +102,16 @@ export const useClientTableStore = defineStore("clientTable", () => {
   const users = ref([]);
   const total = ref(0);
 
-  function fetchClients(page = 1, limit = 10, search, queries) {
+  function fetchClients(
+    page = 1,
+    limit = 10,
+    search,
+    queries,
+    sortBy,
+    orderBy
+  ) {
     loading.value = true;
-    ClientService.getClients(page, limit, search, queries)
+    ClientService.getClients(page, limit, search, queries, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
@@ -118,13 +127,33 @@ export const useClientTableStore = defineStore("clientTable", () => {
   }
 
   const handleRequest = (props) => {
-    console.log(props);
+    const propsSortBy = props.pagination.sortBy;
+    let orderBy = props.pagination.descending ? "desc" : "asc";
+    let sortBy;
+
+    if (propsSortBy === "index") {
+      sortBy = "id";
+    } else if (propsSortBy === "appealDate") {
+      sortBy = "applied_date";
+    } else if (propsSortBy === "finishedDate") {
+      sortBy = "finished_date";
+    } else if (propsSortBy === "appealStatus") {
+      sortBy = "status";
+    } else if (propsSortBy === "diagnosisName") {
+      sortBy = "diagnosis";
+    }
+
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
       props.filter,
-      requestFilterQuery.value
+      requestFilterQuery.value,
+      sortBy,
+      orderBy
     );
+
+    pagination.value.descending = props.pagination.descending;
+    pagination.value.sortBy = propsSortBy;
   };
 
   const rows = computed(() => {

@@ -21,6 +21,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       label: "№",
       field: "index",
       align: "left",
+      sortable: true,
     },
     {
       name: "client",
@@ -33,18 +34,21 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       align: "left",
       label: t("client_table.date_of_appeal"),
       field: "appealDate",
+      sortable: true,
     },
     {
       name: "finishedDate",
       align: "left",
       label: "Дата завершения",
       field: "finishedDate",
+      sortable: true,
     },
     {
       name: "appealStatus",
       align: "left",
       label: t("client_table.appeal_status"),
       field: "appealStatus",
+      sortable: true,
     },
     {
       name: "drugstore",
@@ -71,8 +75,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   ]);
 
   const pagination = ref({
-    sortBy: "desc",
-    descending: false,
+    sortBy: "index",
+    descending: true,
     rowsPerPage: 10,
     rowsNumber: 0,
     page: 1,
@@ -81,18 +85,18 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search, queries) {
+  function fetchClients(
+    page = 1,
+    limit = 10,
+    search,
+    queries,
+    sortBy,
+    orderBy
+  ) {
     loading.value = true;
-    DrugsService.getClients(page, limit, search, queries)
+    DrugsService.getClients(page, limit, search, queries, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
-        // router.push({
-        //   name: "appeals-page",
-        //   query: {
-        //     page,
-        //     limit,
-        //   },
-        // });
 
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
@@ -105,12 +109,31 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   }
 
   const handleRequest = (props) => {
+    const propsSortBy = props.pagination.sortBy;
+    let orderBy = props.pagination.descending ? "desc" : "asc";
+    let sortBy;
+
+    if (propsSortBy === "index") {
+      sortBy = "id";
+    } else if (propsSortBy === "appealDate") {
+      sortBy = "applied_date";
+    } else if (propsSortBy === "finishedDate") {
+      sortBy = "finished_date";
+    } else if (propsSortBy === "appealStatus") {
+      sortBy = "status";
+    }
+
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
       props.filter,
-      requestFilterQuery.value
+      requestFilterQuery.value,
+      sortBy,
+      orderBy
     );
+
+    pagination.value.descending = props.pagination.descending;
+    pagination.value.sortBy = propsSortBy;
   };
 
   const rows = computed(() => {

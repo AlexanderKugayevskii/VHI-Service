@@ -18,6 +18,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       label: "№",
       field: "index",
       align: "left",
+      sortable: true,
     },
     {
       name: "clientName",
@@ -54,6 +55,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       align: "left",
       label: "ID",
       field: "dmsId",
+      sortable: true,
     },
     {
       name: "program",
@@ -62,22 +64,25 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       field: "program",
     },
     {
-      name: "endInsurancePeriod",
-      align: "left",
-      label: "Дата начала страхования",
-      field: "endInsurancePeriod",
-    },
-    {
       name: "startInsurancePeriod",
       align: "left",
-      label: "Дата конца страхования",
+      label: "Дата начала страхования",
       field: "startInsurancePeriod",
+      sortable: true,
+    },
+    {
+      name: "endInsurancePeriod",
+      align: "left",
+      label: "Дата конца страхования",
+      field: "endInsurancePeriod",
+      sortable: true,
     },
     {
       name: "organizationName",
       align: "left",
       label: "Организация",
       field: "organizationName",
+      sortable: true,
     },
     {
       name: "change",
@@ -87,8 +92,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     },
   ]);
   const pagination = ref({
-    sortBy: "desc",
-    descending: false,
+    sortBy: "index",
+    descending: true,
     rowsPerPage: 10,
     rowsNumber: 0,
     page: 1,
@@ -96,9 +101,9 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search) {
+  function fetchClients(page = 1, limit = 10, search, sortBy, orderBy) {
     loading.value = true;
-    ClientService.getFullClients(page, limit, search)
+    ClientService.getFullClients(page, limit, search, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
 
@@ -113,11 +118,32 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   }
 
   const handleRequest = (props) => {
+    const propsSortBy = props.pagination.sortBy;
+    let orderBy = props.pagination.descending ? "desc" : "asc";
+    let sortBy;
+
+    if (propsSortBy === "index") {
+      sortBy = "id";
+    } else if (propsSortBy === "startInsurancePeriod") {
+      sortBy = "contract.start_date";
+    } else if (propsSortBy === "endInsurancePeriod") {
+      sortBy = "contract.end_date";
+    } else if (propsSortBy === "organizationName") {
+      sortBy = "applicant";
+    } else if (propsSortBy === "dmsId") {
+      sortBy = "dms_code";
+    }
+
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
-      props.filter
+      props.filter,
+      sortBy,
+      orderBy
     );
+
+    pagination.value.descending = props.pagination.descending;
+    pagination.value.sortBy = propsSortBy;
   };
 
   const currentDate = dayjs();
@@ -210,7 +236,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   };
 
   const setClientDataForAppeal = (client) => {
-    const birthday = client.birthday.split("-").reverse().join('-');
+    const birthday = client.birthday.split("-").reverse().join("-");
 
     clientDataForAppeal.value = {
       clientFirstname: client.name,
