@@ -28,7 +28,6 @@ function updateClientData(id, payload) {
   return api.post(`/clinics/clients/update/${id}`, payload);
 }
 
-
 //clinic excel
 function getClientExcelData(contract_client_id) {
   return api.get(`/clinics/client-excel/${contract_client_id}`, {

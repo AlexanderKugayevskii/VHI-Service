@@ -162,6 +162,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const drugAppealImage = ref({});
   const drugs = ref([]);
   const selectedDrugs = ref([]);
+  ``;
   const suggestedDrugs = ref([]);
 
   const drugstores = ref([]);
@@ -1213,7 +1214,12 @@ export const useAppealStore = defineStore("appeal", () => {
   const changeStatusDoctor = (selectedItem, isSuggested = true, actionType) => {
     let doctors = isSuggested ? suggestedDoctors.value : selectedDoctors.value;
     doctors = doctors.map((doctor) => {
-      if (selectedItem.item.id === doctor.id) {
+      const condition =
+        selectedItem.item.id === null
+          ? selectedItem.item.name === doctor.name
+          : selectedItem.item.id === doctor.id;
+
+      if (condition) {
         const limit = {
           id: selectedItem.medical_program?.id || doctor.pivot.program_item_id,
         };
@@ -1260,7 +1266,12 @@ export const useAppealStore = defineStore("appeal", () => {
       ? suggestedServices.value
       : selectedServices.value;
     services = services.map((service) => {
-      if (selectedItem.item.id === service.id) {
+      const condition =
+        selectedItem.item.id === null
+          ? selectedItem.item.name === service.name
+          : selectedItem.item.id === service.id;
+
+      if (condition) {
         const limit = {
           id: selectedItem.medical_program?.id ?? service.pivot.program_item_id,
         };

@@ -101,6 +101,7 @@
         v-model:pagination="reactivePagination"
         no-data-label="Обращений нет"
         no-results-label="Данных по вашему запросу не найдено"
+        binary-state-sort
         @request="requestData"
       >
         <template v-slot:loading>
