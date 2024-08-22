@@ -103,7 +103,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   function fetchClients(page = 1, limit = 10, search, sortBy, orderBy) {
     loading.value = true;
-    ClientService.getFullClients(page, limit, search, sortBy, orderBy)
+    ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
 
@@ -144,6 +144,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
     pagination.value.descending = props.pagination.descending;
     pagination.value.sortBy = propsSortBy;
+
+    console.log(pagination.value);
   };
 
   const currentDate = dayjs();
