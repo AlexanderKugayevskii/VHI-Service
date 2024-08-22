@@ -76,7 +76,7 @@ const data = computed(() => {
 });
 
 onMounted(() => {
-  console.log(clientInfo.value);
+  // console.log(clientInfo.value);
 });
 </script>
 

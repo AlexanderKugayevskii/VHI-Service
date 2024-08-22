@@ -147,7 +147,8 @@ const getTimeStamp = async (hex, fun, fail) => {
 const getEimzoKey = async () => {
   await vueEimzo.install();
   const certs = await vueEimzo.listAllUserKeys();
-  // const certForTest = certs[1];
+  // console.log(certs);
+  // const certForTest = certs[0];
   if (isClinic.value) {
     eimzoKey.value = certs.find((cert) => cert.TIN === user.value.hospital.INN);
     // eimzoKey.value = certForTest;

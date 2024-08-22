@@ -18,7 +18,7 @@ didox.interceptors.request.use((config) => {
 export default boot(({ app }) => {
   app.config.globalProperties.$didox = didox;
   const VueEIMZO = new EIMZO();
-  console.log(VueEIMZO);
+  // console.log(VueEIMZO);
   app.use(VueEIMZO);
   app.config.globalProperties.$eimzo = VueEIMZO;
 });

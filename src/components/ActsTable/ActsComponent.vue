@@ -340,12 +340,12 @@ const createActByClinic = async () => {
     amount: fieldsData.value.total_amount,
   };
 
-  console.log(payload);
+  // console.log(payload);
 
   try {
     const response = await ActService.createAct(payload);
     const data = response.data;
-    console.log(`created_act`, data);
+    // console.log(`created_act`, data);
 
     actIsCreated.value = true;
     $q.notify({

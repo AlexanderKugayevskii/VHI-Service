@@ -235,7 +235,7 @@ const getAct = async (page, limit) => {
 
     actsData.value = data;
 
-    console.log(actsData.value);
+    // console.log(actsData.value);
   } catch (e) {
     console.error(e);
   }
