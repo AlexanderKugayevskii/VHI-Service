@@ -1,11 +1,13 @@
 import { api } from "../boot/axios";
 
 //appeals clients
-function getClients(page, limit, search, filterQueries) {
+function getClients(page, limit, search, filterQueries, sortBy, orderBy) {
   return api.get(`/clinics/application-hospitals`, {
     params: {
       _limit: limit,
       page: page,
+      sortBy: sortBy,
+      orderBy: orderBy,
       all_fields: search,
       ...filterQueries,
     },
@@ -13,11 +15,13 @@ function getClients(page, limit, search, filterQueries) {
 }
 
 //full clients
-function getFullClients(page, limit, search, filterQueries) {
+function getFullClients(page, limit, search, filterQueries, sortBy, orderBy) {
   return api.get("/clinics/clients", {
     params: {
       _limit: limit,
       page: page,
+      sortBy: sortBy,
+      orderBy: orderBy,
       all_fields: search,
       ...filterQueries,
     },
