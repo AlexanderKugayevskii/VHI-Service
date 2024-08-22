@@ -168,10 +168,13 @@ export const useClientTableStore = defineStore("clientTable", () => {
       const totalAmount = row.doctors
         .concat(row.services)
         .reduce((prev, curr) => {
-          return curr.pivot.status !== 2
-            ? prev + curr.pivot.quantity * parseFloat(curr.pivot.price)
-            : 0;
+          if (curr.pivot.status !== 2) {
+            return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
+          }
+          return prev;
         }, 0);
+
+      console.log(totalAmount);
 
       return {
         contractClientId: row.contract_client_id,
