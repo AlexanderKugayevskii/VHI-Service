@@ -174,8 +174,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
           return prev;
         }, 0);
 
-      console.log(totalAmount);
-
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
