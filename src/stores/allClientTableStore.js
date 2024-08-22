@@ -136,7 +136,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     pagination.value.descending = props.pagination.descending;
     pagination.value.sortBy = propsSortBy;
 
-    console.log(pagination.value);
   };
 
   const currentDate = dayjs();

@@ -57,7 +57,7 @@ const open = () => {
 };
 
 onMounted(() => {
-  console.log(props.notification);
+  // console.log(props.notification);
 });
 
 const message = computed(() => {

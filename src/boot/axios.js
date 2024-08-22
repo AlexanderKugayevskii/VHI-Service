@@ -20,7 +20,7 @@ const api = axios.create({ baseURL: url + "/api" });
 export default boot(({ app, router }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
   function redirectToLogin() {
-    console.log("Токен протух. Перенаправляем на страницу логина.");
+    // console.log("Токен протух. Перенаправляем на страницу логина.");
   }
   api.interceptors.request.use((config) => {
     const token = localStorage.getItem("authToken");
@@ -41,7 +41,7 @@ export default boot(({ app, router }) => {
       }
     }
     config.headers["Access-Control-Allow-Origin"] = "*";
-    console.log("any request");
+    // console.log("any request");
     return config;
   });
 

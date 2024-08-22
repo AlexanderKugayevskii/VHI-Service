@@ -255,7 +255,7 @@ const selectOption = (option) => {
 };
 
 const openClientInfo = async (client) => {
-  console.log(`CLIENT FROM FULL CLIENTS TABLE`, client);
+  // console.log(`CLIENT FROM FULL CLIENTS TABLE`, client);
   appealStore.setClient(client);
   router.push(
     Trans.i18nRoute({

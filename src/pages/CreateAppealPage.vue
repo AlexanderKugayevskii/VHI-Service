@@ -849,7 +849,7 @@ watch(
 );
 
 onMounted(() => {
-  console.log(`client`, clientData.value);
+  // console.log(`client`, clientData.value);
 });
 
 const hideModal = () => {
