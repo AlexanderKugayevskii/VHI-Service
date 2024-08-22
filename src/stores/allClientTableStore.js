@@ -68,21 +68,18 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       align: "left",
       label: "Дата начала страхования",
       field: "startInsurancePeriod",
-      sortable: true,
     },
     {
       name: "endInsurancePeriod",
       align: "left",
       label: "Дата конца страхования",
       field: "endInsurancePeriod",
-      sortable: true,
     },
     {
       name: "organizationName",
       align: "left",
       label: "Организация",
       field: "organizationName",
-      sortable: true,
     },
     {
       name: "change",
@@ -124,12 +121,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
     if (propsSortBy === "index") {
       sortBy = "id";
-    } else if (propsSortBy === "startInsurancePeriod") {
-      sortBy = "contract.start_date";
-    } else if (propsSortBy === "endInsurancePeriod") {
-      sortBy = "contract.end_date";
-    } else if (propsSortBy === "organizationName") {
-      sortBy = "applicant";
     } else if (propsSortBy === "dmsId") {
       sortBy = "dms_code";
     }
