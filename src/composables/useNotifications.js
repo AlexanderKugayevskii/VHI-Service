@@ -11,6 +11,7 @@ const useNotifications = () => {
       if (response.status !== 200) {
         throw new Error("Network response was not ok");
       }
+      
       const data = response.data.data;
       notifications.value = data;
     } catch (error) {
