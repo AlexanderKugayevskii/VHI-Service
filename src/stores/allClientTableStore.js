@@ -273,6 +273,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClinicApplications(id);
       const data = response.data.data;
 
+      console.log(response.data);
       clinicClientApplications.value = data;
     } catch (e) {
       console.error(e);
@@ -296,6 +297,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
 
+      const appliedDate = row.applied_date.split("-").reverse().join("-");
+      const finishedDate = row.finished_date
+        ? row.finished_date.split("-").reverse().join("-")
+        : null;
+
       const totalAmount = row.doctors
         .concat(row.services)
         .reduce((prev, curr) => {
@@ -312,7 +318,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         clientLastname: clientInfo.value.client.lastname,
         birthday: clientInfo.value.client.birthday,
         type_id: row.client_type,
-        appealDate: formatDate(row.created_at),
+        appealDate: appliedDate,
+        finishedDate: finishedDate,
         appealStatus: row.status,
         clinicName: row.hospital?.name,
         doctorName: doctors,
@@ -333,6 +340,10 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       console.log(row);
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
 
+      const finishedDate = row.finished_date
+        ? row.finished_date.split("-").reverse().join("-")
+        : null;
+
       const totalAmount = row.drugs.reduce((prev, curr) => {
         if (curr.pivot.status !== 2) {
           return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
@@ -347,6 +358,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         birthday: clientInfo.value.client.birthday,
         type_id: row.client_type,
         appealDate: formatDate(row.created_at),
+        finishedDate: finishedDate,
+
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
         medicines: medicines,
