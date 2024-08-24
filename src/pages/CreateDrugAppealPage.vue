@@ -530,14 +530,14 @@ const handleCreateAppeal = async () => {
   });
 
   await appealStore.fetchMedicalPrograms();
-  await appealStore.fetchApplicantDrugData();
+  await appealStore.fetchApplicantDrugData(appealStore.client.appealId);
 
   $q.loading.hide();
   if (appealStore.isAgent) {
     router.replace(
       Trans.i18nRoute({
         name: "createAppealDrugLimit",
-        params: { id: appealStore.client.contractClientId },
+        params: { id: appealStore.client.appealId },
       })
     );
   }
@@ -603,7 +603,13 @@ const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
   appealStore.clearDrugstoreData();
-  router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
+
+  if (appealStore.isDrugstore) {
+    router.replace(Trans.i18nRoute({ name: "drugstore-page" }));
+  } else {
+    router.go(-1);
+  }
+  createAppealModalRef.value.hide();
 };
 const handleStatusDrugs = (item, isSuggested) => {
   appealStore.changeStatusDrugs(item, isSuggested);
