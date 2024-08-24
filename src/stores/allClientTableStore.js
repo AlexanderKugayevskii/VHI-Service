@@ -135,7 +135,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
     pagination.value.descending = props.pagination.descending;
     pagination.value.sortBy = propsSortBy;
-
   };
 
   const currentDate = dayjs();
@@ -297,6 +296,15 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const doctors = row.doctors.map((doctor) => doctor.name).join(", ");
       const services = row.services.map((service) => service.name).join(", ");
 
+      const totalAmount = row.doctors
+        .concat(row.services)
+        .reduce((prev, curr) => {
+          if (curr.pivot.status !== 2) {
+            return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
+          }
+          return prev;
+        }, 0);
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -310,7 +318,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         doctorName: doctors,
         serviceName: services,
         diagnosisName: row.diagnosis ?? "",
-        expenseAmount: row.total_amount ?? "",
+        expenseAmount: totalAmount ?? "",
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program?.name,
 
@@ -322,7 +330,15 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const applicationsDrugstoreRows = computed(() => {
     return drugstoreClientApplications.value.map((row, index) => {
+      console.log(row);
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
+
+      const totalAmount = row.drugs.reduce((prev, curr) => {
+        if (curr.pivot.status !== 2) {
+          return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
+        }
+        return prev;
+      }, 0);
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -334,7 +350,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",
         medicines: medicines,
-        expenseAmount: row.total_amount ?? "",
+        expenseAmount: totalAmount ?? "",
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program.name,
         userSettings: "",

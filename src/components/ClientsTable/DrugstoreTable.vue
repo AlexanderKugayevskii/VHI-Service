@@ -181,7 +181,7 @@
               </TableTooltip>
             </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
-              {{ props.row.expenseAmount }}
+              {{ formatPrice(props.row.expenseAmount, false) }}
             </q-td>
             <q-td
               key="userSettings"
@@ -237,7 +237,7 @@ import DateInput from "../Shared/DateInput.vue";
 import PaginationTable from "./PaginationTable.vue";
 import UserSettings from "./UserSettings.vue";
 import { onMounted, computed, ref, toRef, toRefs, watch } from "vue";
-
+import formatPrice from "src/helpers/formatPrice";
 import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
