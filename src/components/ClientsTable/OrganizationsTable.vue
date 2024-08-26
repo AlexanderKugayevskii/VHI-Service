@@ -116,7 +116,7 @@
               <SimpleButton
                 label="скачать отчет"
                 custom-class="appeals-btn reports-btn"
-                @click="downloadReportByOrganization(props.row.index)"
+                @click="downloadReportByOrganization(props.row)"
                 :disabled="disableButton"
               />
             </q-td>
@@ -301,21 +301,23 @@ const downloadReport = async () => {
   }
 };
 
-const downloadReportByOrganization = async (organizationId) => {
-  console.log(organizationId);
+const downloadReportByOrganization = async (row) => {
   try {
     const response = await ClinicService.downloadOrganizationsExcel(
       {
         startDate: dateRangeData.value.startDate,
         endDate: dateRangeData.value.endDate,
       },
-      organizationId
+      row.index
     );
     const blob = new Blob([response.data], { type: response.data.type });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `report_by_organization.xlsx`);
+    link.setAttribute(
+      "download",
+      `${row.organizationName}_${dateRangeData.value.startDate}_${dateRangeData.value.endDate}.xlsx`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
