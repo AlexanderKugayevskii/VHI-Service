@@ -12,14 +12,19 @@ function getServices(id) {
   return api.get(`/clinics/${id}/services`);
 }
 
-function downloadOrganizationsExcel(dateRange) {
+function downloadOrganizationsExcel(dateRange, organizationId) {
   return api.post(
     `/clinics/organizations-excel`,
     {
       ...dateRange,
+      id: organizationId,
     },
     { responseType: "blob" }
   );
+}
+
+function fetchOrganizations() {
+  return api.get("/clinics/organizations-list");
 }
 
 export default {
@@ -28,4 +33,5 @@ export default {
   getServices,
 
   downloadOrganizationsExcel,
+  fetchOrganizations,
 };
