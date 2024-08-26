@@ -14,10 +14,9 @@ function getServices(id) {
 
 function downloadOrganizationsExcel(dateRange, organizationId) {
   return api.post(
-    `/clinics/organizations-excel`,
+    `/clinics/organizations-excel/${organizationId}`,
     {
       ...dateRange,
-      id: organizationId,
     },
     { responseType: "blob" }
   );
