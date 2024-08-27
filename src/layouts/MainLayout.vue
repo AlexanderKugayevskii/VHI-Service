@@ -2,6 +2,46 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="body-bg bordered">
       <q-toolbar class="q-px-lg q-py-sm">
+        <q-btn flat @click="toggleDrawerRight" round dense>
+          <q-icon size="20px">
+            <svg
+              width="16"
+              height="12"
+              viewBox="0 0 16 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Group">
+                <g id="Group_2">
+                  <path
+                    id="Vector"
+                    d="M1.33325 6H14.6666"
+                    stroke="#2C3955"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    id="Vector_2"
+                    d="M1.33325 1H14.6666"
+                    stroke="#2C3955"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    id="Vector_3"
+                    d="M1.33325 11H14.6666"
+                    stroke="#2C3955"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+              </g>
+            </svg>
+          </q-icon>
+        </q-btn>
         <q-space></q-space>
         <div class="right-side">
           <LanguageSwitcher />
@@ -19,7 +59,8 @@
     <q-drawer
       :width="250"
       show-if-above
-      class="nav-bg q-pt-md q-pb-sm flex column"
+      v-model="drawerRight"
+      class="nav-bg q-pt-md q-pb-sm flex column drawer"
     >
       <div class="flex flex-center q-pb-xxl">
         <img alt="Logo Neo Insurance" src="~assets/logo-neo.svg" />
@@ -180,7 +221,7 @@
           </RouteLink>
         </q-list>
         <div class="q-px-sm drawer-bottom">
-          <div class = "drawer-neoshka">
+          <div class="drawer-neoshka">
             <img src="/neoshka.svg" />
           </div>
           <q-item class="q-pa-xs user justify-between">
@@ -307,6 +348,7 @@ export default defineComponent({
     const authStore = useAuthStore();
     const appealStore = useAppealStore();
     const isMenuOpen = ref(false);
+    const drawerRight = ref(false);
 
     const handleLogout = () => {
       authStore.logout();
@@ -317,6 +359,10 @@ export default defineComponent({
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
+    };
+
+    const toggleDrawerRight = () => {
+      drawerRight.value = !drawerRight.value;
     };
 
     onBeforeMount(() => {
@@ -334,6 +380,8 @@ export default defineComponent({
       handleLogout,
       isMenuOpen,
       toggleMenu,
+      drawerRight,
+      toggleDrawerRight,
     };
   },
 });

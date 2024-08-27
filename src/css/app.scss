@@ -74,6 +74,10 @@ body {
   .inner-table-td {
     padding: 0;
   }
+
+  @media screen and (max-width: 1240px) {
+    table-layout: auto;
+  }
 }
 .act-service-table .q-table {
   table-layout: auto;
@@ -90,6 +94,10 @@ body {
 // .full-client-table .q-table tr td:last-child {
 //   position: static;
 // }
+
+.drawer {
+  flex-wrap: nowrap;
+}
 
 .q-table__middle {
   background: none;
