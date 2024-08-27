@@ -22,13 +22,17 @@
             fill="#7A88A6"
           />
         </svg>
-        <q-badge class="notification-badge" floating rounded>{{
-          notifications.length
-        }}</q-badge>
+        <q-badge
+          v-if="notifications.length > 0"
+          class="notification-badge"
+          floating
+          rounded
+          >{{ notifications.length }}</q-badge
+        >
       </q-btn>
     </div>
 
-    <Transition name="fade">
+    <Transition name="fade" v-if="notifications.length > 0">
       <div
         v-click-out-side="closeModal"
         class="dropdown-select"
