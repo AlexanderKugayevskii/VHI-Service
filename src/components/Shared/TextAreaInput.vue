@@ -137,6 +137,7 @@ watch(
     border: none;
     padding: 0;
     color: $primary;
+    resize: vertical;
     &::placeholder {
       color: #7a88a6;
       font-size: 15px;

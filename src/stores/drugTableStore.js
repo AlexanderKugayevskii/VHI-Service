@@ -139,6 +139,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   const rows = computed(() => {
     return users.value.map((row, index) => {
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
+      const appliedDate = row.applied_date.split("-").reverse().join("-");
       const finishedDate = row.finished_date
         ? row.finished_date.split("-").reverse().join("-")
         : null;
@@ -153,7 +154,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         clientFirstname: row.client.name,
         clientLastname: row.client.lastname,
         birthday: row.client.birthday,
-        appealDate: formatDate(row.created_at),
+        appealDate: appliedDate,
         finishedDate: finishedDate,
         appealStatus: row.status,
         drugstore: row.drugstore.name ?? "",

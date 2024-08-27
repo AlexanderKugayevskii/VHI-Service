@@ -212,10 +212,17 @@
                               :modelValue="clientData.finishedDate"
                             ></DateInput>
 
-                            <!-- <TextAreaInput
+                            <TextAreaInput
                               label="Комментарий"
-                              placeholder="укажите комментарий"
-                            /> -->
+                              :placeholder="
+                                appealStore.isClinic
+                                  ? 'комментариев нет'
+                                  : 'укажите комментарий'
+                              "
+                              :modelValue="appealStore.comment"
+                              @update:model-value="setComment"
+                              :disableInput="appealStore.isClinic"
+                            />
                           </div>
                         </q-tab-panel>
 
@@ -915,6 +922,14 @@ const handleStatusDoctor = (item, isSuggested) => {
 };
 const handleStatusService = (item, isSuggested) => {
   appealStore.changeStatusService(item, isSuggested);
+};
+
+const setComment = (val) => {
+  if (appealStore.isClinic) {
+    return;
+  }
+
+  appealStore.setComment(val);
 };
 
 // const handleRemoveDrug = (item) => {

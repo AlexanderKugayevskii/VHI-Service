@@ -76,6 +76,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
 
   const diagnosis = ref("");
+  const comment = ref("");
   const appealDate = ref(todayDate);
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
@@ -107,6 +108,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const setDiagnosis = (value) => {
     diagnosis.value = value;
+  };
+  const setComment = (value) => {
+    comment.value = value;
   };
 
   const setAppealDate = (value) => {
@@ -531,6 +535,7 @@ export const useAppealStore = defineStore("appeal", () => {
   };
   const clearAppealData = () => {
     diagnosis.value = "";
+    comment.value = "";
     appealDate.value = todayDate;
     doctors.value = [];
     services.value = [];
@@ -781,6 +786,7 @@ export const useAppealStore = defineStore("appeal", () => {
       hospital_id: selectedClinic.value.id,
       client_type: client.value.type_id,
       is_hospital: true,
+      comment: comment.value,
       services,
       doctors,
       diagnosis: diagnosis.value,
@@ -828,6 +834,7 @@ export const useAppealStore = defineStore("appeal", () => {
       doctors: allDoctorsStatus.value,
       diagnosis: diagnosis.value,
       applied_date: appealDate.value,
+      comment: comment.value,
     };
 
     try {
@@ -943,6 +950,7 @@ export const useAppealStore = defineStore("appeal", () => {
       // client.value.appealStatus = data.status;
       selectedClinic.value = data.hospital;
       diagnosis.value = data.diagnosis;
+      comment.value = data.comment ?? "";
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -1426,7 +1434,9 @@ export const useAppealStore = defineStore("appeal", () => {
     client,
     setClient,
     diagnosis,
+    comment,
     setDiagnosis,
+    setComment,
     appealDate,
     setAppealDate,
     clinics,
