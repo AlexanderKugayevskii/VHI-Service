@@ -184,14 +184,14 @@
                                 />
                               </template>
                             </DropdownSelectNew>
-                            <SimpleInput
-                              class="dropdown-space"
+                            <TextAreaInput
+                              class="dropdown-space diagnosis-input"
                               label="Диагноз"
                               placeholder="Введите диагноз"
                               :disableInput="clientData.appealStatus === 2"
                               @update:model-value="appealStore.setDiagnosis"
                               :modelValue="appealStore.diagnosis"
-                            ></SimpleInput>
+                            ></TextAreaInput>
 
                             <DateInput
                               class="dropdown-space"
