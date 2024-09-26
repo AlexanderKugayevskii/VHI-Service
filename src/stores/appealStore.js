@@ -910,6 +910,7 @@ export const useAppealStore = defineStore("appeal", () => {
     } catch (e) {
       console.error(e);
     }
+
   };
 
   const fetchApplicantData = async (id) => {
@@ -1077,6 +1078,8 @@ export const useAppealStore = defineStore("appeal", () => {
 
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
+
+      console.log(`DOCTORS `, selectedDoctors.value);
     } catch (e) {
       console.error(e);
     } finally {

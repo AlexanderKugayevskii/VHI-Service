@@ -380,11 +380,12 @@ const openAppealPage = async (client) => {
 };
 
 const openAppealLimit = async (client) => {
-  // appealStore.setClient(client);
+  appealStore.setClient(client);
   appealStore.setTypeOfAppeal("CHANGE");
   $q.loading.show({
     delay: 500,
   });
+
 
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData(client.appealId);
