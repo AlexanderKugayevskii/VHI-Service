@@ -1,19 +1,21 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import NotificationService from "src/services/NotificationService";
+import { useAuthStore } from "src/stores/authStore";
+import { useCommonStore } from "src/stores/commonStore";
 
 const useNotifications = () => {
+  const authStore = useAuthStore();
+  const commonStore = useCommonStore();
   const notifications = ref([]);
   const previousNotificationCount = ref(0); // Сохраняем предыдущее количество уведомлений
   const isPolling = ref(false);
+
+  //sound
   const notificationSound = new Audio("/notification-sound.mp3"); // Добавляем звук
   notificationSound.volume = 0.3; // Устанавливаем громкость на 50%
 
-  let userInteracted = false;
-
   const handleUserInteraction = () => {
-    userInteracted = true;
-
-    console.log(userInteracted);
+    commonStore.setUserInteracted();
     document.removeEventListener("click", handleUserInteraction);
   };
 
@@ -28,12 +30,11 @@ const useNotifications = () => {
 
       const data = response.data.data;
 
-      if (data.length > previousNotificationCount.value) {
+      if (
+        data.length > previousNotificationCount.value &&
+        commonStore.userInteracted
+      ) {
         notificationSound.play(); // Проигрываем звук, если пришло новое уведомление
-        previousNotificationCount.value = data.length;
-      }
-
-      if (userInteracted) {
         previousNotificationCount.value = data.length;
       }
 

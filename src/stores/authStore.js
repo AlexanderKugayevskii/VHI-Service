@@ -3,8 +3,11 @@ import { ref } from "vue";
 import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
 import { Notify } from "quasar";
+import { useCommonStore } from "./commonStore";
 
 export const useAuthStore = defineStore("auth", () => {
+  //stores
+  const commonStore = useCommonStore();
   //state
   const user = ref(null);
   const token = ref(null);
@@ -19,6 +22,8 @@ export const useAuthStore = defineStore("auth", () => {
 
     localStorage.setItem("authToken", payload.token);
     localStorage.setItem("authUser", JSON.stringify(payload.user));
+
+    commonStore.setUserInteracted();
   };
 
   const setLoading = (loadingValue) => {
