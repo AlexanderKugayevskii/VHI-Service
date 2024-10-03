@@ -28,8 +28,6 @@ const useNotifications = () => {
 
       const data = response.data.data;
 
-      console.log(data.length);
-      console.log(previousNotificationCount.value);
       if (data.length > previousNotificationCount.value) {
         notificationSound.play(); // Проигрываем звук, если пришло новое уведомление
         previousNotificationCount.value = data.length;
@@ -39,7 +37,6 @@ const useNotifications = () => {
         previousNotificationCount.value = data.length;
       }
 
-      console.log(data);
       notifications.value = data;
     } catch (error) {
       console.error("Fetch error", error);
