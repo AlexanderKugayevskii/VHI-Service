@@ -31,7 +31,6 @@
         >
       </q-btn>
     </div>
-
     <Transition name="fade" v-if="notifications.length > 0">
       <div
         v-click-out-side="closeModal"
