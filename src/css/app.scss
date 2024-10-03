@@ -534,5 +534,6 @@ button[class^="btn"] {
 }
 
 .diagnosis-input textarea.input-field__text-input {
-  min-height: 0;
+  resize: none; 
+  min-height: 120px;
 }
