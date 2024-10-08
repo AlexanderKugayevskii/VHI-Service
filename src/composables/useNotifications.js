@@ -31,6 +31,7 @@ const useNotifications = () => {
       }
 
       const data = response.data.data;
+     
 
       if (
         data.length > previousNotificationCount.value &&
