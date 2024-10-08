@@ -116,6 +116,9 @@ export const useAppealStore = defineStore("appeal", () => {
   const setAppealDate = (value) => {
     appealDate.value = value;
   };
+  const setFinishedDate = (value) => {
+    client.value.finishedDate = value;
+  };
   const clinics = ref([]);
   const selectedClinic = ref(null);
 
@@ -793,6 +796,7 @@ export const useAppealStore = defineStore("appeal", () => {
       applied_date: appealDate.value,
       finished: finishedAppeal.value,
     };
+
     try {
       const response = await AppealService.saveAppealByAgent(payload);
       const data = response.data.data;
@@ -836,6 +840,9 @@ export const useAppealStore = defineStore("appeal", () => {
       applied_date: appealDate.value,
       comment: comment.value,
     };
+    if (client.value.appealStatus === 2) {
+      payload.finished_date = client.value.finishedDate;
+    }
 
     try {
       const response = await AppealService.changeAppealData(
@@ -910,7 +917,6 @@ export const useAppealStore = defineStore("appeal", () => {
     } catch (e) {
       console.error(e);
     }
-
   };
 
   const fetchApplicantData = async (id) => {
@@ -923,6 +929,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
+
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,
@@ -1442,6 +1449,7 @@ export const useAppealStore = defineStore("appeal", () => {
     setComment,
     appealDate,
     setAppealDate,
+    setFinishedDate,
     clinics,
     selectedClinic,
     doctors,
@@ -1475,7 +1483,6 @@ export const useAppealStore = defineStore("appeal", () => {
     checkSuggestedServices,
     cantRemoveFromSelectedDoctors,
     cantRemoveFromSelectedServices,
-
     drugs,
     drugstores,
     drugAppealImage,
