@@ -2,11 +2,13 @@ import { computed, ref } from "vue";
 import NotificationService from "src/services/NotificationService";
 import { useAuthStore } from "src/stores/authStore";
 import { useCommonStore } from "src/stores/commonStore";
+import { Notify } from "quasar";
 
 const useNotifications = () => {
   const authStore = useAuthStore();
   const commonStore = useCommonStore();
   const notifications = ref([]);
+  const lastNotification = ref(null);
   const previousNotificationCount = ref(0); // Сохраняем предыдущее количество уведомлений
   const isPolling = ref(false);
 
@@ -35,10 +37,16 @@ const useNotifications = () => {
         commonStore.userInteracted
       ) {
         notificationSound.play(); // Проигрываем звук, если пришло новое уведомление
+
+        // всплывающее уведомление
+        // Notify.create({
+        //   message: "Danger, Will Robinson! Danger!",
+        // });
         previousNotificationCount.value = data.length;
       }
 
       notifications.value = data;
+      lastNotification.value = data.at(-1);
     } catch (error) {
       console.error("Fetch error", error);
     }
@@ -63,7 +71,7 @@ const useNotifications = () => {
     isPolling.value = false;
   };
 
-  return { notifications, startPolling, stopPolling };
+  return { lastNotification, notifications, startPolling, stopPolling };
 };
 
 export default useNotifications;

@@ -120,7 +120,8 @@ export default {
     const router = useRouter();
     const scrollTarget = ref(null);
     const virtualListScrollTargetRef = ref(null);
-    const { notifications, startPolling, stopPolling } = useNotifications();
+    const { lastNotification, notifications, startPolling, stopPolling } =
+      useNotifications();
 
     onMounted(() => {
       scrollTarget.value = virtualListScrollTargetRef.value;
@@ -153,6 +154,7 @@ export default {
       virtualListScrollTargetRef,
       scrollTarget,
       notifications,
+      lastNotification,
       openAppealPage,
     };
   },

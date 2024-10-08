@@ -138,7 +138,7 @@
 
                               <DateInput
                                 v-if="clientData.finishedDate"
-                                :disableInput="clientData.appealStatus === 2"
+                                :disableInput="appealStore.isClinic"
                                 number
                                 label="Дата завершения"
                                 :modelValue="clientData.finishedDate"
