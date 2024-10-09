@@ -210,6 +210,7 @@
                               number
                               label="Дата завершения"
                               :modelValue="clientData.finishedDate"
+                              @update:model-value="appealStore.setFinishedDate"
                             ></DateInput>
 
                             <TextAreaInput
@@ -621,7 +622,8 @@
                         "
                         :disabled="
                           appealStore.finishedAppeal ||
-                          clientData.appealStatus === 2
+                          clientData.appealStatus === 2 ||
+                          checkSuggestedItems
                         "
                       >
                       </SimpleCheckbox>
@@ -765,6 +767,13 @@ const doctorCustomPrice = reactive({
 const disabledDoctorButton = computed(
   () => doctorCustomPrice.rawValue.length === 0
 );
+
+const checkSuggestedItems = computed(() => {
+  return (
+    appealStore.suggestedDoctors.length > 0 ||
+    appealStore.suggestedServices.length > 0
+  );
+});
 
 const serviceDropdownRef = ref(null);
 const serviceCustomPrice = reactive({
