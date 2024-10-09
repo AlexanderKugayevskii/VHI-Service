@@ -716,7 +716,17 @@ export const useAppealStore = defineStore("appeal", () => {
       drugs: allDrugsStatus.value,
       applied_date: appealDate.value,
     };
+
+    if (client.value.appealStatus === 2) {
+      payload.finished_date = client.value.finishedDate
+        .split("-")
+        .reverse()
+        .join("-");
+    }
+
+    console.log(`drugs change`, payload);
     // appendFormData(formData, payload);
+    formData.append("finished_date", payload.finished_date);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);
@@ -841,7 +851,10 @@ export const useAppealStore = defineStore("appeal", () => {
       comment: comment.value,
     };
     if (client.value.appealStatus === 2) {
-      payload.finished_date = client.value.finishedDate.split('-').reverse().join('-');
+      payload.finished_date = client.value.finishedDate
+        .split("-")
+        .reverse()
+        .join("-");
     }
 
     try {
@@ -1422,6 +1435,7 @@ export const useAppealStore = defineStore("appeal", () => {
             status: 1,
           },
           status: 1,
+          progress: 2,
         };
       });
       finishedAppeal.value = true;

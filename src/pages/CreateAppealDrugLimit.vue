@@ -258,7 +258,7 @@
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
-                      formatPrice(appealStore.appealTotalConsumption)
+                      formatPrice(appealStore.appealTotalDrugConsumption)
                     }}</span>
                   </div>
                 </div>
