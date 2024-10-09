@@ -841,7 +841,7 @@ export const useAppealStore = defineStore("appeal", () => {
       comment: comment.value,
     };
     if (client.value.appealStatus === 2) {
-      payload.finished_date = client.value.finishedDate;
+      payload.finished_date = client.value.finishedDate.split('-').reverse().join('-');
     }
 
     try {
