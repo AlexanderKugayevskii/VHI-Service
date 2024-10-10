@@ -150,7 +150,6 @@ const deleteDoctor = async (row) => {
       doctor_id: row.serviceId,
     });
     const data = response.data;
-    console.log(data);
   } catch (e) {
     console.error(e);
   }

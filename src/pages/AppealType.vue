@@ -138,7 +138,6 @@ const hideModal = () => {
 const goToAppeal = async () => {
   appealTypeModalRef.value.hide();
   const localClient = $q.sessionStorage.getItem("client");
-  console.log(appealStore.client);
   if (type.value === 0) {
     await appealStore.setClinic();
     appealStore.setTypeOfAppeal("NEW");

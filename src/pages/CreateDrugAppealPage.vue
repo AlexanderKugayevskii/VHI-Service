@@ -142,7 +142,9 @@
                                 number
                                 label="Дата завершения"
                                 :modelValue="clientData.finishedDate"
-                                @update:model-value="appealStore.setFinishedDate"
+                                @update:model-value="
+                                  appealStore.setFinishedDate
+                                "
                               ></DateInput>
                             </div>
 
