@@ -684,7 +684,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.saveDrugAppeal(formData);
       const data = response.data.data;
-      console.log(`POST APPEAL DRUG DATA, `, data);
+      
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
