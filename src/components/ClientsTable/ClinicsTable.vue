@@ -283,7 +283,6 @@ const getExcelData = async () => {
 
     const fileDate = dayjs().format("D-MM-YY");
     const blob = new Blob([response.data], { type: response.data.type });
-    console.log(`clinic table`, response);
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;

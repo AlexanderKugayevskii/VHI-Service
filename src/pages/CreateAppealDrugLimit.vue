@@ -258,7 +258,7 @@
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
-                      formatPrice(appealStore.appealTotalConsumption)
+                      formatPrice(appealStore.appealTotalDrugConsumption)
                     }}</span>
                   </div>
                 </div>
@@ -378,7 +378,7 @@ watch(
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
-  appealStore.clearClinicData();
+  appealStore.clearDrugstoreData();
   // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
   router.go(-1);
 };

@@ -192,7 +192,6 @@ const findClinic = (hospitalId) => {
 ///////////////
 
 const deleteService = async (row) => {
-  console.log(row);
   try {
     const response = await ActService.aktDelete(props.id, {
       type: 0,

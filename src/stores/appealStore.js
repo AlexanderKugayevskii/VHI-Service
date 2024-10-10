@@ -659,6 +659,9 @@ export const useAppealStore = defineStore("appeal", () => {
 
     const drugsData = selectedDrugs.value.map((drug) => {
       const { pivot, isNew, ...other } = drug;
+      other.status = pivot.status;
+      other.progress = pivot.progress
+
       return other;
     });
 
@@ -681,6 +684,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.saveDrugAppeal(formData);
       const data = response.data.data;
+      
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -716,7 +720,16 @@ export const useAppealStore = defineStore("appeal", () => {
       drugs: allDrugsStatus.value,
       applied_date: appealDate.value,
     };
+
+    if (client.value.appealStatus === 2) {
+      payload.finished_date = client.value.finishedDate
+        .split("-")
+        .reverse()
+        .join("-");
+    }
+
     // appendFormData(formData, payload);
+    formData.append("finished_date", payload.finished_date);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);
@@ -841,7 +854,10 @@ export const useAppealStore = defineStore("appeal", () => {
       comment: comment.value,
     };
     if (client.value.appealStatus === 2) {
-      payload.finished_date = client.value.finishedDate.split('-').reverse().join('-');
+      payload.finished_date = client.value.finishedDate
+        .split("-")
+        .reverse()
+        .join("-");
     }
 
     try {
@@ -1085,8 +1101,6 @@ export const useAppealStore = defineStore("appeal", () => {
 
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
-
-      console.log(`DOCTORS `, selectedDoctors.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -1104,7 +1118,6 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
-      console.log(`drugstore`, data);
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,
@@ -1244,7 +1257,6 @@ export const useAppealStore = defineStore("appeal", () => {
         if (selectedItem.medical_program?.name) {
           limit.name = selectedItem.medical_program?.name;
         }
-        console.log(doctor.pivot.program_item_id);
         return {
           ...doctor,
           pivot: {
@@ -1271,8 +1283,6 @@ export const useAppealStore = defineStore("appeal", () => {
     } else {
       selectedDoctors.value = doctors;
     }
-
-    console.log(selectedDoctors.value);
   };
 
   const changeStatusService = (
@@ -1422,6 +1432,7 @@ export const useAppealStore = defineStore("appeal", () => {
             status: 1,
           },
           status: 1,
+          progress: 2,
         };
       });
       finishedAppeal.value = true;
