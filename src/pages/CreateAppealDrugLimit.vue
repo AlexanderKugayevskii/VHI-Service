@@ -378,7 +378,7 @@ watch(
 const hideModal = () => {
   createAppealModalRef.value.hide();
   appealStore.clearAppealData();
-  appealStore.clearClinicData();
+  appealStore.clearDrugstoreData();
   // router.replace(Trans.i18nRoute({ name: "appeals-page" }));
   router.go(-1);
 };
