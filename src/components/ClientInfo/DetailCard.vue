@@ -25,7 +25,6 @@
             formatPrice(remaind)
           }}</span>
         </p>
-      
       </div>
       <div class="details__card-icons" v-if="$slots.icons">
         <slot name="icons">
@@ -79,27 +78,33 @@
 
 <script setup>
 import formatPrice from "src/helpers/formatPrice";
-import { watchEffect } from "vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 const props = defineProps({
   rate: {
     type: Object,
   },
 });
+const emit = defineEmits(["alert"]);
 
 const rate = computed(() => props.rate);
 
 const limit = computed(() => {
-  return formatPrice(Number(props.rate.limit));
+  return formatPrice(parseFloat(props.rate.limit));
 });
 const spent = computed(() => {
-  const spentNumber = -Number(props.rate.spent);
-  if (spentNumber >= 0) return Number(props.rate.spent);
+  const spentNumber = -parseFloat(props.rate.spent);
+  if (spentNumber >= 0) return parseFloat(props.rate.spent);
   return spentNumber;
 });
 const remaind = computed(() => {
-  return Number(props.rate.limit) - Number(props.rate.spent);
+  return parseFloat(props.rate.limit) - parseFloat(props.rate.spent);
+});
+
+watch(remaind, (newVal) => {
+  if (newVal < 0) {
+    emit("alert", rate.value);
+  }
 });
 </script>
 

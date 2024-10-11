@@ -239,6 +239,10 @@
                       customClass="btn-action"
                       :loading="appealStore.loading"
                       @click="handleChangeAppeal"
+                      :disabled="
+                        appealStore.checkSelectedLimits ||
+                        appealStore.checkRemaindMedicalLimits
+                      "
                     >
                       <template #loading-spinner> <LoadingSpinner /> </template
                     ></SimpleButton>
@@ -247,6 +251,10 @@
                       type="button"
                       customClass="btn-cancel"
                       @click="hideModal"
+                      :disabled="
+                        appealStore.checkSelectedLimits ||
+                        appealStore.checkRemaindMedicalLimits
+                      "
                     ></SimpleButton>
                   </div>
                   <div
@@ -280,6 +288,7 @@
                             v-for="limit in calculateLimits"
                             :key="limit.id"
                             :rate="limit"
+                            @alert="testLog"
                           ></DetailCard>
                         </div>
                       </div>
@@ -410,6 +419,14 @@ const selectLimitDrug = (item, drug, isSuggested) => {
   );
 };
 
+const testLog = (rate) => {
+  $q.notify({
+    type: "error",
+    message: `Лимит "${rate.name}" - недостаточно средств`,
+    position: "bottom",
+    timeout: 3000,
+  });
+};
 onMounted(() => {
   if (appealStore.isAgent) {
     const appealStatuses = appealStore.allDrugsStatus;
