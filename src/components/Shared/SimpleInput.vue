@@ -16,6 +16,7 @@
           class="input-field__text-input"
           :value="modelValue"
           @input="onInput"
+      
         />
         <slot name="action-button"></slot>
         <q-icon size="20px" v-if="showIcon">

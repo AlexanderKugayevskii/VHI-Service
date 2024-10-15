@@ -84,14 +84,14 @@
 
 <script setup>
 import formatPrice from "src/helpers/formatPrice";
-import { watchEffect } from "vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 const props = defineProps({
   rate: {
     type: Object,
   },
 });
+const emit = defineEmits(["alert"]);
 
 const rate = computed(() => props.rate);
 
@@ -99,6 +99,8 @@ const limit = computed(() => {
   return parseFloat(props.rate.limit);
 });
 const spent = computed(() => {
+  const spentNumber = -parseFloat(props.rate.spent);
+  if (spentNumber >= 0) return parseFloat(props.rate.spent);
   const spentNumber = -parseFloat(props.rate.spent);
   if (spentNumber >= 0) return parseFloat(props.rate.spent);
   return spentNumber;
@@ -118,6 +120,13 @@ const percentLimitStyle = computed(() => {
     return "alert--medium";
   } else {
     return "";
+  }
+  return parseFloat(props.rate.limit) - parseFloat(props.rate.spent);
+});
+
+watch(remaind, (newVal) => {
+  if (newVal < 0) {
+    emit("alert", rate.value);
   }
 });
 </script>
