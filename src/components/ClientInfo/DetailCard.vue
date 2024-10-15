@@ -101,8 +101,6 @@ const limit = computed(() => {
 const spent = computed(() => {
   const spentNumber = -parseFloat(props.rate.spent);
   if (spentNumber >= 0) return parseFloat(props.rate.spent);
-  const spentNumber = -parseFloat(props.rate.spent);
-  if (spentNumber >= 0) return parseFloat(props.rate.spent);
   return spentNumber;
 });
 const remaind = computed(() => {
@@ -121,7 +119,6 @@ const percentLimitStyle = computed(() => {
   } else {
     return "";
   }
-  return parseFloat(props.rate.limit) - parseFloat(props.rate.spent);
 });
 
 watch(remaind, (newVal) => {
