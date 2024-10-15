@@ -159,6 +159,11 @@
             <q-td key="client" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
+                <span
+                  style="color: var(--q-negative)"
+                  v-if="props.row.specificType === 1"
+                  >{{ props.row.specificType }}</span
+                >
               </a>
               <TableTooltip>
                 {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
@@ -386,7 +391,6 @@ const openAppealLimit = async (client) => {
     delay: 500,
   });
 
-
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData(client.appealId);
   await appealStore.fetchHospitalData();
@@ -471,7 +475,7 @@ onMounted(() => {});
   width: 64px;
 }
 .appeals-th:nth-of-type(2) {
-  // width: 150px;
+  width: 280px;
 }
 .appeals-th:nth-of-type(3) {
   width: 150px;

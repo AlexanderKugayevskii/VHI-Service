@@ -95,6 +95,9 @@
           >
             <a class="appeal-link">
               {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
+              <span style="color: var(--q-negative)" v-if="props.row.type === 1"
+                >*</span
+              >
             </a>
             <TableTooltip>
               {{ props.row.clientLastname }} {{ props.row.clientFirstname }}

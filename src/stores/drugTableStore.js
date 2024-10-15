@@ -163,6 +163,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         dmsCode: row.contract_client.dms_code,
         program: row.contract_client.program?.name,
         type_id: row.client_type,
+        specificType: row.contract_client.type,
         userSettings: "",
         index: row.id,
       };

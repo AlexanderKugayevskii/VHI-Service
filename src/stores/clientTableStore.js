@@ -4,7 +4,6 @@ import { useAppealStore } from "./appealStore";
 import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
-import { sortBy } from "lodash";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
@@ -196,6 +195,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
         //   index +
         //   1,
+        specificType: row.contract_client.type,
         index: row.id,
       };
     });
