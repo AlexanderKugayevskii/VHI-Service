@@ -226,6 +226,8 @@ export default {
 
     onMounted(() => {
       scrollTarget.value = virtualListScrollTargetRef.value;
+
+      
     });
     return {
       virtualListScrollTargetRef,
@@ -318,7 +320,9 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+    
+  },
 };
 </script>
 
