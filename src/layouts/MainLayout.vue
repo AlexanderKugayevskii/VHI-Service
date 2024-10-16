@@ -219,6 +219,50 @@
             :routeTo="Trans.i18nRoute({ name: 'acts-page' })"
           >
           </RouteLink>
+
+          <!--  -->
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
+            <div class="menu-expand-item-header">
+              <button
+                class="nav-item nav-item-btn q-py-sm"
+                @click="toggleHistory"
+              >
+                <span class="nav-item-btn-left">
+                  <q-icon size="20px"> </q-icon>
+                  <span class="flex column">
+                    <span> История </span>
+                  </span>
+                </span>
+                <q-icon size="20px">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="#7A88A6"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </q-icon>
+              </button>
+            </div>
+            <Collapse :when="isHistoryOpen" class="v-collapse">
+              <div
+                class="menu-expand-item-content menu-expand-item-content-history"
+                ref="menuExpandContent"
+              >
+                <OpenedAppealsList />
+              </div>
+            </Collapse>
+          </div>
+
+          <!--  -->
         </q-list>
         <div class="q-px-sm drawer-bottom">
           <div class="drawer-neoshka">
@@ -332,6 +376,7 @@ import { useRouter } from "vue-router";
 import DropdownSettings from "src/components/Shared/DropdownSettings.vue";
 import { Collapse } from "vue-collapsed";
 import { onBeforeMount } from "vue";
+import OpenedAppealsList from "src/components/LastOpenedAppeals/OpenedAppealsList.vue";
 
 export default defineComponent({
   name: "MainLayout",
@@ -341,6 +386,7 @@ export default defineComponent({
     LanguageSwitcher,
     DropdownSettings,
     AppealNotification,
+    OpenedAppealsList,
   },
 
   setup() {
@@ -348,6 +394,7 @@ export default defineComponent({
     const authStore = useAuthStore();
     const appealStore = useAppealStore();
     const isMenuOpen = ref(false);
+    const isHistoryOpen = ref(true);
     const drawerRight = ref(false);
 
     const handleLogout = () => {
@@ -359,6 +406,9 @@ export default defineComponent({
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
+    };
+    const toggleHistory = () => {
+      isHistoryOpen.value = !isHistoryOpen.value;
     };
 
     const toggleDrawerRight = () => {
@@ -379,7 +429,9 @@ export default defineComponent({
       appealStore,
       handleLogout,
       isMenuOpen,
+      isHistoryOpen,
       toggleMenu,
+      toggleHistory,
       drawerRight,
       toggleDrawerRight,
     };
@@ -528,6 +580,12 @@ export default defineComponent({
     height: 100%;
     width: 1px;
     background-color: #e3e8f0;
+  }
+}
+.menu-expand-item-content-history {
+  padding-left: 0px;
+  &::before {
+    content: none;
   }
 }
 .menu-expand-item:has(.router-link-active) .nav-item-btn {

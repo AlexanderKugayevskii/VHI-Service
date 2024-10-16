@@ -21,6 +21,10 @@
             :status="clientData.appealStatus"
             :label="true"
           ></StatusBar>
+          <div class="label-row">
+            <span class="title-label red">Аптека</span>
+            <span class="title-label violet">Обращения</span>
+          </div>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">

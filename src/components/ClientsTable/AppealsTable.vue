@@ -162,7 +162,7 @@
                 <span
                   style="color: var(--q-negative)"
                   v-if="props.row.specificType === 1"
-                  >{{ props.row.specificType }}</span
+                  >*</span
                 >
               </a>
               <TableTooltip>
@@ -270,6 +270,7 @@ import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -307,6 +308,8 @@ const props = defineProps({
 });
 
 const appealStore = useAppealStore();
+const { deleteData } = useAppealsHistory();
+
 const tableRef = ref(null);
 
 const reactiveProps = toRefs(props);
@@ -406,6 +409,9 @@ const openAppealLimit = async (client) => {
 
 const deleteAppeal = async (data) => {
   await appealStore.deleteAppealData(data.appealId);
+  //appealsHistory
+
+  deleteData(data.appealId);
   tableRef.value.requestServerInteraction();
 };
 

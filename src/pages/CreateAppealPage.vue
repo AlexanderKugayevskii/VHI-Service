@@ -744,11 +744,14 @@ import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { onMounted } from "vue";
 import { useQuasar } from "quasar";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
+
+const { dataArray, addData } = useAppealsHistory();
 
 const { client: clientData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
@@ -803,7 +806,18 @@ const handleCreateAppeal = async () => {
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData(appealStore.client.appealId);
   await appealStore.fetchHospitalData();
+
   $q.loading.hide();
+  const { dmsCode, appealId, clientFirstname, clientLastname } =
+    appealStore.client;
+
+  addData({
+    dmsCode,
+    appealId,
+    clientFirstname,
+    clientLastname,
+    appealType: "CLINIC",
+  });
 
   if (appealStore.isAgent) {
     router.replace(
@@ -866,6 +880,8 @@ watch(
 
 onMounted(() => {
   // console.log(`client`, clientData.value);
+
+  console.log($q);
 });
 
 const hideModal = () => {

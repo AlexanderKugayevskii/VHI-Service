@@ -15,9 +15,9 @@ import iconSet from 'quasar/icon-set/material-icons.js'
 
 
 
-import {Loading,SessionStorage,Notify,Dialog} from 'quasar'
+import {Loading,SessionStorage,LocalStorage,Notify,Dialog} from 'quasar'
 
 
 
-export default { config: {"loading":{"spinnerSize":"64px","spinnerColor":"accent","backgroundColor":"white","delay":400}},iconSet,plugins: {Loading,SessionStorage,Notify,Dialog} }
+export default { config: {"loading":{"spinnerSize":"64px","spinnerColor":"accent","backgroundColor":"white","delay":400}},iconSet,plugins: {Loading,SessionStorage,LocalStorage,Notify,Dialog} }
 

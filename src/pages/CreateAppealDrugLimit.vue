@@ -17,7 +17,7 @@
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
           <div class="label-row">
-            <span class="title-label green">Аптека</span>
+            <span class="title-label red">Аптека</span>
             <span class="title-label violet">Лимиты</span>
           </div>
         </div>
