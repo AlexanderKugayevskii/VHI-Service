@@ -58,17 +58,30 @@ const openAppealPage = async () => {
     delay: 500,
   });
 
-  await appealStore.fetchApplicantData(appealId.value);
-  await appealStore.fetchHospitalData();
+  if (props.item.appealType === "CLINIC") {
+    await appealStore.fetchApplicantData(appealId.value);
+    await appealStore.fetchHospitalData();
 
-  $q.loading.hide();
-  router.push(
-    Trans.i18nRoute({
-      name: "createAppeal",
-      params: { id: appealId.value },
-    })
-  );
+    $q.loading.hide();
+    router.push(
+      Trans.i18nRoute({
+        name: "createAppeal",
+        params: { id: appealId.value },
+      })
+    );
+  } else if (props.item.appealType === "DRUGSTORE") {
+    await appealStore.fetchApplicantDrugData(appealId.value);
+
+    $q.loading.hide();
+    router.push(
+      Trans.i18nRoute({
+        name: "createDrugsAppeal",
+        params: { id: appealId.value },
+      })
+    );
+  }
 };
+
 </script>
 
 <style scoped lang="scss">

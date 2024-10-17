@@ -242,6 +242,8 @@ import formatPrice from "src/helpers/formatPrice";
 import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
+
 
 const props = defineProps({
   pagination: {
@@ -280,6 +282,8 @@ const emit = defineEmits(["createAppeal"]);
 
 const tableRef = ref(null);
 const appealStore = useAppealStore();
+const { deleteData } = useAppealsHistory();
+
 
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
@@ -372,6 +376,9 @@ const openAppealLimit = async (client) => {
 
 const deleteAppeal = async (data) => {
   await appealStore.deleteAppealData(data.appealId);
+
+  //appealsHistory
+  deleteData(data.appealId);
   tableRef.value.requestServerInteraction();
 };
 

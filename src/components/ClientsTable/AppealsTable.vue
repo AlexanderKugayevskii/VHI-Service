@@ -409,8 +409,8 @@ const openAppealLimit = async (client) => {
 
 const deleteAppeal = async (data) => {
   await appealStore.deleteAppealData(data.appealId);
+  
   //appealsHistory
-
   deleteData(data.appealId);
   tableRef.value.requestServerInteraction();
 };

@@ -12,19 +12,20 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="page-title q-my-none q-mb-md">
-            {{ $t("create_appeal.title") }}
-            {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
-          </h4>
-
+          <div class="modal-header-top">
+            <h4 class="page-title q-my-none">
+              {{ $t("create_appeal.title") }}
+              {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
+            </h4>
+            <div class="label-row">
+              <span class="title-label red">Аптека</span>
+              <span class="title-label violet">Обращения</span>
+            </div>
+          </div>
           <StatusBar
             :status="clientData.appealStatus"
             :label="true"
           ></StatusBar>
-          <div class="label-row">
-            <span class="title-label red">Аптека</span>
-            <span class="title-label violet">Обращения</span>
-          </div>
         </div>
         <div class="create-appeal-body">
           <div class="create-appeal-row">
@@ -494,12 +495,15 @@ import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import { useQuasar } from "quasar";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
 const $q = useQuasar();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
+
+const { dataArray, addData } = useAppealsHistory();
 
 const { client: clientData, drug: drugData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
@@ -538,6 +542,17 @@ const handleCreateAppeal = async () => {
 
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantDrugData(appealStore.client.appealId);
+
+  const { dmsCode, appealId, clientFirstname, clientLastname } =
+    appealStore.client;
+
+  addData({
+    dmsCode,
+    appealId,
+    clientFirstname,
+    clientLastname,
+    appealType: "DRUGSTORE",
+  });
 
   $q.loading.hide();
   if (appealStore.isAgent) {
@@ -653,7 +668,17 @@ watch(
   position: relative;
   overflow: visible;
 }
+
 .create-appeal-modal .modal-header {
+  // border-top-left-radius: 16px;
+  // padding: 24px;
+  &-top {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 12px;
+    margin-bottom: 16px;
+  }
   display: block;
   border-top-left-radius: 16px;
   padding: 24px;
