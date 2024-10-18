@@ -154,7 +154,7 @@
             <q-td key="client" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
-                <span style = "color: var(--q-negative)" v-if = "props.row.specificType === 1">{{ props.row.specificType }}</span>
+                <span style = "color: var(--q-negative)" v-if = "props.row.specificType === 1">*</span>
               </a>
               <TableTooltip>
                 {{ props.row.clientFirstname }} {{ props.row.clientLastname }}

@@ -345,6 +345,19 @@
                       <template #loading-spinner>
                         <LoadingSpinner />
                       </template>
+                      <template #tooltip v-if="!appealStore.selectedDrugstore">
+                        <q-tooltip
+                          :delay="100"
+                          max-width="300px"
+                          self="bottom middle"
+                          :offset="[0, -50]"
+                          class="custom-tooltip"
+                          transition-show="scale"
+                          transition-duration="200"
+                        >
+                          Аптека не выбрана
+                        </q-tooltip>
+                      </template>
                     </SimpleButton>
                     <SimpleButton
                       v-else
