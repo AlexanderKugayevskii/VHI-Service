@@ -1,10 +1,18 @@
 <template>
-  <div>data</div>
+  <div v-if="loading" class="history-loading">Загрузка...</div>
+  <div v-else class="history-container">
+    <AppealHistoryItem
+      v-for="item in historyData"
+      :key="item.id"
+      :item="item"
+    ></AppealHistoryItem>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import AppealService from "src/services/AppealService";
+import AppealHistoryItem from "src/components/AppealHistoryItem.vue";
 
 const props = defineProps({
   appealId: {
@@ -21,10 +29,10 @@ const getAppealHistory = async () => {
 
   try {
     const response = await AppealService.getHistoryAppeal(appealId.value);
-    console.log(response);
-    if (response.status === "200") {
+    if (response.status === 200) {
       const data = response.data;
-      historyData.value = data;
+      historyData.value = data.data;
+      console.log(historyData.value);
     }
   } catch (e) {
   } finally {
@@ -34,3 +42,14 @@ const getAppealHistory = async () => {
 
 getAppealHistory();
 </script>
+
+<style lang="scss" scoped>
+.history-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+.history-loading {
+  color: #404f6f;
+}
+</style>
