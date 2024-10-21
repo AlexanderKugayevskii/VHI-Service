@@ -32,7 +32,7 @@ const getAppealHistory = async () => {
     if (response.status === 200) {
       const data = response.data;
       historyData.value = data.data;
-      console.log(historyData.value);
+      console.log(historyData.value)
     }
   } catch (e) {
   } finally {
@@ -47,7 +47,6 @@ getAppealHistory();
 .history-container {
   display: flex;
   flex-direction: column;
-  row-gap: 12px;
 }
 .history-loading {
   color: #404f6f;

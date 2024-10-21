@@ -1,9 +1,9 @@
 <template>
   <q-tooltip
     :delay="100"
-    max-width="300px"
+    :max-width="`${size}px`"
     self="bottom middle"
-    :offset="[0, -44]"
+    :offset="offset"
     class="custom-tooltip"
     transition-show="scale"
     transition-duration="200"
@@ -52,12 +52,33 @@
 </style>
 
 <script setup>
+defineProps({
+  offset: {
+    type: Array,
+    default: () => {
+      return [0, -44];
+    },
+  },
+  size: {
+    type: Number,
+    default: 300,
+  },
+});
 import { ref } from "vue";
 const showTooltip = ref(false);
 
 const checkShow = (e) => {
   const show = e.target;
-  if (show.scrollWidth <= show.offsetWidth) {
+  const lineClamp = getComputedStyle(e.target)["-webkit-line-clamp"];
+
+  let condition;
+  if (lineClamp === "none") {
+    condition = show.scrollWidth <= show.offsetWidth;
+  } else {
+    condition =
+      show.scrollHeight <= show.offsetHeight + show.offsetHeight * 0.1;
+  }
+  if (condition) {
     showTooltip.value = false;
     return;
   } else {
