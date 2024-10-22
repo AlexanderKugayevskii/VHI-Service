@@ -10,6 +10,7 @@
         {{ label }}
       </span>
       <slot name="loading-spinner" v-else></slot>
+      <slot name="tooltip"></slot>
     </button>
   </div>
 </template>

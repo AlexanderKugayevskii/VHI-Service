@@ -159,6 +159,11 @@
             <q-td key="client" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
+                <span
+                  style="color: var(--q-negative)"
+                  v-if="props.row.specificType === 1"
+                  >*</span
+                >
               </a>
               <TableTooltip>
                 {{ props.row.clientLastname }} {{ props.row.clientFirstname }}
@@ -203,6 +208,13 @@
                 {{ props.row.diagnosisName }}
               </TableTooltip>
             </q-td>
+            <q-td key="limits" :props="props" class="appeals-td">
+              <!-- <SimpleButton
+                label="лимиты"
+                custom-class="appeals-btn reports-btn"
+                @click="openAppealLimit(props.row)"
+              /> -->
+            </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
               {{ formatPrice(props.row.expenseAmount, false) }}
             </q-td>
@@ -231,7 +243,6 @@
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
       />
-
       <q-space></q-space>
       <RowsPerPage
         v-if="reactivePagination"
@@ -265,6 +276,7 @@ import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -302,6 +314,8 @@ const props = defineProps({
 });
 
 const appealStore = useAppealStore();
+const { deleteData } = useAppealsHistory();
+
 const tableRef = ref(null);
 
 const reactiveProps = toRefs(props);
@@ -386,7 +400,6 @@ const openAppealLimit = async (client) => {
     delay: 500,
   });
 
-
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData(client.appealId);
   await appealStore.fetchHospitalData();
@@ -402,6 +415,9 @@ const openAppealLimit = async (client) => {
 
 const deleteAppeal = async (data) => {
   await appealStore.deleteAppealData(data.appealId);
+
+  //appealsHistory
+  deleteData(data.appealId);
   tableRef.value.requestServerInteraction();
 };
 
@@ -471,13 +487,13 @@ onMounted(() => {});
   width: 64px;
 }
 .appeals-th:nth-of-type(2) {
-  // width: 150px;
+  width: 280px;
 }
 .appeals-th:nth-of-type(3) {
-  width: 150px;
+  width: 140px;
 }
 .appeals-th:nth-of-type(4) {
-  width: 150px;
+  width: 140px;
 }
 .appeals-th:nth-of-type(5) {
   width: 150px;

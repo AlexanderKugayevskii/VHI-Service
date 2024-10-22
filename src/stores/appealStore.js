@@ -6,6 +6,7 @@ import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
 import { SessionStorage, Notify } from "quasar";
 import dayjs from "dayjs";
+import { all } from "axios";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -81,8 +82,8 @@ export const useAppealStore = defineStore("appeal", () => {
   const medicalProgram = ref(null);
   const medicalLimits = ref([]);
 
-  const calculateLimits = computed(() => {
-    const allData = [
+  const allData = computed(() => {
+    return [
       ...selectedDoctors.value,
       ...suggestedDoctors.value,
       ...selectedServices.value,
@@ -90,8 +91,10 @@ export const useAppealStore = defineStore("appeal", () => {
       ...selectedDrugs.value,
       ...suggestedDrugs.value,
     ];
+  });
+  const calculateLimits = computed(() => {
     return medicalLimits.value.map((limit) => {
-      const findItemsSumm = allData.reduce((acc, curr) => {
+      const findItemsSumm = allData.value.reduce((acc, curr) => {
         if (curr.pivot.program_item_id === limit.id) {
           return acc + parseFloat(curr.pivot.price) * curr.pivot.quantity;
         }
@@ -103,6 +106,21 @@ export const useAppealStore = defineStore("appeal", () => {
         spent:
           limit.spent - allMedicalLimitsSumm.value[limit.name] + findItemsSumm,
       };
+    });
+  });
+
+  const checkSelectedLimits = computed(() => {
+    // program_item_id
+    return allData.value.some((item) => {
+      return item.pivot.program_item_id === 0;
+    });
+  });
+
+  const checkRemaindMedicalLimits = computed(() => {
+    return calculateLimits.value.some((item) => {
+      const remaind = parseFloat(item.limit) - parseFloat(item.spent);
+
+      return remaind < 0;
     });
   });
 
@@ -660,7 +678,7 @@ export const useAppealStore = defineStore("appeal", () => {
     const drugsData = selectedDrugs.value.map((drug) => {
       const { pivot, isNew, ...other } = drug;
       other.status = pivot.status;
-      other.progress = pivot.progress
+      other.progress = pivot.progress;
 
       return other;
     });
@@ -684,7 +702,7 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await AppealService.saveDrugAppeal(formData);
       const data = response.data.data;
-      
+
       if (
         response.status === 200 &&
         response.data.message === "created successfully"
@@ -726,10 +744,11 @@ export const useAppealStore = defineStore("appeal", () => {
         .split("-")
         .reverse()
         .join("-");
+
+      formData.append("finished_date", payload.finished_date);
     }
 
     // appendFormData(formData, payload);
-    formData.append("finished_date", payload.finished_date);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);
@@ -1522,6 +1541,8 @@ export const useAppealStore = defineStore("appeal", () => {
     makeAppealDrugDone,
     finishedAppeal,
     calculateLimits,
+    checkSelectedLimits,
+    checkRemaindMedicalLimits,
 
     allDoctorsStatus,
     allServicesStatus,

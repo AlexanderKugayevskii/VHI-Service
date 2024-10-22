@@ -103,7 +103,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
-
+        console.log(users.value)
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -182,6 +182,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         endInsurancePeriod: endInsurancePeriod,
         organizationName: row.contract?.applicant ?? "no applicant",
         expireStatus: expire,
+        type: row.type, 
         index: row.id,
       };
     });

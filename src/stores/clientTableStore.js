@@ -4,7 +4,6 @@ import { useAppealStore } from "./appealStore";
 import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
-import { sortBy } from "lodash";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
@@ -77,6 +76,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
       label: t("client_table.diagnosis"),
       field: "diagnosisName",
       sortable: true,
+    },
+    {
+      name: "limits",
+      align: "left",
+      label: "лимиты",
+      field: "limits",
     },
     {
       name: "expenseAmount",
@@ -191,12 +196,14 @@ export const useClientTableStore = defineStore("clientTable", () => {
         dmsCode: row.contract_client?.dms_code ?? "",
         program: row.contract_client?.program?.name ?? "",
         type_id: row.client_type,
-        userSettings: "",
         // index:
         //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
         //   index +
         //   1,
+        specificType: row.contract_client.type,
         index: row.id,
+        limits: "",
+        userSettings: "",
       };
     });
   });

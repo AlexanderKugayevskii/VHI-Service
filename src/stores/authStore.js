@@ -4,6 +4,7 @@ import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
 import { Notify } from "quasar";
 import { useCommonStore } from "./commonStore";
+import { LocalStorage } from "quasar";
 
 export const useAuthStore = defineStore("auth", () => {
   //stores
@@ -40,6 +41,8 @@ export const useAuthStore = defineStore("auth", () => {
 
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUser");
+    
+    LocalStorage.removeItem('appealsHistory')
   };
   const logout = () => {
     clearUser();

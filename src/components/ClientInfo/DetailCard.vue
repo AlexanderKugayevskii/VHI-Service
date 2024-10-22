@@ -4,6 +4,7 @@
       'details__card',
       'details__card_big',
       { details__card_negative: remaind < 0 },
+      `${percentLimitStyle}`,
     ]"
   >
     <h5 class="details__card-title">{{ rate?.name }}</h5>
@@ -11,13 +12,18 @@
       <div class="details__card-text">
         <p>
           <span>Лимит: </span>
-          <span>{{ limit }}</span>
+          <span>{{ formatPrice(limit) }}</span>
         </p>
         <p>
           <span>Потрачено: </span>
           <span :class="[{ 'text-negative': spent < 0 }]">{{
             formatPrice(spent)
           }}</span>
+          <span
+            :class="[{ 'text-negative': spent < 0 }]"
+            v-if="percentSpent > 50"
+            >({{ percentSpent.toFixed(1) }}%)</span
+          >
         </p>
         <p>
           <span>Осталось: </span>
@@ -25,7 +31,6 @@
             formatPrice(remaind)
           }}</span>
         </p>
-      
       </div>
       <div class="details__card-icons" v-if="$slots.icons">
         <slot name="icons">
@@ -79,27 +84,47 @@
 
 <script setup>
 import formatPrice from "src/helpers/formatPrice";
-import { watchEffect } from "vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 const props = defineProps({
   rate: {
     type: Object,
   },
 });
+const emit = defineEmits(["alert"]);
 
 const rate = computed(() => props.rate);
 
 const limit = computed(() => {
-  return formatPrice(Number(props.rate.limit));
+  return parseFloat(props.rate.limit);
 });
 const spent = computed(() => {
-  const spentNumber = -Number(props.rate.spent);
-  if (spentNumber >= 0) return Number(props.rate.spent);
+  const spentNumber = -parseFloat(props.rate.spent);
+  if (spentNumber >= 0) return parseFloat(props.rate.spent);
   return spentNumber;
 });
 const remaind = computed(() => {
-  return Number(props.rate.limit) - Number(props.rate.spent);
+  return parseFloat(props.rate.limit) - parseFloat(props.rate.spent);
+});
+
+const percentSpent = computed(() => {
+  return Math.abs((spent.value / limit.value) * 100);
+});
+
+const percentLimitStyle = computed(() => {
+  if (percentSpent.value > 70) {
+    return "alert--hard";
+  } else if (percentSpent.value > 50) {
+    return "alert--medium";
+  } else {
+    return "";
+  }
+});
+
+watch(remaind, (newVal) => {
+  if (newVal < 0) {
+    emit("alert", rate.value);
+  }
 });
 </script>
 
@@ -145,5 +170,12 @@ const remaind = computed(() => {
     display: flex;
     justify-content: space-between;
   }
+}
+
+.alert--medium {
+  background-color: hsl(44, 100%, 82%);
+}
+.alert--hard {
+  background-color: hsl(0, 100%, 91%);
 }
 </style>

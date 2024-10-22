@@ -59,6 +59,10 @@ function deleteAppeal(appealId) {
   return api.delete(`/clinics/applications/${appealId}`);
 }
 
+function getHistoryAppeal(appealId) {
+  return api.get(`/clinics/applications/${appealId}/history`);
+}
+
 export default {
   getDrugs,
   getDrugstores,
@@ -72,4 +76,5 @@ export default {
   saveDrugAppeal,
   changeAppealDrugData,
   deleteAppeal,
+  getHistoryAppeal,
 };

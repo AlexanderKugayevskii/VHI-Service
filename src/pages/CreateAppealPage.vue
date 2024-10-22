@@ -587,11 +587,25 @@
                       :label="$t('create_appeal.buttons.save_appeal')"
                       type="submit"
                       customClass="btn-action"
+                      :disabled="!appealStore.selectedClinic"
                       :loading="appealStore.loading"
                       @click="handleCreateAppeal"
                     >
                       <template #loading-spinner>
                         <LoadingSpinner />
+                      </template>
+                      <template #tooltip v-if="!appealStore.selectedClinic">
+                        <q-tooltip
+                          :delay="100"
+                          max-width="300px"
+                          self="bottom middle"
+                          :offset="[0, -50]"
+                          class="custom-tooltip"
+                          transition-show="scale"
+                          transition-duration="200"
+                        >
+                          Клиника не выбрана
+                        </q-tooltip>
                       </template>
                     </SimpleButton>
                     <SimpleButton
@@ -673,14 +687,23 @@
                         transition-next="jump-right"
                         transition-prev="jump-left"
                       >
-                        <q-tab-panel name="chat" key="chat">
+                        <q-tab-panel
+                          name="chat"
+                          key="chat"
+                          :disable="appealStore.typeOfAppeal === 0"
+                        >
                           <AppealChat
+                            v-if="appealStore.typeOfAppeal === 1"
                             :appealId="clientData.appealId"
                             :appealType="appealStore.typeOfAppeal"
                           />
                         </q-tab-panel>
-                        <q-tab-panel name="history" key="history">
-                          <div class="temp-text">Скоро будет</div>
+                        <q-tab-panel
+                          name="history"
+                          key="history"
+                          :disable="appealStore.typeOfAppeal === 0"
+                        >
+                          <AppealHistory :appealId="clientData.appealId" />
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>
@@ -724,6 +747,15 @@
 </template>
 
 <script setup>
+import { onMounted, ref, reactive, computed, watch } from "vue";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
+import { useAppealStore } from "src/stores/appealStore.js";
+import { useAuthStore } from "src/stores/authStore";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
+import formatPrice from "src/helpers/formatPrice";
+import Trans from "src/i18n/translation";
 import SimpleCheckbox from "src/components/Shared/SimpleCheckbox.vue";
 import StatusBar from "src/components/Shared/StatusBar.vue";
 import DropdownSelectNew from "src/components/Shared/DropdownSelectNew.vue";
@@ -735,20 +767,14 @@ import SelectListItem from "src/components/Shared/SelectListItem.vue";
 import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
-import { ref, reactive, computed, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
-import { useAppealStore } from "src/stores/appealStore.js";
-import { useAuthStore } from "src/stores/authStore";
-import Trans from "src/i18n/translation";
-import { storeToRefs } from "pinia";
-import formatPrice from "src/helpers/formatPrice";
-import { onMounted } from "vue";
-import { useQuasar } from "quasar";
+import AppealHistory from "src/components/AppealHistory.vue";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const appealStore = useAppealStore();
+
+const { dataArray, addData } = useAppealsHistory();
 
 const { client: clientData } = storeToRefs(appealStore);
 const createAppealModalFixed = ref(true);
@@ -803,7 +829,18 @@ const handleCreateAppeal = async () => {
   await appealStore.fetchMedicalPrograms();
   await appealStore.fetchApplicantData(appealStore.client.appealId);
   await appealStore.fetchHospitalData();
+
   $q.loading.hide();
+  const { dmsCode, appealId, clientFirstname, clientLastname } =
+    appealStore.client;
+
+  addData({
+    dmsCode,
+    appealId,
+    clientFirstname,
+    clientLastname,
+    appealType: "CLINIC",
+  });
 
   if (appealStore.isAgent) {
     router.replace(
@@ -866,6 +903,8 @@ watch(
 
 onMounted(() => {
   // console.log(`client`, clientData.value);
+
+  console.log($q);
 });
 
 const hideModal = () => {
