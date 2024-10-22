@@ -310,6 +310,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
           return prev;
         }, 0);
 
+      const limitNames = [
+        ...new Set(
+          [row.service_program_item_names, row.doctor_program_item_names].flat()
+        ),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -327,8 +333,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         expenseAmount: totalAmount ?? "",
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program?.name,
-
         userSettings: "",
+        limits: limitNames,
         index: row.id,
       };
     });
@@ -348,6 +354,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         }
         return prev;
       }, 0);
+
+      const limitNames = [
+        ...new Set([row.drug_program_item_names].flat()),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -365,6 +376,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program.name,
         userSettings: "",
+        limits: limitNames,
         index: row.id,
       };
     });
