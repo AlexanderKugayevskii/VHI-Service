@@ -78,6 +78,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
       sortable: true,
     },
     {
+      name: "limits",
+      align: "left",
+      label: "лимиты",
+      field: "limits",
+    },
+    {
       name: "expenseAmount",
       align: "right",
       label: t("client_table.expense", { currency: "UZS" }),
@@ -190,13 +196,14 @@ export const useClientTableStore = defineStore("clientTable", () => {
         dmsCode: row.contract_client?.dms_code ?? "",
         program: row.contract_client?.program?.name ?? "",
         type_id: row.client_type,
-        userSettings: "",
         // index:
         //   (pagination.value.page - 1) * pagination.value.rowsPerPage +
         //   index +
         //   1,
         specificType: row.contract_client.type,
         index: row.id,
+        limits: "",
+        userSettings: "",
       };
     });
   });

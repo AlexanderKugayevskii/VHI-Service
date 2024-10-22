@@ -137,7 +137,7 @@
 
           <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
             <div class="menu-expand-item-header">
-              <button class="nav-item nav-item-btn q-py-sm" @click="toggleMenu">
+              <button class="nav-item nav-item-btn q-py-sm" @click="toggleReports">
                 <span class="nav-item-btn-left">
                   <q-icon size="20px"> </q-icon>
                   <span class="flex column">
@@ -163,7 +163,7 @@
                 </q-icon>
               </button>
             </div>
-            <Collapse :when="isMenuOpen" class="v-collapse">
+            <Collapse :when="isReportsOpen" class="v-collapse">
               <div class="menu-expand-item-content" ref="menuExpandContent">
                 <RouteLink
                   caption="По клиникам"
@@ -220,7 +220,7 @@
           >
           </RouteLink>
 
-          <!--  -->
+          <!-- history -->
           <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
             <div class="menu-expand-item-header">
               <button
@@ -393,8 +393,11 @@ export default defineComponent({
     const router = useRouter();
     const authStore = useAuthStore();
     const appealStore = useAppealStore();
+
     const isMenuOpen = ref(false);
+    const isReportsOpen = ref(false);
     const isHistoryOpen = ref(true);
+
     const drawerRight = ref(false);
 
     const handleLogout = () => {
@@ -407,6 +410,9 @@ export default defineComponent({
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
     };
+    const toggleReports = () => {
+      isReportsOpen.value = !isReportsOpen.value
+    }
     const toggleHistory = () => {
       isHistoryOpen.value = !isHistoryOpen.value;
     };
@@ -429,8 +435,10 @@ export default defineComponent({
       appealStore,
       handleLogout,
       isMenuOpen,
+      isReportsOpen, 
       isHistoryOpen,
       toggleMenu,
+      toggleReports,
       toggleHistory,
       drawerRight,
       toggleDrawerRight,

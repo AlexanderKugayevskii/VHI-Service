@@ -208,6 +208,13 @@
                 {{ props.row.diagnosisName }}
               </TableTooltip>
             </q-td>
+            <q-td key="limits" :props="props" class="appeals-td">
+              <SimpleButton
+                label="лимиты"
+                custom-class="appeals-btn reports-btn"
+                @click="openAppealLimit(props.row)"
+              />
+            </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
               {{ formatPrice(props.row.expenseAmount, false) }}
             </q-td>
@@ -236,7 +243,6 @@
         @onDecrementPage="decrementPage"
         @onChangePage="changePage"
       />
-
       <q-space></q-space>
       <RowsPerPage
         v-if="reactivePagination"
@@ -409,7 +415,7 @@ const openAppealLimit = async (client) => {
 
 const deleteAppeal = async (data) => {
   await appealStore.deleteAppealData(data.appealId);
-  
+
   //appealsHistory
   deleteData(data.appealId);
   tableRef.value.requestServerInteraction();
@@ -484,10 +490,10 @@ onMounted(() => {});
   width: 280px;
 }
 .appeals-th:nth-of-type(3) {
-  width: 150px;
+  width: 140px;
 }
 .appeals-th:nth-of-type(4) {
-  width: 150px;
+  width: 140px;
 }
 .appeals-th:nth-of-type(5) {
   width: 150px;

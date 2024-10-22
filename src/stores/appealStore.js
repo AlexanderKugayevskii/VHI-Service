@@ -744,10 +744,11 @@ export const useAppealStore = defineStore("appeal", () => {
         .split("-")
         .reverse()
         .join("-");
+
+      formData.append("finished_date", payload.finished_date);
     }
 
     // appendFormData(formData, payload);
-    formData.append("finished_date", payload.finished_date);
     formData.append("drugs", JSON.stringify(payload.drugs));
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);

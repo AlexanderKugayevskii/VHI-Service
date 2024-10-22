@@ -1,6 +1,7 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
 import echo from "./chat";
+import { LocalStorage } from "quasar";
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -33,6 +34,7 @@ export default boot(({ app, router }) => {
         lastTokenUpdateTime &&
         currentTime - lastTokenUpdateTime > TOKEN_LIFETIME
       ) {
+        LocalStorage.removeItem("appealsHistory");
         console.log("Токен протух. Перенаправляем на страницу логина.");
         router.replace({ name: "Login" });
       } else {

@@ -768,7 +768,6 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 import AppealHistory from "src/components/AppealHistory.vue";
-import TableTooltip from "src/components/Shared/TableTooltip.vue";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
