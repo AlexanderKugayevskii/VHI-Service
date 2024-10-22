@@ -35,7 +35,7 @@ export default boot(({ app, router }) => {
         currentTime - lastTokenUpdateTime > TOKEN_LIFETIME
       ) {
         LocalStorage.removeItem("appealsHistory");
-        console.log("Токен протух. Перенаправляем на страницу логина.");
+        // console.log("Токен протух. Перенаправляем на страницу логина.");
         router.replace({ name: "Login" });
       } else {
         config.headers["Authorization"] = `Bearer ${token}`;
