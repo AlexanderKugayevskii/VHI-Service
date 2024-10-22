@@ -121,6 +121,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
 
+        console.log(users.value);
+
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -179,6 +181,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
           return prev;
         }, 0);
 
+      const limitNames = [
+        ...new Set(
+          [row.service_program_item_names, row.doctor_program_item_names].flat()
+        ),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -202,7 +210,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         //   1,
         specificType: row.contract_client.type,
         index: row.id,
-        limits: "",
+        limits: limitNames,
         userSettings: "",
       };
     });

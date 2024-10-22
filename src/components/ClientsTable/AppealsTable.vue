@@ -150,7 +150,7 @@
         <template v-slot:body="props">
           <q-tr
             :props="props"
-            @mouseup="cancelOpenWhenSelect(props.row)"
+            @mouseup="(e) => cancelOpenWhenSelect(props.row, e)"
             class="clickable"
           >
             <q-td key="index" :props="props" class="appeals-td">
@@ -209,11 +209,21 @@
               </TableTooltip>
             </q-td>
             <q-td key="limits" :props="props" class="appeals-td">
-              <!-- <SimpleButton
-                label="лимиты"
-                custom-class="appeals-btn reports-btn"
+              <SimpleButton
+                full-width
+                label="лимиты &#129125;"
+                :custom-class="[
+                  'appeals-btn',
+                  'reports-btn',
+                  { 'alert-btn': props.row.limits?.length === 0 },
+                ]"
                 @click="openAppealLimit(props.row)"
-              /> -->
+              >
+              </SimpleButton>
+              <TableTooltip show v-if="props.row.limits?.length > 0">
+                {{ props.row.limits }}
+              </TableTooltip>
+              <TableTooltip show v-else> Лимиты не назначены </TableTooltip>
             </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
               {{ formatPrice(props.row.expenseAmount, false) }}
@@ -336,9 +346,11 @@ const handleDelete = () => {
 // const clientTableStore = useClientTableStore();
 // const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
 
-const cancelOpenWhenSelect = (client) => {
+const cancelOpenWhenSelect = (client, e) => {
   const selection = window.getSelection().toString();
-  if (!selection) {
+  const isButton = !!e.target.closest("BUTTON");
+
+  if (!selection && !isButton) {
     openAppealPage(client);
   } else {
     return;
@@ -454,8 +466,6 @@ onMounted(() => {
   );
 });
 
-onMounted(() => {});
-
 //calculate table height for showing only 10 rows
 // onMounted(() => {
 //   const qTableMiddleElement = document.querySelector(".q-table__middle");
@@ -498,6 +508,7 @@ onMounted(() => {});
 .appeals-th:nth-of-type(5) {
   width: 150px;
 }
+
 .q-table thead th:last-of-type {
   width: 52px;
 }

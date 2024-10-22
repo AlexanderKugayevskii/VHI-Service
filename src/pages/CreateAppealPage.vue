@@ -901,12 +901,6 @@ watch(
   }
 );
 
-onMounted(() => {
-  // console.log(`client`, clientData.value);
-
-  console.log($q);
-});
-
 const hideModal = () => {
   appealStore.clearAppealData();
   appealStore.clearClinicData();

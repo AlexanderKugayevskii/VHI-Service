@@ -4,9 +4,10 @@ import LoginService from "src/services/LoginService";
 import { useI18n } from "vue-i18n";
 import { Notify } from "quasar";
 import { useCommonStore } from "./commonStore";
-import { LocalStorage } from "quasar";
+import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
 export const useAuthStore = defineStore("auth", () => {
+  const appealHistory = useAppealsHistory();
   //stores
   const commonStore = useCommonStore();
   //state
@@ -41,8 +42,8 @@ export const useAuthStore = defineStore("auth", () => {
 
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUser");
-    
-    LocalStorage.removeItem('appealsHistory')
+
+    appealHistory.clearData();
   };
   const logout = () => {
     clearUser();

@@ -103,7 +103,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
-        console.log(users.value)
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -182,7 +181,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         endInsurancePeriod: endInsurancePeriod,
         organizationName: row.contract?.applicant ?? "no applicant",
         expireStatus: expire,
-        type: row.type, 
+        type: row.type,
         index: row.id,
       };
     });
@@ -274,7 +273,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClinicApplications(id);
       const data = response.data.data;
 
-      console.log(response.data);
       clinicClientApplications.value = data;
     } catch (e) {
       console.error(e);
@@ -338,7 +336,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const applicationsDrugstoreRows = computed(() => {
     return drugstoreClientApplications.value.map((row, index) => {
-      console.log(row);
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
 
       const finishedDate = row.finished_date
