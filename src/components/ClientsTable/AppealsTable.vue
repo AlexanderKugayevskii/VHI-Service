@@ -209,11 +209,11 @@
               </TableTooltip>
             </q-td>
             <q-td key="limits" :props="props" class="appeals-td">
-              <SimpleButton
+              <!-- <SimpleButton
                 label="лимиты"
                 custom-class="appeals-btn reports-btn"
                 @click="openAppealLimit(props.row)"
-              />
+              /> -->
             </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
               {{ formatPrice(props.row.expenseAmount, false) }}
