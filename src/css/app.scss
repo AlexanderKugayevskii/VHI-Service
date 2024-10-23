@@ -388,6 +388,13 @@ button[class^="btn"] {
 
 .reports-btn {
   height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-btn {
+  background-color: $negative;
 }
 
 .appeal-content {
@@ -534,6 +541,6 @@ button[class^="btn"] {
 }
 
 .diagnosis-input textarea.input-field__text-input {
-  resize: none; 
+  resize: none;
   min-height: 120px;
 }

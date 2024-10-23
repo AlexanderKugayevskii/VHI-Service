@@ -63,6 +63,12 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       field: "medicines",
     },
     {
+      name: "limits",
+      align: "left",
+      label: "лимиты",
+      field: "limits",
+    },
+    {
       name: "expenseAmount",
       align: "right",
       label: t("client_table.expense", { currency: "UZS" }),
@@ -148,6 +154,10 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         return prev + curr.pivot.quantity * parseFloat(curr.pivot.price);
       }, 0);
 
+      const limitNames = [
+        ...new Set([row.drugs_program_item_names].flat()),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -166,6 +176,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         specificType: row.contract_client.type,
         userSettings: "",
         index: row.id,
+        limits: limitNames,
       };
     });
   });

@@ -103,7 +103,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
-        console.log(users.value)
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -182,7 +181,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         endInsurancePeriod: endInsurancePeriod,
         organizationName: row.contract?.applicant ?? "no applicant",
         expireStatus: expire,
-        type: row.type, 
+        type: row.type,
         index: row.id,
       };
     });
@@ -274,7 +273,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       const response = await ClientService.getClinicApplications(id);
       const data = response.data.data;
 
-      console.log(response.data);
       clinicClientApplications.value = data;
     } catch (e) {
       console.error(e);
@@ -312,6 +310,12 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
           return prev;
         }, 0);
 
+      const limitNames = [
+        ...new Set(
+          [row.service_program_item_names, row.doctor_program_item_names].flat()
+        ),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -329,8 +333,8 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         expenseAmount: totalAmount ?? "",
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program?.name,
-
         userSettings: "",
+        limits: limitNames,
         index: row.id,
       };
     });
@@ -338,7 +342,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const applicationsDrugstoreRows = computed(() => {
     return drugstoreClientApplications.value.map((row, index) => {
-      console.log(row);
       const medicines = row.drugs.map((drug) => drug.name).join(", ");
 
       const finishedDate = row.finished_date
@@ -351,6 +354,11 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         }
         return prev;
       }, 0);
+
+      const limitNames = [
+        ...new Set([row.drugs_program_item_names].flat()),
+      ].join(", ");
+
       return {
         contractClientId: row.contract_client_id,
         appealId: row.id,
@@ -368,6 +376,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
         dmsCode: clientInfo.value.dms_code,
         program: clientInfo.value.program.name,
         userSettings: "",
+        limits: limitNames,
         index: row.id,
       };
     });

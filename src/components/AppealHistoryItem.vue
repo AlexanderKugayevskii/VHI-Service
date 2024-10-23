@@ -92,7 +92,7 @@ onMounted(() => {
     if (
       actionMessageRef.value.scrollHeight >=
       actionMessageRef.value.offsetHeight +
-        actionMessageRef.value.offsetHeight * 0.1
+        actionMessageRef.value.offsetHeight * 0.15
     ) {
       underline.value = true;
     }

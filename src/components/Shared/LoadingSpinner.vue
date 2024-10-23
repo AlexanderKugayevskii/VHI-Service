@@ -22,7 +22,7 @@
 .spinner > div {
   width: 5px;
   height: 5px;
-  background-color: #fff;
+  background-color: $accent;
 
   border-radius: 100%;
 

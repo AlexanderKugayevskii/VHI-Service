@@ -17,7 +17,6 @@ import OpenedAppealsItem from "./OpenedAppealsItem.vue";
 const { dataArray } = useAppealsHistory();
 
 const reversedArray = computed(() => {
-  console.log(`COMPUTED`, dataArray.value);
   return dataArray.value.toReversed();
 });
 </script>

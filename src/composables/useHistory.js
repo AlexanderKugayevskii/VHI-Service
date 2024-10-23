@@ -73,6 +73,12 @@ export function useHistory() {
         name: item.changes.diagnosis,
       };
     }
+    if (item.changes.hasOwnProperty("drug_name")) {
+      whatChanged = {
+        type: "Лекарство",
+        name: item.changes.drug_name,
+      };
+    }
 
     if (item.changes.hasOwnProperty("comment")) {
       whatChanged = {

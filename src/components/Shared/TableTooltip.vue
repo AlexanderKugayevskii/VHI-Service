@@ -52,7 +52,7 @@
 </style>
 
 <script setup>
-defineProps({
+const props = defineProps({
   offset: {
     type: Array,
     default: () => {
@@ -63,8 +63,14 @@ defineProps({
     type: Number,
     default: 300,
   },
+
+  show: {
+    type: Boolean,
+    default: false,
+  },
 });
 import { ref } from "vue";
+
 const showTooltip = ref(false);
 
 const checkShow = (e) => {
@@ -76,8 +82,16 @@ const checkShow = (e) => {
     condition = show.scrollWidth <= show.offsetWidth;
   } else {
     condition =
-      show.scrollHeight <= show.offsetHeight + show.offsetHeight * 0.1;
+      show.scrollHeight <= show.offsetHeight + show.offsetHeight * 0.15;
   }
+
+  if (props.show) {
+    showTooltip.value = true;
+    return;
+  } else {
+    showTooltip.value = false;
+  }
+
   if (condition) {
     showTooltip.value = false;
     return;

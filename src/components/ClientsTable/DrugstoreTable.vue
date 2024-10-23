@@ -145,7 +145,7 @@
         <template v-slot:body="props">
           <q-tr
             :props="props"
-            @mouseup="cancelOpenWhenSelect(props.row)"
+            @mouseup="(e) => cancelOpenWhenSelect(props.row, e)"
             class="clickable"
           >
             <q-td key="index" :props="props" class="appeals-td">
@@ -154,7 +154,11 @@
             <q-td key="client" :props="props" class="appeals-td">
               <a class="appeal-link">
                 {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
-                <span style = "color: var(--q-negative)" v-if = "props.row.specificType === 1">*</span>
+                <span
+                  style="color: var(--q-negative)"
+                  v-if="props.row.specificType === 1"
+                  >*</span
+                >
               </a>
               <TableTooltip>
                 {{ props.row.clientFirstname }} {{ props.row.clientLastname }}
@@ -180,6 +184,23 @@
               <TableTooltip>
                 {{ props.row.medicines }}
               </TableTooltip>
+            </q-td>
+            <q-td key="limits" :props="props" class="appeals-td">
+              <SimpleButton
+                full-width
+                label="лимиты &#129125;"
+                :custom-class="[
+                  'appeals-btn',
+                  'reports-btn',
+                  { 'alert-btn': props.row.limits?.length === 0 },
+                ]"
+                @click="openAppealLimit(props.row)"
+              >
+              </SimpleButton>
+              <TableTooltip show v-if="props.row.limits?.length > 0">
+                {{ props.row.limits }}
+              </TableTooltip>
+              <TableTooltip show v-else> Лимиты не назначены </TableTooltip>
             </q-td>
             <q-td key="expenseAmount" :props="props" class="appeals-td">
               {{ formatPrice(props.row.expenseAmount, false) }}
@@ -244,7 +265,6 @@ import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
 
-
 const props = defineProps({
   pagination: {
     type: Object,
@@ -284,7 +304,6 @@ const tableRef = ref(null);
 const appealStore = useAppealStore();
 const { deleteData } = useAppealsHistory();
 
-
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
 
@@ -323,16 +342,16 @@ const selectOption = (option) => {
   });
 };
 
-const cancelOpenWhenSelect = (client) => {
+const cancelOpenWhenSelect = (client, e) => {
   const selection = window.getSelection().toString();
+  const isButton = !!e.target.closest("BUTTON");
 
-  if (!selection) {
+  if (!selection && !isButton) {
     openAppealPage(client);
   } else {
     return;
   }
 };
-
 const handleClickCreateAppealBtn = () => {
   emit("createAppeal");
 };
@@ -427,7 +446,10 @@ onMounted(() => {
   width: 150px;
 }
 .appeals-th:nth-of-type(8) {
-  width: 200px;
+  width: 150px;
+}
+.appeals-th:nth-of-type(9) {
+  width: 150px;
 }
 .q-table thead th:last-of-type {
   width: 52px;

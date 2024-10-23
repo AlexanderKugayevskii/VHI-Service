@@ -444,7 +444,7 @@
                           />
                         </q-tab-panel>
                         <q-tab-panel name="history" key="history">
-                          <div class="temp-text">Скоро будет</div>
+                          <AppealHistory :appealId="clientData.appealId" />
                         </q-tab-panel>
                       </q-tab-panels>
                     </keep-alive>
@@ -499,6 +499,7 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 import DateInput from "src/components/Shared/DateInput.vue";
+import AppealHistory from "src/components/AppealHistory.vue";
 
 import { ref, computed, watch, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
