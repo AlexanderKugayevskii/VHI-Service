@@ -39,7 +39,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
     {
       name: "finishedDate",
       align: "left",
-      label: "Дата завершения",
+      label: t("client_table.date_of_completion"),
       field: "finishedDate",
       sortable: true,
     },
@@ -59,13 +59,13 @@ export const useDrugTableStore = defineStore("drugTable", () => {
     {
       name: "medicines",
       align: "left",
-      label: "Лекарства",
+      label: t("client_table.drugs"),
       field: "medicines",
     },
     {
       name: "limits",
       align: "left",
-      label: "лимиты",
+      label: t("client_table.limits"),
       field: "limits",
     },
     {
