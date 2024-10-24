@@ -258,7 +258,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       medicalLimits.value = medicalLimits.value.map((limit) => {
         return {
           ...limit,
-          spent: Number(limit.spent),
+          spent: parseFloat(limit.spent),
         };
       });
     } catch (e) {
