@@ -1,7 +1,15 @@
 {
   "nav": {
     "appeals": "Murojaatlar",
-    "clients": "Mijozlar"
+    "clients": "Mijozlar",
+    "clinics": "Klinikalar",
+    "drugstores": "Dorixonalar",
+    "reports": "Hisobotlar",
+    "by_clinics": "Klinikalar bo‘yicha",
+    "by_drugstore": "Dorixonalar bo‘yicha",
+    "by_organizations": "Tashkilotlar bo‘yicha",
+    "act_and_esf": "AKT va ESF",
+    "history": "Tarix"
   },
   "create_appeal": {
     "title": "Murojaat",
@@ -21,7 +29,8 @@
     "buttons": {
       "save_appeal": "Xabarni saqlash",
       "create_appeal": "So'rov yarating",
-      "exit_appeal": "Tashqariga chiqish"
+      "exit_appeal": "Tashqariga chiqish",
+      "delete": "O‘chirish"
     }
   },
   "appeal_search": {
@@ -53,18 +62,25 @@
   "client_table": {
     "clients": "Mijozlar",
     "client": "Mijoz",
-    "date_of_appeal": "Ariza berilgan sana",
+    "date_of_appeal": "Murojaat sanasi",
+    "date_of_completion": "Tugash sanasi",
     "appeal_status": "Holat",
     "clinic": "Klinika",
     "doctor": "Shifokor",
+    "doctors": "Shifokorlar",
     "service": "Xizmat",
+    "services": "Xizmatlar",
     "diagnosis": "Tashxis",
+    "drugstore": "Dorixona",
+    "drugs": "Dorilar",
+    "limits": "Limitlar",
     "expense": "Iste'mol / {currency}"
   },
   "pagination": {
     "next": "Keyingisi",
     "prev": "Oldingi",
-    "rows_per_page": "Jadvaldagi qatorlar"
+    "rows_per_page": "Jadvaldagi qatorlar",
+    "total": "Umumiy"
   },
   "days": {
     "today": "Bugun",

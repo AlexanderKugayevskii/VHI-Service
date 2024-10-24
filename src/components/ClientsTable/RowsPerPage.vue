@@ -16,14 +16,13 @@
       </button>
     </div>
     <div class="table-total">
-      Общее: <span class="">{{ pagination.rowsNumber ?? total }}</span>
+      {{$t('pagination.total')}}: <span class="">{{ pagination.rowsNumber ?? total }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, defineEmits, computed } from "vue";
-import { useRoute } from "vue-router";
 const emit = defineEmits(["choiceOption"]);
 const props = defineProps(["pagination", "total"]);
 

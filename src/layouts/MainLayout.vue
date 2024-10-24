@@ -91,7 +91,9 @@
                     <span>
                       {{ $t("nav.appeals") }}
                     </span>
-                    <span class="menu-expand-subtitle"> Клиники, аптеки </span>
+                    <span class="menu-expand-subtitle">
+                      {{ $t("nav.clinics").toLowerCase() }}, {{ $t("nav.drugstores").toLowerCase() }}
+                    </span>
                   </span>
                 </span>
                 <q-icon size="20px">
@@ -116,12 +118,12 @@
             <Collapse :when="isMenuOpen" class="v-collapse">
               <div class="menu-expand-item-content" ref="menuExpandContent">
                 <RouteLink
-                  caption="Клиники"
+                  :caption="$t('nav.clinics')"
                   :routeTo="Trans.i18nRoute({ name: 'appeals-page' })"
                 >
                 </RouteLink>
                 <RouteLink
-                  caption="Аптеки"
+                  :caption="$t('nav.drugstores')"
                   :routeTo="Trans.i18nRoute({ name: 'drugstore-page' })"
                 ></RouteLink>
               </div>
@@ -137,11 +139,14 @@
 
           <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
             <div class="menu-expand-item-header">
-              <button class="nav-item nav-item-btn q-py-sm" @click="toggleReports">
+              <button
+                class="nav-item nav-item-btn q-py-sm"
+                @click="toggleReports"
+              >
                 <span class="nav-item-btn-left">
                   <q-icon size="20px"> </q-icon>
                   <span class="flex column">
-                    <span> Отчеты </span>
+                    <span> {{ $t("nav.reports") }} </span>
                   </span>
                 </span>
                 <q-icon size="20px">
@@ -166,19 +171,19 @@
             <Collapse :when="isReportsOpen" class="v-collapse">
               <div class="menu-expand-item-content" ref="menuExpandContent">
                 <RouteLink
-                  caption="По клиникам"
+                  :caption="$t('nav.by_clinics')"
                   v-if="appealStore.isAgent"
                   :routeTo="Trans.i18nRoute({ name: 'reports-clinic-page' })"
                 >
                 </RouteLink>
                 <RouteLink
-                  caption="По аптекам"
+                  :caption="$t('nav.by_drugstore')"
                   v-if="appealStore.isAgent"
                   :routeTo="Trans.i18nRoute({ name: 'reports-drugstore-page' })"
                 >
                 </RouteLink>
                 <RouteLink
-                  caption="По организациям"
+                  :caption="$t('nav.by_organizations')"
                   v-if="appealStore.isAgent"
                   :routeTo="
                     Trans.i18nRoute({ name: 'reports-organizations-page' })
@@ -215,7 +220,7 @@
           </RouteLink>
           <RouteLink
             class="q-px-sm"
-            caption="АКТ И ЭСФ"
+            :caption="$t('nav.act_and_esf')"
             :routeTo="Trans.i18nRoute({ name: 'acts-page' })"
           >
           </RouteLink>
@@ -230,7 +235,7 @@
                 <span class="nav-item-btn-left">
                   <q-icon size="20px"> </q-icon>
                   <span class="flex column">
-                    <span> История </span>
+                    <span> {{ $t("nav.history") }} </span>
                   </span>
                 </span>
                 <q-icon size="20px">
@@ -411,8 +416,8 @@ export default defineComponent({
       isMenuOpen.value = !isMenuOpen.value;
     };
     const toggleReports = () => {
-      isReportsOpen.value = !isReportsOpen.value
-    }
+      isReportsOpen.value = !isReportsOpen.value;
+    };
     const toggleHistory = () => {
       isHistoryOpen.value = !isHistoryOpen.value;
     };
@@ -435,7 +440,7 @@ export default defineComponent({
       appealStore,
       handleLogout,
       isMenuOpen,
-      isReportsOpen, 
+      isReportsOpen,
       isHistoryOpen,
       toggleMenu,
       toggleReports,

@@ -58,7 +58,7 @@
               />
             </svg>
           </q-icon>
-          <span class="option-text">Обращение</span>
+          <span class="option-text">{{ $t("create_appeal.title") }}</span>
         </q-item>
 
         <q-item
@@ -84,9 +84,8 @@
               />
             </svg>
           </q-icon>
-          <span class="option-text">Лимиты</span>
+          <span class="option-text">{{ $t("client_table.limits") }}</span>
         </q-item>
-
         <q-item
           clickable
           v-close-popup
@@ -136,7 +135,9 @@
               />
             </svg>
           </q-icon>
-          <span class="option-text">Удалить</span>
+          <span class="option-text">{{
+            $t("create_appeal.buttons.delete")
+          }}</span>
         </q-item>
       </template>
     </DropdownSettings>

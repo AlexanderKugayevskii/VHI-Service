@@ -114,7 +114,13 @@
                         name="doctors"
                         :ripple="false"
                         class="tab--no-hover"
+                        :disable="!appealStore.selectedClinic"
                       >
+                        <TableTooltip show v-if="!appealStore.selectedClinic"
+                          >Нельзя выбрать врача, пока не выбрана
+                          клиника</TableTooltip
+                        >
+
                         <span>{{ $t("create_appeal.tabs.doctors") }}</span>
                         <q-badge
                           v-if="appealStore.actionDoctorStatusCount > 0"
@@ -126,7 +132,12 @@
                         name="services"
                         :ripple="false"
                         class="tab--no-hover"
+                        :disable="!appealStore.selectedClinic"
                       >
+                        <TableTooltip show v-if="!appealStore.selectedClinic"
+                          >Нельзя выбрать сервис, пока не выбрана
+                          клиника</TableTooltip
+                        >
                         <span>
                           {{ $t("create_appeal.tabs.services") }}
                         </span>
@@ -227,7 +238,11 @@
                           </div>
                         </q-tab-panel>
 
-                        <q-tab-panel name="doctors" key="doctors">
+                        <q-tab-panel
+                          name="doctors"
+                          key="doctors"
+                          :disable="!appealStore.selectedClinic"
+                        >
                           <div class="tab-header">
                             <DropdownSelectNew
                               ref="doctorDropdownRef"
@@ -401,7 +416,11 @@
                           </div>
                         </q-tab-panel>
 
-                        <q-tab-panel name="services" key="services">
+                        <q-tab-panel
+                          name="services"
+                          key="services"
+                          :disable="!appealStore.selectedClinic"
+                        >
                           <div class="tab-header">
                             <DropdownSelectNew
                               ref="serviceDropdownRef"
@@ -768,6 +787,7 @@ import CheckIcon from "src/components/Shared/CheckIcon.vue";
 import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 import AppealHistory from "src/components/AppealHistory.vue";
+import TableTooltip from "src/components/Shared/TableTooltip.vue";
 
 const $q = useQuasar();
 const authStore = useAuthStore();

@@ -1,7 +1,15 @@
 {
   "nav": {
     "appeals": "Обращения",
-    "clients": "Клиенты"
+    "clients": "Клиенты",
+    "clinics": "Клиники",
+    "drugstores": "Аптеки",
+    "reports": "Отчеты",
+    "by_clinics": "По клиникам",
+    "by_drugstore": "По аптекам",
+    "by_organizations": "По организациям",
+    "act_and_esf": "АКТ и ЭСФ",
+    "history": "История"
   },
   "create_appeal": {
     "title": "Обращение",
@@ -21,7 +29,8 @@
     "buttons": {
       "save_appeal": "Сохранить обращение",
       "create_appeal": "Создать обращение",
-      "exit_appeal": "Выйти"
+      "exit_appeal": "Выйти",
+      "delete": "Удалить"
     }
   },
   "appeal_search": {
@@ -52,22 +61,26 @@
   },
   "client_table": {
     "clients": "Клиенты",
-    "client": "Клиент", 
+    "client": "Клиент",
     "date_of_appeal": "Дата обращения",
+    "date_of_completion": "Дата завершения", 
     "appeal_status": "Статус",
     "clinic": "Клиника",
     "doctor": "Врач",
-    "doctors": "Врач", 
+    "doctors": "Врач",
     "service": "Сервис",
     "services": "Сервис",
     "diagnosis": "Диагноз",
     "drugstore": "Аптека",
+    "drugs": "Лекарства", 
+    "limits": "Лимиты", 
     "expense": "Расход / {currency}"
   },
   "pagination": {
     "next": "Следующая",
     "prev": "Предыдущая",
-    "rows_per_page": "Строк в таблице"
+    "rows_per_page": "Строк в таблице",
+    "total": "Общее"
   },
   "days": {
     "today": "Сегодня",
