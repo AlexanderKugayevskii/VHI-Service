@@ -155,7 +155,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       }, 0);
 
       const limitNames = [
-        ...new Set([row.drug_program_item_names].flat()),
+        ...new Set([row.drugs_program_item_names].flat()),
       ].join(", ");
 
       return {
