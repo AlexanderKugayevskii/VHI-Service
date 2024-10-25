@@ -9,14 +9,14 @@
             `history-item-status_${classNameByStatus}`,
           ]"
         >
-          {{ status }}
+          {{ $t(status) }}
         </div>
         <div class="history-item-date">{{ date }}</div>
       </div>
       <div class="history-item-body">
         <div class="history-item-body-item">
           <span class="history-item-action-message"
-            >{{ actionMessage.action }}:
+            >{{ $t(actionMessage.action) }}:
           </span>
           <span class="history-item-action-username">{{
             actionMessage.username
@@ -27,7 +27,7 @@
           v-if="actionMessage.whatChanged !== null"
         >
           <span class="history-item-action-message"
-            >{{ actionMessage.whatChanged.type }}:
+            >{{ $t(actionMessage.whatChanged.type) }}:
           </span>
           <span
             :class="[

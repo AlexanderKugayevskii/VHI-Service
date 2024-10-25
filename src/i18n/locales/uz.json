@@ -13,6 +13,13 @@
   },
   "create_appeal": {
     "title": "Murojaat",
+    "total_consumption": "Umumiy xarajatlar",
+    "make_appeal_done": "Yakunlash",
+    "diagnosis": "Tashxis",
+    "enter_diagnosis": "Tashxisni kiriting",
+    "comment": "Izoh",
+    "enter_comment": "Izoh ko‘rsating",
+    "no_comment": "Izohlar yo‘q",
     "tabs": {
       "clinic": "Klinika va tashxis",
       "doctors": "Shifokorlar",
@@ -24,7 +31,11 @@
       "doctors": "Shifokorni tanlang",
       "services": "Hizmatni tanlang",
       "doctors_choise": "Shifokorni tanlang | {n}-ta shifokor tanlangan",
-      "services_choise": "Hizmatni tanlang | {n}-ta hizmat tanlangan"
+      "services_choise": "Hizmatni tanlang | {n}-ta hizmat tanlangan",
+      "enter_service_cost": "xizmat narxini kiriting",
+      "add_doctor": "Shifokorni qo‘shish",
+      "add_service": "Xizmat qo‘shish",
+      "your_clinic": "Sizning klinikangiz"
     },
     "buttons": {
       "save_appeal": "Xabarni saqlash",
@@ -62,8 +73,11 @@
   "client_table": {
     "clients": "Mijozlar",
     "client": "Mijoz",
+    "relative": "Qarindosh",
+    "applicant": "Ariza beruvchi",
     "date_of_appeal": "Murojaat sanasi",
     "date_of_completion": "Tugash sanasi",
+    "date_of_birthday": "Tug‘ilgan sanasi",
     "appeal_status": "Holat",
     "clinic": "Klinika",
     "doctor": "Shifokor",
@@ -74,7 +88,8 @@
     "drugstore": "Dorixona",
     "drugs": "Dorilar",
     "limits": "Limitlar",
-    "expense": "Iste'mol / {currency}"
+    "expense": "Iste'mol / {currency}",
+    "program": "Dastur"
   },
   "pagination": {
     "next": "Keyingisi",
@@ -85,5 +100,52 @@
   "days": {
     "today": "Bugun",
     "yesterday": "Kecha"
+  },
+
+  "common": {
+    "no_data": "Ma’lumotlar yo‘q",
+    "loading": "Загрузка",
+    "enter_date": "Sanani kiriting (10-05-2024)"
+  },
+  "validation": {
+    "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",
+    "choose_service": "Klinika tanlanmaguncha xizmatni tanlay olmaysiz",
+    "no_clinic": "Klinikasi tanlanmagan"
+  },
+  "chat": {
+    "chat_title": "Chat",
+    "write_message": "Xabar yozish..."
+  },
+  "history": {
+    "history_title": "Tarix",
+
+    "application_created": "Murojaat yaratildi",
+    "application_updated": "Murojaat o‘zgartirildi",
+    "application_deleted": "Murojaat olib tashlandi",
+    "application_closed": "Murojaat yakunlandi",
+    "application_service_created": "Xizmat qo‘shildi",
+    "application_service_updated": "Xizmat o‘zgartirildi",
+    "application_service_deleted": "Xizmat olib tashlandi",
+    "application_doctor_created": "Shifokor qo‘shildi",
+    "application_doctor_updated": "Shifokor o‘zgardi",
+    "application_doctor_deleted": "Shifokor olib tashlandi",
+    "application_drug_created": "Dori qo‘shildi",
+    "application_drug_updated": "Dori o‘zgartirildi",
+    "application_drug_deleted": "Dori olib tashlandi",
+    "application_comment_updated": "Izoh o‘zgardi",
+    "application_diagnosis_updated": "Tashxis o‘zgartirildi",
+    "application_limit_updated": "Limit belgilandi",
+
+    "service": "Xizmat",
+    "doctor": "Shifokor",
+    "diagnosis": "Tashxis",
+    "medicine": "Dori",
+    "comment": "Izoh",
+
+    "added": "Qo‘shdi",
+    "changed": "O‘zgartirdim",
+    "deleted": "O‘chirib tashlandi",
+    "finished": "Yakunlandi",
+    "created": "Yaratgan"
   }
 }

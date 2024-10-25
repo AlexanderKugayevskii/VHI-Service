@@ -13,6 +13,13 @@
   },
   "create_appeal": {
     "title": "Обращение",
+    "total_consumption": "Общий расход",
+    "make_appeal_done": "Сделать завершенным",
+    "diagnosis": "Диагноз",
+    "enter_diagnosis": "Введите диагноз",
+    "comment": "Комментарий",
+    "enter_comment": "Укажите комментарий",
+    "no_comment": "Комментариев нет", 
     "tabs": {
       "clinic": "Клиника и диагноз",
       "doctors": "Врачи",
@@ -24,7 +31,11 @@
       "doctors": "Выберите врача",
       "services": "Выберите сервис",
       "doctors_choise": "Выберите врача | Выбран {n} врач | Выбрано {n} врача | Выбрано {n} врачей",
-      "services_choise": "Выберите сервис | Выбран {n} сервис | Выбрано {n} сервиса | Выбрано {n} сервисов"
+      "services_choise": "Выберите сервис | Выбран {n} сервис | Выбрано {n} сервиса | Выбрано {n} сервисов",
+      "enter_service_cost": "введите стоимость услуги",
+      "add_doctor": "Добавить врача", 
+      "add_service": "Добавить сервис",
+      "your_clinic": "Ваша клиника" 
     },
     "buttons": {
       "save_appeal": "Сохранить обращение",
@@ -62,8 +73,11 @@
   "client_table": {
     "clients": "Клиенты",
     "client": "Клиент",
+    "relative": "Родственник",
+    "applicant": "Заявитель",
     "date_of_appeal": "Дата обращения",
-    "date_of_completion": "Дата завершения", 
+    "date_of_completion": "Дата завершения",
+    "date_of_birtday": "Дата рождения",
     "appeal_status": "Статус",
     "clinic": "Клиника",
     "doctor": "Врач",
@@ -72,9 +86,10 @@
     "services": "Сервис",
     "diagnosis": "Диагноз",
     "drugstore": "Аптека",
-    "drugs": "Лекарства", 
-    "limits": "Лимиты", 
-    "expense": "Расход / {currency}"
+    "drugs": "Лекарства",
+    "limits": "Лимиты",
+    "expense": "Расход / {currency}",
+    "program": "Программа"
   },
   "pagination": {
     "next": "Следующая",
@@ -85,5 +100,52 @@
   "days": {
     "today": "Сегодня",
     "yesterday": "Вчера"
+  },
+  "common": {
+    "no_data": "Данных нет",
+    "loading": "Загрузка",
+    "enter_date": "Введите дату (10-05-2024)"
+  },
+
+  "validation": {
+    "choose_doctor": "Нельзя выбрать врача, пока не выбрана клиника",
+    "choose_service": "Нельзя выбрать сервис, пока не выбрана клиника",
+    "no_clinic": "Клиника не выбрана"
+  },
+  "chat": {
+    "chat_title": "Чат",
+    "write_message": "Написать сообщение..."
+  },
+  "history": {
+    "history_title": "История",
+
+    "application_created": "Обращение создано",
+    "application_updated": "Обращение изменено",
+    "application_deleted": "Обращение удалено",
+    "application_closed": "Обращение завершено",
+    "application_service_created": "Добавлен сервис",
+    "application_service_updated": "Изменен сервис",
+    "application_service_deleted": "Удален сервис",
+    "application_doctor_created": "Добавлен врач",
+    "application_doctor_updated": "Изменен врач",
+    "application_doctor_deleted": "Удален врач",
+    "application_drug_created": "Добавлено лекарство",
+    "application_drug_updated": "Изменено лекарство",
+    "application_drug_deleted": "Удалено лекарство",
+    "application_comment_updated": "Изменен комментарий",
+    "application_diagnosis_updated": "Изменен диагноз",
+    "application_limit_updated": "Назначен лимит",
+
+    "service": "Сервис",
+    "doctor": "Врач",
+    "diagnosis": "Диагноз",
+    "medicine": "Лекарство",
+    "comment": "Комментарий", 
+
+    "added": "Добавил", 
+    "changed": "Изменил", 
+    "deleted": "Удалил", 
+    "finished": "Завершил", 
+    "created": "Создал" 
   }
 }
