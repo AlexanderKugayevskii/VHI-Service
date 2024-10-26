@@ -16,10 +16,22 @@
     "total_consumption": "Общий расход",
     "make_appeal_done": "Сделать завершенным",
     "diagnosis": "Диагноз",
+    "medicine": "Лекарство",
+    "enter_medicine": "Выберите лекарство",
     "enter_diagnosis": "Введите диагноз",
+    "add_medicine": "Добавить лекарство",
+    "add": "Добавить",
+    "amount": "Количество",
+    "price": "Цена",
     "comment": "Комментарий",
     "enter_comment": "Укажите комментарий",
-    "no_comment": "Комментариев нет", 
+    "no_comment": "Комментариев нет",
+    "added_by_drugstore": "Добавлено аптекой",
+    "added_by_clinic": "Добавлено клиникой",
+    "added_by_company": "Добавлено компанией",
+    "completed_by_clinic": "Завершено клиникой",
+    "decision_by_company": "Решение компании",
+
     "tabs": {
       "clinic": "Клиника и диагноз",
       "doctors": "Врачи",
@@ -30,12 +42,14 @@
       "clinic": "Выберите клинику",
       "doctors": "Выберите врача",
       "services": "Выберите сервис",
+      "drugstore": "Выберите аптеку",
       "doctors_choise": "Выберите врача | Выбран {n} врач | Выбрано {n} врача | Выбрано {n} врачей",
       "services_choise": "Выберите сервис | Выбран {n} сервис | Выбрано {n} сервиса | Выбрано {n} сервисов",
       "enter_service_cost": "введите стоимость услуги",
-      "add_doctor": "Добавить врача", 
+      "add_doctor": "Добавить врача",
       "add_service": "Добавить сервис",
-      "your_clinic": "Ваша клиника" 
+      "your_clinic": "Ваша клиника",
+      "your_drugstore": "Ваша аптека"
     },
     "buttons": {
       "save_appeal": "Сохранить обращение",
@@ -110,7 +124,8 @@
   "validation": {
     "choose_doctor": "Нельзя выбрать врача, пока не выбрана клиника",
     "choose_service": "Нельзя выбрать сервис, пока не выбрана клиника",
-    "no_clinic": "Клиника не выбрана"
+    "no_clinic": "Клиника не выбрана",
+    "no_drugstore": "Аптека не выбрана"
   },
   "chat": {
     "chat_title": "Чат",
@@ -140,12 +155,12 @@
     "doctor": "Врач",
     "diagnosis": "Диагноз",
     "medicine": "Лекарство",
-    "comment": "Комментарий", 
+    "comment": "Комментарий",
 
-    "added": "Добавил", 
-    "changed": "Изменил", 
-    "deleted": "Удалил", 
-    "finished": "Завершил", 
-    "created": "Создал" 
+    "added": "Добавил",
+    "changed": "Изменил",
+    "deleted": "Удалил",
+    "finished": "Завершил",
+    "created": "Создал"
   }
 }

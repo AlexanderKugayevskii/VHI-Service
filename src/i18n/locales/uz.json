@@ -17,9 +17,21 @@
     "make_appeal_done": "Yakunlash",
     "diagnosis": "Tashxis",
     "enter_diagnosis": "Tashxisni kiriting",
+    "medicine": "Dorilar",
+    "enter_medicine": "Dori tanlang",
+    "add_medicine": "Dori qo‘shish",
+    "add": "Qo‘shish",
+    "amount": "Miqdori",
+    "price": "Narxi",
     "comment": "Izoh",
     "enter_comment": "Izoh ko‘rsating",
     "no_comment": "Izohlar yo‘q",
+    "added_by_drugstore": "Dorixona tomonidan qo‘shildi",
+    "added_by_clinic": "Klinika tomonidan qo‘shilgan",
+    "added_by_company": "Kompaniya tomonidan qo‘shilgan",
+    "completed_by_clinic": "Klinika tomonidan yakunlandi",
+    "decision_by_company": "Kompaniyaning qarori",
+
     "tabs": {
       "clinic": "Klinika va tashxis",
       "doctors": "Shifokorlar",
@@ -30,12 +42,14 @@
       "clinic": "Klinikani tanlang",
       "doctors": "Shifokorni tanlang",
       "services": "Hizmatni tanlang",
+      "drugstore": "Dorixonani tanlang",
       "doctors_choise": "Shifokorni tanlang | {n}-ta shifokor tanlangan",
       "services_choise": "Hizmatni tanlang | {n}-ta hizmat tanlangan",
       "enter_service_cost": "xizmat narxini kiriting",
       "add_doctor": "Shifokorni qo‘shish",
       "add_service": "Xizmat qo‘shish",
-      "your_clinic": "Sizning klinikangiz"
+      "your_clinic": "Sizning klinikangiz",
+      "your_drugstore": "Sizning dorixonangiz"
     },
     "buttons": {
       "save_appeal": "Xabarni saqlash",
@@ -110,7 +124,8 @@
   "validation": {
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",
     "choose_service": "Klinika tanlanmaguncha xizmatni tanlay olmaysiz",
-    "no_clinic": "Klinikasi tanlanmagan"
+    "no_clinic": "Klinikasi tanlanmagan",
+    "no_drugstore": "Dorixona tanlanmagan"
   },
   "chat": {
     "chat_title": "Chat",

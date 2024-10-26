@@ -305,11 +305,15 @@
                                       )
                                     "
                                   >
-                                    (добавлено
+                                    (
                                     {{
                                       appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
+                                        ? $t(
+                                            "create_appeal.added_by_clinic"
+                                          ).toLowerCase()
+                                        : $t(
+                                            "create_appeal.added_by_company"
+                                          ).toLowerCase()
                                     }})
                                   </span>
                                   <span
@@ -319,11 +323,17 @@
                                       )
                                     "
                                   >
+                                    (
                                     {{
                                       appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
+                                        ? ` ${$t(
+                                            "create_appeal.completed_by_clinic"
+                                          )}`
+                                        : ` ${$t(
+                                            "create_appeal.decision_by_company"
+                                          )}`
                                     }}
+                                    )
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -398,10 +408,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="doctor in appealStore.suggestedDoctors"
@@ -489,11 +499,15 @@
                                       )
                                     "
                                   >
-                                    (добавлено
+                                    (
                                     {{
                                       appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
+                                        ? $t(
+                                            "create_appeal.added_by_clinic"
+                                          ).toLowerCase()
+                                        : $t(
+                                            "create_appeal.added_by_company"
+                                          ).toLowerCase()
                                     }})
                                   </span>
                                   <span
@@ -503,11 +517,17 @@
                                       )
                                     "
                                   >
+                                    (
                                     {{
                                       appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
+                                        ? ` ${$t(
+                                            "create_appeal.completed_by_clinic"
+                                          )}`
+                                        : ` ${$t(
+                                            "create_appeal.decision_by_company"
+                                          )}`
                                     }}
+                                    )
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -583,10 +603,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="service in appealStore.suggestedServices"
