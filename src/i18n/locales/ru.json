@@ -9,7 +9,11 @@
     "by_drugstore": "По аптекам",
     "by_organizations": "По организациям",
     "act_and_esf": "АКТ и ЭСФ",
-    "history": "История"
+    "history": "История",
+    "report_by_clinics": "Отчеты по клиникам",
+    "report_by_drugstore": "Отчеты по аптекам",
+    "report_by_organizations": "Отчеты по организациям",
+    "report_by_payment": "Отчет оплаты"
   },
   "create_appeal": {
     "title": "Обращение",
@@ -32,6 +36,9 @@
     "added_by_company": "Добавлено компанией",
     "completed_by_clinic": "Завершено клиникой",
     "decision_by_company": "Решение компании",
+    "delete_appeal": "Удалить обращение?",
+    "fio_client": "Фамилия и имя клиента",
+    "enter_drug_name": "Введите название лекарства",
 
     "tabs": {
       "clinic": "Клиника и диагноз",
@@ -57,7 +64,10 @@
       "create_appeal": "Создать обращение",
       "exit_appeal": "Выйти",
       "delete": "Удалить",
-      "continue": "Продолжить"
+      "continue": "Продолжить",
+      "download_report": "Скачать отчет",
+      "change": "Изменить",
+      "change_data": "Изменить данные"
     }
   },
   "appeal_search": {
@@ -70,7 +80,9 @@
     "passport_input": "Введите серию и номер паспорта",
     "fio_label": "Фамилия Имя",
     "passport_label": "Серия и номер паспорта",
-    "type_of_appeal": "Выберите тип обращения"
+    "type_of_appeal": "Выберите тип обращения",
+    "client": "Клиент",
+    "relative": "Родственник"
   },
   "statuses": {
     "new": "Новое",
@@ -107,7 +119,13 @@
     "limits": "Лимиты",
     "no_limits": "Лимиты не назначены",
     "expense": "Расход / {currency}",
-    "program": "Программа"
+    "program": "Программа",
+    "type": "Тип",
+    "passport": "Паспорт",
+    "pinfl": "ПИНФЛ",
+    "phone": "Телефон",
+    "organization": "Организация",
+    "organization_name": "Название организации"
   },
   "pagination": {
     "next": "Следующая",
@@ -123,14 +141,21 @@
     "no_data": "Данных нет",
     "loading": "Загрузка",
     "enter_date": "Введите дату (10-05-2024)",
-    "not_found": "Ничего не найдено"
+    "not_found": "Ничего не найдено",
+    "notifications": "Уведомления",
+    "start_date": "Дата начала",
+    "end_date": "Дата конца",
+    "generate_report": "Сформировать отчет",
+    
   },
 
   "validation": {
     "choose_doctor": "Нельзя выбрать врача, пока не выбрана клиника",
     "choose_service": "Нельзя выбрать сервис, пока не выбрана клиника",
     "no_clinic": "Клиника не выбрана",
-    "no_drugstore": "Аптека не выбрана"
+    "no_drugstore": "Аптека не выбрана",
+    "limits_alert": "Некоторые лимиты не были выбраны. Пожалуйста проверьте еще раз!",
+    "limits_error": "{rateName} limiti yetarli emas"
   },
   "chat": {
     "chat_title": "Чат",
@@ -167,5 +192,50 @@
     "deleted": "Удалил",
     "finished": "Завершил",
     "created": "Создал"
+  },
+  "client_info": {
+    "polis_info": "Информация полиса",
+    "insurance_start_date": "Дата начала страхования",
+    "insurance_end_date": "Дата конца страхования",
+    "number_of_contruct": "Номер контракта",
+    "applicant": "Заявитель",
+    "total_balance": "Общий остаток",
+    "limit": "Лимит",
+    "spent": "Потрачено",
+    "remaining": "Осталось",
+    "client": "Клиент",
+    "passport": "Паспорт",
+    "phone": "Телефон",
+    "no_limits": "Лимитов нет",
+    "show_more": "Показать еще",
+    "change_client_data": "Изменить данные клиента",
+    "resident": "Резидент",
+    "choise_type": "Выберите тип"
+  },
+
+  "act": {
+    "existing_acts": "Существующие акты",
+    "date_of_act": "Дата акта",
+    "date_of_esf": "Дата ЭСФ",
+    "status_of_act": "Статус акта",
+    "clinic_name": "Название клиники",
+    "summ": "Сумм",
+    "act_confirmed": "Акт подтвержден",
+    "act_not_confirmed": "Акт не подтвержден",
+    "send_act": "Отправить акт",
+    "send_esf": "Отправить счет фактуру",
+    "confirmed": "Подтверждено",
+    "to_confirm": "Подтвердить",
+    "to_confirm_act": "Подтвердить акт",
+    "send_act_success": "Акт выполненных работ успешно отправлен в DIDOX",
+    "send_act_error": "Акт выполненных работ не был отправлен",
+    "send_esf_success": "Счет-фактура успешно отправлена в DIDOX",
+    "send_esf_error": "Ошибка при отправке счет фактуры",
+    "eimzo_no_key": "У вас нет ключа E-imzo",
+    "didox_not_auth": "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+    "eimzo_wrong_password": "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+    "ikpu_cancel": "Выбор ИКПУ отменен. Попробуйте еще раз",
+    "act_success_confirmed": "Акт успешно подтвержден",
+    "delete": "Удалить?"
   }
 }

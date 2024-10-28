@@ -7,12 +7,12 @@
       <div class="modal-body"></div>
       <div class="modal-footer">
         <SimpleButton
-          label="Отмена"
+          :label="$t('appeal_search.cancel')"
           custom-class="btn-cancel"
           @click="hideModal"
         />
         <SimpleButton
-          label="Удалить"
+          :label="$t('create_appeal.buttons.delete')"
           :custom-class="['btn-action']"
           @click="confirmModal"
         >
@@ -29,7 +29,7 @@ import SimpleButton from "../Shared/SimpleButton.vue";
 const props = defineProps({
   title: {
     type: String,
-    default: "Подтвердить",
+    default: "confirm",
   },
 });
 defineEmits([...useDialogPluginComponent.emits, "confirm"]);

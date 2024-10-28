@@ -9,7 +9,11 @@
     "by_drugstore": "Dorixonalar bo‘yicha",
     "by_organizations": "Tashkilotlar bo‘yicha",
     "act_and_esf": "AKT va ESF",
-    "history": "Tarix"
+    "history": "Tarix",
+    "report_by_clinics": "Klinikalar bo‘yicha hisobotlar",
+    "report_by_drugstore": "Dorixonalar bo‘yicha hisobotlar",
+    "report_by_organizations": "Tashkilotlar bo‘yicha hisobotlar",
+    "report_by_payment": "To‘lov hisoboti"
   },
   "create_appeal": {
     "title": "Murojaat",
@@ -32,6 +36,9 @@
     "added_by_company": "Kompaniya tomonidan qo‘shilgan",
     "completed_by_clinic": "Klinika tomonidan yakunlandi",
     "decision_by_company": "Kompaniyaning qarori",
+    "delete_appeal": "Murojaat o‘chirilsinmi?",
+    "fio_client": "Mijozning familiyasi va ismi",
+    "enter_drug_name": "Dori nomini kiriting",
 
     "tabs": {
       "clinic": "Klinika va tashxis",
@@ -57,7 +64,10 @@
       "create_appeal": "So'rov yarating",
       "exit_appeal": "Tashqariga chiqish",
       "delete": "O‘chirish",
-      "continue": "Davom ettirish"
+      "continue": "Davom ettirish",
+      "download_report": "Hisobotni yuklab olish",
+      "change": "O‘zgartirish",
+      "change_data": "Ma’lumotlarni o‘zgartirish"
     }
   },
   "appeal_search": {
@@ -70,7 +80,9 @@
     "passport_input": "Seriya va pasport raqamini kiriting",
     "fio_label": "Familiya Ismi",
     "passport_label": "Seriya vs pasport",
-    "type_of_appeal": "Murojaat turini tanlang"
+    "type_of_appeal": "Murojaat turini tanlang",
+    "client": "Mijoz",
+    "relative": "Qarindosh"
   },
   "statuses": {
     "new": "Yangi",
@@ -107,7 +119,13 @@
     "limits": "Limitlar",
     "no_limits": "Limit belgilanmagan",
     "expense": "Iste'mol / {currency}",
-    "program": "Dastur"
+    "program": "Dastur",
+    "type": "Turi",
+    "passport": "Pasport",
+    "pinfl": "PINFL",
+    "phone": "Telefon",
+    "organization": "Tashkilot",
+    "organization_name": "Tashkilot nomi"
   },
   "pagination": {
     "next": "Keyingisi",
@@ -124,13 +142,20 @@
     "no_data": "Ma’lumotlar yo‘q",
     "loading": "Загрузка",
     "enter_date": "Sanani kiriting (10-05-2024)",
-    "not_found": "Ничего не найдено"
+    "not_found": "Hech narsa topilmadi",
+    "notifications": "Bildirishnomalar",
+    "start_date": "Boshlanish sanasi",
+    "end_date": "Tugash sanasi",
+    "generate_report": "Hisobotni shakllantirish",
+    "report": "Hisobot"
   },
   "validation": {
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",
     "choose_service": "Klinika tanlanmaguncha xizmatni tanlay olmaysiz",
     "no_clinic": "Klinikasi tanlanmagan",
-    "no_drugstore": "Dorixona tanlanmagan"
+    "no_drugstore": "Dorixona tanlanmagan",
+    "limits_alert": "Ba’zi limitlar tanlanmagan. Iltimos, yana bir marta tekshiring!",
+    "limits_error": "Лимит {rateName} - недостаточно средств"
   },
   "chat": {
     "chat_title": "Chat",
@@ -167,5 +192,50 @@
     "deleted": "O‘chirib tashlandi",
     "finished": "Yakunlandi",
     "created": "Yaratgan"
+  },
+
+  "client_info": {
+    "polis_info": "Polis axboroti",
+    "insurance_start_date": "Sug‘urta boshlangan sana",
+    "insurance_end_date": "Sug‘urta tugagan sana",
+    "number_of_contruct": "Shartnoma raqami",
+    "applicant": "Ariza beruvchi",
+    "total_balance": "Umumiy qoldiq",
+    "limit": "Limit",
+    "spent": "Sarflangan",
+    "remaining": "Qolgan",
+    "client": "Mijoz",
+    "passport": "Pasport",
+    "phone": "Telefon",
+    "no_limits": "Limitlar yo‘q",
+    "show_more": "Yana ko‘rsatish",
+    "change_client_data": "Mijoz ma’lumotlarini o‘zgartirish",
+    "resident": "Rezident",
+    "choise_type": "Turini tanlang"
+  },
+  "act": {
+    "existing_acts": "Mavjud hujjatlar",
+    "date_of_act": "Hujjat sanasi",
+    "date_of_esf": "ESF sanasi",
+    "status_of_act": "Hujjat holati",
+    "clinic_name": "Klinika nomi",
+    "summ": "Summa",
+    "act_confirmed": "Hujjat tasdiqlandi",
+    "act_not_confirmed": "Hujjat tasdiqlanmadi",
+    "send_act": "Hujjatni yuborish",
+    "send_esf": "Hisob-fakturani yuborish",
+    "confirmed": "Tasdiqlandi",
+    "to_confirm": "Tasdiqlash",
+    "to_confirm_act": "Hujjatni tasdiqlash",
+    "send_act_success": "Bajarilgan ishlar dalolatnomasi DIDOXga muvaffaqiyatli jo‘natildi",
+    "send_act_error": "Bajarilgan ishlar dalolatnomasi yuborilmagan",
+    "send_esf_success": "Hisobvaraq-faktura DIDOX’ga muvaffaqiyatli yuborildi",
+    "send_esf_error": "Hisob-fakturani yuborishda xatolik",
+    "eimzo_no_key": "Sizda E-imzo kaliti yo‘q",
+    "didox_not_auth": "DIDOXga ulanib bo‘lmadi. Yana bir marta urinib ko‘ring",
+    "eimzo_wrong_password": "Parol xato yoki Siz ’Bekor qilish’ tugmasini bosdingiz,",
+    "ikpu_cancel": "IKPUni tanlash bekor qilindi. Yana bir marta urinib ko‘ring",
+    "act_success_confirmed": "Hujjat tasdiqlandi",
+    "delete": "Удалить?"
   }
 }

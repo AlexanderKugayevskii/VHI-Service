@@ -7,23 +7,26 @@
 
 <script setup>
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 const props = defineProps({
   status: {
     type: Number,
   },
 });
 
+const { t } = useI18n();
+
 const statusClass = computed(() => {
   const s = props.status;
   if (s === 1) {
     return {
-      text: "Акт не подтвержден",
+      text: t("act.act_not_confirmed"),
       className: "status-light--red",
     };
   }
 
   return {
-    text: "Акт подтвержден",
+    text: t("act.act_confirmed"),
     className: "status-light--success",
   };
 });

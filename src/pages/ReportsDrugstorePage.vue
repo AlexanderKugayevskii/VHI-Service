@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center column body-bg">
     <div class="col page-container">
-      <h2 class="page-title q-my-none q-mb-md">Отчеты по аптекам</h2>
+      <h2 class="page-title q-my-none q-mb-md">{{$t('nav.report_by_drugstore')}}</h2>
       <DrugstoreDataTable />
     </div>
   </q-page>

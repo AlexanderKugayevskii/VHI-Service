@@ -29,25 +29,26 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     {
       name: "residentType",
       align: "left",
-      label: "Тип",
+      label: t("client_table.type"),
       field: "residentType",
     },
     {
       name: "passport",
       align: "left",
-      label: "Паспорт",
+      label: t("client_table.passport"),
       field: "passport",
     },
     {
       name: "pinfl",
       align: "left",
-      label: "ПИНФЛ",
+      label: t("client_table.pinfl"),
       field: "passport",
     },
     {
       name: "phone",
       align: "left",
-      label: "Телефон",
+      label: t("client_table.phone"),
+
       field: "phone",
     },
     {
@@ -60,25 +61,26 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     {
       name: "program",
       align: "left",
-      label: "Программа",
+      label: t("client_table.program"),
+
       field: "program",
     },
     {
       name: "startInsurancePeriod",
       align: "left",
-      label: "Дата начала страхования",
+      label: t("client_info.insurance_start_date"),
       field: "startInsurancePeriod",
     },
     {
       name: "endInsurancePeriod",
       align: "left",
-      label: "Дата конца страхования",
+      label: t("client_info.insurance_end_date"),
       field: "endInsurancePeriod",
     },
     {
       name: "organizationName",
       align: "left",
-      label: "Организация",
+      label: t("client_table.organization"),
       field: "organizationName",
     },
     {

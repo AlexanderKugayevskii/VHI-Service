@@ -1,7 +1,9 @@
 <template>
   <q-page class="flex flex-center column body-bg" v-if="!isClientInfoRoute">
     <div class="col page-container clients-container">
-      <h2 class="page-title q-my-none q-mb-md">Клиенты</h2>
+      <h2 class="page-title q-my-none q-mb-md">
+        {{ $t("nav.clients") }}
+      </h2>
       <FullClientsTable
         :pagination="pagination"
         :rows="rows"

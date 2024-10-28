@@ -190,26 +190,26 @@ const columns = computed(() => [
   {
     name: "organizationName",
     align: "left",
-    label: "Название организации",
+    label: t("client_table.organization_name"),
     field: "organizationName",
     sortable: true,
   },
   {
     name: "contractNumber",
     align: "left",
-    label: "Номер контракта",
+    label: t("client_info.number_of_contruct"),
     field: "contractNumber",
   },
   {
     name: "phone",
     align: "left",
-    label: "Телефон",
+    label: t("client_info.phone"),
     field: "phone",
   },
   {
     name: "download",
     align: "right",
-    label: "Отчет",
+    label: t("common.report"),
     field: "download",
   },
 ]);

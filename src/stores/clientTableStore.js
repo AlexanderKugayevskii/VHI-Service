@@ -121,8 +121,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
 
-        console.log(users.value);
-
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -238,7 +236,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         name: t("client_table.client"),
         type: "client",
         meta: true,
-        placeholder: "Фамилия и имя клиента",
+        placeholder: t("create_appeal.fio_client"),
         multiple: false,
         component: "SimpleInput",
         item: "",

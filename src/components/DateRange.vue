@@ -1,18 +1,18 @@
 <template>
   <div class="reports">
     <DateInput_new
-      label="Дата начала"
+      :label="t('common.start_date')"
       placeholder="01-01-2024"
       v-model="startDate"
     />
     <DateInput_new
-      label="Дата конца"
+      :label="t('common.end_date')"
       placeholder="01-01-2024"
       v-model="endDate"
     />
     <SimpleButton
       :disabled="disabledRule"
-      :label="buttonName"
+      :label="$t('common.generate_report') || buttonName"
       custom-class="appeals-btn"
       @click="handleClick"
     />
@@ -23,14 +23,17 @@
 import { ref, computed, watch } from "vue";
 import DateInput_new from "./Shared/DateInput_new.vue";
 import SimpleButton from "./Shared/SimpleButton.vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 const props = defineProps({
   disabledRule: {
     type: Boolean,
   },
   buttonName: {
-    type: String, 
-    default: 'Сформировать отчет'
-  }
+    type: String,
+    default: "common.generate_report",
+  },
 });
 const emit = defineEmits(["getRange", "getData"]);
 

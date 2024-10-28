@@ -24,7 +24,7 @@
     <div class="client-result-item-content">
       <div class="client-result-item-info">
         <span class="client-result-item-info-title"
-          >Серия и номер паспорта
+          >{{ $t("appeal_search.passport_label") }}
         </span>
         <span class="client-result-item-info-descr">{{
           item.passportSeria + " " + item.passportNumber
@@ -35,18 +35,24 @@
         <span class="client-result-item-info-descr">{{ item.dmsCode }}</span>
       </div>
       <div class="client-result-item-info">
-        <span class="client-result-item-info-title">Фамилия и Имя </span>
+        <span class="client-result-item-info-title"
+          >{{ $t("appeal_search.fio") }}
+        </span>
         <span class="client-result-item-info-descr">{{
           item.clientLastname + " " + item.clientFirstname
         }}</span>
       </div>
       <div class="client-result-item-info" v-if="item.type_id === 0">
-        <span class="client-result-item-info-title">Программа </span>
+        <span class="client-result-item-info-title"
+          >{{ $t("client_table.program") }}
+        </span>
         <span class="client-result-item-info-descr">{{ item.program }}</span>
       </div>
     </div>
     <div class="client-result-item-tag">
-      <div class="client-result-item-tag-text">{{ item.type }}</div>
+      <div class="client-result-item-tag-text">
+        {{ $t(`appeal_search.${item.type}`) }}
+      </div>
     </div>
   </div>
 </template>

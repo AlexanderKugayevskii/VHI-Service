@@ -41,7 +41,7 @@
           </template>
         </q-input>
       </div>
-      <div class="appeals-badges">
+      <div class="appeals-badges" v-if="showAdvancedFilter">
         <q-btn
           dense
           round
@@ -125,6 +125,10 @@ const props = defineProps({
   removeFilter: {
     default: null,
   },
+  showAdvancedFilter: {
+    type: Boolean,
+    default: true,
+  },
 });
 const modalFilterFixed = ref(false);
 const showDropdown = ref(false);
@@ -160,7 +164,6 @@ onMounted(() => {
     }
     showDropdown.value = false;
   });
-
 });
 </script>
 

@@ -351,6 +351,8 @@ import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
 
+const { t } = useI18n();
+
 const $q = useQuasar();
 
 const authStore = useAuthStore();
@@ -425,7 +427,9 @@ const selectLimitDrug = (item, drug, isSuggested) => {
 const testLog = (rate) => {
   $q.notify({
     type: "error",
-    message: `Лимит "${rate.name}" - недостаточно средств`,
+    message: t("validation.limits_error", {
+      rateName: rate.name,
+    }),
     position: "bottom",
     timeout: 3000,
   });
@@ -440,8 +444,7 @@ onMounted(() => {
     if (programItemIdIsZero) {
       $q.notify({
         type: "alert",
-        message:
-          "Некоторые лимиты не были выбраны. Пожалуйста проверьте еще раз!",
+        message: t("validation.limits_alert"),
         position: "bottom",
       });
     }

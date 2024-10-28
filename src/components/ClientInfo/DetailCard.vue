@@ -11,11 +11,11 @@
     <div class="details__card-info">
       <div class="details__card-text">
         <p>
-          <span>Лимит: </span>
+          <span>{{ $t("client_info.limit") }}: </span>
           <span>{{ formatPrice(limit) }}</span>
         </p>
         <p>
-          <span>Потрачено: </span>
+          <span>{{ $t("client_info.spent") }}: </span>
           <span :class="[{ 'text-negative': spent < 0 }]">{{
             formatPrice(spent)
           }}</span>
@@ -26,7 +26,7 @@
           >
         </p>
         <p>
-          <span>Осталось: </span>
+          <span>{{ $t("client_info.remaining") }}: </span>
           <span :class="[{ 'text-negative': remaind < 0 }]">{{
             formatPrice(remaind)
           }}</span>

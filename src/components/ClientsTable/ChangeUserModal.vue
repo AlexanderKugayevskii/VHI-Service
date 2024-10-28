@@ -2,7 +2,9 @@
   <q-dialog ref="dialogRef" @hide="onDialogHide" no-backdrop-dismiss>
     <div class="modal-container appeal-search-container">
       <div class="modal-header">
-        <h4 class="page-title q-my-none">Изменить данные клиента</h4>
+        <h4 class="page-title q-my-none">
+          {{ $t("client_info.change_client_data") }}
+        </h4>
       </div>
       <div class="modal-body">
         <div class="modal-row">
@@ -14,8 +16,12 @@
             :selected-options="selectedResidentType"
             @select-option="selectResidentType"
           >
-            <template #top-label>Резидент</template>
-            <template #placeholder> Выберите тип </template>
+            <template #top-label>
+              {{ $t("client_info.resident") }}
+            </template>
+            <template #placeholder>
+              {{ $t("client_info.choise_type") }}
+            </template>
             <template v-slot:selected-options-once="props">
               <div>{{ props.option.name }}</div>
             </template>
@@ -28,7 +34,7 @@
         <div class="modal-row">
           <SimpleInput
             maxlength="14"
-            label="ПИНФЛ"
+            :label="$t('client_table.pinfl')"
             placeholder="00000000000000"
             @update:model-value="changeUserPinfl"
             :model-value="userPinfl"
@@ -38,7 +44,7 @@
         <div class="modal-row">
           <PhoneInput
             placeholder="+998 99 123-45-67"
-            label="Телефон"
+            :label="$t('client_table.phone')"
             @update:model-value="changeUserPhone"
             :model-value="userPhone"
           />
@@ -51,7 +57,7 @@
           @click="hideModal"
         />
         <SimpleButton
-          label="Изменить данные"
+          :label="$t('create_appeal.buttons.change_data')"
           :custom-class="['btn-action']"
           @click="changeUserData"
         >

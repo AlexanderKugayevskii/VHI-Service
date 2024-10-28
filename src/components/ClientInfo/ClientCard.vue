@@ -3,15 +3,15 @@
     <div class="client__card-info">
       <div class="client__card-text">
         <p>
-          <span>Клиент: </span>
+          <span>{{ $t('client_info.client') }}: </span>
           <span>{{ clientData.clientName }}, {{ clientData.birthDay }}</span>
         </p>
         <p>
-          <span>Паспорт: </span>
+          <span>{{ $t('client_info.passport') }}: </span>
           <span>{{ clientData.passport }}</span>
         </p>
         <p v-if="clientData.phone">
-          <span>Телефон: </span>
+          <span>{{ $t('client_info.phone') }}: </span>
           <span>{{ clientData.phone }}</span>
         </p>
       </div>

@@ -1,11 +1,13 @@
 <template>
   <q-page class="flex column body-bg">
     <div class="col page-container">
-      <h2 class="page-title q-my-none q-mb-md">Акт и ЭСФ</h2>
+      <h2 class="page-title q-my-none q-mb-md">{{ $t("nav.act_and_esf") }}</h2>
 
       <div class="fields-result">
         <div class="fields-result-group q-mb-lg">
-          <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
+          <h3 class="page-title q-my-none q-mb-md">
+            {{ $t("create_appeal.tabs.services") }}
+          </h3>
 
           <ServiceTableShow :id="id" @getDataFromTable="getDataFromTable" />
         </div>
@@ -14,7 +16,9 @@
         </div> -->
         <div class="fields-result-group q-mb-lg">
           <!-- v-if="fieldsData.doctors.length > 0" -->
-          <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
+          <h3 class="page-title q-my-none q-mb-md">
+            {{ $t("create_appeal.tabs.doctors") }}
+          </h3>
 
           <DoctorsTableShow :id="id" @getDataFromTable="getDataFromTable" />
         </div>
@@ -32,7 +36,7 @@
               v-if="isClinic && dataFields.status === 1"
               type="button"
               customClass="appeals-btn"
-              label="Отправить акт"
+              :label="$t('act.send_act')"
               :loading="loadingSendAct"
               @click="downloadAct"
             >
@@ -44,7 +48,7 @@
               v-if="isClinic && dataFields.status === 2"
               type="button"
               customClass="appeals-btn"
-              label="Отправить счёт фактуру"
+              :label="$t('act.send_esf')"
               :loading="loadingSendInvoice"
               @click="getFacturaData"
             >
@@ -59,7 +63,7 @@
               v-if="isAgent && dataFields.status === 0"
               type="button"
               customClass="appeals-btn"
-              :label="isActConfirmed ? 'Подтверждено' : 'Подтвердить'"
+              :label="$t(isActConfirmed ? 'act.confirmed' : 'act.to_confirm')"
               :disabled="isActConfirmed"
               @click="confirmAct"
             >
@@ -68,7 +72,13 @@
               v-if="isAgent && dataFields.status === 1"
               type="button"
               customClass="appeals-btn"
-              :label="isActSentConfirmed ? 'Акт подтвержен' : 'Подтвердить акт'"
+              :label="
+                $t(
+                  isActSentConfirmed
+                    ? 'act.act_confirmed'
+                    : 'act.to_confirm_act'
+                )
+              "
               :disabled="isActSentConfirmed"
               @click="confirmActSent"
             >
@@ -104,7 +114,9 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { useQuasar } from "quasar";
 import ProductClassModal from "src/components/ActsTable/ProductClassModal.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = defineProps({
@@ -279,13 +291,13 @@ const sendAct = async (base64File) => {
       const status = await ActService.aktSent(props.id);
       $q.notify({
         type: "success",
-        message: "Акт выполненных работ успешно отправлен в DIDOX",
+        message: t("act.send_act_success"),
         position: "bottom",
       });
     } catch (e) {
       $q.notify({
         type: "error",
-        message: "Акт выполненных работ не был отправлен",
+        message: t("act.send_act_error"),
         position: "bottom",
       });
       console.error(e);
@@ -434,20 +446,20 @@ const sendInvoice = async (data, ikpuData) => {
       await signDidox(response);
       $q.notify({
         type: "success",
-        message: "Счет-фактура успешно отправлена в DIDOX",
+        message: t("act.send_esf_success"),
         position: "bottom",
       });
     } catch (e) {
       $q.notify({
         type: "error",
-        message: "Ошибка при отправке счет фактуры",
+        message: t("act.send_esf_error"),
         position: "bottom",
       });
     }
   } catch (e) {
     $q.notify({
       type: "error",
-      message: "Ошибка при отправке счет фактуры",
+      message: t("act.send_esf_error"),
       position: "bottom",
     });
     console.error(e);
@@ -469,7 +481,7 @@ const downloadAct = async () => {
     if (result === "KEY_NOT_FOUND") {
       $q.notify({
         type: "error",
-        message: "У вас нет ключа E-imzo",
+        message: t("act.eimzo_no_key"),
         position: "bottom",
       });
       return;
@@ -478,7 +490,7 @@ const downloadAct = async () => {
     if (result === "DIDOX_NOT_AUTH") {
       $q.notify({
         type: "error",
-        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        message: t("act.didox_not_auth"),
         position: "bottom",
       });
       return;
@@ -487,7 +499,7 @@ const downloadAct = async () => {
     if (result === "CANCEL_PASSWORD") {
       $q.notify({
         type: "error",
-        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        message: t("act.eimzo_wrong_password"),
         position: "bottom",
       });
       return;
@@ -513,7 +525,7 @@ const getFacturaData = async () => {
     if (result === "KEY_NOT_FOUND") {
       $q.notify({
         type: "error",
-        message: "У вас нет ключа E-imzo",
+        message: t("act.eimzo_no_key"),
         position: "bottom",
       });
       return;
@@ -522,7 +534,7 @@ const getFacturaData = async () => {
     if (result === "DIDOX_NOT_AUTH") {
       $q.notify({
         type: "error",
-        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        message: t("act.didox_not_auth"),
         position: "bottom",
       });
       return;
@@ -531,7 +543,7 @@ const getFacturaData = async () => {
     if (result === "CANCEL_PASSWORD") {
       $q.notify({
         type: "error",
-        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        message: t("act.eimzo_wrong_password"),
         position: "bottom",
       });
       return;
@@ -555,7 +567,7 @@ const getFacturaData = async () => {
         } catch (err) {
           $q.notify({
             type: "error",
-            message: "Выбор ИКПУ отменен. Попробуйте еще раз",
+            message: t("act.ikpu_cancel"),
             position: "bottom",
           });
 
@@ -581,7 +593,7 @@ const confirmAct = async () => {
 
     $q.notify({
       type: "success",
-      message: "Акт успешно подтвержден",
+      message: t("act.act_success_confirmed"),
       position: "bottom",
     });
 

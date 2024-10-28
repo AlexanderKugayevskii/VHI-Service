@@ -206,7 +206,7 @@ const columns = computed(() => [
   {
     name: "phone",
     align: "left",
-    label: "Телефон",
+    label: t("client_info.phone"),
     field: "phone",
   },
 ]);
@@ -243,7 +243,6 @@ const fetchDrugstores = async () => {
   }
 };
 
-
 // MULTISELECTION
 const handleCheck = (row) => {
   const findedRow = checkedDrugs.value.findIndex(
@@ -267,7 +266,7 @@ const handleAllDrugs = () => {
     checkedDrugs.value = [];
   } else {
     checkedDrugs.value = [...filteredRows.value];
-  } 
+  }
 };
 const checkAllDrugs = computed(() => {
   if (filteredRows.value.length === 0) {

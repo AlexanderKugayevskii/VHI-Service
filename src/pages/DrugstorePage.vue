@@ -1,7 +1,9 @@
 <template>
   <q-page class="flex body-bg">
     <div class="col page-container">
-      <h2 class="page-title q-my-none q-mb-md">Аптеки</h2>
+      <h2 class="page-title q-my-none q-mb-md">
+        {{ $t("nav.drugstores") }}
+      </h2>
 
       <DrugstoreTable
         @createAppeal="openSearchClient"
