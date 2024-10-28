@@ -55,7 +55,7 @@
             />
           </svg>
         </span>
-        <h3 class="notification-title">Уведомления</h3>
+        <h3 class="notification-title">{{ $t("common.notifications") }}</h3>
         <div class="dropdown-select-scroll" id="virtual-scroll-target">
           <!-- loading -->
           <!-- <div class="dropdown-loading flex flex-center">

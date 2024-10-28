@@ -9,7 +9,11 @@
     "by_drugstore": "По аптекам",
     "by_organizations": "По организациям",
     "act_and_esf": "АКТ и ЭСФ",
-    "history": "История"
+    "history": "История",
+    "report_by_clinics": "Отчеты по клиникам",
+    "report_by_drugstore": "Отчеты по аптекам",
+    "report_by_organizations": "Отчеты по организациям",
+    "report_by_payment": "Отчет оплаты"
   },
   "create_appeal": {
     "title": "Обращение",
@@ -131,7 +135,8 @@
     "no_data": "Данных нет",
     "loading": "Загрузка",
     "enter_date": "Введите дату (10-05-2024)",
-    "not_found": "Ничего не найдено"
+    "not_found": "Ничего не найдено",
+    "notifications": "Уведомления"
   },
 
   "validation": {
@@ -211,6 +216,15 @@
     "send_esf": "Отправить счет фактуру",
     "confirmed": "Подтверждено",
     "to_confirm": "Подтвердить",
-    "to_confirm_act": "Подтвердить акт"
+    "to_confirm_act": "Подтвердить акт",
+    "send_act_success": "Акт выполненных работ успешно отправлен в DIDOX",
+    "send_act_error": "Акт выполненных работ не был отправлен",
+    "send_esf_success": "Счет-фактура успешно отправлена в DIDOX",
+    "send_esf_error": "Ошибка при отправке счет фактуры",
+    "eimzo_no_key": "У вас нет ключа E-imzo",
+    "didox_not_auth": "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+    "eimzo_wrong_password": "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+    "ikpu_cancel": "Выбор ИКПУ отменен. Попробуйте еще раз",
+    "act_success_confirmed": "Акт успешно подтвержден"
   }
 }

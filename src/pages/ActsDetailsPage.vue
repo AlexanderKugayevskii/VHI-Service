@@ -114,7 +114,9 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { useQuasar } from "quasar";
 import ProductClassModal from "src/components/ActsTable/ProductClassModal.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = defineProps({
@@ -289,13 +291,13 @@ const sendAct = async (base64File) => {
       const status = await ActService.aktSent(props.id);
       $q.notify({
         type: "success",
-        message: "Акт выполненных работ успешно отправлен в DIDOX",
+        message: t("act.send_act_success"),
         position: "bottom",
       });
     } catch (e) {
       $q.notify({
         type: "error",
-        message: "Акт выполненных работ не был отправлен",
+        message: t("act.send_act_error"),
         position: "bottom",
       });
       console.error(e);
@@ -444,20 +446,20 @@ const sendInvoice = async (data, ikpuData) => {
       await signDidox(response);
       $q.notify({
         type: "success",
-        message: "Счет-фактура успешно отправлена в DIDOX",
+        message: t("act.send_esf_success"),
         position: "bottom",
       });
     } catch (e) {
       $q.notify({
         type: "error",
-        message: "Ошибка при отправке счет фактуры",
+        message: t("act.send_esf_error"),
         position: "bottom",
       });
     }
   } catch (e) {
     $q.notify({
       type: "error",
-      message: "Ошибка при отправке счет фактуры",
+      message: t("act.send_esf_error"),
       position: "bottom",
     });
     console.error(e);
@@ -479,7 +481,7 @@ const downloadAct = async () => {
     if (result === "KEY_NOT_FOUND") {
       $q.notify({
         type: "error",
-        message: "У вас нет ключа E-imzo",
+        message: t("act.eimzo_no_key"),
         position: "bottom",
       });
       return;
@@ -488,7 +490,7 @@ const downloadAct = async () => {
     if (result === "DIDOX_NOT_AUTH") {
       $q.notify({
         type: "error",
-        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        message: t("act.didox_not_auth"),
         position: "bottom",
       });
       return;
@@ -497,7 +499,7 @@ const downloadAct = async () => {
     if (result === "CANCEL_PASSWORD") {
       $q.notify({
         type: "error",
-        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        message: t("act.eimzo_wrong_password"),
         position: "bottom",
       });
       return;
@@ -523,7 +525,7 @@ const getFacturaData = async () => {
     if (result === "KEY_NOT_FOUND") {
       $q.notify({
         type: "error",
-        message: "У вас нет ключа E-imzo",
+        message: t("act.eimzo_no_key"),
         position: "bottom",
       });
       return;
@@ -532,7 +534,7 @@ const getFacturaData = async () => {
     if (result === "DIDOX_NOT_AUTH") {
       $q.notify({
         type: "error",
-        message: "Не удалось подключиться к DIDOX. Попробуйте еще раз",
+        message: t("act.didox_not_auth"),
         position: "bottom",
       });
       return;
@@ -541,7 +543,7 @@ const getFacturaData = async () => {
     if (result === "CANCEL_PASSWORD") {
       $q.notify({
         type: "error",
-        message: "Неверный пароль или Вы нажали на кнопку 'Отмена'",
+        message: t("act.eimzo_wrong_password"),
         position: "bottom",
       });
       return;
@@ -565,7 +567,7 @@ const getFacturaData = async () => {
         } catch (err) {
           $q.notify({
             type: "error",
-            message: "Выбор ИКПУ отменен. Попробуйте еще раз",
+            message: t("act.ikpu_cancel"),
             position: "bottom",
           });
 
@@ -591,7 +593,7 @@ const confirmAct = async () => {
 
     $q.notify({
       type: "success",
-      message: "Акт успешно подтвержден",
+      message: t("act.act_success_confirmed"),
       position: "bottom",
     });
 

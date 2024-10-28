@@ -9,7 +9,11 @@
     "by_drugstore": "Dorixonalar bo‘yicha",
     "by_organizations": "Tashkilotlar bo‘yicha",
     "act_and_esf": "AKT va ESF",
-    "history": "Tarix"
+    "history": "Tarix",
+    "report_by_clinics": "Klinikalar bo‘yicha hisobotlar",
+    "report_by_drugstore": "Dorixonalar bo‘yicha hisobotlar",
+    "report_by_organizations": "Tashkilotlar bo‘yicha hisobotlar",
+    "report_by_payment": "To‘lov hisoboti"
   },
   "create_appeal": {
     "title": "Murojaat",
@@ -132,7 +136,8 @@
     "no_data": "Ma’lumotlar yo‘q",
     "loading": "Загрузка",
     "enter_date": "Sanani kiriting (10-05-2024)",
-    "not_found": "Ничего не найдено"
+    "not_found": "Hech narsa topilmadi",
+    "notifications": "Bildirishnomalar"
   },
   "validation": {
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",
@@ -211,6 +216,15 @@
     "send_esf": "Hisob-fakturani yuborish",
     "confirmed": "Tasdiqlandi",
     "to_confirm": "Tasdiqlash",
-    "to_confirm_act": "Hujjatni tasdiqlash"
+    "to_confirm_act": "Hujjatni tasdiqlash",
+    "send_act_success": "Bajarilgan ishlar dalolatnomasi DIDOXga muvaffaqiyatli jo‘natildi",
+    "send_act_error": "Bajarilgan ishlar dalolatnomasi yuborilmagan",
+    "send_esf_success": "Hisobvaraq-faktura DIDOX’ga muvaffaqiyatli yuborildi",
+    "send_esf_error": "Hisob-fakturani yuborishda xatolik",
+    "eimzo_no_key": "Sizda E-imzo kaliti yo‘q",
+    "didox_not_auth": "DIDOXga ulanib bo‘lmadi. Yana bir marta urinib ko‘ring",
+    "eimzo_wrong_password": "Parol xato yoki Siz ’Bekor qilish’ tugmasini bosdingiz,",
+    "ikpu_cancel": "IKPUni tanlash bekor qilindi. Yana bir marta urinib ko‘ring",
+    "act_success_confirmed": "Hujjat tasdiqlandi"
   }
 }
