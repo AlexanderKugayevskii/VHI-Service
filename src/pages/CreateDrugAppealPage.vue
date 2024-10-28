@@ -18,8 +18,10 @@
               {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
             </h4>
             <div class="label-row">
-              <span class="title-label red">Аптека</span>
-              <span class="title-label violet">Обращения</span>
+              <span class="title-label red">{{
+                $t("create_appeal.tabs.drugstore")
+              }}</span>
+              <span class="title-label violet">{{ $t("nav.appeals") }}</span>
             </div>
           </div>
           <StatusBar
@@ -36,7 +38,7 @@
                     >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >Клиент:
+                    >{{ $t("client_table.client") }}:
                     <b
                       >{{
                         clientData.clientFirstname +
@@ -46,15 +48,19 @@
                     </b></span
                   >
                   <span
-                    >Программа: <b>{{ clientData.program }} </b></span
+                    >{{ $t("client_table.program") }}:
+                    <b>{{ clientData.program }} </b></span
                   >
 
                   <span
-                    >Заявитель:
-                    <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                    >{{ $t("client_table.applicant") }}:
+                    <b
+                      >{{ clientData.applicant || $t("common.no_data") }}
+                    </b></span
                   >
                   <span
-                    >Дата рождения: <b>{{ clientData.birthday }} </b></span
+                    >{{ $t("client_table.date_of_birthday") }}:
+                    <b>{{ clientData.birthday }} </b></span
                   >
                 </div>
 
@@ -134,8 +140,8 @@
                               <DateInput
                                 class="dropdown-space"
                                 number
-                                label="Дата обращения"
-                                placeholder="Введите дату (10-05-2024)"
+                                :label="$t('client_table.date_of_appeal')"
+                                :placeholder="$t('common.enter_date')"
                                 @update:model-value="appealStore.setAppealDate"
                                 :modelValue="appealStore.appealDate"
                                 :disable-input="clientData.appealStatus === 2"
@@ -145,7 +151,7 @@
                                 v-if="clientData.finishedDate"
                                 :disableInput="appealStore.isClinic"
                                 number
-                                label="Дата завершения"
+                                :label="$t('client_table.date_of_completion')"
                                 :modelValue="clientData.finishedDate"
                                 @update:model-value="
                                   appealStore.setFinishedDate
@@ -157,7 +163,7 @@
                               <DropdownSelectNew
                                 ref="drugstoreDropdownRef"
                                 class="drugstore-form-drugname"
-                                label="Лекарство"
+                                :label="$t('create_appeal.medicine')"
                                 :multiple="false"
                                 :debounce-time="300"
                                 :loading="appealStore.loading"
@@ -169,9 +175,11 @@
                                 @select-option="handleSelectDrug"
                                 :disable-choise="clientData.appealStatus === 2"
                               >
-                                <template #top-label> Лекарство </template>
+                                <template #top-label>
+                                  {{ $t("create_appeal.medicine") }}
+                                </template>
                                 <template #placeholder>
-                                  Выберите лекарство
+                                  {{ $t("create_appeal.enter_medicine") }}
                                 </template>
                                 <template v-slot:selected-options-once="props">
                                   <div>{{ props.option.name }}</div>
@@ -182,7 +190,7 @@
                                 <template v-slot:action>
                                   <SimpleButton
                                     type="button"
-                                    label="добавить лекарство"
+                                    :label="$t('create_appeal.add_medicine')"
                                     customClass="btn-action"
                                     @click="handleAddCustomDrug"
                                     full-width
@@ -194,7 +202,7 @@
                                 </template>
                               </DropdownSelectNew>
                               <SimpleInput
-                                label="Кол-во"
+                                :label="$t('create_appeal.amount')"
                                 placeholder="0"
                                 class="drugstore-form-amount"
                                 number
@@ -202,14 +210,14 @@
                               ></SimpleInput>
                               <SimpleInput
                                 class="drugstore-form-price"
-                                label="Цена"
+                                :label="$t('create_appeal.price')"
                                 placeholder="0"
                                 number
                                 @update:model-value="handleDrugPrice"
                                 :model-value="drugPrice.formattedValue"
                               ></SimpleInput>
                               <SimpleButton
-                                label="Добавить"
+                                :label="$t('create_appeal.add')"
                                 type="button"
                                 customClass="btn-add"
                                 class="drugstore-form-btn-wrapper"
@@ -251,10 +259,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isDrugstore"
                               >
-                                Добавлено аптекой
+                                {{ $t("create_appeal.added_by_drugstore") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="drug in appealStore.suggestedDrugs"
@@ -291,8 +299,8 @@
                               class="dropdown-space"
                               :label="
                                 appealStore.isDrugstore
-                                  ? 'Ваша аптека'
-                                  : 'Аптека'
+                                  ? $t('create_appeal.tabs.drugstore')
+                                  : $t('create_appeal.dropdowns.your_drugstore')
                               "
                               :multiple="false"
                               :loading="appealStore.loading"
@@ -305,9 +313,11 @@
                               @select-option="appealStore.selectDrugstore"
                               @request="appealStore.fetchDrugstores"
                             >
-                              <template #top-label> Аптека </template>
+                              <template #top-label>
+                                {{ $t("create_appeal.tabs.drugstore") }}
+                              </template>
                               <template #placeholder v-if="appealStore.isAgent">
-                                Выберите аптеку
+                                {{ $t("create_appeal.dropdowns.drugstore") }}
                               </template>
                               <template v-slot:selected-options-once="props">
                                 <div>{{ props.option.name }}</div>
@@ -355,7 +365,7 @@
                           transition-show="scale"
                           transition-duration="200"
                         >
-                          Аптека не выбрана
+                          {{ $t("validation.no_drugstore") }}
                         </q-tooltip>
                       </template>
                     </SimpleButton>
@@ -391,7 +401,7 @@
                         "
                       >
                       </SimpleCheckbox>
-                      <span>Сделать завершенным</span>
+                      <span>{{ $t("createa_appeal.make_appeal_done") }}</span>
                     </div>
                   </div>
                   <div
@@ -399,7 +409,7 @@
                     v-if="!appealStore.isClinic"
                   >
                     <span class="create-appeal-action-expences-title"
-                      >Общий расход:
+                      >{{ $t("createa_appeal.total_consumption") }}:
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
@@ -416,13 +426,13 @@
                     <q-tabs dense active-class="tab-active" v-model="tabRight">
                       <q-tab
                         name="chat"
-                        label="Чат"
+                        :label="$t('chat.chat_title')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="history"
-                        label="История"
+                        :label="$t('chat.history_title')"
                         :ripple="false"
                         class="tab--no-hover"
                       />

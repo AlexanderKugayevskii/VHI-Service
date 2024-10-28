@@ -17,8 +17,12 @@
             {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
           </h4>
           <div class="label-row">
-            <span class="title-label green">Клиника</span>
-            <span class="title-label violet">Лимиты</span>
+            <span class="title-label green">{{
+              $t("client_table.clinic")
+            }}</span>
+            <span class="title-label violet">{{
+              $t("client_table.limits")
+            }}</span>
           </div>
         </div>
         <div class="create-appeal-body">
@@ -30,7 +34,11 @@
                     >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >{{ clientData.type_id === 0 ? "Клиент" : "Родственник" }}:
+                    >{{
+                      clientData.type_id === 0
+                        ? $t("client_table.client")
+                        : $t("client_table.relative")
+                    }}:
                     <b
                       >{{
                         clientData.clientFirstname +
@@ -40,7 +48,8 @@
                     </b></span
                   >
                   <span
-                    >Программа: <b>{{ clientData.program }} </b></span
+                    >{{ $t("client_table.program") }}:
+                    <b>{{ clientData.program }} </b></span
                   >
                 </div>
                 <!-- <div class="create-appeal-client-action">
@@ -137,9 +146,9 @@
                                       selectLimitDoctor(item, doctor, false)
                                   "
                                 >
-                                  <template #placeholder
-                                    >Выберите лимит</template
-                                  >
+                                  <template #placeholder>{{
+                                    $t("create_appeal.enter_limit")
+                                  }}</template>
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
@@ -165,10 +174,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="doctor in appealStore.suggestedDoctors"
@@ -199,9 +208,9 @@
                                         selectLimitDoctor(item, doctor, true)
                                     "
                                   >
-                                    <template #placeholder
-                                      >Выберите лимит</template
-                                    >
+                                    <template #placeholder>{{
+                                      $t("create_appeal.enter_limit")
+                                    }}</template>
                                     <template
                                       v-slot:selected-options-once="props"
                                     >
@@ -255,9 +264,9 @@
                                       selectLimitService(item, service, false)
                                   "
                                 >
-                                  <template #placeholder
-                                    >Выберите лимит</template
-                                  >
+                                  <template #placeholder>
+                                    {{ $t("create_appeal.enter_limit") }}
+                                  </template>
                                   <template
                                     v-slot:selected-options-once="props"
                                   >
@@ -284,10 +293,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="service in appealStore.suggestedServices"
@@ -318,9 +327,9 @@
                                         selectLimitService(item, service, true)
                                     "
                                   >
-                                    <template #placeholder
-                                      >Выберите лимит</template
-                                    >
+                                    <template #placeholder>
+                                      {{ $t("create_appeal.enter_limit") }}
+                                    </template>
                                     <template
                                       v-slot:selected-options-once="props"
                                     >
@@ -367,11 +376,9 @@
                       customClass="btn-action"
                       :loading="appealStore.loading"
                       @click="handleChangeAppeal"
-                      :disabled="
-                        appealStore.checkSelectedLimits ||
-                        appealStore.checkRemaindMedicalLimits
-                      "
+                      :disabled="appealStore.checkSelectedLimits"
                     >
+                      <!-- appealStore.checkRemaindMedicalLimits -->
                       <template #loading-spinner> <LoadingSpinner /> </template
                     ></SimpleButton>
                     <SimpleButton
@@ -379,18 +386,16 @@
                       type="button"
                       customClass="btn-cancel"
                       @click="hideModal"
-                      :disabled="
-                        appealStore.checkSelectedLimits ||
-                        appealStore.checkRemaindMedicalLimits
-                      "
+                      :disabled="appealStore.checkSelectedLimits"
                     ></SimpleButton>
+                    <!-- appealStore.checkRemaindMedicalLimits -->
                   </div>
                   <div
                     class="create-appeal-action-expences"
                     v-if="!appealStore.isClinic"
                   >
                     <span class="create-appeal-action-expences-title"
-                      >Общий расход:
+                      >{{ $t("create_appeal.total_consumption") }}:
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
@@ -407,7 +412,9 @@
                     <div class="create-appeal-client-content-limits">
                       <div class="create-appeal-client-info">
                         <div class="create-appeal-client-text">
-                          <span><b>Лимиты</b></span>
+                          <span
+                            ><b>{{ $t("client_table.limits") }}</b></span
+                          >
                         </div>
                       </div>
                       <div class="create-appeal-client-wrapper">

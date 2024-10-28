@@ -18,8 +18,10 @@
               {{ clientData.appealId ? `№ ${clientData.appealId}` : "" }}
             </h4>
             <div class="label-row">
-              <span class="title-label green">Клиника</span>
-              <span class="title-label violet">Обращения</span>
+              <span class="title-label green">{{
+                $t("client_table.clinic")
+              }}</span>
+              <span class="title-label violet">{{ $t("nav.appeals") }}</span>
             </div>
           </div>
           <StatusBar
@@ -36,7 +38,11 @@
                     >ID: <b>{{ clientData.dmsCode }} </b></span
                   >
                   <span
-                    >{{ clientData.type_id === 0 ? "Клиент" : "Родственник" }}:
+                    >{{
+                      clientData.type_id === 0
+                        ? $t("client_table.client")
+                        : $t("client_table.relative")
+                    }}:
                     <b
                       >{{
                         clientData.clientFirstname +
@@ -46,16 +52,21 @@
                     </b></span
                   >
                   <span
-                    >Программа: <b>{{ clientData.program }} </b></span
+                    >{{ $t("client_table.program") }}:
+                    <b>{{ clientData.program }} </b></span
                   >
 
                   <span
-                    >Заявитель:
-                    <b>{{ clientData.applicant || "Данных нет" }} </b></span
+                    >{{ $t("client_table.applicant") }}:
+                    <b
+                      >{{ clientData.applicant || $t("common.no_data") }}
+                    </b></span
                   >
                   <span
-                    >Дата рождения:
-                    <b>{{ clientData.birthday || "Данных нет" }} </b></span
+                    >{{ $t("client_table.date_of_birthday") }}:
+                    <b
+                      >{{ clientData.birthday || $t("common.no_data") }}
+                    </b></span
                   >
                 </div>
                 <div class="create-appeal-client-action">
@@ -116,10 +127,9 @@
                         class="tab--no-hover"
                         :disable="!appealStore.selectedClinic"
                       >
-                        <TableTooltip show v-if="!appealStore.selectedClinic"
-                          >Нельзя выбрать врача, пока не выбрана
-                          клиника</TableTooltip
-                        >
+                        <TableTooltip show v-if="!appealStore.selectedClinic">{{
+                          $t("validation.choose_doctor")
+                        }}</TableTooltip>
 
                         <span>{{ $t("create_appeal.tabs.doctors") }}</span>
                         <q-badge
@@ -134,10 +144,9 @@
                         class="tab--no-hover"
                         :disable="!appealStore.selectedClinic"
                       >
-                        <TableTooltip show v-if="!appealStore.selectedClinic"
-                          >Нельзя выбрать сервис, пока не выбрана
-                          клиника</TableTooltip
-                        >
+                        <TableTooltip show v-if="!appealStore.selectedClinic">{{
+                          $t("validation.choose_service")
+                        }}</TableTooltip>
                         <span>
                           {{ $t("create_appeal.tabs.services") }}
                         </span>
@@ -163,7 +172,7 @@
                               class="dropdown-space"
                               :label="
                                 appealStore.isClinic
-                                  ? 'Ваша клиника'
+                                  ? $t('create_appeal.dropdowns.your_clinic')
                                   : $t('create_appeal.dropdowns.clinic')
                               "
                               :multiple="false"
@@ -197,8 +206,8 @@
                             </DropdownSelectNew>
                             <TextAreaInput
                               class="dropdown-space diagnosis-input"
-                              label="Диагноз"
-                              placeholder="Введите диагноз"
+                              :label="$t('create_appeal.diagnosis')"
+                              :placeholder="$t('create_appeal.enter_diagnosis')"
                               :disableInput="clientData.appealStatus === 2"
                               @update:model-value="appealStore.setDiagnosis"
                               :modelValue="appealStore.diagnosis"
@@ -208,8 +217,8 @@
                               class="dropdown-space"
                               :disableInput="clientData.appealStatus === 2"
                               number
-                              label="Дата обращения"
-                              placeholder="Введите дату (10-05-2024)"
+                              :label="$t('client_table.date_of_appeal')"
+                              :placeholder="$t('common.enter_date')"
                               @update:model-value="appealStore.setAppealDate"
                               :modelValue="appealStore.appealDate"
                             ></DateInput>
@@ -219,17 +228,17 @@
                               v-if="clientData.finishedDate"
                               :disableInput="appealStore.isClinic"
                               number
-                              label="Дата завершения"
+                              :label="$t('client_table.date_of_completion')"
                               :modelValue="clientData.finishedDate"
                               @update:model-value="appealStore.setFinishedDate"
                             ></DateInput>
 
                             <TextAreaInput
-                              label="Комментарий"
+                              :label="$t('create_appeal.comment')"
                               :placeholder="
                                 appealStore.isClinic
-                                  ? 'комментариев нет'
-                                  : 'укажите комментарий'
+                                  ? $t('create_appeal.no_comment')
+                                  : $t('create_appeal.enter_comment')
                               "
                               :modelValue="appealStore.comment"
                               @update:model-value="setComment"
@@ -296,11 +305,15 @@
                                       )
                                     "
                                   >
-                                    (добавлено
+                                    (
                                     {{
                                       appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
+                                        ? $t(
+                                            "create_appeal.added_by_clinic"
+                                          ).toLowerCase()
+                                        : $t(
+                                            "create_appeal.added_by_company"
+                                          ).toLowerCase()
                                     }})
                                   </span>
                                   <span
@@ -310,11 +323,17 @@
                                       )
                                     "
                                   >
+                                    (
                                     {{
                                       appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
+                                        ? ` ${$t(
+                                            "create_appeal.completed_by_clinic"
+                                          )}`
+                                        : ` ${$t(
+                                            "create_appeal.decision_by_company"
+                                          )}`
                                     }}
+                                    )
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -331,7 +350,11 @@
                               <template v-slot:action>
                                 <SimpleInput
                                   class="dropdown-space"
-                                  placeholder="введите стоимость услуги"
+                                  :placeholder="
+                                    $t(
+                                      'create_appeal.dropdowns.enter_service_cost'
+                                    )
+                                  "
                                   @update:model-value="handleDoctorCustomPrice"
                                   :model-value="
                                     doctorCustomPrice.formattedValue
@@ -340,7 +363,9 @@
                                 />
                                 <SimpleButton
                                   type="button"
-                                  label="добавить врача"
+                                  :label="
+                                    $t('create_appeal.dropdowns.add_doctor')
+                                  "
                                   customClass="btn-action"
                                   @click="addCustomDoctor"
                                   :disabled="disabledDoctorButton"
@@ -383,10 +408,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="doctor in appealStore.suggestedDoctors"
@@ -474,11 +499,15 @@
                                       )
                                     "
                                   >
-                                    (добавлено
+                                    (
                                     {{
                                       appealStore.isClinic
-                                        ? "компанией"
-                                        : "клиникой"
+                                        ? $t(
+                                            "create_appeal.added_by_clinic"
+                                          ).toLowerCase()
+                                        : $t(
+                                            "create_appeal.added_by_company"
+                                          ).toLowerCase()
                                     }})
                                   </span>
                                   <span
@@ -488,11 +517,17 @@
                                       )
                                     "
                                   >
+                                    (
                                     {{
                                       appealStore.isAgent
-                                        ? " (завершено клиникой)"
-                                        : " (решение компании)"
+                                        ? ` ${$t(
+                                            "create_appeal.completed_by_clinic"
+                                          )}`
+                                        : ` ${$t(
+                                            "create_appeal.decision_by_company"
+                                          )}`
                                     }}
+                                    )
                                   </span>
                                 </div>
                                 <CheckIcon
@@ -509,7 +544,11 @@
                               <template v-slot:action>
                                 <SimpleInput
                                   class="dropdown-space"
-                                  placeholder="введите стоимость услуги"
+                                  :placeholder="
+                                    $t(
+                                      'create_appeal.dropdowns.enter_service_cost'
+                                    )
+                                  "
                                   @update:model-value="handleServiceCustomPrice"
                                   :model-value="
                                     serviceCustomPrice.formattedValue
@@ -518,7 +557,9 @@
                                 />
                                 <SimpleButton
                                   type="button"
-                                  label="добавить сервис"
+                                  :label="
+                                    $t('create_appeal.dropdowns.add_service')
+                                  "
                                   customClass="btn-action"
                                   @click="addCustomService"
                                   :disabled="disabledServiceButton"
@@ -562,10 +603,10 @@
                                 class="added-by-title"
                                 v-if="!appealStore.isClinic"
                               >
-                                Добавлено клиникой
+                                {{ $t("create_appeal.added_by_clinic") }}
                               </p>
                               <p class="added-by-title" v-else>
-                                Добавлено компанией
+                                {{ $t("create_appeal.added_by_company") }}
                               </p>
                               <SelectListItem
                                 v-for="service in appealStore.suggestedServices"
@@ -623,7 +664,7 @@
                           transition-show="scale"
                           transition-duration="200"
                         >
-                          Клиника не выбрана
+                          {{ $t("validation.no_clinic") }}
                         </q-tooltip>
                       </template>
                     </SimpleButton>
@@ -660,7 +701,7 @@
                         "
                       >
                       </SimpleCheckbox>
-                      <span>Сделать завершенным</span>
+                      <span>{{ $t("create_appeal.make_appeal_done") }}</span>
                     </div>
                   </div>
                   <div
@@ -668,7 +709,7 @@
                     v-if="!appealStore.isClinic"
                   >
                     <span class="create-appeal-action-expences-title"
-                      >Общий расход:
+                      >{{ $t("create_appeal.total_consumption") }}:
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
@@ -685,13 +726,13 @@
                     <q-tabs dense active-class="tab-active" v-model="tabRight">
                       <q-tab
                         name="chat"
-                        label="Чат"
+                        :label="$t('chat.chat_title')"
                         :ripple="false"
                         class="tab--no-hover"
                       />
                       <q-tab
                         name="history"
-                        label="История"
+                        :label="$t('history.history_title')"
                         :ripple="false"
                         class="tab--no-hover"
                       />

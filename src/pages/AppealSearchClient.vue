@@ -144,7 +144,7 @@
           @click="hideModal"
         />
         <SimpleButton
-          label="Продолжить"
+          :label="$t('create_appeal.buttons.continue')"
           :custom-class="[
             'btn-action',
             selectedClient === null ? 'btn--disabled' : '',
@@ -154,7 +154,7 @@
           v-if="appealStore.isAgent"
         ></SimpleButton>
         <SimpleButton
-          label="Создать обращение"
+          :label="$t('create_appeal.buttons.create_appeal')"
           :custom-class="[
             'btn-action',
             selectedClient === null ? 'btn--disabled' : '',

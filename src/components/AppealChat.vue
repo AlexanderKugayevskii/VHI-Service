@@ -2,7 +2,10 @@
   <div class="chat" ref="chatRef">
     <div class="chat-header">
       <form @submit.prevent="sendMessage" class="chat-form">
-        <SimpleInput placeholder="Написать сообщение..." v-model="inputText">
+        <SimpleInput
+          :placeholder="$t('chat.write_message')"
+          v-model="inputText"
+        >
           <template #action-button>
             <button class="btn-reset pointer">
               <q-icon size="20px">
@@ -198,7 +201,6 @@ const mappedMessages = computed(() => {
       ...message,
       dateMessage,
     };
-
   });
 
   temp.forEach((message) => {
@@ -260,7 +262,6 @@ onMounted(async () => {
   if (props.appealType === 1) {
     await getMessages();
     // await listenMessages(); //temporary
-    
 
     longPoolIntervalId.value = setInterval(async () => {
       await getMessages();

@@ -52,7 +52,7 @@
                 />
               </svg>
             </q-icon>
-            <span>Клиника</span>
+            <span>{{$t('client_table.clinic')}}</span>
           </div>
 
           <div
@@ -87,7 +87,8 @@
                 />
               </svg>
             </q-icon>
-            <span>Аптека</span>
+            <span>{{$t('client_table.drugstore')}}</span>
+
           </div>
         </div>
       </div>
@@ -109,6 +110,7 @@
 </template>
 
 <script setup>
+import { useSearchClientsStore } from "src/stores/clientSearchStore";
 import { useQuasar } from "quasar";
 import { ref } from "vue";
 import SimpleButton from "src/components/Shared/SimpleButton.vue";
@@ -118,6 +120,7 @@ import { useAppealStore } from "src/stores/appealStore";
 import Trans from "src/i18n/translation";
 
 const appealStore = useAppealStore();
+const searchClientsStore = useSearchClientsStore();
 const router = useRouter();
 const $q = useQuasar();
 
@@ -160,6 +163,8 @@ const goToAppeal = async () => {
       })
     );
   }
+
+  searchClientsStore.clearClients();
 };
 </script>
 <style lang="scss" scoped>
