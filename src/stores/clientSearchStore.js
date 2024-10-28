@@ -35,7 +35,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
-        type: "Клиент",
+        type: "client",
         type_id: 0,
         hasSubClient: item.sub_clients.length > 0,
       });
@@ -53,7 +53,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
             passportSeria: subClient.seria,
             passportNumber: subClient.number,
             program: item.program ? item.program.name : "no program",
-            type: "Родственник",
+            type: "relative",
             type_id: 1,
             last: index === item.sub_clients.length - 1,
           });
@@ -83,7 +83,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
-        type: "Клиент",
+        type: "client",
         type_id: 0,
         hasSubClient: item.sub_clients.length > 0,
       });
@@ -101,7 +101,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
             passportSeria: subClient.seria,
             passportNumber: subClient.number,
             program: item.program ? item.program.name : "no program",
-            type: "Родственник",
+            type: "relative",
             type_id: 1,
             last: index === item.sub_clients.length - 1,
           });
@@ -131,7 +131,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
         passportSeria: item.client.seria,
         passportNumber: item.client.number,
         program: item.program ? item.program.name : "no program",
-        type: "Клиент",
+        type: "client",
         type_id: 0,
         hasSubClient: item.sub_clients.length > 0,
       });
@@ -149,7 +149,7 @@ export const useSearchClientsStore = defineStore("clients", () => {
             passportSeria: subClient.seria,
             passportNumber: subClient.number,
             program: item.program ? item.program.name : "no program",
-            type: "Родственник",
+            type: "relative",
             type_id: 1,
             last: index === item.sub_clients.length - 1,
           });

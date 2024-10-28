@@ -198,7 +198,7 @@ const columns = computed(() => [
   {
     name: "phone",
     align: "left",
-    label: "Телефон",
+    label: t("client_info.phone"),
     field: "phone",
   },
 ]);

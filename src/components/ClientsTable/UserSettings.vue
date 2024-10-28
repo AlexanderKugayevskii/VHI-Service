@@ -150,10 +150,11 @@ import DropdownSettings from "../Shared/DropdownSettings.vue";
 import ConfirmModal from "../Shared/ConfirmModal.vue";
 import { useQuasar } from "quasar";
 import { useAppealStore } from "src/stores/appealStore";
+import { useI18n } from "vue-i18n";
 const emit = defineEmits(["openModal", "openModalLimit", "deleteAppeal"]);
 const props = defineProps(["client"]);
 const $q = useQuasar();
-
+const { t } = useI18n();
 const { isClinic } = useAppealStore();
 
 const openAppealPage = async () => {
@@ -166,7 +167,7 @@ const deleteAppeal = async () => {
   $q.dialog({
     component: ConfirmModal,
     componentProps: {
-      title: "Удалить обращение?",
+      title: t("create_appeal.delete_appeal"),
     },
   }).onOk(() => {
     emit("deleteAppeal");

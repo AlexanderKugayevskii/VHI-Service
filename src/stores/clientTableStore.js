@@ -236,7 +236,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         name: t("client_table.client"),
         type: "client",
         meta: true,
-        placeholder: "Фамилия и имя клиента",
+        placeholder: t("create_appeal.fio_client"),
         multiple: false,
         component: "SimpleInput",
         item: "",

@@ -36,6 +36,9 @@
     "added_by_company": "Добавлено компанией",
     "completed_by_clinic": "Завершено клиникой",
     "decision_by_company": "Решение компании",
+    "delete_appeal": "Удалить обращение?",
+    "fio_client": "Фамилия и имя клиента",
+    "enter_drug_name": "Введите название лекарства",
 
     "tabs": {
       "clinic": "Клиника и диагноз",
@@ -77,7 +80,9 @@
     "passport_input": "Введите серию и номер паспорта",
     "fio_label": "Фамилия Имя",
     "passport_label": "Серия и номер паспорта",
-    "type_of_appeal": "Выберите тип обращения"
+    "type_of_appeal": "Выберите тип обращения",
+    "client": "Клиент",
+    "relative": "Родственник"
   },
   "statuses": {
     "new": "Новое",
@@ -119,7 +124,8 @@
     "passport": "Паспорт",
     "pinfl": "ПИНФЛ",
     "phone": "Телефон",
-    "organization": "Организация"
+    "organization": "Организация",
+    "organization_name": "Название организации"
   },
   "pagination": {
     "next": "Следующая",
@@ -136,7 +142,11 @@
     "loading": "Загрузка",
     "enter_date": "Введите дату (10-05-2024)",
     "not_found": "Ничего не найдено",
-    "notifications": "Уведомления"
+    "notifications": "Уведомления",
+    "start_date": "Дата начала",
+    "end_date": "Дата конца",
+    "generate_report": "Сформировать отчет",
+    
   },
 
   "validation": {
@@ -225,6 +235,7 @@
     "didox_not_auth": "Не удалось подключиться к DIDOX. Попробуйте еще раз",
     "eimzo_wrong_password": "Неверный пароль или Вы нажали на кнопку 'Отмена'",
     "ikpu_cancel": "Выбор ИКПУ отменен. Попробуйте еще раз",
-    "act_success_confirmed": "Акт успешно подтвержден"
+    "act_success_confirmed": "Акт успешно подтвержден",
+    "delete": "Удалить?"
   }
 }
