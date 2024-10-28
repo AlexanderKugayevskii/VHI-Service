@@ -138,7 +138,9 @@
     "choose_doctor": "Нельзя выбрать врача, пока не выбрана клиника",
     "choose_service": "Нельзя выбрать сервис, пока не выбрана клиника",
     "no_clinic": "Клиника не выбрана",
-    "no_drugstore": "Аптека не выбрана"
+    "no_drugstore": "Аптека не выбрана",
+    "limits_alert": "Некоторые лимиты не были выбраны. Пожалуйста проверьте еще раз!",
+    "limits_error": "{rateName} limiti yetarli emas"
   },
   "chat": {
     "chat_title": "Чат",
@@ -204,6 +206,11 @@
     "clinic_name": "Название клиники",
     "summ": "Сумм",
     "act_confirmed": "Акт подтвержден",
-    "act_not_confirmed": "Акт не подтвержден"
+    "act_not_confirmed": "Акт не подтвержден",
+    "send_act": "Отправить акт",
+    "send_esf": "Отправить счет фактуру",
+    "confirmed": "Подтверждено",
+    "to_confirm": "Подтвердить",
+    "to_confirm_act": "Подтвердить акт"
   }
 }

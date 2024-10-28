@@ -138,7 +138,9 @@
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",
     "choose_service": "Klinika tanlanmaguncha xizmatni tanlay olmaysiz",
     "no_clinic": "Klinikasi tanlanmagan",
-    "no_drugstore": "Dorixona tanlanmagan"
+    "no_drugstore": "Dorixona tanlanmagan",
+    "limits_alert": "Ba’zi limitlar tanlanmagan. Iltimos, yana bir marta tekshiring!",
+    "limits_error": "Лимит {rateName} - недостаточно средств"
   },
   "chat": {
     "chat_title": "Chat",
@@ -204,6 +206,11 @@
     "clinic_name": "Klinika nomi",
     "summ": "Summa",
     "act_confirmed": "Hujjat tasdiqlandi",
-    "act_not_confirmed": "Hujjat tasdiqlanmadi"
+    "act_not_confirmed": "Hujjat tasdiqlanmadi",
+    "send_act": "Hujjatni yuborish",
+    "send_esf": "Hisob-fakturani yuborish",
+    "confirmed": "Tasdiqlandi",
+    "to_confirm": "Tasdiqlash",
+    "to_confirm_act": "Hujjatni tasdiqlash"
   }
 }

@@ -1,11 +1,13 @@
 <template>
   <q-page class="flex column body-bg">
     <div class="col page-container">
-      <h2 class="page-title q-my-none q-mb-md">Акт и ЭСФ</h2>
+      <h2 class="page-title q-my-none q-mb-md">{{ $t("nav.act_and_esf") }}</h2>
 
       <div class="fields-result">
         <div class="fields-result-group q-mb-lg">
-          <h3 class="page-title q-my-none q-mb-md">Сервисы</h3>
+          <h3 class="page-title q-my-none q-mb-md">
+            {{ $t("create_appeal.tabs.services") }}
+          </h3>
 
           <ServiceTableShow :id="id" @getDataFromTable="getDataFromTable" />
         </div>
@@ -14,7 +16,9 @@
         </div> -->
         <div class="fields-result-group q-mb-lg">
           <!-- v-if="fieldsData.doctors.length > 0" -->
-          <h3 class="page-title q-my-none q-mb-md">Врачи</h3>
+          <h3 class="page-title q-my-none q-mb-md">
+            {{ $t("create_appeal.tabs.doctors") }}
+          </h3>
 
           <DoctorsTableShow :id="id" @getDataFromTable="getDataFromTable" />
         </div>
@@ -32,7 +36,7 @@
               v-if="isClinic && dataFields.status === 1"
               type="button"
               customClass="appeals-btn"
-              label="Отправить акт"
+              :label="$t('act.send_act')"
               :loading="loadingSendAct"
               @click="downloadAct"
             >
@@ -44,7 +48,7 @@
               v-if="isClinic && dataFields.status === 2"
               type="button"
               customClass="appeals-btn"
-              label="Отправить счёт фактуру"
+              :label="$t('act.send_esf')"
               :loading="loadingSendInvoice"
               @click="getFacturaData"
             >
@@ -59,7 +63,7 @@
               v-if="isAgent && dataFields.status === 0"
               type="button"
               customClass="appeals-btn"
-              :label="isActConfirmed ? 'Подтверждено' : 'Подтвердить'"
+              :label="$t(isActConfirmed ? 'act.confirmed' : 'act.to_confirm')"
               :disabled="isActConfirmed"
               @click="confirmAct"
             >
@@ -68,7 +72,13 @@
               v-if="isAgent && dataFields.status === 1"
               type="button"
               customClass="appeals-btn"
-              :label="isActSentConfirmed ? 'Акт подтвержен' : 'Подтвердить акт'"
+              :label="
+                $t(
+                  isActSentConfirmed
+                    ? 'act.act_confirmed'
+                    : 'act.to_confirm_act'
+                )
+              "
               :disabled="isActSentConfirmed"
               @click="confirmActSent"
             >
