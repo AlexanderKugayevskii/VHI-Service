@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex body-bg">
     <div class="col page-container">
-      <h2 class="page-title q-my-none q-mb-md">Клиники</h2>
+      <h2 class="page-title q-my-none q-mb-md">{{$t('nav.clinics')}}</h2>
       <AppealsTable
         @createAppeal="openSearchClient"
         :pagination="pagination"

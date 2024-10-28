@@ -2,9 +2,9 @@
   <LoadingSpinner v-if="allClientTableStore.loading" />
   <div class="details" v-else>
     <div class="details-header">
-      <h2 class="page-title q-my-none">Информация полиса</h2>
+      <h2 class="page-title q-my-none">{{ $t("client_info.polis_info") }}</h2>
       <SimpleButton
-        label="Скачать отчет"
+        :label="$t('create_appeal.buttons.download_report')"
         :customClass="[
           'appeals-btn',
           { 'appeals-btn_negative': fileError.length },
@@ -23,9 +23,9 @@
         :rate="item"
       />
     </div>
-    <div v-else class="details-error">Лимитов нет</div>
+    <div v-else class="details-error">{{ $t("client_info.no_limits") }}</div>
     <ExpandBtn
-      :text="`Показать еще (${extraPrograms.length})`"
+      :text="`${$t('client_info.show_more')} (${extraPrograms.length})`"
       @btn-click="handleShowDetailsExtra"
       v-if="!showDetailsExtra && extraPrograms.length > 0"
       :expand="showDetailsExtra"
@@ -52,7 +52,7 @@
       />
     </div>
     <div class="details-tabs">
-      <p class="details-tabs__title">Обращения</p>
+      <p class="details-tabs__title">{{ $t("nav.appeals") }}</p>
       <div class="details-tabs__items">
         <!-- <ClientTab :isSelected="true" :client="client" />
         <ClientTab
@@ -86,14 +86,14 @@
         >
           <q-tab
             name="clinics"
-            label="Клиники"
+            :label="$t('nav.clinics')"
             :ripple="false"
             class="tabs--no-hover"
           >
           </q-tab>
           <q-tab
             name="drugstore"
-            label="Аптеки"
+            :label="$t('nav.drugstores')"
             :ripple="false"
             class="tabs--no-hover"
           >
@@ -113,6 +113,7 @@
                 :rows="allClientTableStore.applicationsClinicRows"
                 :columns="columnsWithoutClientName"
                 :loading="allClientTableStore.loading"
+                :showAdvancedFilter="false"
                 @createAppeal="openAppealTypeModal"
               />
             </div>
@@ -123,6 +124,7 @@
                 :rows="allClientTableStore.applicationsDrugstoreRows"
                 :columns="drugColumnsWithoutClientName"
                 :loading="allClientTableStore.loading"
+                :showAdvancedFilter="false"
                 @createAppeal="openAppealTypeModal"
               />
             </div>

@@ -169,7 +169,7 @@
     </div>
 
     <div class="acts-result q-mb-lg">
-      <h3 class="page-title q-my-none q-mb-md">Существующие акты</h3>
+      <h3 class="page-title q-my-none q-mb-md">{{$t('act.existing_acts')}}</h3>
       <ActsTable @show-fields="handleShowFields" :selectedClinic = "selectedClinic"/>
     </div>
   </div>

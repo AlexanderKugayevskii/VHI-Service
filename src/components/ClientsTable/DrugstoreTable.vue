@@ -7,6 +7,7 @@
       @delete:option="handleDelete"
       :filter-options="filterQuery"
       :removeFilter="removeFilter"
+      :showAdvancedFilter="showAdvancedFilter"
     >
       <template #appealBtn>
         <SimpleButton
@@ -291,6 +292,10 @@ const props = defineProps({
     default: true,
   },
   showPagination: {
+    type: Boolean,
+    default: true,
+  },
+  showAdvancedFilter: {
     type: Boolean,
     default: true,
   },

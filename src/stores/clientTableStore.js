@@ -121,8 +121,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
 
-        console.log(users.value);
-
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;

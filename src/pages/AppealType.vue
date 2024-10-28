@@ -2,7 +2,7 @@
   <q-dialog ref="appealTypeModalRef" no-backdrop-dismiss>
     <div class="modal-container appeal-search-container">
       <div class="modal-header">
-        <h4 class="page-title q-my-none">Выберите тип обращения</h4>
+        <h4 class="page-title q-my-none">{{ $t('appeal_search.type_of_appeal') }}</h4>
         <button type="button" class="btn-close" @click="hideModal">
           <q-icon size="20px">
             <svg

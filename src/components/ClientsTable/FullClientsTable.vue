@@ -156,7 +156,7 @@
           </q-td>
           <q-td key="change" :props="props" class="appeals-td">
             <SimpleButton
-              label="изменить"
+              :label="$t('create_appeal.buttons.change')"
               custom-class="appeals-btn reports-btn"
               @click="openChangeUserModal(props.row)"
             />

@@ -57,7 +57,10 @@
       "create_appeal": "Создать обращение",
       "exit_appeal": "Выйти",
       "delete": "Удалить",
-      "continue": "Продолжить"
+      "continue": "Продолжить",
+      "download_report": "Скачать отчет",
+      "change": "Изменить",
+      "change_data": "Изменить данные"
     }
   },
   "appeal_search": {
@@ -107,7 +110,12 @@
     "limits": "Лимиты",
     "no_limits": "Лимиты не назначены",
     "expense": "Расход / {currency}",
-    "program": "Программа"
+    "program": "Программа",
+    "type": "Тип",
+    "passport": "Паспорт",
+    "pinfl": "ПИНФЛ",
+    "phone": "Телефон",
+    "organization": "Организация"
   },
   "pagination": {
     "next": "Следующая",
@@ -167,5 +175,35 @@
     "deleted": "Удалил",
     "finished": "Завершил",
     "created": "Создал"
+  },
+  "client_info": {
+    "polis_info": "Информация полиса",
+    "insurance_start_date": "Дата начала страхования",
+    "insurance_end_date": "Дата конца страхования",
+    "number_of_contruct": "Номер контракта",
+    "applicant": "Заявитель",
+    "total_balance": "Общий остаток",
+    "limit": "Лимит",
+    "spent": "Потрачено",
+    "remaining": "Осталось",
+    "client": "Клиент",
+    "passport": "Паспорт",
+    "phone": "Телефон",
+    "no_limits": "Лимитов нет",
+    "show_more": "Показать еще",
+    "change_client_data": "Изменить данные клиента",
+    "resident": "Резидент",
+    "choise_type": "Выберите тип"
+  },
+
+  "act": {
+    "existing_acts": "Существующие акты",
+    "date_of_act": "Дата акта",
+    "date_of_esf": "Дата ЭСФ",
+    "status_of_act": "Статус акта",
+    "clinic_name": "Название клиники",
+    "summ": "Сумм",
+    "act_confirmed": "Акт подтвержден",
+    "act_not_confirmed": "Акт не подтвержден"
   }
 }

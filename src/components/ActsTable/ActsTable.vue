@@ -177,31 +177,32 @@ const columns = computed(() => [
   {
     name: "date",
     field: "date",
-    label: "Дата акта",
+    label: t("act.date_of_act"),
     align: "left",
   },
   {
     name: "esfDate",
     field: "esfDate",
-    label: "Дата ЭСФ",
+    label: t("act.date_of_esf"),
     align: "left",
   },
   {
     name: "actStatus",
     field: "actStatus",
-    label: "Статус Акта",
+    label: t("act.status_of_act"),
     align: "left",
   },
   {
     name: "hospitalName",
     field: "hospitalName",
-    label: "Название клиники",
+    label: t("act.clinic_name"),
     align: "left",
   },
   {
     name: "amount",
-    label: "Сумма",
     align: "left",
+    label: t("act.summ"),
+
     field: "amount",
   },
 ]);
