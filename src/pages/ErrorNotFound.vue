@@ -5,7 +5,9 @@
     <div>
       <div style="font-size: 30vh">404</div>
 
-      <div class="text-h2" style="opacity: 0.4">Ничего не найдено...</div>
+      <div class="text-h2" style="opacity: 0.4">
+        {{ $t("common.not_found") }}
+      </div>
 
       <q-btn
         class="q-mt-xl btn"

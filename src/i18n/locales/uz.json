@@ -19,6 +19,7 @@
     "enter_diagnosis": "Tashxisni kiriting",
     "medicine": "Dorilar",
     "enter_medicine": "Dori tanlang",
+    "enter_limit": "Limitni tanlang",
     "add_medicine": "Dori qo‘shish",
     "add": "Qo‘shish",
     "amount": "Miqdori",
@@ -55,7 +56,8 @@
       "save_appeal": "Xabarni saqlash",
       "create_appeal": "So'rov yarating",
       "exit_appeal": "Tashqariga chiqish",
-      "delete": "O‘chirish"
+      "delete": "O‘chirish",
+      "continue": "Davom ettirish"
     }
   },
   "appeal_search": {
@@ -67,7 +69,8 @@
     "fio_input": "Familiyasi vs Ismi kiriting",
     "passport_input": "Seriya va pasport raqamini kiriting",
     "fio_label": "Familiya Ismi",
-    "passport_label": "Seriya vs pasport"
+    "passport_label": "Seriya vs pasport",
+    "type_of_appeal": "Murojaat turini tanlang"
   },
   "statuses": {
     "new": "Yangi",
@@ -102,6 +105,7 @@
     "drugstore": "Dorixona",
     "drugs": "Dorilar",
     "limits": "Limitlar",
+    "no_limits": "Limit belgilanmagan",
     "expense": "Iste'mol / {currency}",
     "program": "Dastur"
   },
@@ -119,7 +123,8 @@
   "common": {
     "no_data": "Ma’lumotlar yo‘q",
     "loading": "Загрузка",
-    "enter_date": "Sanani kiriting (10-05-2024)"
+    "enter_date": "Sanani kiriting (10-05-2024)",
+    "not_found": "Ничего не найдено"
   },
   "validation": {
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",

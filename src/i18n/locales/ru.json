@@ -19,6 +19,7 @@
     "medicine": "Лекарство",
     "enter_medicine": "Выберите лекарство",
     "enter_diagnosis": "Введите диагноз",
+    "enter_limit": "Выберите лимит",
     "add_medicine": "Добавить лекарство",
     "add": "Добавить",
     "amount": "Количество",
@@ -55,7 +56,8 @@
       "save_appeal": "Сохранить обращение",
       "create_appeal": "Создать обращение",
       "exit_appeal": "Выйти",
-      "delete": "Удалить"
+      "delete": "Удалить",
+      "continue": "Продолжить"
     }
   },
   "appeal_search": {
@@ -67,7 +69,8 @@
     "fio_input": "Введите Фамилию и Имя клиента",
     "passport_input": "Введите серию и номер паспорта",
     "fio_label": "Фамилия Имя",
-    "passport_label": "Серия и номер паспорта"
+    "passport_label": "Серия и номер паспорта",
+    "type_of_appeal": "Выберите тип обращения"
   },
   "statuses": {
     "new": "Новое",
@@ -102,6 +105,7 @@
     "drugstore": "Аптека",
     "drugs": "Лекарства",
     "limits": "Лимиты",
+    "no_limits": "Лимиты не назначены",
     "expense": "Расход / {currency}",
     "program": "Программа"
   },
@@ -118,7 +122,8 @@
   "common": {
     "no_data": "Данных нет",
     "loading": "Загрузка",
-    "enter_date": "Введите дату (10-05-2024)"
+    "enter_date": "Введите дату (10-05-2024)",
+    "not_found": "Ничего не найдено"
   },
 
   "validation": {

@@ -188,7 +188,7 @@
             <q-td key="limits" :props="props" class="appeals-td">
               <SimpleButton
                 full-width
-                label="лимиты &#129125;"
+                :label="`${$t('client_table.limits').toLowerCase()} &#129125;`"
                 :custom-class="[
                   'appeals-btn',
                   'reports-btn',
