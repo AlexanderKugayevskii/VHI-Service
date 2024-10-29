@@ -350,6 +350,7 @@ import Trans from "src/i18n/translation";
 import { storeToRefs } from "pinia";
 import formatPrice from "src/helpers/formatPrice";
 import DetailCard from "src/components/ClientInfo/DetailCard.vue";
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
