@@ -112,7 +112,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const checkSelectedLimits = computed(() => {
     // program_item_id
     return allData.value.some((item) => {
-      return item.pivot.program_item_id === 0;
+      return item.pivot.program_item_id === 0 && item.pivot.status !== 2;
     });
   });
 
