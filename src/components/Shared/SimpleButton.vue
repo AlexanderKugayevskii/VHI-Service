@@ -11,6 +11,7 @@
       </span>
       <slot name="loading-spinner" v-else></slot>
       <slot name="tooltip"></slot>
+      <slot></slot>
     </button>
   </div>
 </template>
@@ -35,8 +36,8 @@ defineProps({
 });
 const emit = defineEmits(["click"]);
 
-const handleClick = () => {
-  emit("click");
+const handleClick = (e) => {
+  emit("click", e);
 };
 </script>
 

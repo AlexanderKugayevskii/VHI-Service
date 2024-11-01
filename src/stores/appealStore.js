@@ -407,6 +407,36 @@ export const useAppealStore = defineStore("appeal", () => {
       });
     }
   };
+  const changeDoctorPrice = (changedData) => {
+    doctors.value = doctors.value.map((doctor) => {
+      if (doctor.id !== changedData.id) {
+        return doctor;
+      } else {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+  };
+  const changeServicePrice = (changedData) => {
+    services.value = services.value.map((service) => {
+      if (service.id !== changedData.id) {
+        return service;
+      } else {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+  };
 
   const checkSuggestedServices = (service) => {
     return suggestedServices.value.some((item) => service.id === item.id);
@@ -1550,5 +1580,8 @@ export const useAppealStore = defineStore("appeal", () => {
     actionDoctorStatusCount,
     actionServiceStatusCount,
     checkStatusIfRejected,
+
+    changeDoctorPrice,
+    changeServicePrice,
   };
 });

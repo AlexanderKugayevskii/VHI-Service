@@ -281,71 +281,101 @@
                               </template>
                               <template v-slot:option-content="props">
                                 <div
-                                  :class="{
-                                    'disabled-option':
-                                      appealStore.checkSuggestedDoctors(
-                                        props.option
-                                      ) ||
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      ),
-                                  }"
+                                  class="row items-center"
+                                  style="column-gap: 8px"
                                 >
-                                  <span>
-                                    {{ props.option.name }}
-                                  </span>
-                                  <span class="price">
-                                    -
-                                    {{ formatPrice(props.option.pivot.price) }}
-                                  </span>
-                                  <span
+                                  <div
+                                    :class="{
+                                      'disabled-option':
+                                        appealStore.checkSuggestedDoctors(
+                                          props.option
+                                        ) ||
+                                        appealStore.cantRemoveFromSelectedDoctors(
+                                          props.option
+                                        ),
+                                      row: true,
+                                      'items-center': true,
+                                    }"
+                                  >
+                                    <span>
+                                      {{ props.option.name }}
+                                    </span>
+                                    <span class="price">
+                                      -
+                                      {{
+                                        formatPrice(props.option.pivot.price)
+                                      }}
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.checkSuggestedDoctors(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      (
+                                      {{
+                                        appealStore.isClinic
+                                          ? $t(
+                                              "create_appeal.added_by_clinic"
+                                            ).toLowerCase()
+                                          : $t(
+                                              "create_appeal.added_by_company"
+                                            ).toLowerCase()
+                                      }})
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.cantRemoveFromSelectedDoctors(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      (
+                                      {{
+                                        appealStore.isAgent
+                                          ? ` ${$t(
+                                              "create_appeal.completed_by_clinic"
+                                            )}`
+                                          : ` ${$t(
+                                              "create_appeal.decision_by_company"
+                                            )}`
+                                      }}
+                                      )
+                                    </span>
+                                  </div>
+                                  <CheckIcon
                                     v-if="
-                                      appealStore.checkSuggestedDoctors(
+                                      appealStore.checkSelectedDoctors(
+                                        props.option
+                                      ) &&
+                                      !appealStore.cantRemoveFromSelectedDoctors(
                                         props.option
                                       )
                                     "
-                                  >
-                                    (
-                                    {{
-                                      appealStore.isClinic
-                                        ? $t(
-                                            "create_appeal.added_by_clinic"
-                                          ).toLowerCase()
-                                        : $t(
-                                            "create_appeal.added_by_company"
-                                          ).toLowerCase()
-                                    }})
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.cantRemoveFromSelectedDoctors(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    (
-                                    {{
-                                      appealStore.isAgent
-                                        ? ` ${$t(
-                                            "create_appeal.completed_by_clinic"
-                                          )}`
-                                        : ` ${$t(
-                                            "create_appeal.decision_by_company"
-                                          )}`
-                                    }}
-                                    )
-                                  </span>
+                                  />
                                 </div>
-                                <CheckIcon
-                                  v-if="
-                                    appealStore.checkSelectedDoctors(
-                                      props.option
-                                    ) &&
-                                    !appealStore.cantRemoveFromSelectedDoctors(
-                                      props.option
-                                    )
-                                  "
-                                />
+                                <SimpleButton
+                                  custom-class="btn-change"
+                                  @click.stop="changeDoctorPrice(props.option)"
+                                >
+                                  <q-icon size="16px">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="18"
+                                      height="18"
+                                      viewBox="0 0 18 18"
+                                      fill="none"
+                                    >
+                                      <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M17.183 0.816075C16.6604 0.293844 15.9518 0.000488281 15.213 0.000488281C14.4742 0.000488281 13.7656 0.293844 13.243 0.816075L11.837 2.22108L15.778 6.16308L17.183 4.75808C17.4419 4.49927 17.6472 4.19199 17.7874 3.85381C17.9275 3.51562 17.9996 3.15314 17.9996 2.78708C17.9996 2.42101 17.9275 2.05853 17.7874 1.72035C17.6472 1.38216 17.4419 1.07488 17.183 0.816075ZM14.718 7.22307L10.777 3.28208L1.78699 12.2721C1.22699 12.8321 0.846993 13.5491 0.698993 14.3271L0.274993 16.5561C0.244347 16.7164 0.253395 16.8817 0.301348 17.0377C0.349301 17.1937 0.434701 17.3356 0.550095 17.451C0.66549 17.5664 0.807373 17.6518 0.963361 17.6997C1.11935 17.7477 1.2847 17.7567 1.44499 17.7261L3.67299 17.3011C4.45162 17.1528 5.16763 16.7737 5.72799 16.2131L14.718 7.22307Z"
+                                        fill="#7A88A6"
+                                      />
+                                    </svg>
+                                  </q-icon>
+                                </SimpleButton>
                               </template>
                               <template v-slot:action>
                                 <SimpleInput
@@ -475,71 +505,101 @@
                               </template>
                               <template v-slot:option-content="props">
                                 <div
-                                  :class="{
-                                    'disabled-option':
-                                      appealStore.checkSuggestedServices(
-                                        props.option
-                                      ) ||
-                                      appealStore.cantRemoveFromSelectedServices(
-                                        props.option
-                                      ),
-                                  }"
+                                  class="row items-center"
+                                  style="column-gap: 8px"
                                 >
-                                  <span>
-                                    {{ props.option.name }}
-                                  </span>
-                                  <span class="price">
-                                    -
-                                    {{ formatPrice(props.option.pivot.price) }}
-                                  </span>
-                                  <span
+                                  <div
+                                    :class="{
+                                      'disabled-option':
+                                        appealStore.checkSuggestedServices(
+                                          props.option
+                                        ) ||
+                                        appealStore.cantRemoveFromSelectedServices(
+                                          props.option
+                                        ),
+                                      row: true,
+                                      'items-center': true,
+                                    }"
+                                  >
+                                    <span>
+                                      {{ props.option.name }}
+                                    </span>
+                                    <span class="price">
+                                      -
+                                      {{
+                                        formatPrice(props.option.pivot.price)
+                                      }}
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.checkSuggestedServices(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      (
+                                      {{
+                                        appealStore.isClinic
+                                          ? $t(
+                                              "create_appeal.added_by_clinic"
+                                            ).toLowerCase()
+                                          : $t(
+                                              "create_appeal.added_by_company"
+                                            ).toLowerCase()
+                                      }})
+                                    </span>
+                                    <span
+                                      v-if="
+                                        appealStore.cantRemoveFromSelectedServices(
+                                          props.option
+                                        )
+                                      "
+                                    >
+                                      (
+                                      {{
+                                        appealStore.isAgent
+                                          ? ` ${$t(
+                                              "create_appeal.completed_by_clinic"
+                                            )}`
+                                          : ` ${$t(
+                                              "create_appeal.decision_by_company"
+                                            )}`
+                                      }}
+                                      )
+                                    </span>
+                                  </div>
+                                  <CheckIcon
                                     v-if="
-                                      appealStore.checkSuggestedServices(
+                                      appealStore.checkSelectedServices(
+                                        props.option
+                                      ) &&
+                                      !appealStore.cantRemoveFromSelectedServices(
                                         props.option
                                       )
                                     "
-                                  >
-                                    (
-                                    {{
-                                      appealStore.isClinic
-                                        ? $t(
-                                            "create_appeal.added_by_clinic"
-                                          ).toLowerCase()
-                                        : $t(
-                                            "create_appeal.added_by_company"
-                                          ).toLowerCase()
-                                    }})
-                                  </span>
-                                  <span
-                                    v-if="
-                                      appealStore.cantRemoveFromSelectedServices(
-                                        props.option
-                                      )
-                                    "
-                                  >
-                                    (
-                                    {{
-                                      appealStore.isAgent
-                                        ? ` ${$t(
-                                            "create_appeal.completed_by_clinic"
-                                          )}`
-                                        : ` ${$t(
-                                            "create_appeal.decision_by_company"
-                                          )}`
-                                    }}
-                                    )
-                                  </span>
+                                  />
                                 </div>
-                                <CheckIcon
-                                  v-if="
-                                    appealStore.checkSelectedServices(
-                                      props.option
-                                    ) &&
-                                    !appealStore.cantRemoveFromSelectedServices(
-                                      props.option
-                                    )
-                                  "
-                                />
+                                <SimpleButton
+                                  custom-class="btn-change"
+                                  @click.stop="changeServicePrice(props.option)"
+                                >
+                                  <q-icon size="16px">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="18"
+                                      height="18"
+                                      viewBox="0 0 18 18"
+                                      fill="none"
+                                    >
+                                      <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M17.183 0.816075C16.6604 0.293844 15.9518 0.000488281 15.213 0.000488281C14.4742 0.000488281 13.7656 0.293844 13.243 0.816075L11.837 2.22108L15.778 6.16308L17.183 4.75808C17.4419 4.49927 17.6472 4.19199 17.7874 3.85381C17.9275 3.51562 17.9996 3.15314 17.9996 2.78708C17.9996 2.42101 17.9275 2.05853 17.7874 1.72035C17.6472 1.38216 17.4419 1.07488 17.183 0.816075ZM14.718 7.22307L10.777 3.28208L1.78699 12.2721C1.22699 12.8321 0.846993 13.5491 0.698993 14.3271L0.274993 16.5561C0.244347 16.7164 0.253395 16.8817 0.301348 17.0377C0.349301 17.1937 0.434701 17.3356 0.550095 17.451C0.66549 17.5664 0.807373 17.6518 0.963361 17.6997C1.11935 17.7477 1.2847 17.7567 1.44499 17.7261L3.67299 17.3011C4.45162 17.1528 5.16763 16.7737 5.72799 16.2131L14.718 7.22307Z"
+                                        fill="#7A88A6"
+                                      />
+                                    </svg>
+                                  </q-icon>
+                                </SimpleButton>
                               </template>
                               <template v-slot:action>
                                 <SimpleInput
@@ -829,6 +889,7 @@ import LoadingSpinner from "src/components/Shared/LoadingSpinner.vue";
 import AppealChat from "src/components/AppealChat.vue";
 import AppealHistory from "src/components/AppealHistory.vue";
 import TableTooltip from "src/components/Shared/TableTooltip.vue";
+import ChangePriceModal from "src/components/Appeal/ChangePriceModal.vue";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
@@ -1018,6 +1079,27 @@ const addCustomService = () => {
   serviceCustomPrice.formattedValue = "";
   appealStore.selectServices(service);
   serviceDropdownRef.value.closeModal();
+};
+
+const changeDoctorPrice = (item) => {
+  $q.dialog({
+    component: ChangePriceModal,
+    componentProps: {
+      item: item,
+    },
+  }).onOk((changedData) => {
+    appealStore.changeDoctorPrice(changedData);
+  });
+};
+const changeServicePrice = (item) => {
+  $q.dialog({
+    component: ChangePriceModal,
+    componentProps: {
+      item: item,
+    },
+  }).onOk((changedData) => {
+    appealStore.changeServicePrice(changedData);
+  });
 };
 
 const handleStatusDoctor = (item, isSuggested) => {

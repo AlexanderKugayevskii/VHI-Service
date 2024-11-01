@@ -219,7 +219,8 @@ body {
 }
 
 .btn-cancel,
-.btn-action {
+.btn-action,
+.btn-change {
   padding: 12px 32px;
   font-size: 15px;
   border-radius: 16px;
@@ -262,6 +263,14 @@ button[class^="btn"] {
   background: none;
   outline: none;
   cursor: pointer;
+}
+
+.btn-change {
+  padding: 0;
+  border-radius: 4px;
+  &:hover {
+    transform: scale(1.3);
+  }
 }
 
 .q-dialog__inner > .modal-container {
@@ -543,4 +552,22 @@ button[class^="btn"] {
 .diagnosis-input textarea.input-field__text-input {
   resize: none;
   min-height: 120px;
+}
+
+.small-input-wrapper {
+  background-color: #f2f5fa;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .small-input {
+    width: 100%;
+    outline: none;
+    background: none;
+    border: none;
+    padding: 0;
+  }
 }

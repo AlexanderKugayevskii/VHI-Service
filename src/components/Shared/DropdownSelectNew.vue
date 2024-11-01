@@ -151,6 +151,7 @@
             >
               <div :class="['dropdown-select-list-item-text', { dense }]">
                 <slot name="option-content" :option="item"></slot>
+                <slot name="option-action"></slot>
               </div>
             </div>
           </q-virtual-scroll>
@@ -226,8 +227,6 @@ export default {
 
     onMounted(() => {
       scrollTarget.value = virtualListScrollTargetRef.value;
-
-      
     });
     return {
       virtualListScrollTargetRef,
@@ -238,6 +237,9 @@ export default {
   methods: {
     closeModal(event) {
       if (this.dropdownActive) {
+        return;
+      }
+      if (event.target.closest(".change-price-modal")) {
         return;
       }
       this.showDropdown = false;
@@ -320,9 +322,7 @@ export default {
     },
   },
 
-  mounted() {
-    
-  },
+  mounted() {},
 };
 </script>
 
@@ -428,6 +428,7 @@ export default {
   font-size: 15px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   column-gap: 8px;
   border-radius: 8px;
   color: #404f6f;
