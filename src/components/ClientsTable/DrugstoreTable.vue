@@ -265,6 +265,7 @@ import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
+import { useCommonStore } from "src/stores/commonStore";
 
 const props = defineProps({
   pagination: {
@@ -307,12 +308,16 @@ const emit = defineEmits(["createAppeal"]);
 
 const tableRef = ref(null);
 const appealStore = useAppealStore();
+const commonStore = useCommonStore();
+
 const { deleteData } = useAppealsHistory();
 
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
+
+const count = computed(() => commonStore.notificationCount);
 
 const handleSearch = (searchValue) => {
   search.value = searchValue;
@@ -416,6 +421,10 @@ onMounted(() => {
       }
     }
   );
+
+  watch(count, () => {
+    tableRef.value.requestServerInteraction();
+  });
 });
 
 //calculate table height for showing only 10 rows

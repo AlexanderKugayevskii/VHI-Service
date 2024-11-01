@@ -281,13 +281,15 @@ import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
 import CheckIcon from "../Shared/CheckIcon.vue";
 import SimpleInput from "../Shared/SimpleInput.vue";
 import DateInput from "../Shared/DateInput.vue";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
 import { useClientTableStore } from "src/stores/clientTableStore";
 import { useAppealStore } from "src/stores/appealStore";
 
 import { toRefs } from "vue";
 import { toRef } from "vue";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
+import useNotifications from "src/composables/useNotifications";
+import { useCommonStore } from "src/stores/commonStore";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -328,15 +330,17 @@ const props = defineProps({
   },
 });
 
-const appealStore = useAppealStore();
-const { deleteData } = useAppealsHistory();
-
 const tableRef = ref(null);
+const appealStore = useAppealStore();
+const commonStore = useCommonStore();
+const { deleteData } = useAppealsHistory();
 
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
+
+const count = computed(() => commonStore.notificationCount);
 
 const handleSearch = (searchValue) => {
   search.value = searchValue;
@@ -455,6 +459,7 @@ const deleteAppeal = async (data) => {
 //first request to API on mounted
 onMounted(() => {
   tableRef.value.requestServerInteraction();
+
   watch(
     () => appealStore.successAppeal,
     (newSuccessAppeal) => {
@@ -463,6 +468,12 @@ onMounted(() => {
       }
     }
   );
+
+  watch(count, () => {
+    tableRef.value.requestServerInteraction();
+    
+  });
+
   watch(
     () => props.filterQuery,
     () => {
