@@ -106,7 +106,7 @@
     "applicant": "Заявитель",
     "date_of_appeal": "Дата обращения",
     "date_of_completion": "Дата завершения",
-    "date_of_birtday": "Дата рождения",
+    "date_of_birthday": "Дата рождения",
     "appeal_status": "Статус",
     "clinic": "Клиника",
     "doctor": "Врач",
@@ -145,8 +145,7 @@
     "notifications": "Уведомления",
     "start_date": "Дата начала",
     "end_date": "Дата конца",
-    "generate_report": "Сформировать отчет",
-    
+    "generate_report": "Сформировать отчет"
   },
 
   "validation": {
