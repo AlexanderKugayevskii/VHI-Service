@@ -407,7 +407,7 @@ export const useAppealStore = defineStore("appeal", () => {
       });
     }
   };
-  const changeDoctorPrice = (changedData) => {
+  const changeDoctorPrice = async (changedData) => {
     doctors.value = doctors.value.map((doctor) => {
       if (doctor.id !== changedData.id) {
         return doctor;
@@ -421,7 +421,17 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       }
     });
+
+    try {
+      const response = await AppealService.changePriceDoctor(changedData.id, {
+        price: changedData.price,
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+    }
   };
+
   const changeServicePrice = (changedData) => {
     services.value = services.value.map((service) => {
       if (service.id !== changedData.id) {
