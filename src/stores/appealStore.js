@@ -216,6 +216,15 @@ export const useAppealStore = defineStore("appeal", () => {
     })
   );
 
+  const medicalLimitsRemaind = computed(() => {
+    return (
+      parseFloat(client.value.liability) -
+      medicalLimits.value.reduce((acc, curr) => {
+        return acc + parseFloat(curr.spent);
+      }, 0)
+    );
+  });
+
   const appealTotalConsumption = computed(() => {
     const allData = [
       ...selectedDoctors.value,
@@ -1047,6 +1056,8 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
+
+      console.log(data);
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,
@@ -1067,6 +1078,7 @@ export const useAppealStore = defineStore("appeal", () => {
         program: data.contract_client.program.name,
         type_id: data.client_type,
         applicant: data.contract_client.contract.applicant,
+        liability: parseFloat(data.contract_client.program.liability),
       };
       setClient(clientData);
 
@@ -1239,6 +1251,7 @@ export const useAppealStore = defineStore("appeal", () => {
         program: data.contract_client.program.name,
         type_id: data.client_type,
         applicant: data.contract_client.contract.applicant,
+        liability: parseFloat(data.contract_client.program.liability),
       };
 
       clientData.id = data.contract_client.id;
@@ -1635,5 +1648,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
     changeDoctorPrice,
     changeServicePrice,
+
+    medicalLimitsRemaind,
   };
 });
