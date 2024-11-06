@@ -151,7 +151,7 @@
                                 v-if="clientData.finishedDate"
                                 :disableInput="appealStore.isClinic"
                                 number
-                                :label="$t('client_table.date_of_completion')"
+                                :label="$t('client_table.finished_date')"
                                 :modelValue="clientData.finishedDate"
                                 @update:model-value="
                                   appealStore.setFinishedDate

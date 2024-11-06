@@ -32,7 +32,7 @@
               (val) => selectFilterData(val, filterItem.type)
             "
           />
-          <DateInput
+          <DateInput_new
             v-if="filterItem.component === 'DateInput'"
             :label="filterItem.name"
             placeholder="10-05-2024"
@@ -266,6 +266,7 @@ import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
 import { useCommonStore } from "src/stores/commonStore";
+import DateInput_new from "../Shared/DateInput_new.vue";
 
 const props = defineProps({
   pagination: {

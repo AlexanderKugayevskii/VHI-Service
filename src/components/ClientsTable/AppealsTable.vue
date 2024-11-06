@@ -32,7 +32,7 @@
               (val) => selectFilterData(val, filterItem.type)
             "
           />
-          <DateInput
+          <DateInput_new
             v-if="filterItem.component === 'DateInput'"
             :label="filterItem.name"
             placeholder="10-05-2024"
@@ -290,6 +290,7 @@ import { toRef } from "vue";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
 import useNotifications from "src/composables/useNotifications";
 import { useCommonStore } from "src/stores/commonStore";
+import DateInput_new from "../Shared/DateInput_new.vue";
 
 const $q = useQuasar();
 const router = useRouter();

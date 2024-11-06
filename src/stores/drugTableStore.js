@@ -39,7 +39,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
     {
       name: "finishedDate",
       align: "left",
-      label: t("client_table.date_of_completion"),
+      label: t("client_table.finished_date"),
       field: "finishedDate",
       sortable: true,
     },
@@ -129,6 +129,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       sortBy = "status";
     }
 
+    console.log(requestFilterQuery.value);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,
@@ -218,6 +219,15 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         item: "",
       },
       {
+        name: t("client_table.finished_date"),
+        type: "finished_date",
+        meta: true,
+        placeholder: "01.01.1990",
+        multiple: false,
+        component: "DateInput",
+        item: "",
+      },
+      {
         name: t("client_table.appeal_status"),
         type: "appeal_status",
         meta: true,
@@ -280,7 +290,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       } else {
         if (
           filterQuery.value[type] === optionItem &&
-          type !== "date_of_appeal"
+          type !== "date_of_appeal" && type !== 'finished_date'
         ) {
           delete filterQuery.value[type];
         } else {
@@ -297,6 +307,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
     const query = {
       full_name: filterQuery.value?.client,
       applied_date: filterQuery.value?.date_of_appeal,
+      finished_date: filterQuery.value?.finished_date,
       status: filterQuery.value.appeal_status?.status,
       drugstore_id: filterQuery.value?.drugstore?.id,
       drugs: filterQuery.value?.drugs,

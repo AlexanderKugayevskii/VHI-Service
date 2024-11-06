@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 const props = defineProps({
   filterOption: {
@@ -70,6 +70,7 @@ const optionKey = computed(() => props.filterOption[0]);
 const handleRemoveChip = () => {
   emit("delete", optionKey.value);
 };
+
 </script>
 
 <style lang="scss" scoped>
