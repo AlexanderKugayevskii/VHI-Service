@@ -151,6 +151,7 @@ export const useAppealStore = defineStore("appeal", () => {
         progress: doctor.pivot.progress ?? 0,
         quantity: doctor.pivot.quantity ?? 1,
         program_item_id: doctor.pivot.program_item_id ?? 0,
+        price: doctor.pivot.price,
       };
       if (doctorData.id === null) {
         doctorData.name = doctor.name;
@@ -172,6 +173,7 @@ export const useAppealStore = defineStore("appeal", () => {
         progress: service.pivot.progress ?? 0,
         quantity: service.pivot.quantity ?? 1,
         program_item_id: service.pivot.program_item_id ?? 0,
+        price: service.pivot.price,
       };
 
       if (serviceData.id === null) {
@@ -423,7 +425,9 @@ export const useAppealStore = defineStore("appeal", () => {
     });
 
     try {
-      const response = await AppealService.changePriceDoctor(changedData.id, {
+      const response = await AppealService.changePriceDoctor({
+        hospital_id: selectedClinic.value.id,
+        doctor_id: changedData.id,
         price: changedData.price,
       });
       console.log(response);
@@ -831,6 +835,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: service.pivot.status,
         progress: service.pivot.progress,
         id: service.id,
+        price: service.pivot.price,
       };
 
       if (serviceData.id === null) {
@@ -846,6 +851,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: doctor.pivot.status,
         progress: doctor.pivot.progress,
         id: doctor.id,
+        price: doctor.pivot.price,
       };
       if (doctorData.id === null) {
         doctorData.name = doctor.name;

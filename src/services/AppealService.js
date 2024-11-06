@@ -12,11 +12,11 @@ function getServices(id) {
   return api.get(`/clinics/services/${id}`);
 }
 
-function changePriceDoctor(id, payload) {
-  return api.post(`/hospital-doctor/${id}/price`, payload);
+function changePriceDoctor(payload) {
+  return api.post(`/hospital-doctor/price`, payload);
 }
 function changePriceService(id) {
-  return api.post(`/hospital-services/${id}/price`, payload);
+  return api.post(`/hospital-services/price`, payload);
 }
 
 function getHospitalDataById(id) {
