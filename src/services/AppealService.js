@@ -15,8 +15,8 @@ function getServices(id) {
 function changePriceDoctor(payload) {
   return api.post(`/hospital-doctor/price`, payload);
 }
-function changePriceService(id) {
-  return api.post(`/hospital-services/price`, payload);
+function changePriceService(payload) {
+  return api.post(`/hospital-service/price`, payload);
 }
 
 function getHospitalDataById(id) {

@@ -424,6 +424,20 @@ export const useAppealStore = defineStore("appeal", () => {
       }
     });
 
+    selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+      if (doctor.id !== changedData.id) {
+        return doctor;
+      } else {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
     try {
       const response = await AppealService.changePriceDoctor({
         hospital_id: selectedClinic.value.id,
@@ -436,7 +450,7 @@ export const useAppealStore = defineStore("appeal", () => {
     }
   };
 
-  const changeServicePrice = (changedData) => {
+  const changeServicePrice = async (changedData) => {
     services.value = services.value.map((service) => {
       if (service.id !== changedData.id) {
         return service;
@@ -450,6 +464,31 @@ export const useAppealStore = defineStore("appeal", () => {
         };
       }
     });
+
+    selectedServices.value = selectedServices.value.map((service) => {
+      if (service.id !== changedData.id) {
+        return service;
+      } else {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
+    try {
+      const response = await AppealService.changePriceService({
+        hospital_id: selectedClinic.value.id,
+        service_id: changedData.id,
+        price: changedData.price,
+      });
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const checkSuggestedServices = (service) => {
