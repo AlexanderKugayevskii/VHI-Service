@@ -444,7 +444,6 @@ export const useAppealStore = defineStore("appeal", () => {
         doctor_id: changedData.id,
         price: changedData.price,
       });
-      console.log(response);
     } catch (e) {
       console.error(e);
     }
@@ -485,7 +484,6 @@ export const useAppealStore = defineStore("appeal", () => {
         service_id: changedData.id,
         price: changedData.price,
       });
-      console.log(response);
     } catch (e) {
       console.error(e);
     }
@@ -1049,7 +1047,6 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
-
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,

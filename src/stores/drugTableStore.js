@@ -129,7 +129,6 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       sortBy = "status";
     }
 
-    console.log(requestFilterQuery.value);
     fetchClients(
       props.pagination.page,
       props.pagination.rowsPerPage,

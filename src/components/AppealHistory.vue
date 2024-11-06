@@ -32,7 +32,6 @@ const getAppealHistory = async () => {
     if (response.status === 200) {
       const data = response.data;
       historyData.value = data.data;
-      console.log(historyData.value)
     }
   } catch (e) {
   } finally {
