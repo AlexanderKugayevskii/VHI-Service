@@ -52,6 +52,16 @@
                     <b>{{ clientData.program }} </b></span
                   >
                 </div>
+                <div class = "create-appeal-client-text">
+                  <span>
+                    Общая страховая сумма:
+                    <b>{{ formatPrice(clientData.liability) }}</b>
+                  </span>
+                  <span>
+                    Общий остаток:
+                    <b>{{ formatPrice(appealStore.medicalLimitsRemaind) }}</b>
+                  </span>
+                </div>
                 <!-- <div class="create-appeal-client-action">
                   <q-btn dense flat :ripple="false" class="btn--no-hover">
                     <q-icon size="20px">
@@ -625,6 +635,8 @@ onMounted(() => {
   padding: 16px;
   margin-bottom: 16px;
   display: flex;
+  flex-wrap: wrap;
+  row-gap: 8px;
 }
 .create-appeal-client-text {
   flex-grow: 1;

@@ -151,6 +151,7 @@ export const useAppealStore = defineStore("appeal", () => {
         progress: doctor.pivot.progress ?? 0,
         quantity: doctor.pivot.quantity ?? 1,
         program_item_id: doctor.pivot.program_item_id ?? 0,
+        price: doctor.pivot.price,
       };
       if (doctorData.id === null) {
         doctorData.name = doctor.name;
@@ -172,6 +173,7 @@ export const useAppealStore = defineStore("appeal", () => {
         progress: service.pivot.progress ?? 0,
         quantity: service.pivot.quantity ?? 1,
         program_item_id: service.pivot.program_item_id ?? 0,
+        price: service.pivot.price,
       };
 
       if (serviceData.id === null) {
@@ -213,6 +215,15 @@ export const useAppealStore = defineStore("appeal", () => {
       return drugData;
     })
   );
+
+  const medicalLimitsRemaind = computed(() => {
+    return (
+      parseFloat(client.value.liability) -
+      medicalLimits.value.reduce((acc, curr) => {
+        return acc + parseFloat(curr.spent);
+      }, 0)
+    );
+  });
 
   const appealTotalConsumption = computed(() => {
     const allData = [
@@ -405,6 +416,85 @@ export const useAppealStore = defineStore("appeal", () => {
           program_item_id: 0,
         },
       });
+    }
+  };
+  const changeDoctorPrice = async (changedData) => {
+    doctors.value = doctors.value.map((doctor) => {
+      if (doctor.id !== changedData.id) {
+        return doctor;
+      } else {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
+    selectedDoctors.value = selectedDoctors.value.map((doctor) => {
+      if (doctor.id !== changedData.id) {
+        return doctor;
+      } else {
+        return {
+          ...doctor,
+          pivot: {
+            ...doctor.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
+    try {
+      const response = await AppealService.changePriceDoctor({
+        hospital_id: selectedClinic.value.id,
+        doctor_id: changedData.id,
+        price: changedData.price,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const changeServicePrice = async (changedData) => {
+    services.value = services.value.map((service) => {
+      if (service.id !== changedData.id) {
+        return service;
+      } else {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
+    selectedServices.value = selectedServices.value.map((service) => {
+      if (service.id !== changedData.id) {
+        return service;
+      } else {
+        return {
+          ...service,
+          pivot: {
+            ...service.pivot,
+            price: changedData.price,
+          },
+        };
+      }
+    });
+
+    try {
+      const response = await AppealService.changePriceService({
+        hospital_id: selectedClinic.value.id,
+        service_id: changedData.id,
+        price: changedData.price,
+      });
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -791,6 +881,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: service.pivot.status,
         progress: service.pivot.progress,
         id: service.id,
+        price: service.pivot.price,
       };
 
       if (serviceData.id === null) {
@@ -806,6 +897,7 @@ export const useAppealStore = defineStore("appeal", () => {
         status: doctor.pivot.status,
         progress: doctor.pivot.progress,
         id: doctor.id,
+        price: doctor.pivot.price,
       };
       if (doctorData.id === null) {
         doctorData.name = doctor.name;
@@ -965,6 +1057,7 @@ export const useAppealStore = defineStore("appeal", () => {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
 
+      console.log(data);
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,
@@ -985,6 +1078,7 @@ export const useAppealStore = defineStore("appeal", () => {
         program: data.contract_client.program.name,
         type_id: data.client_type,
         applicant: data.contract_client.contract.applicant,
+        liability: parseFloat(data.contract_client.program.liability),
       };
       setClient(clientData);
 
@@ -1157,12 +1251,14 @@ export const useAppealStore = defineStore("appeal", () => {
         program: data.contract_client.program.name,
         type_id: data.client_type,
         applicant: data.contract_client.contract.applicant,
+        liability: parseFloat(data.contract_client.program.liability),
       };
 
       clientData.id = data.contract_client.id;
       clientData.clientId = data.contract_client.client_id;
       selectedDrugstore.value = data.drugstore;
       setClient(clientData);
+      
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
@@ -1550,5 +1646,10 @@ export const useAppealStore = defineStore("appeal", () => {
     actionDoctorStatusCount,
     actionServiceStatusCount,
     checkStatusIfRejected,
+
+    changeDoctorPrice,
+    changeServicePrice,
+
+    medicalLimitsRemaind,
   };
 });

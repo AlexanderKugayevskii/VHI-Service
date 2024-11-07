@@ -41,7 +41,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     {
       name: "finishedDate",
       align: "left",
-      label: t("client_table.date_of_completion"),
+      label: t("client_table.finished_date"),
       field: "finishedDate",
       sortable: true,
     },
@@ -251,6 +251,16 @@ export const useClientTableStore = defineStore("clientTable", () => {
         item: "",
       },
       {
+
+        name: t("client_table.finished_date"),
+        type: "finished_date",
+        meta: true,
+        placeholder: "01.01.1990",
+        multiple: false,
+        component: "DateInput",
+        item: "",
+      },
+      {
         name: t("client_table.appeal_status"),
         type: "appeal_status",
         meta: true,
@@ -331,7 +341,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
       } else {
         if (
           filterQuery.value[type] === optionItem &&
-          type !== "date_of_appeal"
+          type !== "date_of_appeal" &&
+          type !== "finished_date"
         ) {
           delete filterQuery.value[type];
         } else {
@@ -348,6 +359,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
     const query = {
       full_name: filterQuery.value?.client,
       applied_date: filterQuery.value?.date_of_appeal,
+      finished_date: filterQuery.value?.finished_date, 
       status: filterQuery.value.appeal_status?.status,
       hospital_id: filterQuery.value?.clinic?.id,
       doctors: filterQuery.value?.doctors,

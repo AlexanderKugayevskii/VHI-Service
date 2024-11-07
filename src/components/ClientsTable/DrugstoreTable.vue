@@ -32,7 +32,7 @@
               (val) => selectFilterData(val, filterItem.type)
             "
           />
-          <DateInput
+          <DateInput_new
             v-if="filterItem.component === 'DateInput'"
             :label="filterItem.name"
             placeholder="10-05-2024"
@@ -265,6 +265,8 @@ import { useDrugTableStore } from "src/stores/drugTableStore.js";
 import { useAppealStore } from "src/stores/appealStore";
 import { storeToRefs } from "pinia";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
+import { useCommonStore } from "src/stores/commonStore";
+import DateInput_new from "../Shared/DateInput_new.vue";
 
 const props = defineProps({
   pagination: {
@@ -307,12 +309,16 @@ const emit = defineEmits(["createAppeal"]);
 
 const tableRef = ref(null);
 const appealStore = useAppealStore();
+const commonStore = useCommonStore();
+
 const { deleteData } = useAppealsHistory();
 
 const reactiveProps = toRefs(props);
 const reactivePagination = toRef(reactiveProps, "pagination");
 
 const search = ref("");
+
+const count = computed(() => commonStore.notificationCount);
 
 const handleSearch = (searchValue) => {
   search.value = searchValue;
@@ -416,6 +422,10 @@ onMounted(() => {
       }
     }
   );
+
+  watch(count, () => {
+    tableRef.value.requestServerInteraction();
+  });
 });
 
 //calculate table height for showing only 10 rows

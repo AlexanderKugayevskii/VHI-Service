@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, ref, toRef, watch } from "vue";
 import NotificationService from "src/services/NotificationService";
 import { useAuthStore } from "src/stores/authStore";
 import { useCommonStore } from "src/stores/commonStore";
@@ -31,7 +31,6 @@ const useNotifications = () => {
       }
 
       const data = response.data.data;
-     
 
       if (
         data.length > previousNotificationCount.value &&
@@ -41,9 +40,10 @@ const useNotifications = () => {
 
         // всплывающее уведомление
         // Notify.create({
-        //   message: "Danger, Will Robinson! Danger!",
+        //   message: "Danger,  Will Robinson! Danger!",
         // });
         previousNotificationCount.value = data.length;
+        commonStore.setNotificationCount(previousNotificationCount.value);
       }
 
       notifications.value = data;
@@ -72,7 +72,12 @@ const useNotifications = () => {
     isPolling.value = false;
   };
 
-  return { lastNotification, notifications, startPolling, stopPolling };
+  return {
+    lastNotification,
+    notifications,
+    startPolling,
+    stopPolling,
+  };
 };
 
 export default useNotifications;

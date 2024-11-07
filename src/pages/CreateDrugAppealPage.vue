@@ -151,7 +151,7 @@
                                 v-if="clientData.finishedDate"
                                 :disableInput="appealStore.isClinic"
                                 number
-                                :label="$t('client_table.date_of_completion')"
+                                :label="$t('client_table.finished_date')"
                                 :modelValue="clientData.finishedDate"
                                 @update:model-value="
                                   appealStore.setFinishedDate
@@ -401,7 +401,7 @@
                         "
                       >
                       </SimpleCheckbox>
-                      <span>{{ $t("createa_appeal.make_appeal_done") }}</span>
+                      <span>{{ $t("create_appeal.make_appeal_done") }}</span>
                     </div>
                   </div>
                   <div
@@ -409,7 +409,7 @@
                     v-if="!appealStore.isClinic"
                   >
                     <span class="create-appeal-action-expences-title"
-                      >{{ $t("createa_appeal.total_consumption") }}:
+                      >{{ $t("create_appeal.total_consumption") }}:
                     </span>
 
                     <span class="create-appeal-action-expences-total">{{
@@ -432,7 +432,7 @@
                       />
                       <q-tab
                         name="history"
-                        :label="$t('chat.history_title')"
+                        :label="$t('history.history_title')"
                         :ripple="false"
                         class="tab--no-hover"
                       />

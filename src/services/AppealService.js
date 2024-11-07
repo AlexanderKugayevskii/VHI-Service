@@ -12,6 +12,13 @@ function getServices(id) {
   return api.get(`/clinics/services/${id}`);
 }
 
+function changePriceDoctor(payload) {
+  return api.post(`/hospital-doctor/price`, payload);
+}
+function changePriceService(payload) {
+  return api.post(`/hospital-service/price`, payload);
+}
+
 function getHospitalDataById(id) {
   return api.get(`/clinics/hospitals/${id}`);
 }
@@ -77,4 +84,6 @@ export default {
   changeAppealDrugData,
   deleteAppeal,
   getHistoryAppeal,
+  changePriceDoctor,
+  changePriceService,
 };
