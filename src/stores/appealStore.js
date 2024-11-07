@@ -1258,6 +1258,7 @@ export const useAppealStore = defineStore("appeal", () => {
       clientData.clientId = data.contract_client.client_id;
       selectedDrugstore.value = data.drugstore;
       setClient(clientData);
+      
 
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
