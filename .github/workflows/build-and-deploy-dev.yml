@@ -107,17 +107,17 @@ jobs:
           secrets: |
               neoinsurance/data/ssh private_key | SSH_PRIVATE_KEY ;
 
-      # - name: Deploy to datacenter
-      #   uses: ./.github/actions/compose-deploy
-      #   with:
-      #     ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
-      #     server_host: ${{ env.SERVER_1_HOST }}
-      #     ssh_port: ${{ env.SERVER_1_SSH_PORT }}
-      #     registry_url: ${{ env.REGISTRY_URL }}
-      #     registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
-      #     registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
-      #     service_name: dms-service-frontend
-      #     environment: ${{ env.ENVIRONMENT }}
+      - name: Deploy to datacenter
+        uses: ./.github/actions/compose-deploy
+        with:
+          ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
+          server_host: ${{ env.SERVER_1_HOST }}
+          ssh_port: ${{ env.SERVER_1_SSH_PORT }}
+          registry_url: ${{ env.REGISTRY_URL }}
+          registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
+          registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
+          service_name: dms-service-frontend
+          environment: ${{ env.ENVIRONMENT }}
 
       - name: Deploy to office
         uses: ./.github/actions/compose-deploy
