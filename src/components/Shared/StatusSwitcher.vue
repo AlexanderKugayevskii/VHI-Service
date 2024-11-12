@@ -28,6 +28,7 @@
     <div
       class="status-item status-done"
       v-if="progress === 2"
+      @click = "() => isSuperAdmin && handleChangeProgress(1)"
       >
       <!-- @click="() => isAgent && handleChangeProgress(1)" -->
       Подтверждено
@@ -51,6 +52,8 @@
     <div>Подтверждено - клиника и агент</div>
 -->
 <script setup>
+import { useAppealStore } from 'src/stores/appealStore';
+import { computed } from 'vue';
 const props = defineProps({
   progress: {
     type: Number,
@@ -70,6 +73,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:change"]);
+const appealStore = useAppealStore()
+
+const isSuperAdmin = computed(() => appealStore.isSuperAdmin)
 
 const handleChangeProgress = (progress) => {
   emit("update:change", progress);

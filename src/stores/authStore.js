@@ -21,7 +21,6 @@ export const useAuthStore = defineStore("auth", () => {
   const setUser = (payload) => {
     user.value = payload.user;
     token.value = payload.token;
-
     localStorage.setItem("authToken", payload.token);
     localStorage.setItem("authUser", JSON.stringify(payload.user));
 
@@ -62,7 +61,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await LoginService.login(credentials);
       const data = response.data;
-
+      console.log(data.user)
       setUser({ user: data.user, token: data.token });
       setLoading(false);
       Notify.create({
