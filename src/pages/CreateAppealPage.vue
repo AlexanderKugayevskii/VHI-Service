@@ -261,7 +261,7 @@
                               :options="appealStore.doctors"
                               :selected-options="appealStore.selectedDoctors"
                               @select-option="appealStore.selectDoctors"
-                              :disable-choise="clientData.appealStatus === 2"
+                              :disable-choise="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
                             >
                               <template #placeholder>
                                 {{ $t("create_appeal.dropdowns.doctors") }}
@@ -485,7 +485,7 @@
                               :options="appealStore.services"
                               :selected-options="appealStore.selectedServices"
                               @select-option="appealStore.selectServices"
-                              :disable-choise="clientData.appealStatus === 2"
+                              :disable-choise="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
                             >
                               <template #placeholder>
                                 {{ $t("create_appeal.dropdowns.services") }}

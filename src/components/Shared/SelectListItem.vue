@@ -26,13 +26,13 @@
             :variant="true"
             @change="handleStatus"
             :checked="item.pivot.status === 1"
-            :disabled="disabledRule"
+            :disabled="disabledRule && !isSuperAdmin"
           />
           <ResolveIcon
             :variant="false"
             @change="handleStatus"
             :checked="item.pivot.status === 2"
-            :disabled="disabledRule"
+            :disabled="disabledRule && !isSuperAdmin"
           />
         </div>
       </div>
@@ -42,7 +42,7 @@
       type="button"
       class="selected-item-remove-btn"
       @click="removeItem"
-      :disabled="cantRemoveItem"
+      :disabled="cantRemoveItem && !isSuperAdmin"
     >
       <q-icon size="16px">
         <svg
@@ -90,6 +90,7 @@ import ResolveIcon from "./ResolveIcon.vue";
 import StatusSwitcher from "./StatusSwitcher.vue";
 import DropdownSelectNew from "./DropdownSelectNew.vue";
 import SimpleInput from "./SimpleInput.vue";
+import { useAppealStore } from "src/stores/appealStore";
 
 const props = defineProps({
   item: {
@@ -129,6 +130,10 @@ const emit = defineEmits([
   "update:quantity",
   "remove:item",
 ]);
+
+const appealStore = useAppealStore();
+
+const isSuperAdmin = computed(() => appealStore.isSuperAdmin);
 
 const disabledRule = computed(() => {
   const createdByOther =
