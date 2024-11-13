@@ -52,6 +52,8 @@
               (option) =>
                 selectFilterData(option, filterItem.type, filterItem.multiple)
             "
+            :need-request="!!filterItem?.request"
+
             @request="fetchDrugstores"
           >
             <template #top-label>{{ filterItem.name }}</template>

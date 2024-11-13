@@ -14,6 +14,31 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       2: t("statuses.completed"),
     };
   });
+  const months = computed(() => {
+    const allMonths = [
+      { name: t("months.jan"), value: 1 },
+      { name: t("months.feb"), value: 2 },
+      { name: t("months.mar"), value: 3 },
+      { name: t("months.apr"), value: 4 },
+      { name: t("months.may"), value: 5 },
+      { name: t("months.jun"), value: 6 },
+      { name: t("months.jul"), value: 7 },
+      { name: t("months.aug"), value: 8 },
+      { name: t("months.sep"), value: 9 },
+      { name: t("months.oct"), value: 10 },
+      { name: t("months.nov"), value: 11 },
+      { name: t("months.dec"), value: 12 },
+    ];
+
+    const currentMonthIndex = new Date().getMonth(); // Получаем текущий месяц как индекс (0 - Январь, 11 - Декабрь)
+    const recentMonths = [];
+    for (let i = 0; i < 5; i++) {
+      const monthIndex = (currentMonthIndex - i + 12) % 12; // Цикличное смещение индекса
+      recentMonths.unshift(allMonths[monthIndex]);
+    }
+
+    return recentMonths.reverse();
+  });
 
   const columns = computed(() => [
     {
@@ -209,6 +234,21 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         item: "",
       },
       {
+        name: t("client_table.month"),
+        type: "month",
+        meta: true,
+        placeholder: "Выберите месяц",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: months.value.map(({ name, value }) => {
+          return {
+            name,
+            value,
+            id: value - 1,
+          };
+        }),
+      },
+      {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
         meta: true,
@@ -289,7 +329,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       } else {
         if (
           filterQuery.value[type] === optionItem &&
-          type !== "date_of_appeal" && type !== 'finished_date'
+          type !== "date_of_appeal" &&
+          type !== "finished_date"
         ) {
           delete filterQuery.value[type];
         } else {
@@ -310,6 +351,7 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       status: filterQuery.value.appeal_status?.status,
       drugstore_id: filterQuery.value?.drugstore?.id,
       drugs: filterQuery.value?.drugs,
+      month: filterQuery.value?.month?.value,
     };
 
     const entries = Object.entries(query);

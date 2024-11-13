@@ -17,6 +17,32 @@ export const useClientTableStore = defineStore("clientTable", () => {
     };
   });
 
+  const months = computed(() => {
+    const allMonths = [
+      { name: t("months.jan"), value: 1 },
+      { name: t("months.feb"), value: 2 },
+      { name: t("months.mar"), value: 3 },
+      { name: t("months.apr"), value: 4 },
+      { name: t("months.may"), value: 5 },
+      { name: t("months.jun"), value: 6 },
+      { name: t("months.jul"), value: 7 },
+      { name: t("months.aug"), value: 8 },
+      { name: t("months.sep"), value: 9 },
+      { name: t("months.oct"), value: 10 },
+      { name: t("months.nov"), value: 11 },
+      { name: t("months.dec"), value: 12 },
+    ];
+
+    const currentMonthIndex = new Date().getMonth(); // Получаем текущий месяц как индекс (0 - Январь, 11 - Декабрь)
+    const recentMonths = [];
+    for (let i = 0; i < 5; i++) {
+      const monthIndex = (currentMonthIndex - i + 12) % 12; // Цикличное смещение индекса
+      recentMonths.unshift(allMonths[monthIndex]);
+    }
+
+    return recentMonths.reverse();
+  });
+
   const columns = computed(() => [
     {
       name: "index",
@@ -120,6 +146,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
       .then((response) => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
+
+        console.log(months.value);
 
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
@@ -242,6 +270,21 @@ export const useClientTableStore = defineStore("clientTable", () => {
         item: "",
       },
       {
+        name: t("client_table.month"),
+        type: "month",
+        meta: true,
+        placeholder: "Выберите месяц",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: months.value.map(({ name, value }) => {
+          return {
+            name,
+            value,
+            id: value - 1,
+          };
+        }),
+      },
+      {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
         meta: true,
@@ -251,7 +294,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         item: "",
       },
       {
-
         name: t("client_table.finished_date"),
         type: "finished_date",
         meta: true,
@@ -276,6 +318,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         name: t("client_table.clinic"),
         type: "clinic",
         meta: !isClinic,
+        request: true, 
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
         component: "DropdownSelectNew",
@@ -286,6 +329,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
           };
         }),
       },
+ 
       {
         name: t("client_table.doctor"),
         type: "doctors",
@@ -359,11 +403,12 @@ export const useClientTableStore = defineStore("clientTable", () => {
     const query = {
       full_name: filterQuery.value?.client,
       applied_date: filterQuery.value?.date_of_appeal,
-      finished_date: filterQuery.value?.finished_date, 
+      finished_date: filterQuery.value?.finished_date,
       status: filterQuery.value.appeal_status?.status,
       hospital_id: filterQuery.value?.clinic?.id,
       doctors: filterQuery.value?.doctors,
       services: filterQuery.value?.services,
+      month: filterQuery.value?.month?.value,
     };
 
     const entries = Object.entries(query);
