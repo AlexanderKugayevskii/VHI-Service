@@ -1,8 +1,9 @@
 <template>
   <div :class="['status-row', dense && 'status-row-dense']">
-    <div v-if="isAgent && progress === 0" class="status-item">
+    <div v-if="(isAgent && progress === 0)" class="status-item">
       Ожидает завершения
     </div>
+   
     <div
       v-if="!isAgent && progress === 0"
       class="status-item clickable"
@@ -17,11 +18,11 @@
     >
       Завершено
     </div>
-    <div class="status-item" v-if="!isAgent && progress === 1">Ожидание</div>
+    <div class="status-item" v-if="!isAgent && !isSuperAdmin && progress === 1">Ожидание</div>
     <div
       class="status-item clickable"
-      @click="() => isAgent && handleChangeProgress(2)"
-      v-if="isAgent && progress === 1"
+      @click="() => (isAgent || isSuperAdmin) && handleChangeProgress(2)"
+      v-if="(isAgent || isSuperAdmin) && progress === 1"
     >
       Подтвердить
     </div>

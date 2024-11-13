@@ -6,7 +6,6 @@ import { useAuthStore } from "./authStore";
 import { storeToRefs } from "pinia";
 import { SessionStorage, Notify } from "quasar";
 import dayjs from "dayjs";
-import { all } from "axios";
 
 const appendFormData = (formData, data, parentKey = "") => {
   for (const [key, value] of Object.entries(data)) {
@@ -54,7 +53,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value?.role.id === 8);
   const isDrugstore = computed(() => user.value?.role.id === 8);
-  const isAgent = computed(() => user.value?.role.id !== 8); //temp
+  const isAgent = computed(() => user.value?.role.id === 9); //temp
   const isSuperAdmin = computed(() => user.value?.role.id === 13); 
 
   const loading = ref(null);
