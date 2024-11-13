@@ -52,6 +52,7 @@
               (option) =>
                 selectFilterData(option, filterItem.type, filterItem.multiple)
             "
+            :need-request="!!filterItem?.request"
             @request="fetchClinics"
           >
             <template #top-label>{{ filterItem.name }}</template>
@@ -81,6 +82,7 @@
               }}
             </template>
           </DropdownSelectNew>
+    
         </div>
       </template>
     </TableActions>
@@ -472,7 +474,6 @@ onMounted(() => {
 
   watch(count, () => {
     tableRef.value.requestServerInteraction();
-    
   });
 
   watch(

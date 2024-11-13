@@ -180,6 +180,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    needRequest: {
+      type: Boolean, 
+      default: true,
+    }, 
     disableChoise: Boolean,
     loading: Boolean,
     label: {
@@ -259,7 +263,9 @@ export default {
       }, 50);
     },
     handleRequest() {
-      this.$emit("request");
+      if(this.needRequest) {
+        this.$emit("request");
+      }
     },
     selectOption(option) {
       this.$emit("selectOption", option);

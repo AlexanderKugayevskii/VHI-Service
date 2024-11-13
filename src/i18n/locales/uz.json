@@ -106,6 +106,7 @@
     "applicant": "Ariza beruvchi",
     "date_of_appeal": "Murojaat sanasi",
     "finished_date": "Tugash sanasi",
+    "month": "Oy",
     "date_of_birthday": "Tug‘ilgan sanasi",
     "appeal_status": "Holat",
     "clinic": "Klinika",
@@ -137,6 +138,20 @@
     "today": "Bugun",
     "yesterday": "Kecha"
   },
+  "months": {
+    "jan": "Yanvar",
+    "feb": "Fevral",
+    "mar": "Mart",
+    "apr": "Aprel",
+    "may": "May",
+    "jun": "Iyun",
+    "jul": "Iyul",
+    "aug": "Avgust",
+    "sep": "Sentabr",
+    "oct": "Oktabr",
+    "nov": "Noyabr",
+    "dec": "Dekabr"
+  }, 
 
   "common": {
     "no_data": "Ma’lumotlar yo‘q",
