@@ -67,7 +67,7 @@
       </div>
       <div class="flex column justify-between nav-grow">
         <q-list>
-          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent || appealStore.isSuperAdmin">
             <div class="menu-expand-item-header">
               <button class="nav-item nav-item-btn q-py-sm" @click="toggleMenu">
                 <span class="nav-item-btn-left">
@@ -132,12 +132,12 @@
           <RouteLink
             class="q-px-sm"
             :caption="$t('nav.clients')"
-            v-if="appealStore.isAgent"
+            v-if="appealStore.isAgent || appealStore.isSuperAdmin"
             :routeTo="Trans.i18nRoute({ name: 'clients' })"
           >
           </RouteLink>
 
-          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent || appealStore.isSuperAdmin">
             <div class="menu-expand-item-header">
               <button
                 class="nav-item nav-item-btn q-py-sm"
@@ -172,19 +172,19 @@
               <div class="menu-expand-item-content" ref="menuExpandContent">
                 <RouteLink
                   :caption="$t('nav.by_clinics')"
-                  v-if="appealStore.isAgent"
+                  v-if="appealStore.isAgent || appealStore.isSuperAdmin"
                   :routeTo="Trans.i18nRoute({ name: 'reports-clinic-page' })"
                 >
                 </RouteLink>
                 <RouteLink
                   :caption="$t('nav.by_drugstore')"
-                  v-if="appealStore.isAgent"
+                  v-if="appealStore.isAgent || appealStore.isSuperAdmin"
                   :routeTo="Trans.i18nRoute({ name: 'reports-drugstore-page' })"
                 >
                 </RouteLink>
                 <RouteLink
                   :caption="$t('nav.by_organizations')"
-                  v-if="appealStore.isAgent"
+                  v-if="appealStore.isAgent || appealStore.isSuperAdmin"
                   :routeTo="
                     Trans.i18nRoute({ name: 'reports-organizations-page' })
                   "
@@ -226,7 +226,7 @@
           </RouteLink>
 
           <!-- history -->
-          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent">
+          <div class="q-px-sm menu-expand-item" v-if="appealStore.isAgent || appealStore.isSuperAdmin">
             <div class="menu-expand-item-header">
               <button
                 class="nav-item nav-item-btn q-py-sm"
