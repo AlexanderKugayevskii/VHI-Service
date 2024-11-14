@@ -53,7 +53,6 @@
                 selectFilterData(option, filterItem.type, filterItem.multiple)
             "
             :need-request="!!filterItem?.request"
-
             @request="fetchDrugstores"
           >
             <template #top-label>{{ filterItem.name }}</template>
@@ -115,9 +114,11 @@
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th
-              v-for="col in props.cols.filter(
-                (col) => col.name !== 'userSettings'
-              )"
+              v-for="col in props.cols.filter((col) => {
+                if (col.name === 'userSettings') return false;
+                if (col.name === 'limits' && appealStore.isClinic) return false;
+                return true;
+              })"
               :key="col.name"
               :props="props"
               class="appeals-th"
@@ -188,7 +189,12 @@
                 {{ props.row.medicines }}
               </TableTooltip>
             </q-td>
-            <q-td key="limits" :props="props" class="appeals-td">
+            <q-td
+              key="limits"
+              :props="props"
+              class="appeals-td"
+              v-if="!appealStore.isClinic"
+            >
               <SimpleButton
                 full-width
                 :label="`${$t('client_table.limits').toLowerCase()} &#129125;`"

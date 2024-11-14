@@ -82,7 +82,6 @@
               }}
             </template>
           </DropdownSelectNew>
-    
         </div>
       </template>
     </TableActions>
@@ -120,9 +119,11 @@
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th
-              v-for="col in props.cols.filter(
-                (col) => col.name !== 'userSettings'
-              )"
+              v-for="col in props.cols.filter((col) => {
+                if (col.name === 'userSettings') return false;
+                if (col.name === 'limits' && appealStore.isClinic) return false;
+                return true;
+              })"
               :key="col.name"
               :props="props"
               class="appeals-th"
@@ -211,7 +212,12 @@
                 {{ props.row.diagnosisName }}
               </TableTooltip>
             </q-td>
-            <q-td key="limits" :props="props" class="appeals-td">
+            <q-td
+              key="limits"
+              :props="props"
+              class="appeals-td"
+              v-if="!appealStore.isClinic"
+            >
               <SimpleButton
                 full-width
                 :label="`${$t('client_table.limits').toLowerCase()} &#129125;`"
@@ -405,7 +411,15 @@ const openAppealPage = async (client) => {
     delay: 500,
   });
 
-  await appealStore.fetchApplicantData(client.appealId);
+  const result = await appealStore.fetchApplicantData(client.appealId);
+  if (result.status === 404) {
+    router.replace(
+      Trans.i18nRoute({
+        name: "appeals-page",
+      })
+    );
+  }
+
   await appealStore.fetchHospitalData();
 
   $q.loading.hide();
