@@ -1056,8 +1056,6 @@ export const useAppealStore = defineStore("appeal", () => {
     try {
       const response = await ClientService.getClientByAppealId(id);
       const data = response.data.data;
-
-      console.log(data);
       const clientData = {
         contractClientId: data.contract_client_id,
         appealId: data.id,
