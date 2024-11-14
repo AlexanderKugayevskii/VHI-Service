@@ -16,8 +16,11 @@ export const useAuthStore = defineStore("auth", () => {
   const loading = ref(false);
   const error = ref(null);
 
+  const roles = ref([1, 8, 9, 13]);
+
   //   const { t } = useI18n();
   //actions
+
   const setUser = (payload) => {
     user.value = payload.user;
     token.value = payload.token;
@@ -61,7 +64,12 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await LoginService.login(credentials);
       const data = response.data;
-      console.log(data.user)
+
+      const roleId = data.user.role.id;
+
+      if (!roles.value.includes(roleId)) {
+        throw new Error();
+      }
       setUser({ user: data.user, token: data.token });
       setLoading(false);
       Notify.create({
@@ -78,7 +86,7 @@ export const useAuthStore = defineStore("auth", () => {
         position: "bottom",
         timeout: 250,
       });
-      setError(error.response.data.error[0]);
+      setError(error.response?.data?.error[0]);
       setLoading(false);
       return false;
     } finally {
