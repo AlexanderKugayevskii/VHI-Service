@@ -54,7 +54,7 @@ export const useAppealStore = defineStore("appeal", () => {
   const isClinic = computed(() => user.value?.role.id === 8);
   const isDrugstore = computed(() => user.value?.role.id === 8);
   const isAgent = computed(() => user.value?.role.id === 9); //temp
-  const isSuperAdmin = computed(() => user.value?.role.id === 13); 
+  const isSuperAdmin = computed(() => user.value?.role.id === 13 || user.value?.role.id === 1); 
 
   const loading = ref(null);
   const successAppeal = ref(false);
