@@ -68,6 +68,7 @@ export const useAuthStore = defineStore("auth", () => {
       const roleId = data.user.role.id;
 
       if (!roles.value.includes(roleId)) {
+        
         throw new Error();
       }
       setUser({ user: data.user, token: data.token });

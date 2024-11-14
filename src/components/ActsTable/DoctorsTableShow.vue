@@ -199,7 +199,6 @@ const deleteDoctor = async (row) => {
       doctor_id: row.serviceId,
     });
     const data = response.data;
-    console.log(data);
     tableRef.value.requestServerInteraction();
   } catch (e) {
     console.error(e);
@@ -280,7 +279,6 @@ const handleRequest = (props) => {
 };
 
 onMounted(() => {
-  console.log(props.id);
   tableRef.value.requestServerInteraction();
 });
 
