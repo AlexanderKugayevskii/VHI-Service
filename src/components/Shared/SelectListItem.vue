@@ -170,6 +170,7 @@ const handleQuantity = (quantity) => {
 };
 
 const removeItem = () => {
+  if (cantRemoveItem.value) return;
   emit("remove:item", props.item);
 };
 </script>

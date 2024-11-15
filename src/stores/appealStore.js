@@ -54,7 +54,9 @@ export const useAppealStore = defineStore("appeal", () => {
   const isClinic = computed(() => user.value?.role.id === 8);
   const isDrugstore = computed(() => user.value?.role.id === 8);
   const isAgent = computed(() => user.value?.role.id === 9); //temp
-  const isSuperAdmin = computed(() => user.value?.role.id === 13 || user.value?.role.id === 1); 
+  const isSuperAdmin = computed(
+    () => user.value?.role.id === 13 || user.value?.role.id === 1
+  );
 
   const loading = ref(null);
   const successAppeal = ref(false);
@@ -663,6 +665,9 @@ export const useAppealStore = defineStore("appeal", () => {
     drugAppealImage.value = {};
 
     finishedAppeal.value = false;
+
+    SessionStorage.removeItem("client");
+
     // hasWatched.value = false;
 
     // client.value = null;
@@ -1212,8 +1217,10 @@ export const useAppealStore = defineStore("appeal", () => {
 
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
+
+      return { status: 200 };
     } catch (e) {
-      console.error(e);
+      return { status: 404 };
     } finally {
       loading.value = false;
     }
@@ -1256,7 +1263,7 @@ export const useAppealStore = defineStore("appeal", () => {
       clientData.clientId = data.contract_client.client_id;
       selectedDrugstore.value = data.drugstore;
       setClient(clientData);
-      
+
       const [ad1, ad2, ad3] = data.applied_date.split(" ")[0].split("-");
       appealDate.value = `${ad3}-${ad2}-${ad1}`;
 

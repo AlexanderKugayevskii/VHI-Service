@@ -49,7 +49,12 @@ const routes = [
                   if (from.name) {
                     next();
                   } else if (appealType === 1) {
-                    await appealStore.fetchApplicantData(client.appealId);
+                    const id = client ? client.appealId : to.params.id;
+                    const result = await appealStore.fetchApplicantData(id);
+                    if (result.status === 404) {
+                      next({ name: "appeals-page" });
+                      return;
+                    }
                     await appealStore.fetchHospitalData();
                     next();
                   } else {
@@ -77,8 +82,14 @@ const routes = [
                   if (from.name) {
                     next();
                   } else {
+                    const id = client ? client.appealId : to.params.id;
+                    const result = await appealStore.fetchApplicantData(id);
+                    if (result.status === 404) {
+                      next({ name: "appeals-page" });
+                      return;
+                    }
                     await appealStore.fetchMedicalPrograms();
-                    await appealStore.fetchApplicantData(client.appealId);
+                    await appealStore.fetchApplicantData(id);
                     await appealStore.fetchHospitalData();
                     next();
                   }
@@ -159,7 +170,7 @@ const routes = [
             component: () => import("pages/ClientsPage.vue"),
             beforeEnter: async (to, from, next) => {
               const appealStore = useAppealStore();
-              if (appealStore.isAgent) {
+              if (appealStore.isAgent || appealStore.isSuperAdmin) {
                 next();
               } else {
                 next({ name: "notFound" });
