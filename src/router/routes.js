@@ -170,7 +170,7 @@ const routes = [
             component: () => import("pages/ClientsPage.vue"),
             beforeEnter: async (to, from, next) => {
               const appealStore = useAppealStore();
-              if (appealStore.isAgent) {
+              if (appealStore.isAgent || appealStore.isSuperAdmin) {
                 next();
               } else {
                 next({ name: "notFound" });
