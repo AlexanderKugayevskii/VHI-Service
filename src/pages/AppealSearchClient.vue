@@ -44,7 +44,7 @@
               :label="$t('appeal_search.fio')"
               :ripple="false"
               class="tab--no-hover"
-              v-if="appealStore.isAgent"
+              v-if="appealStore.isAgent || appealStore.isSuperAdmin"
             />
             <q-tab
               name="byPassport"
@@ -85,7 +85,10 @@
               </div>
             </q-tab-panel>
 
-            <q-tab-panel name="byName" v-if="appealStore.isAgent">
+            <q-tab-panel
+              name="byName"
+              v-if="appealStore.isAgent || appealStore.isSuperAdmin"
+            >
               <div class="tab-header">
                 <SimpleInput
                   :label="$t('appeal_search.fio_label')"
@@ -151,7 +154,7 @@
           ]"
           :disabled="selectedClient === null"
           @click="openTypeModal"
-          v-if="appealStore.isAgent"
+          v-if="appealStore.isAgent || appealStore.isSuperAdmin"
         ></SimpleButton>
         <SimpleButton
           :label="$t('create_appeal.buttons.create_appeal')"
@@ -197,15 +200,15 @@ const router = useRouter();
 const handleInput = (val) => {
   if (!val) return;
 
-  if (!appealStore.isAgent && val.length === 10) {
+  if ((!appealStore.isAgent || !appealStore.isSuperAdmin) && val.length === 10) {
     searchPassport.value = val;
   }
 
-  if (!appealStore.isAgent && val.length < 10) {
+  if ((!appealStore.isAgent || !appealStore.isSuperAdmin) && val.length < 10) {
     clientStore.clearClients();
   }
 
-  if (appealStore.isAgent && val.length >= 3) {
+  if ((appealStore.isAgent || appealStore.isSuperAdmin) && val.length >= 3) {
     searchPassport.value = val;
   }
 };
