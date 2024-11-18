@@ -53,7 +53,10 @@ export const useAppealStore = defineStore("appeal", () => {
   const { user } = storeToRefs(authStore);
   const isClinic = computed(() => user.value?.role.id === 8);
   const isDrugstore = computed(() => user.value?.role.id === 8);
-  const isAgent = computed(() => user.value?.role.id === 9); //temp
+  const isAgent = computed(
+    () => user.value?.role.id === 9 || user.value?.role.id === 6
+  ); //temp
+
   const isSuperAdmin = computed(
     () => user.value?.role.id === 13 || user.value?.role.id === 1
   );

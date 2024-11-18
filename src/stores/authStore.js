@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("auth", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  const roles = ref([1, 8, 9, 13]);
+  const roles = ref([1, 6, 8, 9, 13]);
 
   //   const { t } = useI18n();
   //actions
