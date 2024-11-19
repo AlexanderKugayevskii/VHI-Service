@@ -9,7 +9,12 @@
         :rows="rows"
         :columns="columns"
         :loading="loading"
+        :filterData="filterData"
         :requestData="clientTableStore.handleRequest"
+        :select-filter-data="clientTableStore.selectFilterData"
+        :filter-query="clientTableStore.filterQuery"
+        :checkSelectedOption="clientTableStore.checkSelectedOption"
+        :removeFilter="clientTableStore.removeFilter"
       />
     </div>
   </q-page>
@@ -25,7 +30,7 @@ import { useRoute } from "vue-router";
 import { useFullClientTableStore } from "src/stores/allClientTableStore";
 
 const clientTableStore = useFullClientTableStore();
-const { pagination, rows, columns, loading } = storeToRefs(clientTableStore);
+const { pagination, rows, columns, loading, filterData } = storeToRefs(clientTableStore);
 
 const route = useRoute();
 const isClientInfoRoute = computed(() => route.name === "clientInfo");

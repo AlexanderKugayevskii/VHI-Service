@@ -189,6 +189,120 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     });
   });
 
+
+  // filterQuery constructor
+
+  const filterQuery = ref({});
+  const filterData = computed(() => {
+    return [
+      // {
+      //   name: t("client_table.client"),
+      //   type: "client",
+      //   meta: true,
+      //   placeholder: t("create_appeal.fio_client"),
+      //   multiple: false,
+      //   component: "SimpleInput",
+      //   item: "",
+      // },
+      // {
+      //   name: t("client_table.date_of_appeal"),
+      //   type: "date_of_appeal",
+      //   meta: true,
+      //   placeholder: "01.01.1990",
+      //   multiple: false,
+      //   component: "DateInput",
+      //   item: "",
+      // },
+      // {
+      //   name: t("client_table.finished_date"),
+      //   type: "finished_date",
+      //   meta: true,
+      //   placeholder: "01.01.1990",
+      //   multiple: false,
+      //   component: "DateInput",
+      //   item: "",
+      // },
+    ];
+  });
+
+  // method for
+  const selectFilterData = (option, type, multiple) => {
+    let optionItem = option;
+    if (!filterQuery.value[type]) {
+      if (multiple) {
+        filterQuery.value[type] = [];
+        filterQuery.value[type].push(optionItem);
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    } else {
+      if (multiple) {
+        const index = filterQuery.value[type].findIndex(
+          (item) => item === optionItem
+        );
+        if (index > -1) {
+          filterQuery.value[type].splice(index, 1);
+        } else {
+          filterQuery.value[type].push(optionItem);
+        }
+        if (filterQuery.value[type].length === 0) {
+          delete filterQuery.value[type];
+        }
+      } else {
+        if (
+          filterQuery.value[type] === optionItem &&
+          type !== "date_of_appeal" &&
+          type !== "finished_date"
+        ) {
+          delete filterQuery.value[type];
+        } else {
+          filterQuery.value[type] = optionItem;
+        }
+        if (filterQuery.value[type]?.length === 0) {
+          delete filterQuery.value[type];
+        }
+      }
+    }
+  };
+
+  const requestFilterQuery = computed(() => {
+    const query = {
+      full_name: filterQuery.value?.client,
+      applied_date: filterQuery.value?.date_of_appeal,
+      finished_date: filterQuery.value?.finished_date,
+      status: filterQuery.value.appeal_status?.status,
+      hospital_id: filterQuery.value?.clinic?.id,
+      doctors: filterQuery.value?.doctors,
+      services: filterQuery.value?.services,
+      month: filterQuery.value?.month?.value,
+    };
+
+    const entries = Object.entries(query);
+    entries.forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    return query;
+  });
+
+  const checkSelectedOption = (option, type, multiple) => {
+    if (multiple) {
+      return filterQuery.value[type]?.some((item) => item === option);
+    } else {
+      if (type === "appeal_status") {
+        return option.status === filterQuery.value[type]?.status;
+      }
+      return option === filterQuery.value[type];
+    }
+  };
+
+  const removeFilter = (filterKey) => {
+    delete filterQuery.value[filterKey];
+  };
+
+
+
   // selected client info
   const clientInfo = ref(null);
   const clientDataForAppeal = ref(null);
@@ -400,5 +514,14 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
     clientDataForAppeal,
     setClientDataForAppeal,
+
+
+    //filterQuery
+    filterQuery,
+    filterData, 
+    selectFilterData,
+    requestFilterQuery,
+    checkSelectedOption,
+    removeFilter,
   };
 });

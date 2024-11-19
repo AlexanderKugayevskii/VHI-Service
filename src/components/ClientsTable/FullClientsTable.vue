@@ -2,15 +2,78 @@
   <div>
     <TableActions
       @update:search="handleSearch"
+      @update:find="handleFind"
+      @delete:option="handleDelete"
       :filter-options="filterQuery"
       :removeFilter="removeFilter"
+      :showAdvancedFilter="showAdvancedFilter"
     >
       <template #filters>
         <div
           class="filter-item"
           v-for="filterItem in filterData"
           :key="filterItem.name"
-        ></div>
+        >
+          <SimpleInput
+            v-if="filterItem.component === 'SimpleInput'"
+            :label="filterItem.name"
+            :placeholder="filterItem.placeholder"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DateInput_new
+            v-if="filterItem.component === 'DateInput'"
+            :label="filterItem.name"
+            placeholder="10-05-2024"
+            :modelValue="filterQuery[filterItem.type]"
+            @update:model-value="
+              (val) => selectFilterData(val, filterItem.type)
+            "
+          />
+          <DropdownSelectNew
+            v-if="filterItem.component === 'DropdownSelectNew'"
+            :label="filterItem.name"
+            :options="filterItem.item"
+            :multiple="filterItem.multiple"
+            :selected-options="filterQuery[filterItem.type]"
+            :search-input="filterItem.type !== 'appeal_status'"
+            @select-option="
+              (option) =>
+                selectFilterData(option, filterItem.type, filterItem.multiple)
+            "
+            :need-request="!!filterItem?.request"
+            @request="fetchClinics"
+          >
+            <template #top-label>{{ filterItem.name }}</template>
+            <template #placeholder>{{ filterItem.placeholder }}</template>
+            <template #option-content="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+              <CheckIcon
+                v-if="
+                  checkSelectedOption(
+                    option,
+                    filterItem.type,
+                    filterItem.multiple
+                  )
+                "
+              />
+            </template>
+            <template v-slot:selected-options-once="{ option }">
+              <div>
+                {{ typeof filterItem.item !== "object" ? option : option.name }}
+              </div>
+            </template>
+            <template v-slot:selected-options-length="{ length }">
+              {{
+                $t(`create_appeal.dropdowns.${filterItem.type}_choise`, length)
+              }}
+            </template>
+          </DropdownSelectNew>
+        </div>
       </template>
     </TableActions>
     <q-table
@@ -189,6 +252,9 @@ import TableTooltip from "src/components/Shared/TableTooltip.vue";
 import PaginationTable from "./PaginationTable.vue";
 import TableActions from "./TableActions.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
+import SimpleInput from "../Shared/SimpleInput.vue";
+import DropdownSelectNew from "../Shared/DropdownSelectNew.vue";
+import DateInput_new from "../Shared/DateInput_new.vue";
 import { useAppealStore } from "src/stores/appealStore";
 import useResidentTypes from "src/composables/useResidentTypes";
 
@@ -207,6 +273,9 @@ const props = defineProps([
   "checkSelectedOption",
   "removeFilter",
   "fetchClinics",
+  "showTableActions",
+  "showPagination",
+  "showAdvancedFilter",
 ]);
 
 const appealStore = useAppealStore();
@@ -217,7 +286,12 @@ const search = ref("");
 const handleSearch = (searchValue) => {
   search.value = searchValue;
 };
-
+const handleFind = () => {
+  tableRef.value.requestServerInteraction();
+};
+const handleDelete = () => {
+  tableRef.value.requestServerInteraction();
+};
 const tableRef = ref(null);
 const user = ref(null);
 
@@ -378,5 +452,9 @@ thead tr:first-child th {
 // }
 tr.clickable {
   cursor: pointer;
+}
+
+.filter-item {
+  padding-bottom: 20px;
 }
 </style>
