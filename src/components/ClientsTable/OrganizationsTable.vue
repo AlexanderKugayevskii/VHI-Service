@@ -238,6 +238,7 @@ const fetchOrganizations = async () => {
   try {
     const response = await ClinicService.fetchOrganizations();
     const data = response.data.data;
+    console.log(data)
     clinics.value = data;
     console.log(data);
     total.value = data.length;

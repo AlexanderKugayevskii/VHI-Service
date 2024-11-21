@@ -42,7 +42,7 @@
         <SimpleButton
           label="Найти"
           custom-class="btn-action"
-          :disabled="!optionsLength"
+          :disabled="disable"
           @click="handleFind"
         ></SimpleButton>
       </div>
@@ -55,16 +55,18 @@ import { ref } from "vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 
 const props = defineProps({
-  optionsLength: {
-    type: Number,
+  disable: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const emit = defineEmits(["find"]);
+const emit = defineEmits(["find", "hide"]);
 
 const filterDialogRef = ref(null);
 const hideModal = () => {
   filterDialogRef.value.hide();
+  
 };
 const handleFind = () => {
   emit("find", true);

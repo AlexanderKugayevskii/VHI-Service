@@ -53,7 +53,8 @@
                 selectFilterData(option, filterItem.type, filterItem.multiple)
             "
             :need-request="!!filterItem?.request"
-            @request="fetchDrugstores"
+             @request="filterItem?.requestFunc"
+            :loading="filterItem?.loadingRef"
           >
             <template #top-label>{{ filterItem.name }}</template>
             <template #placeholder>{{ filterItem.placeholder }}</template>
@@ -82,6 +83,12 @@
               }}
             </template>
           </DropdownSelectNew>
+          <AgeRange
+            v-if="filterItem.component === 'AgeRange'"
+            @getRange="
+              (ageRange) => selectFilterData(ageRange, filterItem.type)
+            "
+          />
         </div>
       </template>
     </TableActions>
@@ -275,6 +282,7 @@ import { storeToRefs } from "pinia";
 import { useAppealsHistory } from "src/composables/useAppealsHistory";
 import { useCommonStore } from "src/stores/commonStore";
 import DateInput_new from "../Shared/DateInput_new.vue";
+import AgeRange from "../AgeRange.vue";
 
 const props = defineProps({
   pagination: {

@@ -43,6 +43,7 @@
 
 <script setup>
 import { computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   filterOption: {
@@ -56,13 +57,28 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["delete"]);
-
+const { t } = useI18n();
 const option = computed(() => {
-  return Array.isArray(props.filterOption[1])
-    ? props.filterOption[1].join(", ")
-    : typeof props.filterOption[1] === "object"
-    ? props.filterOption[1].name
-    : props.filterOption[1];
+  const filterValue = props.filterOption[1];
+
+  if (Array.isArray(filterValue)) {
+    return filterValue.join(", ");
+  }
+
+  if (typeof filterValue === "object") {
+    if ("name" in filterValue) {
+      return filterValue.name;
+    }
+
+    if ("min_age" in filterValue || "max_age" in filterValue) {
+      return t("common.age_range", {
+        min: filterValue.min_age,
+        max: filterValue.max_age,
+      });
+    }
+  }
+
+  return filterValue;
 });
 
 const optionKey = computed(() => props.filterOption[0]);
@@ -70,7 +86,6 @@ const optionKey = computed(() => props.filterOption[0]);
 const handleRemoveChip = () => {
   emit("delete", optionKey.value);
 };
-
 </script>
 
 <style lang="scss" scoped>

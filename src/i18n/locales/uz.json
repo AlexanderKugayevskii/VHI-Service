@@ -126,7 +126,8 @@
     "pinfl": "PINFL",
     "phone": "Telefon",
     "organization": "Tashkilot",
-    "organization_name": "Tashkilot nomi"
+    "organization_name": "Tashkilot nomi",
+    "age": "Yoshi"
   },
   "pagination": {
     "next": "Keyingisi",
@@ -162,7 +163,8 @@
     "start_date": "Boshlanish sanasi",
     "end_date": "Tugash sanasi",
     "generate_report": "Hisobotni shakllantirish",
-    "report": "Hisobot"
+    "report": "Hisobot",
+    "age_range": "{min} dan {max} gacha"
   },
   "validation": {
     "choose_doctor": "Klinika tanlanmaguncha shifokorni tanlab bo‘lmaydi",

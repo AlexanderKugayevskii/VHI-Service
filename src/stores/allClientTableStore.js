@@ -100,9 +100,16 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search, sortBy, orderBy) {
+  function fetchClients(
+    page = 1,
+    limit = 10,
+    search,
+    queries,
+    sortBy,
+    orderBy
+  ) {
     loading.value = true;
-    ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
+    ClientService.getFullClients(page, limit, search, queries, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
         pagination.value.page = page;
@@ -130,6 +137,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       props.pagination.page,
       props.pagination.rowsPerPage,
       props.filter,
+      requestFilterQuery.value,
       sortBy,
       orderBy
     );
@@ -190,38 +198,49 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   });
 
 
+  //extra requests for filters
+  const organizations = ref([]);
+  const organizationsLoading = ref(false);
+  const fetchOrganizations = async () => {
+    organizationsLoading.value = true;
+    try {
+      const response = await ClinicService.fetchOrganizations();
+      const data = response.data.data;
+      organizations.value = data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      organizationsLoading.value = false;
+    }
+  };
   // filterQuery constructor
-
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
-      // {
-      //   name: t("client_table.client"),
-      //   type: "client",
-      //   meta: true,
-      //   placeholder: t("create_appeal.fio_client"),
-      //   multiple: false,
-      //   component: "SimpleInput",
-      //   item: "",
-      // },
-      // {
-      //   name: t("client_table.date_of_appeal"),
-      //   type: "date_of_appeal",
-      //   meta: true,
-      //   placeholder: "01.01.1990",
-      //   multiple: false,
-      //   component: "DateInput",
-      //   item: "",
-      // },
-      // {
-      //   name: t("client_table.finished_date"),
-      //   type: "finished_date",
-      //   meta: true,
-      //   placeholder: "01.01.1990",
-      //   multiple: false,
-      //   component: "DateInput",
-      //   item: "",
-      // },
+      {
+        name: "Возраст",
+        type: "age",
+        meta: true,
+        component: "AgeRange",
+        item: null,
+      },
+      {
+        name: "Организация",
+        type: "organization",
+        meta: true,
+        request: true,
+        placeholder: "Выберите организацию",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: organizations.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
+        requestFunc: fetchOrganizations,
+        loadingRef: organizationsLoading.value,
+      },
     ];
   });
 
@@ -267,15 +286,13 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
   const requestFilterQuery = computed(() => {
     const query = {
-      full_name: filterQuery.value?.client,
-      applied_date: filterQuery.value?.date_of_appeal,
-      finished_date: filterQuery.value?.finished_date,
-      status: filterQuery.value.appeal_status?.status,
-      hospital_id: filterQuery.value?.clinic?.id,
-      doctors: filterQuery.value?.doctors,
-      services: filterQuery.value?.services,
-      month: filterQuery.value?.month?.value,
+      org_id: filterQuery.value?.organization?.id,
     };
+
+    if (filterQuery.value.age) {
+      query.min_age = filterQuery.value.age.min_age;
+      query.max_age = filterQuery.value.age.max_age;
+    }
 
     const entries = Object.entries(query);
     entries.forEach(([key, value]) => {
@@ -300,8 +317,6 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const removeFilter = (filterKey) => {
     delete filterQuery.value[filterKey];
   };
-
-
 
   // selected client info
   const clientInfo = ref(null);
@@ -515,10 +530,9 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
     clientDataForAppeal,
     setClientDataForAppeal,
 
-
     //filterQuery
     filterQuery,
-    filterData, 
+    filterData,
     selectFilterData,
     requestFilterQuery,
     checkSelectedOption,

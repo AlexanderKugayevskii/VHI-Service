@@ -65,12 +65,14 @@
           <q-badge floating v-if="optionsLength">{{ optionsLength }}</q-badge>
         </q-btn>
 
-        <FilterChip
-          v-for="option in expandedOptions"
-          :key="option.label"
-          :filterOption="option"
-          @delete="deleteOption"
-        />
+        <div>
+          <FilterChip
+            v-for="option in expandedOptions"
+            :key="option.label"
+            :filterOption="option"
+            @delete="deleteOption"
+          />
+        </div>
         <div class="filter-chip-dropdown" v-if="extraOptions.length">
           <button
             type="button"
@@ -102,8 +104,9 @@
 
   <TableFiltersModal
     v-model:="modalFilterFixed"
-    :optionsLength="optionsLength"
+    :disable="disable"
     @find="find"
+    @hide="hide"
   >
     <template #filters>
       <slot name="filters"></slot>
@@ -129,6 +132,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  disable: {
+    type: Boolean,
+    default: false,
+  },
 });
 const modalFilterFixed = ref(false);
 const showDropdown = ref(false);
@@ -143,13 +150,12 @@ const search = () => {
 const find = () => {
   emit("update:find");
 };
+
 const deleteOption = (option) => {
   props.removeFilter(option);
   emit("delete:option");
 };
-
 const optionsLength = computed(() => Object.keys(props.filterOptions).length);
-
 const expandedOptions = computed(() => {
   return Object.entries(props.filterOptions).slice(0, 2);
 });
