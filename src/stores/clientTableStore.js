@@ -426,7 +426,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
         }
       } else {
         if (
-          filterQuery.value[type] === optionItem &&
+          (filterQuery.value[type] === optionItem ||
+            filterQuery.value[type]?.id === optionItem?.id) &&
           type !== "date_of_appeal" &&
           type !== "finished_date"
         ) {

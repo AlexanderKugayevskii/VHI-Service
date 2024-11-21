@@ -105,7 +105,6 @@
     v-model:="modalFilterFixed"
     :disable="disable"
     @find="find"
-    @hide="hide"
   >
     <template #filters>
       <slot name="filters"></slot>
