@@ -65,14 +65,13 @@
           <q-badge floating v-if="optionsLength">{{ optionsLength }}</q-badge>
         </q-btn>
 
-        <div>
-          <FilterChip
-            v-for="option in expandedOptions"
-            :key="option.label"
-            :filterOption="option"
-            @delete="deleteOption"
-          />
-        </div>
+        <FilterChip
+          v-for="option in expandedOptions"
+          :key="option.label"
+          :filterOption="option"
+          @delete="deleteOption"
+        />
+
         <div class="filter-chip-dropdown" v-if="extraOptions.length">
           <button
             type="button"
