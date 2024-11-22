@@ -126,7 +126,8 @@
     "pinfl": "ПИНФЛ",
     "phone": "Телефон",
     "organization": "Организация",
-    "organization_name": "Название организации"
+    "organization_name": "Название организации",
+    "age": "Возраст"
   },
   "pagination": {
     "next": "Следующая",
@@ -161,7 +162,8 @@
     "notifications": "Уведомления",
     "start_date": "Дата начала",
     "end_date": "Дата конца",
-    "generate_report": "Сформировать отчет"
+    "generate_report": "Сформировать отчет",
+    "age_range": "От {min} до {max}"
   },
 
   "validation": {

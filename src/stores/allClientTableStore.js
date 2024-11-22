@@ -100,9 +100,16 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
   const loading = ref(true);
   const users = ref([]);
 
-  function fetchClients(page = 1, limit = 10, search, sortBy, orderBy) {
+  function fetchClients(
+    page = 1,
+    limit = 10,
+    search,
+    queries,
+    sortBy,
+    orderBy
+  ) {
     loading.value = true;
-    ClientService.getFullClients(page, limit, search, {}, sortBy, orderBy)
+    ClientService.getFullClients(page, limit, search, queries, sortBy, orderBy)
       .then((response) => {
         users.value = response.data.data.data;
         pagination.value.page = page;
@@ -130,6 +137,7 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       props.pagination.page,
       props.pagination.rowsPerPage,
       props.filter,
+      requestFilterQuery.value,
       sortBy,
       orderBy
     );
@@ -188,6 +196,127 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
       };
     });
   });
+
+
+  //extra requests for filters
+  const organizations = ref([]);
+  const organizationsLoading = ref(false);
+  const fetchOrganizations = async () => {
+    organizationsLoading.value = true;
+    try {
+      const response = await ClinicService.fetchOrganizations();
+      const data = response.data.data;
+      organizations.value = data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      organizationsLoading.value = false;
+    }
+  };
+  // filterQuery constructor
+  const filterQuery = ref({});
+  const filterData = computed(() => {
+    return [
+      {
+        name: "Возраст",
+        type: "age",
+        meta: true,
+        component: "AgeRange",
+        item: null,
+      },
+      {
+        name: "Организация",
+        type: "organization",
+        meta: true,
+        request: true,
+        placeholder: "Выберите организацию",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: organizations.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
+        requestFunc: fetchOrganizations,
+        loadingRef: organizationsLoading.value,
+      },
+    ];
+  });
+
+  // method for
+  const selectFilterData = (option, type, multiple) => {
+    let optionItem = option;
+    if (!filterQuery.value[type]) {
+      if (multiple) {
+        filterQuery.value[type] = [];
+        filterQuery.value[type].push(optionItem);
+      } else {
+        filterQuery.value[type] = optionItem;
+      }
+    } else {
+      if (multiple) {
+        const index = filterQuery.value[type].findIndex(
+          (item) => item === optionItem
+        );
+        if (index > -1) {
+          filterQuery.value[type].splice(index, 1);
+        } else {
+          filterQuery.value[type].push(optionItem);
+        }
+        if (filterQuery.value[type].length === 0) {
+          delete filterQuery.value[type];
+        }
+      } else {
+        if (
+          filterQuery.value[type] === optionItem &&
+          type !== "date_of_appeal" &&
+          type !== "finished_date"
+        ) {
+          delete filterQuery.value[type];
+        } else {
+          filterQuery.value[type] = optionItem;
+        }
+        if (filterQuery.value[type]?.length === 0) {
+          delete filterQuery.value[type];
+        }
+      }
+    }
+  };
+
+  const requestFilterQuery = computed(() => {
+    const query = {
+      org_id: filterQuery.value?.organization?.id,
+    };
+
+    if (filterQuery.value.age) {
+      query.min_age = filterQuery.value.age.min_age;
+      query.max_age = filterQuery.value.age.max_age;
+    }
+
+    const entries = Object.entries(query);
+    entries.forEach(([key, value]) => {
+      if (value === undefined) {
+        delete query[key];
+      }
+    });
+    return query;
+  });
+
+  const checkSelectedOption = (option, type, multiple) => {
+    if (multiple) {
+      return filterQuery.value[type]?.some((item) => item === option);
+    } else {
+      if (type === "appeal_status") {
+        return option.status === filterQuery.value[type]?.status;
+      }
+      return option === filterQuery.value[type];
+    }
+  };
+
+  const removeFilter = (filterKey) => {
+    delete filterQuery.value[filterKey];
+  };
 
   // selected client info
   const clientInfo = ref(null);
@@ -400,5 +529,13 @@ export const useFullClientTableStore = defineStore("allClientTable", () => {
 
     clientDataForAppeal,
     setClientDataForAppeal,
+
+    //filterQuery
+    filterQuery,
+    filterData,
+    selectFilterData,
+    requestFilterQuery,
+    checkSelectedOption,
+    removeFilter,
   };
 });

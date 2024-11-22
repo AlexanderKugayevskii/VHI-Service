@@ -4,6 +4,7 @@ import { useAppealStore } from "./appealStore";
 import { ref, computed, watch } from "vue";
 import ClientService from "src/services/ClientService";
 import AppealService from "src/services/AppealService";
+import ClinicService from "src/services/ClinicService";
 export const useClientTableStore = defineStore("clientTable", () => {
   const { t } = useI18n();
 
@@ -147,7 +148,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
         users.value = response.data.data.data;
         total.value = response.data.data.total;
 
-
         pagination.value.page = page;
         pagination.value.rowsPerPage = limit;
         pagination.value.rowsNumber = response.data.data.total;
@@ -243,19 +243,36 @@ export const useClientTableStore = defineStore("clientTable", () => {
 
   // fetch clinics for filter table clinic
   const clinics = ref([]);
+  const clinicsLoading = ref(false);
   const fetchClinics = async () => {
-    loading.value = true;
+    clinicsLoading.value = true;
     try {
       const response = await AppealService.getClinics();
       clinics.value = response.data.data;
     } catch (e) {
       console.error(e);
     } finally {
-      loading.value = false;
+      clinicsLoading.value = false;
+    }
+  };
+
+  const organizations = ref([]);
+  const organizationsLoading = ref(false);
+  const fetchOrganizations = async () => {
+    organizationsLoading.value = true;
+    try {
+      const response = await ClinicService.fetchOrganizations();
+      const data = response.data.data;
+      organizations.value = data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      organizationsLoading.value = false;
     }
   };
 
   // filterQuery constructor
+  
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
@@ -267,6 +284,13 @@ export const useClientTableStore = defineStore("clientTable", () => {
         multiple: false,
         component: "SimpleInput",
         item: "",
+      },
+      {
+        name: "Возраст",
+        type: "age",
+        meta: true,
+        component: "AgeRange",
+        item: null,
       },
       {
         name: t("client_table.month"),
@@ -283,6 +307,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
           };
         }),
       },
+
       {
         name: t("client_table.date_of_appeal"),
         type: "date_of_appeal",
@@ -314,10 +339,27 @@ export const useClientTableStore = defineStore("clientTable", () => {
         })),
       },
       {
+        name: "Организация",
+        type: "organization",
+        meta: !isClinic,
+        request: true,
+        placeholder: "Выберите организацию",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: organizations.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
+        requestFunc: fetchOrganizations,
+        loadingRef: organizationsLoading.value,
+      },
+      {
         name: t("client_table.clinic"),
         type: "clinic",
         meta: !isClinic,
-        request: true, 
+        request: true,
         placeholder: t("create_appeal.dropdowns.clinic"),
         multiple: false,
         component: "DropdownSelectNew",
@@ -327,8 +369,10 @@ export const useClientTableStore = defineStore("clientTable", () => {
             id,
           };
         }),
+        requestFunc: fetchClinics,
+        loadingRef: clinicsLoading.value,
       },
- 
+
       {
         name: t("client_table.doctor"),
         type: "doctors",
@@ -383,7 +427,8 @@ export const useClientTableStore = defineStore("clientTable", () => {
         }
       } else {
         if (
-          filterQuery.value[type] === optionItem &&
+          (filterQuery.value[type] === optionItem ||
+            filterQuery.value[type]?.id === optionItem?.id) &&
           type !== "date_of_appeal" &&
           type !== "finished_date"
         ) {
@@ -404,11 +449,17 @@ export const useClientTableStore = defineStore("clientTable", () => {
       applied_date: filterQuery.value?.date_of_appeal,
       finished_date: filterQuery.value?.finished_date,
       status: filterQuery.value.appeal_status?.status,
+      org_id: filterQuery.value?.organization?.id,
       hospital_id: filterQuery.value?.clinic?.id,
       doctors: filterQuery.value?.doctors,
       services: filterQuery.value?.services,
       month: filterQuery.value?.month?.value,
     };
+
+    if (filterQuery.value.age) {
+      query.min_age = filterQuery.value.age.min_age;
+      query.max_age = filterQuery.value.age.max_age;
+    }
 
     const entries = Object.entries(query);
     entries.forEach(([key, value]) => {
@@ -447,5 +498,6 @@ export const useClientTableStore = defineStore("clientTable", () => {
     checkSelectedOption,
     removeFilter,
     fetchClinics,
+    fetchOrganizations,
   };
 });

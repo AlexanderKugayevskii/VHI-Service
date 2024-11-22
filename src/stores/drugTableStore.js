@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
 import DrugsService from "src/services/DrugsService";
 import AppealService from "src/services/AppealService";
-import formatDate from "src/helpers/formatDate";
+import ClinicService from "src/services/ClinicService";
 
 import { useI18n } from "vue-i18n";
 export const useDrugTableStore = defineStore("drugTable", () => {
@@ -211,13 +211,31 @@ export const useDrugTableStore = defineStore("drugTable", () => {
   //   1,
 
   const drugstores = ref([]);
+  const drugstoresLoading = ref(false);
   const fetchDrugstores = async () => {
+    drugstoresLoading.value = true;
     try {
       const response = await AppealService.getDrugstores();
       drugstores.value = response.data.data;
     } catch (e) {
       console.error(e);
     } finally {
+      drugstoresLoading.value = false;
+    }
+  };
+
+  const organizations = ref([]);
+  const organizationsLoading = ref(false);
+  const fetchOrganizations = async () => {
+    organizationsLoading.value = true;
+    try {
+      const response = await ClinicService.fetchOrganizations();
+      const data = response.data.data;
+      organizations.value = data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      organizationsLoading.value = false;
     }
   };
 
@@ -232,6 +250,13 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         multiple: false,
         component: "SimpleInput",
         item: "",
+      },
+      {
+        name: "Возраст",
+        type: "age",
+        meta: true,
+        component: "AgeRange",
+        item: null,
       },
       {
         name: t("client_table.month"),
@@ -279,6 +304,23 @@ export const useDrugTableStore = defineStore("drugTable", () => {
         })),
       },
       {
+        name: "Организация",
+        type: "organization",
+        meta: true,
+        request: true,
+        placeholder: "Выберите организацию",
+        multiple: false,
+        component: "DropdownSelectNew",
+        item: organizations.value.map(({ name, id }) => {
+          return {
+            name,
+            id,
+          };
+        }),
+        requestFunc: fetchOrganizations,
+        loadingRef: organizationsLoading.value,
+      },
+      {
         name: t("create_appeal.tabs.drugstore"),
         type: "drugstore",
         meta: true,
@@ -291,6 +333,8 @@ export const useDrugTableStore = defineStore("drugTable", () => {
             id,
           };
         }),
+        requestFunc: fetchDrugstores,
+        loadingRef: drugstoresLoading.value,
       },
       {
         name: t("client_table.drugs"),
@@ -349,10 +393,16 @@ export const useDrugTableStore = defineStore("drugTable", () => {
       applied_date: filterQuery.value?.date_of_appeal,
       finished_date: filterQuery.value?.finished_date,
       status: filterQuery.value.appeal_status?.status,
+      org_id: filterQuery.value?.organization?.id,
       drugstore_id: filterQuery.value?.drugstore?.id,
       drugs: filterQuery.value?.drugs,
       month: filterQuery.value?.month?.value,
     };
+
+    if (filterQuery.value.age) {
+      query.min_age = filterQuery.value.age.min_age;
+      query.max_age = filterQuery.value.age.max_age;
+    }
 
     const entries = Object.entries(query);
     entries.forEach(([key, value]) => {
