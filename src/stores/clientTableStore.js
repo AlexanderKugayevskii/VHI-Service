@@ -272,6 +272,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   };
 
   // filterQuery constructor
+  
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
