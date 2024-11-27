@@ -746,7 +746,7 @@
                     ></SimpleButton>
                     <div
                       class="create-appeal-done-action"
-                      v-if="appealStore.isAgent"
+                      v-if="appealStore.isAgent || appealStore.isSuperAdmin"
                     >
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
