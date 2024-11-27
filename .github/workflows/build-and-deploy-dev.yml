@@ -119,14 +119,14 @@ jobs:
           service_name: dms-service-frontend
           environment: ${{ env.ENVIRONMENT }}
 
-      - name: Deploy to office
-        uses: ./.github/actions/compose-deploy
-        with:
-          ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
-          server_host: ${{ env.SERVER_2_HOST }}
-          ssh_port: ${{ env.SERVER_2_SSH_PORT }}
-          registry_url: ${{ env.REGISTRY_URL }}
-          registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
-          registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
-          service_name: dms-service-frontend
-          environment: ${{ env.ENVIRONMENT }}
+      # - name: Deploy to office
+      #   uses: ./.github/actions/compose-deploy
+      #   with:
+      #     ssh_private_key: ${{ steps.import-secrets.outputs.SSH_PRIVATE_KEY }}
+      #     server_host: ${{ env.SERVER_2_HOST }}
+      #     ssh_port: ${{ env.SERVER_2_SSH_PORT }}
+      #     registry_url: ${{ env.REGISTRY_URL }}
+      #     registry_username: ${{ secrets.MEGAHERTZ_REGISTRY_USERNAME }}
+      #     registry_password: ${{ secrets.MEGAHERTZ_REGISTRY_PASSWORD }}
+      #     service_name: dms-service-frontend
+      #     environment: ${{ env.ENVIRONMENT }}
