@@ -179,8 +179,8 @@
                               :loading="appealStore.loading"
                               :options="appealStore.clinics"
                               :disable-choise="
-                                appealStore.isClinic ||
-                                appealStore.typeOfAppeal === 1
+                                (appealStore.isClinic ||
+                                appealStore.typeOfAppeal === 1) && !appealStore.isSuperAdmin
                               "
                               :selected-options="appealStore.selectedClinic"
                               @select-option="appealStore.selectClinic"
@@ -208,14 +208,14 @@
                               class="dropdown-space diagnosis-input"
                               :label="$t('create_appeal.diagnosis')"
                               :placeholder="$t('create_appeal.enter_diagnosis')"
-                              :disableInput="clientData.appealStatus === 2"
+                              :disableInput="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
                               @update:model-value="appealStore.setDiagnosis"
                               :modelValue="appealStore.diagnosis"
                             ></TextAreaInput>
 
                             <DateInput
                               class="dropdown-space"
-                              :disableInput="clientData.appealStatus === 2"
+                              :disableInput="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
                               number
                               :label="$t('client_table.date_of_appeal')"
                               :placeholder="$t('common.enter_date')"
@@ -333,7 +333,7 @@
                                     >
                                       (
                                       {{
-                                        appealStore.isAgent
+                                        appealStore.isAgent || appealStore.isSuperAdmin
                                           ? ` ${$t(
                                               "create_appeal.completed_by_clinic"
                                             )}`
@@ -411,7 +411,7 @@
                               :item="doctor"
                               :key="doctor.id"
                               :commonStatus="clientData.appealStatus"
-                              :isAgent="appealStore.isAgent"
+                              :isAgent="appealStore.isAgent || appealStore.isSuperAdmin"
                               @update:status="
                                 (item) => handleStatusDoctor(item, false)
                               "
@@ -557,7 +557,7 @@
                                     >
                                       (
                                       {{
-                                        appealStore.isAgent
+                                        appealStore.isAgent || appealStore.isSuperAdmin
                                           ? ` ${$t(
                                               "create_appeal.completed_by_clinic"
                                             )}`
@@ -755,11 +755,11 @@
                           clientData.appealStatus === 2
                         "
                         :disabled="
-                          appealStore.finishedAppeal ||
-                          clientData.appealStatus === 2 ||
                           checkSuggestedItems
                         "
                       >
+                      <!-- appealStore.finishedAppeal ||
+                      clientData.appealStatus === 2 || -->
                       </SimpleCheckbox>
                       <span>{{ $t("create_appeal.make_appeal_done") }}</span>
                     </div>
@@ -964,7 +964,7 @@ const handleCreateAppeal = async () => {
     appealType: "CLINIC",
   });
 
-  if (appealStore.isAgent) {
+  if (appealStore.isAgent || appealStore.isSuperAdmin) {
     router.replace(
       Trans.i18nRoute({
         name: "createAppealLimit",

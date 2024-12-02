@@ -144,7 +144,10 @@
                                 :placeholder="$t('common.enter_date')"
                                 @update:model-value="appealStore.setAppealDate"
                                 :modelValue="appealStore.appealDate"
-                                :disable-input="clientData.appealStatus === 2"
+                                :disable-input="
+                                  clientData.appealStatus === 2 ||
+                                  !appealStore.isSuperAdmin
+                                "
                               ></DateInput>
 
                               <DateInput
@@ -173,7 +176,10 @@
                                 @request="appealStore.fetchDrugs"
                                 @request-by-search="handleSearchDrugs"
                                 @select-option="handleSelectDrug"
-                                :disable-choise="clientData.appealStatus === 2"
+                                :disable-choise="
+                                  clientData.appealStatus === 2 ||
+                                  !appealStore.isSuperAdmin
+                                "
                               >
                                 <template #top-label>
                                   {{ $t("create_appeal.medicine") }}
@@ -232,7 +238,9 @@
                               :item="drug"
                               :key="drug.id"
                               :removable="true"
-                              :is-agent="appealStore.isAgent"
+                              :is-agent="
+                                appealStore.isAgent || appealStore.isSuperAdmin
+                              "
                               @update:status="
                                 (item) => handleStatusDrugs(item, false)
                               "
@@ -269,7 +277,10 @@
                                 :item="drug"
                                 :removable="true"
                                 :key="drug.id"
-                                :isAgent="appealStore.isAgent"
+                                :isAgent="
+                                  appealStore.isAgent ||
+                                  appealStore.isSuperAdmin
+                                "
                                 @update:status="
                                   (item) => handleStatusDrugs(item, true)
                                 "
@@ -307,7 +318,8 @@
                               :options="appealStore.drugstores"
                               :disable-choise="
                                 appealStore.isDrugstore ||
-                                appealStore.typeOfAppeal === 1
+                                appealStore.typeOfAppeal === 1 ||
+                                !appealStore.isSuperAdmin
                               "
                               :selected-options="appealStore.selectedDrugstore"
                               @select-option="appealStore.selectDrugstore"
@@ -316,7 +328,13 @@
                               <template #top-label>
                                 {{ $t("create_appeal.tabs.drugstore") }}
                               </template>
-                              <template #placeholder v-if="appealStore.isAgent">
+                              <template
+                                #placeholder
+                                v-if="
+                                  appealStore.isAgent ||
+                                  appealStore.isSuperAdmin
+                                "
+                              >
                                 {{ $t("create_appeal.dropdowns.drugstore") }}
                               </template>
                               <template v-slot:selected-options-once="props">
@@ -392,10 +410,6 @@
                       <SimpleCheckbox
                         @change="handleAppealDoneCheckbox"
                         :checked="
-                          appealStore.finishedAppeal ||
-                          clientData.appealStatus === 2
-                        "
-                        :disabled="
                           appealStore.finishedAppeal ||
                           clientData.appealStatus === 2
                         "
@@ -579,7 +593,7 @@ const handleCreateAppeal = async () => {
   });
 
   $q.loading.hide();
-  if (appealStore.isAgent) {
+  if (appealStore.isAgent || appealStore.isSuperAdmin) {
     router.replace(
       Trans.i18nRoute({
         name: "createAppealDrugLimit",
@@ -591,7 +605,7 @@ const handleCreateAppeal = async () => {
 const handleChangeAppeal = async () => {
   await appealStore.changeAppealDrugData();
 
-  if (appealStore.isAgent) {
+  if (appealStore.isAgent || appealStore.isSuperAdmin) {
     const appealStatuses = appealStore.allDrugsStatus;
 
     const programItemIdIsZero = appealStatuses.some(

@@ -154,7 +154,7 @@ const disabledRule = computed(() => {
 });
 
 const cantRemoveItem = computed(() => {
-  return props.item.pivot.status > 0;
+  return props.item.pivot.status > 0 && !appealStore.isSuperAdmin;
 });
 
 const quantity = computed(() => String(props.item.pivot.quantity));

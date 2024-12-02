@@ -263,7 +263,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const actionDoctorStatusCount = computed(() => {
     let count = 0;
-    if (isAgent.value) {
+    if (isAgent.value || isSuperAdmin.value) {
       count = suggestedDoctors.value
         .concat(selectedDoctors.value)
         .filter(
@@ -292,7 +292,7 @@ export const useAppealStore = defineStore("appeal", () => {
 
   const actionServiceStatusCount = computed(() => {
     let count = 0;
-    if (isAgent.value) {
+    if (isAgent.value || isSuperAdmin.value) {
       count = suggestedServices.value
         .concat(selectedServices.value)
         .filter(
@@ -359,9 +359,9 @@ export const useAppealStore = defineStore("appeal", () => {
       if (doctor.id === item.id) {
         return (
           (item.pivot.progress >= 1 &&
-            isAgent.value &&
+            (isAgent.value || isSuperAdmin.value) &&
             !finishedAppeal.value) ||
-          (item.pivot.status !== 0 && !isAgent.value)
+          (item.pivot.status !== 0 && (!isAgent.value || !isSuperAdmin.value))
         );
       }
     });
@@ -513,9 +513,9 @@ export const useAppealStore = defineStore("appeal", () => {
       if (service.id === item.id) {
         return (
           (item.pivot.progress >= 1 &&
-            isAgent.value &&
+            (isAgent.value || isSuperAdmin.value) &&
             !finishedAppeal.value) ||
-          (item.pivot.status !== 0 && !isAgent.value)
+          (item.pivot.status !== 0 && (!isAgent.value || !isSuperAdmin.value))
         );
       }
     });
@@ -581,9 +581,9 @@ export const useAppealStore = defineStore("appeal", () => {
       if (drug.id === item.id) {
         return (
           (item.pivot.progress >= 1 &&
-            isAgent.value &&
+            (isAgent.value || isSuperAdmin.value) &&
             !finishedAppeal.value) ||
-          (item.pivot.status !== 0 && !isAgent.value)
+          (item.pivot.status !== 0 && (!isAgent.value || !isSuperAdmin.value))
         );
       }
     });
@@ -1221,6 +1221,8 @@ export const useAppealStore = defineStore("appeal", () => {
       copyDoctors.value = [...selectedDoctors.value];
       copyServices.value = [...selectedServices.value];
 
+      finishedAppeal.value = clientData.appealStatus === 2;
+
       return { status: 200 };
     } catch (e) {
       return { status: 404 };
@@ -1346,6 +1348,8 @@ export const useAppealStore = defineStore("appeal", () => {
       if (data.file) {
         drugAppealImage.value.readerPhoto = `https://api.neoinsurance.uz/${data.file}`;
       }
+
+      finishedAppeal.value = clientData.appealStatus === 2;
     } catch (e) {
       console.error(e);
     } finally {
