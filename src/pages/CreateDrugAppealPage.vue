@@ -145,8 +145,7 @@
                                 @update:model-value="appealStore.setAppealDate"
                                 :modelValue="appealStore.appealDate"
                                 :disable-input="
-                                  clientData.appealStatus === 2 ||
-                                  !appealStore.isSuperAdmin
+                                  clientData.appealStatus === 2
                                 "
                               ></DateInput>
 

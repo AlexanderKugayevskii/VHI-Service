@@ -215,7 +215,7 @@
 
                             <DateInput
                               class="dropdown-space"
-                              :disableInput="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
+                              :disableInput="clientData.appealStatus === 2"
                               number
                               :label="$t('client_table.date_of_appeal')"
                               :placeholder="$t('common.enter_date')"
