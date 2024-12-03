@@ -176,7 +176,7 @@
                                 @request-by-search="handleSearchDrugs"
                                 @select-option="handleSelectDrug"
                                 :disable-choise="
-                                  clientData.appealStatus === 2 ||
+                                  clientData.appealStatus === 2 &&
                                   !appealStore.isSuperAdmin
                                 "
                               >
@@ -317,8 +317,8 @@
                               :options="appealStore.drugstores"
                               :disable-choise="
                                 appealStore.isDrugstore ||
-                                appealStore.typeOfAppeal === 1 ||
-                                !appealStore.isSuperAdmin
+                                (appealStore.typeOfAppeal === 1 &&
+                                  !appealStore.isSuperAdmin)
                               "
                               :selected-options="appealStore.selectedDrugstore"
                               @select-option="appealStore.selectDrugstore"
