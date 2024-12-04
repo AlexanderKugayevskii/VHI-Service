@@ -849,6 +849,7 @@ export const useAppealStore = defineStore("appeal", () => {
     // appendFormData(formData, payload);
     formData.append("drugs", JSON.stringify(payload.drugs));
     formData.append("drugstore_id", payload.drugstore_id);
+    formData.append("applied_date", payload.applied_date);
     if (drugAppealImage.value?.file) {
       formData.append("file", drugAppealImage.value.file);
     }
