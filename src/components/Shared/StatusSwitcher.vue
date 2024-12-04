@@ -1,11 +1,14 @@
 <template>
   <div :class="['status-row', dense && 'status-row-dense']">
-    <div v-if="(isAgent && progress === 0)" class="status-item">
+    <div
+      v-if="(isAgent && !isSuperAdmin) && progress === 0"
+      class="status-item"
+    >
       Ожидает завершения
     </div>
-   
+
     <div
-      v-if="!isAgent && progress === 0"
+      v-if="(!isAgent || isSuperAdmin) && progress === 0"
       class="status-item clickable"
       @click="handleChangeProgress(1)"
     >
@@ -18,7 +21,9 @@
     >
       Завершено
     </div>
-    <div class="status-item" v-if="!isAgent && !isSuperAdmin && progress === 1">Ожидание</div>
+    <div class="status-item" v-if="!isAgent && !isSuperAdmin && progress === 1">
+      Ожидание
+    </div>
     <div
       class="status-item clickable"
       @click="() => (isAgent || isSuperAdmin) && handleChangeProgress(2)"
@@ -29,8 +34,8 @@
     <div
       class="status-item status-done"
       v-if="progress === 2"
-      @click = "() => isSuperAdmin && handleChangeProgress(1)"
-      >
+      @click="() => isSuperAdmin && handleChangeProgress(1)"
+    >
       <!-- @click="() => isAgent && handleChangeProgress(1)" -->
       Подтверждено
     </div>
@@ -53,8 +58,8 @@
     <div>Подтверждено - клиника и агент</div>
 -->
 <script setup>
-import { useAppealStore } from 'src/stores/appealStore';
-import { computed } from 'vue';
+import { useAppealStore } from "src/stores/appealStore";
+import { computed } from "vue";
 const props = defineProps({
   progress: {
     type: Number,
@@ -74,9 +79,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:change"]);
-const appealStore = useAppealStore()
+const appealStore = useAppealStore();
 
-const isSuperAdmin = computed(() => appealStore.isSuperAdmin)
+const isSuperAdmin = computed(() => appealStore.isSuperAdmin);
 
 const handleChangeProgress = (progress) => {
   emit("update:change", progress);

@@ -144,9 +144,7 @@
                                 :placeholder="$t('common.enter_date')"
                                 @update:model-value="appealStore.setAppealDate"
                                 :modelValue="appealStore.appealDate"
-                                :disable-input="
-                                  clientData.appealStatus === 2
-                                "
+                                :disable-input="clientData.appealStatus === 2 && !appealStore.isSuperAdmin"
                               ></DateInput>
 
                               <DateInput
@@ -412,6 +410,7 @@
                           appealStore.finishedAppeal ||
                           clientData.appealStatus === 2
                         "
+                        :disabled="clientData.appealStatus === 2"
                       >
                       </SimpleCheckbox>
                       <span>{{ $t("create_appeal.make_appeal_done") }}</span>
