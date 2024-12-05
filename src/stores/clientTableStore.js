@@ -276,7 +276,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
   const filterQuery = ref({});
   const filterData = computed(() => {
     return [
-      {
+     {
         name: t("client_table.client"),
         type: "client",
         meta: true,
@@ -427,8 +427,7 @@ export const useClientTableStore = defineStore("clientTable", () => {
         }
       } else {
         if (
-          (filterQuery.value[type] === optionItem ||
-            filterQuery.value[type]?.id === optionItem?.id) &&
+          (filterQuery.value[type] === optionItem) &&
           type !== "date_of_appeal" &&
           type !== "finished_date"
         ) {
