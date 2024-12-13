@@ -109,6 +109,10 @@ function getClientsByPassport(passport) {
   });
 }
 
+function postClientComment(contractId, payload) {
+  return api.post(`/clients/${contractId}/comment`, payload);
+}
+
 export default {
   getClients,
   getFullClients,
@@ -125,4 +129,6 @@ export default {
 
   getClinicApplications,
   getDrugstoreApplications,
+
+  postClientComment
 };

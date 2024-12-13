@@ -51,6 +51,27 @@
         :client="client"
       />
     </div>
+
+    <div class="details-tabs">
+      <form
+        action=""
+        @submit.prevent="handlePostComment"
+        class="send-comment-form"
+      >
+        <TextAreaInput
+          label="Комментарий"
+          placeholder="введите текст здесь"
+          wrapperStyle="background-color: #fff"
+          v-model="clientComment"
+        />
+        <SimpleButton
+          type="submit"
+          label="Сохранить Комментарий"
+          custom-class="btn-action"
+        />
+      </form>
+    </div>
+
     <div class="details-tabs">
       <p class="details-tabs__title">{{ $t("nav.appeals") }}</p>
       <div class="details-tabs__items">
@@ -73,6 +94,7 @@
         />
       </div>
     </div>
+
     <!-- v-if="allClientTableStore.clientInfo.applications.length > 0" -->
 
     <div class="tabs-container">
@@ -152,8 +174,10 @@ import AppealsTable from "../ClientsTable/AppealsTable.vue";
 import DrugstoreTable from "../ClientsTable/DrugstoreTable.vue";
 import SimpleButton from "../Shared/SimpleButton.vue";
 import ClientService from "src/services/ClientService";
+import TextAreaInput from "../Shared/TextAreaInput.vue";
 import dayjs from "dayjs";
 import AppealType from "src/pages/AppealType.vue";
+import { useQuasar } from "quasar";
 
 const props = defineProps({
   contractClientId: {
@@ -161,6 +185,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const $q = useQuasar();
+const clientComment = ref("");
 const tab = ref("clinics");
 const showDetailsExtra = ref(false);
 const handleShowDetailsExtra = () => {
@@ -233,6 +260,29 @@ const getExcelData = async () => {
     fileLoad.value = false;
   }
 };
+
+const handlePostComment = async () => {
+  try {
+    const response = await ClientService.postClientComment(
+      props.contractClientId,
+      {
+        comment: clientComment.value,
+      }
+    );
+
+    if (response.status === 200) {
+      $q.notify({
+        type: "success",
+        message: "Комментарий успешно сохранен",
+        position: "bottom",
+      });
+    }
+
+    const data = response.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -302,5 +352,12 @@ const getExcelData = async () => {
 
 .q-tab-panels {
   background: none;
+}
+
+.send-comment-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
 }
 </style>
